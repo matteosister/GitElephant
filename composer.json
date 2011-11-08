@@ -1,0 +1,18 @@
+{
+  "name": "php-git-wrapper",
+  "description": "A git binary wrapper for PHP 5.3",
+  "keywords": [],
+  "homepage": "",
+  "version": "0.0.1",
+  "license": "GPL3",
+  "authors": [
+    {
+      "name": "Matteo Giachino",
+      "email": "matteog@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0",
+    "symfony/console": ">=2.0.4"
+  }
+}
