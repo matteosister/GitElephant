@@ -1,11 +1,4 @@
 <?php
-/**
- * User: matteo
- * Date: 08/11/11
- * Time: 12.28
- *
- * Just for fun...
- */
 
 /*
  * This file is part of the GitWrapper package.
@@ -14,19 +7,23 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
- */
-
-/**
- * Binary
  *
- * It contains the reference to the system git command
- *
- * @author Jordi Boggiano <j.boggiano@seld.be>
+ * Just for fun...
  */
 
 namespace GitWrapper;
 
-class Binary
+
+/**
+ * Binary
+ *
+ * It contains the reference to the system git binary
+ *
+ * @author Matteo Giachino <matteog@gmail.com>
+ */
+
+
+class GitBinary
 {
     private $path;
 
