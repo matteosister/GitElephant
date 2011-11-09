@@ -11,11 +11,11 @@
  * Just for fun...
  */
 
-namespace GitWrapper\Command\Tree;
+namespace GitWrapper\Objects;
 
 use GitWrapper\Command\BaseCommand;
 use GitWrapper\Command\Caller;
-use GitWrapper\Command\Tree\Node;
+use GitWrapper\Objects\Node;
 use GitWrapper\GitBinary;
 
 

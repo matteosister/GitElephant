@@ -19,4 +19,12 @@ spl_autoload_register(function($class)
         require $file;
         return true;
     }
+
+    $file = __DIR__.'/../vendor/'.strtr($class, '\\', '/').'.php';
+    if (file_exists($file)) {
+        require $file;
+        return true;
+    }
 });
+
+

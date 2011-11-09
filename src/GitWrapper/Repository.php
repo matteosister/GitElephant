@@ -15,9 +15,10 @@ namespace GitWrapper;
 
 use GitWrapper\GitBinary;
 use GitWrapper\Command\Caller;
-use GitWrapper\Command\Tree\Tree;
-use GitWrapper\Command\Tree\Node;
+use GitWrapper\Objects\Tree;
+use GitWrapper\Objects\Node;
 use GitWrapper\Command\Main;
+use GitWrapper\Command\Branch;
 
 /**
  * Repository
@@ -98,5 +99,10 @@ class Repository
             $tree[] = new Node($nodeString);
         }
         return $tree;
+    }
+
+    public function getBranches()
+    {
+        
     }
 }

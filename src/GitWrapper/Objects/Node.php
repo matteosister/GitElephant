@@ -11,7 +11,7 @@
  * Just for fun...
  */
 
-namespace GitWrapper\Command\Tree;
+namespace GitWrapper\Objects;
 
 
 /**

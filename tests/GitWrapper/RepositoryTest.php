@@ -12,8 +12,6 @@
 
 namespace GitWrapper;
 
-use GitWrapper\Command\Tree\Tree;
-
 /**
  * RepositoryTest
  *
@@ -24,34 +22,38 @@ use GitWrapper\Command\Tree\Tree;
  
 class RepositoryTest extends TestCase
 {
+    public function setUp() {
+        $this->initRepository();
+    }
+
     public function testInit()
     {
-        $this->assertTrue($this->repository->init(), 'init error');
+        $this->assertTrue($this->getRepository()->init(), 'init error');
     }
 
-    /**
-     * @depends testInit
-     */
     public function testStageAll()
     {
-        $this->caller->execute('touch test', false);
-        $this->assertTrue($this->repository->stageAll(), sprintf('stageAll error on folder %s', $this->path));
+        $this->getRepository()->init();
+        $this->getCaller()->execute('touch test', false);
+        $this->assertTrue($this->getRepository()->stageAll(), sprintf('stageAll error'));
     }
 
-    /**
-     * @depends testStageAll
-     */
     public function testCommit()
     {
-        $this->assertTrue($this->repository->commit('initial import'), 'commit error');
+        $this->getRepository()->init();
+        $this->getCaller()->execute('touch test', false);
+        $this->getRepository()->stageAll();
+        $this->assertTrue($this->getRepository()->commit('initial import'), 'commit error');
     }
 
-    /**
-     * @depends testCommit
-     */
     public function testGetTree()
     {
-        $tree = $this->repository->getTree();
+        $this->getRepository()->init();
+        $this->getCaller()->execute('touch test', false);
+        $this->getRepository()->stageAll();
+        $this->getRepository()->commit('initial import');
+
+        $tree = $this->getRepository()->getTree();
         $this->assertTrue(count($tree) == 1, 'One file in the repository');
         $firstNode = $tree[0];
         $this->assertEquals('test', $firstNode->getFilename(), 'First repository file is named "test"');

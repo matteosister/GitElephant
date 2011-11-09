@@ -15,18 +15,45 @@ namespace GitWrapper;
 use GitWrapper\Repository;
 use GitWrapper\GitBinary;
 use GitWrapper\Command\Caller;
+use Symfony\Component\Finder\Finder;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
-    protected $caller;
-    protected $repository;
+    private $caller;
+    private $repository;
+    private $path;
+    private $finder;
 
-    public function __construct()
+    /**
+     * @return Repository
+     */
+    protected function getRepository()
     {
-        $path = sys_get_temp_dir().DIRECTORY_SEPARATOR.md5(uniqid());
-        mkdir($path);
-        $binary = new GitBinary('/usr/local/bin/git');
-        $this->caller = new Caller($binary, $path);
-        $this->repository = new Repository($this->path);
+        if ($this->repository == null) {
+            $this->initRepository();
+        }
+        return $this->repository;
+    }
+
+    protected function getCaller()
+    {
+        if ($this->caller == null) {
+            $this->initRepository();
+        }
+        return $this->caller;
+    }
+
+    protected function initRepository()
+    {
+        if ($this->repository == null) {
+            $tempDir = realpath(sys_get_temp_dir()).'gitwrapper_'.md5(uniqid(rand(),1));
+            $tempName = tempnam($tempDir, 'gitwrapper');
+            $this->path = $tempName;
+            unlink($this->path);
+            mkdir($this->path);
+            $binary = new GitBinary('/usr/local/bin/git');
+            $this->caller = new Caller($binary, $this->path);
+            $this->repository = new Repository($this->path);
+        }
     }
 }
