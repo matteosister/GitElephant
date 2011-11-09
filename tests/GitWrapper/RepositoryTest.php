@@ -31,7 +31,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * depends testInit
+     * @depends testInit
      */
     public function testStageAll()
     {
@@ -40,7 +40,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * depends testStageAll
+     * @depends testStageAll
      */
     public function testCommit()
     {
@@ -48,7 +48,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * depends testCommit
+     * @depends testCommit
      */
     public function testGetTree()
     {
