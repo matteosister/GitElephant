@@ -29,6 +29,9 @@ class GitBinary
 
     public function __construct($path = null)
     {
+        if ($path == null) {
+            $path = '/usr/local/bin/git';
+        }
         $this->setPath($path);
     }
 

@@ -13,13 +13,15 @@
 
 namespace GitWrapper;
 
-use GitWrapper\Command\Tree\Tree;
 use GitWrapper\GitBinary;
+use GitWrapper\Command\Caller;
+use GitWrapper\Command\Tree\Tree;
+use GitWrapper\Command\Main;
 
 /**
  * Repository
  *
- * @todo: description
+ * Base Class for repository operations
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -27,21 +29,21 @@ use GitWrapper\GitBinary;
 class Repository
 {
     private $path;
-    private $binary;
-    private $tree;
+    private $caller;
 
     public function __construct($repository_path, GitBinary $binary = null)
     {
-        if (!is_dir($repository_path)) {
-            throw new \InvalidArgumentException();
-        }
-
         if ($binary == null) {
-            $binary = new GitBinary('/usr/local/bin/git');
+            $binary = new GitBinary();
         }
-
-        $this->binary = $binary;
         $this->path = $repository_path;
+        $this->caller = new Caller($binary, $repository_path);
+    }
+
+    public function init()
+    {
+        $main = new Main();
+        $this->caller->execute($main->init());
     }
 
     /**
@@ -50,9 +52,9 @@ class Repository
      */
     public function getTree($what = 'HEAD')
     {
-        $this->tree = new Tree($this->binary);
-        $this->tree->lsTree($what);
-        $this->tree->execute($this->path, null);
-        return $this->tree;
+        $tree = new Tree();
+        $tree->lsTree($what);
+        $this->caller->execute($tree->getCommand());
+        var_dump(explode("\n", $this->caller->getResult()));
     }
 }

@@ -14,6 +14,7 @@
 namespace GitWrapper\Command\Tree;
 
 use GitWrapper\Command\BaseCommand;
+use GitWrapper\Command\Caller;
 use GitWrapper\Command\Tree\Node;
 use GitWrapper\GitBinary;
 
@@ -31,25 +32,16 @@ class Tree extends BaseCommand implements \ArrayAccess, \Iterator, \Countable
     private $children = array();
     private $position = 0;
 
-    public function __construct(GitBinary $binary)
+    public function __construct()
     {
         $this->position = 0;
-        $this->binary = $binary;
     }
 
     public function lsTree($subject)
     {
         $this->addCommandName('ls-tree');
-        //$this->addArgument('--name-only');
         $this->addSubject($subject);
-    }
-
-    public function execute($repositoryPath, $stdIn = null)
-    {
-        parent::execute($repositoryPath, $stdIn);
-        while(!feof($this->getStdOut())) {
-            $this[] = new Node(fgets($this->getStdOut()));
-        }
+        return $this->getCommand();
     }
 
     public function offsetExists($offset)

@@ -13,7 +13,7 @@
 
 namespace GitWrapper\Command;
 
-use GitWrapper\GitBinary;
+use GitWrapper\Command\Caller;
 
 /**
  * BaseCommand
@@ -25,17 +25,12 @@ use GitWrapper\GitBinary;
 
 class BaseCommand
 {
-    protected  $binary;
     private $commandName;
     private $arguments = array();
     private $subject;
 
     private $stdOut;
 
-    public function __construct(GitBinary $binary)
-    {
-        $this->binary = $binary;
-    }
 
     public static function create($cmd, $cwd = null, array $env = null) {
         return new static($cmd, $cwd, $env);
@@ -56,56 +51,16 @@ class BaseCommand
         $this->subject = $subject;
     }
 
-    private function getCommand()
+    public function getCommand()
     {
         if ($this->commandName == null) {
             throw new \InvalidParameterException("You should pass a commandName to execute a command");
         }
         
-        return $this->binary->getPath()
-               .' '.$this->commandName
+        return $this->commandName
                .' '.implode(' ', array_map('escapeshellarg', $this->arguments))
                .' '.$this->subject;
     }
 
-    public function execute($repositoryPath, $stdIn = null)
-    {
-        $stdOut = fopen('php://temp', 'r');
-        $stdErr = fopen('php://temp', 'r');
-
-        $descriptorSpec = array(
-           0 => array("pipe", "r"), // stdin is a pipe that the child will read from
-           1 => $stdOut,            // stdout is a temp file that the child will write to
-           2 => $stdErr             // stderr is a temp file that the child will write to
-        );
-        $pipes   = array();
-
-        $process = proc_open(
-            $this->getCommand(),
-            $descriptorSpec,
-            $pipes,
-            $repositoryPath,
-            null
-        );
-
-        if (is_resource($process)) {
-            if ($stdIn !== null) {
-                fwrite($pipes[0], (string)$stdIn);
-            }
-            fclose($pipes[0]);
-
-            $returnCode = proc_close($process);
-            fseek($stdOut, 0);
-            $this->stdOut = $stdOut;
-        } else {
-            fclose($stdOut);
-            fclose($stdErr);
-            throw new \RuntimeException(sprintf('Cannot execute "%s"', $cmd));
-        }
-    }
-
-    public function getStdOut()
-    {
-        return $this->stdOut;
-    }
+    
 }
