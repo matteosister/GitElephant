@@ -35,7 +35,7 @@ class RepositoryTest extends TestCase
      */
     public function testStageAll()
     {
-        //$this->caller->execute('touch test', false);
+        $this->caller->execute('touch test', false);
         $this->assertTrue($this->repository->stageAll(), sprintf('stageAll error on folder %s', $this->path));
     }
 
