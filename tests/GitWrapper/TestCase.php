@@ -19,13 +19,13 @@ use GitWrapper\Command\Caller;
 class TestCase extends \PHPUnit_Framework_Testcase
 {
     protected $caller;
+    protected $system_caller;
     protected $repository;
 
     public function __construct()
     {
-        //$this->path = sys_get_temp_dir().DIRECTORY_SEPARATOR.md5(uniqid());
+        $this->path = sys_get_temp_dir().DIRECTORY_SEPARATOR.md5(uniqid(rand(),1));
         //mkdir($this->path);
-        $this->path = '/home/matteo/test';
         $this->binary = new GitBinary('/usr/local/bin/git');
         $this->caller = new Caller($this->binary, $this->path);
         $this->repository = new Repository($this->path);

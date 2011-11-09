@@ -75,7 +75,7 @@ class Caller
             fclose($pipes[1]);
             fclose($pipes[2]);
             if ($this->getError() !== false) {
-                throw new \RuntimeException(sprintf('Cannot execute "%s", message: "%s"', $cmd, $this->getError()));
+                throw new \RuntimeException(sprintf('Cannot execute "%s", message: "%s", folder: "%s"', $cmd, $this->getError(), $this->repositoryPath));
             }
             return $this;
         } else {

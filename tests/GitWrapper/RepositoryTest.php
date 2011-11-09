@@ -30,17 +30,26 @@ class RepositoryTest extends TestCase
         $this->assertTrue($this->repository->init(), 'init error');
     }
 
+    /**
+     * @depends testInit
+     */
     public function testStageAll()
     {
-        $this->caller->execute('touch test', false);
-        $this->assertTrue($this->repository->stageAll(), 'stageAll error');
+        //$this->caller->execute('touch test', false);
+        $this->assertTrue($this->repository->stageAll(), sprintf('stageAll error on folder %s', $this->path));
     }
 
+    /**
+     * @depends testStageAll
+     */
     public function testCommit()
     {
         $this->assertTrue($this->repository->commit('initial import'), 'commit error');
     }
 
+    /**
+     * @depends testCommit
+     */
     public function testGetTree()
     {
         $tree = $this->repository->getTree();

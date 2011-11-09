@@ -56,6 +56,7 @@ class Repository
      * stage all working tree content
      * @return void
      */
+    
     public function stageAll()
     {
         $main = new Main();
@@ -75,13 +76,18 @@ class Repository
         return true;
     }
 
+    public function createBranch($name)
+    {
+
+    }
+
     /**
      * @param string $what the name of the tree, HEAD by default
      * @return GitWrapper\Command\Tree\Tree
      */
     public function getTree($what = 'HEAD')
     {
-        $tree = new Tree();
+        $tree = new Tree($what);
         $tree->lsTree($what);
         $this->caller->execute($tree->getCommand());
         foreach($this->caller->getOutputLines() as $nodeString) {

@@ -29,11 +29,13 @@ use GitWrapper\GitBinary;
 
 class Tree extends BaseCommand implements \ArrayAccess, \Iterator, \Countable
 {
+    private $sha;
     private $children = array();
     private $position = 0;
 
-    public function __construct()
+    public function __construct($sha)
     {
+        $this->sha = $sha;
         $this->position = 0;
     }
 
