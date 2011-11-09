@@ -16,6 +16,7 @@ namespace GitWrapper;
 use GitWrapper\GitBinary;
 use GitWrapper\Command\Caller;
 use GitWrapper\Command\Tree\Tree;
+use GitWrapper\Command\Tree\Node;
 use GitWrapper\Command\Main;
 
 /**
@@ -55,6 +56,9 @@ class Repository
         $tree = new Tree();
         $tree->lsTree($what);
         $this->caller->execute($tree->getCommand());
-        var_dump(explode("\n", $this->caller->getResult()));
+        foreach($this->caller->getOutputLines() as $nodeString) {
+            $tree[] = new Node($nodeString);
+        }
+        return $tree;
     }
 }

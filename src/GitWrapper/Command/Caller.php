@@ -26,7 +26,9 @@ class Caller
 {
     private $binary;
     private $repositoryPath;
-    private $result;
+    private $stdOut;
+    private $stdErr;
+    private $outputLines;
 
     public function __construct(GitBinary $binary, $repositoryPath)
     {
@@ -41,17 +43,13 @@ class Caller
 
     public function execute($cmd)
     {
+        $this->outputLines = array();
         $cmd = $this->binary->getPath().' '.$cmd;
-        var_dump($cmd);
-        var_dump($this->repositoryPath);
-
-        $stdErr = fopen('php://temp', 'r');
-        $stdOut = fopen('php://temp', 'r');
 
         $descriptorSpec = array(
-           0 => array("pipe", "r"), // stdin is a pipe that the child will read from
-           1 => array("pipe", "w"),            // stdout is a temp file that the child will write to
-           2 => $stdErr             // stderr is a temp file that the child will write to
+           0 => array("pipe", "r"), // Input
+           1 => array("pipe", "w"), // Output
+           2 => array("pipe", "w")  // Error
         );
 
         $pipes = array();
@@ -65,17 +63,37 @@ class Caller
 
         if (is_resource($process)) {
             fclose($pipes[0]);
-            $this->result = stream_get_contents($pipes[1]);
+            while ($line = fgets($pipes[1])) {
+                if ($line !== FALSE) {
+                    $this->outputLines[] = trim($line);
+                }
+            }
+            $this->stdOut = stream_get_contents($pipes[1]);
+            $this->stdErr = stream_get_contents($pipes[2]);
             fclose($pipes[1]);
+            fclose($pipes[2]);
+            if ($this->getError() !== false) {
+                throw new \RuntimeException(sprintf('Cannot execute "%s", message: "%s"', $cmd, $this->getError()));
+            }
         } else {
-            fclose($stdOut);
-            fclose($stdErr);
-            throw new \RuntimeException(sprintf('Cannot execute "%s"', $this->getCommand()));
+            fclose($pipes[1]);
+            fclose($pipes[2]);
+            throw new \RuntimeException(sprintf('Cannot execute "%s"', $cmd));
         }
     }
 
-    public function getResult()
+    public function getError()
     {
-        return $this->result;
+        return $this->stdErr == '' ? false : trim($this->stdErr);
+    }
+
+    public function getOutput()
+    {
+        return $this->stdOut;
+    }
+
+    public function getOutputLines()
+    {
+        return $this->outputLines;
     }
 }
