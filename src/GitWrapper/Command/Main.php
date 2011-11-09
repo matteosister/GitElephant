@@ -27,31 +27,31 @@ class Main extends BaseCommand
 {
     /**
      * Init the repo
-     * @return string
+     * @return Main
      */
     public function init()
     {
         $this->addCommandName('init');
-        return $this->getCommand();
+        return $this;
     }
 
     /**
      * Add a node to the repository
      * @param string $what
-     * @return string
+     * @return Main
      */
     public function add($what = '.')
     {
         $this->addCommandName('add');
         $this->addCommandSubject($what);
-        return $this->getCommand();
+        return $this;
     }
 
     /**
      * Commit
      * @param $message
      * @param bool $all
-     * @return string
+     * @return Main
      */
     public function commit($message, $all = false) {
         if (trim($message) == '' || $message == null) {
@@ -63,6 +63,6 @@ class Main extends BaseCommand
         }
         $this->addCommandArgument('-m');
         $this->addCommandSubject("'".$message."'");
-        return $this->getCommand();
+        return $this;
     }
 }

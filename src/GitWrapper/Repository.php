@@ -40,7 +40,7 @@ class Repository
         $this->path = $repository_path;
         $this->caller = new Caller($binary, $repository_path);
     }
-
+    
     /**
      * Init the repository
      * @return void
@@ -48,7 +48,11 @@ class Repository
     public function init()
     {
         $main = new Main();
-        $this->caller->execute($main->init());
+        $this->caller->execute(
+            $main
+                ->init()
+                ->getCommand()
+        );
         return true;
     }
 
@@ -60,7 +64,7 @@ class Repository
     public function stageAll()
     {
         $main = new Main();
-        $this->caller->execute($main->add());
+        $this->caller->execute($main->add()->getCommand());
         return true;
     }
 
@@ -72,7 +76,7 @@ class Repository
     public function commit($message)
     {
         $main = new Main();
-        $this->caller->execute($main->commit($message));
+        $this->caller->execute($main->commit($message)->getCommand());
         return true;
     }
 

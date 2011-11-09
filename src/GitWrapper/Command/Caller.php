@@ -60,7 +60,7 @@ class Caller
             $descriptorSpec,
             $pipes,
             $this->repositoryPath,
-            $_ENV
+            null
         );
 
         if (is_resource($process)) {

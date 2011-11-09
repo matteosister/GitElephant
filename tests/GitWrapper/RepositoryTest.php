@@ -13,7 +13,6 @@
 namespace GitWrapper;
 
 use GitWrapper\Command\Tree\Tree;
-use GitWrapper\Command\Init;
 
 /**
  * RepositoryTest
