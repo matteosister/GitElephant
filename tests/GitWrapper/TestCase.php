@@ -35,6 +35,9 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return $this->repository;
     }
 
+    /**
+     * @return Caller
+     */
     protected function getCaller()
     {
         if ($this->caller == null) {

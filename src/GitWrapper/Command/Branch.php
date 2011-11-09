@@ -26,10 +26,12 @@ use GitWrapper\Command\BaseCommand;
 
 class Branch extends BaseCommand
 {
-    private $branches;
-
-    public function listAll()
+    public function create($name, $startPoint = null)
     {
-        
+        $this->addCommandName('branch');
+        $subject = $startPoint == null ? $name : $name.' '.$startPoint;
+        $this->addCommandSubject($subject);
+
+        return $this->getCommand();
     }
 }

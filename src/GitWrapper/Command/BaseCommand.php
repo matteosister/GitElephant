@@ -29,13 +29,6 @@ class BaseCommand
     private $commandArguments = array();
     private $commandSubject;
 
-    private $stdOut;
-
-
-    public static function create($cmd, $cwd = null, array $env = null) {
-        return new static($cmd, $cwd, $env);
-    }
-
     protected function addCommandName($commandName)
     {
         $this->commandName = $commandName;
@@ -57,10 +50,16 @@ class BaseCommand
             throw new \InvalidParameterException("You should pass a commandName to execute a command");
         }
         
-        return $this->commandName
-               .' '.implode(' ', array_map('escapeshellarg', $this->commandArguments))
-               .' '.$this->commandSubject;
-    }
+        $command = $this->commandName;
+        $command .= ' ';
+        if (count($this->commandArguments) > 0) {
+            $command .= implode(' ', array_map('escapeshellarg', $this->commandArguments));
+            $command .= ' ';
+        }
+        if ($this->commandSubject != null) {
+            $command .= $this->commandSubject;
+        }
 
-    
+        return $command;
+    }
 }

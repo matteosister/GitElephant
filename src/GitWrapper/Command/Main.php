@@ -25,14 +25,25 @@ use GitWrapper\GitBinary;
  
 class Main extends BaseCommand
 {
+    const GIT_INIT = 'init';
+    const GIT_STATUS = 'status';
+    const GIT_ADD = 'add';
+    const GIT_COMMIT = 'commit';
+
     /**
      * Init the repo
      * @return Main
      */
     public function init()
     {
-        $this->addCommandName('init');
-        return $this;
+        $this->addCommandName(self::GIT_INIT);
+        return $this->getCommand();
+    }
+
+    public function status()
+    {
+        $this->addCommandName(self::GIT_STATUS);
+        return $this->getCommand();
     }
 
     /**
@@ -42,9 +53,9 @@ class Main extends BaseCommand
      */
     public function add($what = '.')
     {
-        $this->addCommandName('add');
+        $this->addCommandName(self::GIT_ADD);
         $this->addCommandSubject($what);
-        return $this;
+        return $this->getCommand();
     }
 
     /**
@@ -57,12 +68,11 @@ class Main extends BaseCommand
         if (trim($message) == '' || $message == null) {
             throw new \InvalidArgumentException(sprintf('You can\'t commit whitout message'));
         }
-        $this->addCommandName('commit');
+        $this->addCommandName(self::GIT_COMMIT);
         if ($all) {
             $this->addCommandArgument('-a');
         }
-        $this->addCommandArgument('-m');
-        $this->addCommandSubject("'".$message."'");
-        return $this;
+        $this->addCommandArgument(sprintf("-m '%s'", $message));
+        return $this->getCommand();
     }
 }

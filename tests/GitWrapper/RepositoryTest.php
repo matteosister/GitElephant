@@ -12,6 +12,9 @@
 
 namespace GitWrapper;
 
+use GitWrapper\Command\Main;
+use GitWrapper\Objects\Node;
+
 /**
  * RepositoryTest
  *
@@ -26,36 +29,86 @@ class RepositoryTest extends TestCase
         $this->initRepository();
     }
 
-    public function testInit()
+    /**
+     * @expectedException RuntimeException
+     */
+    public function testGetStatus()
     {
-        $this->assertTrue($this->getRepository()->init(), 'init error');
+        $this->assertStringStartsWith('fatal: Not a git repository', $this->getRepository()->getStatus(), 'get status should return "fatal: Not a git repository"');
     }
 
+    /**
+     * @depends testGetStatus
+     */
+    public function testInit()
+    {
+        $this->getRepository()->init();
+        $this->assertRegExp('/(.*)nothing to commit(.*)/', $this->getRepository()->getStatus(true), 'init problem, git status on an empty repo should give nothing to commit');
+    }
+
+    /**
+     * @depends testInit
+     */
     public function testStageAll()
     {
         $this->getRepository()->init();
-        $this->getCaller()->execute('touch test', false);
-        $this->assertTrue($this->getRepository()->stageAll(), sprintf('stageAll error'));
+        $this->addFile('test');
+        $this->getRepository()->stageAll();
+        $this->assertRegExp('/(.*)Changes to be committed(.*)/', $this->getRepository()->getStatus(true), 'stageAll error, git status should give Changes to be committed');
     }
 
+    /**
+     * @depends testStageAll
+     */
     public function testCommit()
     {
         $this->getRepository()->init();
-        $this->getCaller()->execute('touch test', false);
+        $this->addFile('test');
         $this->getRepository()->stageAll();
-        $this->assertTrue($this->getRepository()->commit('initial import'), 'commit error');
+        $this->getRepository()->commit('initial import');
+        $this->assertRegExp('/(.*)nothing to commit(.*)/', $this->getRepository()->getStatus(true), 'commit error, git status should give nothing to commit');
     }
 
+    /**
+     * @depends testCommit
+     */
     public function testGetTree()
     {
         $this->getRepository()->init();
-        $this->getCaller()->execute('touch test', false);
+        $this->addFile('test');
+        $this->addFolder('test-folder');
+        $this->addFile('test2', 'test-folder');
+
         $this->getRepository()->stageAll();
         $this->getRepository()->commit('initial import');
 
         $tree = $this->getRepository()->getTree();
-        $this->assertTrue(count($tree) == 1, 'One file in the repository');
+        $this->assertCount(2, $tree, 'One file in the repository');
         $firstNode = $tree[0];
-        $this->assertEquals('test', $firstNode->getFilename(), 'First repository file is named "test"');
+        $this->assertInstanceOf('GitWrapper\Objects\Node', $firstNode, 'array access on tree should give always a node type');
+        $this->assertEquals('test', $firstNode->getFilename(), 'First repository file should be named "test"');
+        $secondNode = $tree[1];
+        $this->assertInstanceOf('GitWrapper\Objects\Node', $secondNode, 'array access on tree should give always a node type');
+        $this->assertEquals(Node::TYPE_TREE, $secondNode->getType(), 'second node should be of type tree');
+        $subtree = $this->getRepository()->getTree($secondNode->getSha());
+        $subnode = $subtree[0];
+        $this->assertInstanceOf('GitWrapper\Objects\Node', $subnode, 'array access on tree should give always a node type');
+        $this->assertEquals(Node::TYPE_BLOB, $subnode->getType(), 'subnode should be of type blob');
+        $this->assertEquals('test2', $subnode->getFilename(), 'subnode should be named "test2"');
+    }
+
+    private function addFile($name, $folder = null)
+    {
+        $filename = $folder == null ?
+                $this->getRepository()->getPath().DIRECTORY_SEPARATOR.$name :
+                $this->getRepository()->getPath().DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name;
+        $handle = fopen($filename, 'w');
+        fwrite($handle, 'test content');
+        fclose($handle);
+    }
+
+    private function addFolder($name)
+    {
+        mkdir($this->getRepository()->getPath().DIRECTORY_SEPARATOR.$name);
     }
 }

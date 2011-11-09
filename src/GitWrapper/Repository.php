@@ -41,6 +41,11 @@ class Repository
         $this->path = $repository_path;
         $this->caller = new Caller($binary, $repository_path);
     }
+
+    public function getPath()
+    {
+        return $this->path;
+    }
     
     /**
      * Init the repository
@@ -49,12 +54,7 @@ class Repository
     public function init()
     {
         $main = new Main();
-        $this->caller->execute(
-            $main
-                ->init()
-                ->getCommand()
-        );
-        return true;
+        $this->caller->execute($main->init());
     }
 
     /**
@@ -65,8 +65,7 @@ class Repository
     public function stageAll()
     {
         $main = new Main();
-        $this->caller->execute($main->add()->getCommand());
-        return true;
+        $this->caller->execute($main->add());
     }
 
     /**
@@ -77,13 +76,19 @@ class Repository
     public function commit($message)
     {
         $main = new Main();
-        $this->caller->execute($main->commit($message)->getCommand());
-        return true;
+        $this->caller->execute($main->commit($message));
     }
 
     public function createBranch($name)
     {
 
+    }
+
+    public function getStatus($oneLine = false)
+    {
+        $main = new Main();
+        $this->caller->execute($main->status());
+        return $oneLine ? $this->caller->getOutput() : $this->caller->getOutputLines();
     }
 
     /**

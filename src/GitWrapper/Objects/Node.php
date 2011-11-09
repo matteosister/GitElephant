@@ -24,6 +24,10 @@ namespace GitWrapper\Objects;
 
 class Node
 {
+    const TYPE_BLOB = 'blob';
+    const TYPE_TREE = 'tree';
+
+
     private $permissions;
     private $type;
     private $sha;

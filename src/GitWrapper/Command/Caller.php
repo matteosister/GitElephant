@@ -26,7 +26,6 @@ class Caller
 {
     private $binary;
     private $repositoryPath;
-    private $stdOut;
     private $stdErr;
     private $outputLines;
 
@@ -70,7 +69,6 @@ class Caller
                     $this->outputLines[] = trim($line);
                 }
             }
-            $this->stdOut = stream_get_contents($pipes[1]);
             $this->stdErr = stream_get_contents($pipes[2]);
             fclose($pipes[1]);
             fclose($pipes[2]);
@@ -92,7 +90,7 @@ class Caller
 
     public function getOutput()
     {
-        return $this->stdOut;
+        return implode(" ", $this->outputLines);
     }
 
     public function getOutputLines()
