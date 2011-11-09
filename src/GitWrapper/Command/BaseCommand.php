@@ -26,8 +26,8 @@ use GitWrapper\Command\Caller;
 class BaseCommand
 {
     private $commandName;
-    private $arguments = array();
-    private $subject;
+    private $commandArguments = array();
+    private $commandSubject;
 
     private $stdOut;
 
@@ -41,14 +41,14 @@ class BaseCommand
         $this->commandName = $commandName;
     }
 
-    protected function addArgument($arg)
+    protected function addCommandArgument($commandArgument)
     {
-        $this->arguments[] = $arg;
+        $this->commandArguments[] = $commandArgument;
     }
 
-    protected function addSubject($subject)
+    protected function addCommandSubject($commandSubject)
     {
-        $this->subject = $subject;
+        $this->commandSubject = $commandSubject;
     }
 
     public function getCommand()
@@ -58,8 +58,8 @@ class BaseCommand
         }
         
         return $this->commandName
-               .' '.implode(' ', array_map('escapeshellarg', $this->arguments))
-               .' '.$this->subject;
+               .' '.implode(' ', array_map('escapeshellarg', $this->commandArguments))
+               .' '.$this->commandSubject;
     }
 
     

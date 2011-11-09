@@ -41,10 +41,38 @@ class Repository
         $this->caller = new Caller($binary, $repository_path);
     }
 
+    /**
+     * Init the repository
+     * @return void
+     */
     public function init()
     {
         $main = new Main();
         $this->caller->execute($main->init());
+        return true;
+    }
+
+    /**
+     * stage all working tree content
+     * @return void
+     */
+    public function stageAll()
+    {
+        $main = new Main();
+        $this->caller->execute($main->add());
+        return true;
+    }
+
+    /**
+     * commit the staged contents
+     * @param $message
+     * @return void
+     */
+    public function commit($message)
+    {
+        $main = new Main();
+        $this->caller->execute($main->commit($message));
+        return true;
     }
 
     /**

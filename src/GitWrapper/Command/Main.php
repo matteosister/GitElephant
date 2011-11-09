@@ -25,9 +25,44 @@ use GitWrapper\GitBinary;
  
 class Main extends BaseCommand
 {
+    /**
+     * Init the repo
+     * @return string
+     */
     public function init()
     {
         $this->addCommandName('init');
+        return $this->getCommand();
+    }
+
+    /**
+     * Add a node to the repository
+     * @param string $what
+     * @return string
+     */
+    public function add($what = '.')
+    {
+        $this->addCommandName('add');
+        $this->addCommandSubject($what);
+        return $this->getCommand();
+    }
+
+    /**
+     * Commit
+     * @param $message
+     * @param bool $all
+     * @return string
+     */
+    public function commit($message, $all = false) {
+        if (trim($message) == '' || $message == null) {
+            throw new \InvalidArgumentException(sprintf('You can\'t commit whitout message'));
+        }
+        $this->addCommandName('commit');
+        if ($all) {
+            $this->addCommandArgument('-a');
+        }
+        $this->addCommandArgument('-m');
+        $this->addCommandSubject("'".$message."'");
         return $this->getCommand();
     }
 }

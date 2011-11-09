@@ -27,8 +27,25 @@ class RepositoryTest extends TestCase
 {
     public function testInit()
     {
-        $this->repository->init();
-        $this->assertEquals(array('.git'), $this->caller->execute('ls')->getResult(), 'equal');
-        //$this->assertTrue($this->caller->execute('ls') == '.git', 'The folder contains a .git subfolder');
+        $this->assertTrue($this->repository->init(), 'init error');
+    }
+
+    public function testStageAll()
+    {
+        $this->caller->execute('touch test', false);
+        $this->assertTrue($this->repository->stageAll(), 'stageAll error');
+    }
+
+    public function testCommit()
+    {
+        $this->assertTrue($this->repository->commit('initial import'), 'commit error');
+    }
+
+    public function testGetTree()
+    {
+        $tree = $this->repository->getTree();
+        $this->assertTrue(count($tree) == 1, 'One file in the repository');
+        $firstNode = $tree[0];
+        $this->assertEquals('test', $firstNode->getFilename(), 'First repository file is named "test"');
     }
 }

@@ -16,15 +16,16 @@ use GitWrapper\Repository;
 use GitWrapper\GitBinary;
 use GitWrapper\Command\Caller;
 
-class TestCase extends \PHPUnit_Framework_TestCase
+class TestCase extends \PHPUnit_Framework_Testcase
 {
     protected $caller;
     protected $repository;
 
     public function __construct()
     {
-        $this->path = sys_get_temp_dir().DIRECTORY_SEPARATOR.md5(uniqid());
-        mkdir($this->path);
+        //$this->path = sys_get_temp_dir().DIRECTORY_SEPARATOR.md5(uniqid());
+        //mkdir($this->path);
+        $this->path = '/home/matteo/test';
         $this->binary = new GitBinary('/usr/local/bin/git');
         $this->caller = new Caller($this->binary, $this->path);
         $this->repository = new Repository($this->path);

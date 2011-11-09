@@ -41,10 +41,12 @@ class Caller
         return $this->binary->getPath();
     }
 
-    public function execute($cmd)
+    public function execute($cmd, $git = true)
     {
         $this->outputLines = array();
-        $cmd = $this->binary->getPath().' '.$cmd;
+        if ($git) {
+            $cmd = $this->binary->getPath().' '.$cmd;
+        }
 
         $descriptorSpec = array(
            0 => array("pipe", "r"), // Input
@@ -75,6 +77,7 @@ class Caller
             if ($this->getError() !== false) {
                 throw new \RuntimeException(sprintf('Cannot execute "%s", message: "%s"', $cmd, $this->getError()));
             }
+            return $this;
         } else {
             fclose($pipes[1]);
             fclose($pipes[2]);
