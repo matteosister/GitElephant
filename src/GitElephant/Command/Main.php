@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the GitWrapper package.
+ * This file is part of the GitElephant package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
  *
@@ -10,10 +10,10 @@
  * Just for fun...
  */
 
-namespace GitWrapper\Command;
+namespace GitElephant\Command;
 
-use GitWrapper\Command\BaseCommand;
-use GitWrapper\GitBinary;
+use GitElephant\Command\BaseCommand;
+use GitElephant\GitBinary;
 
 /**
  * Init

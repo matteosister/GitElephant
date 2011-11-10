@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the GitWrapper package.
+ * This file is part of the GitElephant package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
  *
@@ -11,12 +11,12 @@
  * Just for fun...
  */
 
-namespace GitWrapper\Objects;
+namespace GitElephant\Objects;
 
-use GitWrapper\Command\BaseCommand;
-use GitWrapper\Command\Caller;
-use GitWrapper\Objects\Node;
-use GitWrapper\GitBinary;
+use GitElephant\Command\BaseCommand;
+use GitElephant\Command\Caller;
+use GitElephant\Objects\Node;
+use GitElephant\GitBinary;
 
 
 /**

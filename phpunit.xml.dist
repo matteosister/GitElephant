@@ -4,14 +4,14 @@
         bootstrap="tests/bootstrap.php"
         colors="true">
     <testsuites>
-        <testsuite name="GitWrapper Test Suite">
-            <directory>tests/GitWrapper/</directory>
+        <testsuite name="GitElephant Test Suite">
+            <directory>tests/GitElephant/</directory>
         </testsuite>
     </testsuites>
 
     <filter>
         <whitelist>
-            <directory suffix=".php">src/GitWrapper/</directory>
+            <directory suffix=".php">src/GitElephant/</directory>
         </whitelist>
     </filter>
 </phpunit>

@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the GitWrapper package.
+ * This file is part of the GitElephant package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
  *
@@ -10,7 +10,7 @@
  * Just for fun...
  */
 
-require_once __DIR__.'/GitWrapper/TestCase.php';
+require_once __DIR__ . '/GitElephant/TestCase.php';
 
 spl_autoload_register(function($class)
 {

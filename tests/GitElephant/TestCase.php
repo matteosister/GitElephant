@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the GitWrapper package.
+ * This file is part of the GitElephant package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
  *
@@ -10,11 +10,11 @@
  * Just for fun...
  */
 
-namespace GitWrapper;
+namespace GitElephant;
 
-use GitWrapper\Repository;
-use GitWrapper\GitBinary;
-use GitWrapper\Command\Caller;
+use GitElephant\Repository;
+use GitElephant\GitBinary;
+use GitElephant\Command\Caller;
 use Symfony\Component\Finder\Finder;
 
 class TestCase extends \PHPUnit_Framework_TestCase

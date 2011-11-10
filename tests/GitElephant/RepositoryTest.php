@@ -1,6 +1,6 @@
 <?php
 /*
- * This file is part of the GitWrapper package.
+ * This file is part of the GitElephant package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
  *
@@ -10,10 +10,10 @@
  * Just for fun...
  */
 
-namespace GitWrapper;
+namespace GitElephant;
 
-use GitWrapper\Command\Main;
-use GitWrapper\Objects\Node;
+use GitElephant\Command\Main;
+use GitElephant\Objects\Node;
 
 /**
  * RepositoryTest
@@ -85,14 +85,14 @@ class RepositoryTest extends TestCase
         $tree = $this->getRepository()->getTree();
         $this->assertCount(2, $tree, 'One file in the repository');
         $firstNode = $tree[0];
-        $this->assertInstanceOf('GitWrapper\Objects\Node', $firstNode, 'array access on tree should give always a node type');
+        $this->assertInstanceOf('GitElephant\Objects\Node', $firstNode, 'array access on tree should give always a node type');
         $this->assertEquals('test', $firstNode->getFilename(), 'First repository file should be named "test"');
         $secondNode = $tree[1];
-        $this->assertInstanceOf('GitWrapper\Objects\Node', $secondNode, 'array access on tree should give always a node type');
+        $this->assertInstanceOf('GitElephant\Objects\Node', $secondNode, 'array access on tree should give always a node type');
         $this->assertEquals(Node::TYPE_TREE, $secondNode->getType(), 'second node should be of type tree');
         $subtree = $this->getRepository()->getTree($secondNode->getSha());
         $subnode = $subtree[0];
-        $this->assertInstanceOf('GitWrapper\Objects\Node', $subnode, 'array access on tree should give always a node type');
+        $this->assertInstanceOf('GitElephant\Objects\Node', $subnode, 'array access on tree should give always a node type');
         $this->assertEquals(Node::TYPE_BLOB, $subnode->getType(), 'subnode should be of type blob');
         $this->assertEquals('test2', $subnode->getFilename(), 'subnode should be named "test2"');
     }

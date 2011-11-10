@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the GitWrapper package.
+ * This file is part of the GitElephant package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
  *
@@ -11,7 +11,7 @@
  * Just for fun...
  */
 
-namespace GitWrapper\Objects;
+namespace GitElephant\Objects;
 
 
 /**

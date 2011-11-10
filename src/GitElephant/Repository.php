@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the GitWrapper package.
+ * This file is part of the GitElephant package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
  *
@@ -11,14 +11,14 @@
  * Just for fun...
  */
 
-namespace GitWrapper;
+namespace GitElephant;
 
-use GitWrapper\GitBinary;
-use GitWrapper\Command\Caller;
-use GitWrapper\Objects\Tree;
-use GitWrapper\Objects\Node;
-use GitWrapper\Command\Main;
-use GitWrapper\Command\Branch;
+use GitElephant\GitBinary;
+use GitElephant\Command\Caller;
+use GitElephant\Objects\Tree;
+use GitElephant\Objects\Node;
+use GitElephant\Command\Main;
+use GitElephant\Command\Branch;
 
 /**
  * Repository
@@ -93,7 +93,7 @@ class Repository
 
     /**
      * @param string $what the name of the tree, HEAD by default
-     * @return GitWrapper\Command\Tree\Tree
+     * @return GitElephant\Command\Tree\Tree
      */
     public function getTree($what = 'HEAD')
     {
