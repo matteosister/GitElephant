@@ -16,7 +16,8 @@ namespace GitElephant;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree;
-use GitElephant\Objects\Node;
+use GitElephant\Objects\TreeNode;
+use GitElephant\Objects\TreeBranch;
 use GitElephant\Command\Main;
 use GitElephant\Command\Branch;
 
@@ -76,16 +77,45 @@ class Repository
         $this->caller->execute($main->commit($message));
     }
 
-    public function createBranch($name)
-    {
-
-    }
-
     public function getStatus($oneLine = false)
     {
         $main = new Main();
         $this->caller->execute($main->status());
         return $oneLine ? $this->caller->getOutput() : $this->caller->getOutputLines();
+    }
+
+    public function createBranch($name, $startPoint = null)
+    {
+        $branch = new Branch();
+        $this->caller->execute($branch->create($name, $startPoint));
+    }
+
+    public function deleteBranch($name)
+    {
+        $branch = new Branch();
+        $this->caller->execute($branch->delete($name));
+    }
+
+    public function getBranches()
+    {
+        $branches = array();
+        $branch = new Branch();
+        $this->caller->execute($branch->lists());
+        foreach($this->caller->getOutputLines() as $branchString) {
+            $branches[] = new TreeBranch($branchString);
+        }
+        return $branches;
+    }
+
+    /**
+     * @return \GitElephant\Objects\TreeBranch
+     */
+    public function getMainBranch()
+    {
+        $filtered = array_filter($this->getBranches(), function($var) {
+            return $var->getCurrent();
+        });
+        return $filtered[0];
     }
 
     /**
@@ -98,13 +128,8 @@ class Repository
         $tree->lsTree($what);
         $this->caller->execute($tree->getCommand());
         foreach($this->caller->getOutputLines() as $nodeString) {
-            $tree[] = new Node($nodeString);
+            $tree[] = new TreeNode($nodeString);
         }
         return $tree;
-    }
-
-    public function getBranches()
-    {
-        
     }
 }

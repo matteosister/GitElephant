@@ -13,7 +13,7 @@
 namespace GitElephant;
 
 use GitElephant\Command\Main;
-use GitElephant\Objects\Node;
+use GitElephant\Objects\TreeNode;
 
 /**
  * RepositoryTest
@@ -99,17 +99,35 @@ class RepositoryTest extends TestCase
         $tree = $this->getRepository()->getTree();
         $this->assertCount(2, $tree, 'One file in the repository');
         $firstNode = $tree[0];
-        $this->assertInstanceOf('GitElephant\Objects\Node', $firstNode, 'array access on tree should give always a node type');
+        $this->assertInstanceOf('GitElephant\Objects\TreeNode', $firstNode, 'array access on tree should give always a node type');
         $this->assertEquals('test', $firstNode->getFilename(), 'First repository file should be named "test"');
         $secondNode = $tree[1];
-        $this->assertInstanceOf('GitElephant\Objects\Node', $secondNode, 'array access on tree should give always a node type');
-        $this->assertEquals(Node::TYPE_TREE, $secondNode->getType(), 'second node should be of type tree');
+        $this->assertInstanceOf('GitElephant\Objects\TreeNode', $secondNode, 'array access on tree should give always a node type');
+        $this->assertEquals(TreeNode::TYPE_TREE, $secondNode->getType(), 'second node should be of type tree');
         $subtree = $this->getRepository()->getTree($secondNode->getSha());
         $subnode = $subtree[0];
-        $this->assertInstanceOf('GitElephant\Objects\Node', $subnode, 'array access on tree should give always a node type');
-        $this->assertEquals(Node::TYPE_BLOB, $subnode->getType(), 'subnode should be of type blob');
+        $this->assertInstanceOf('GitElephant\Objects\TreeNode', $subnode, 'array access on tree should give always a node type');
+        $this->assertEquals(TreeNode::TYPE_BLOB, $subnode->getType(), 'subnode should be of type blob');
         $this->assertEquals('test2', $subnode->getFilename(), 'subnode should be named "test2"');
     }
 
-
+    /**
+     * @covers GitElephant\Repository::getBranches
+     */
+    public function testGetBranches()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->getRepository()->stage();
+        $this->getRepository()->commit('initial import');
+        $this->assertCount(1, $this->getRepository()->getBranches(), 'an initialized repository should have only one branch');
+        $this->getRepository()->createBranch('test-branch');
+        $this->assertCount(2, $this->getRepository()->getBranches(), 'two branches expected');
+        $this->getRepository()->deleteBranch('test-branch');
+        $this->assertCount(1, $this->getRepository()->getBranches(), 'one branch expected');
+        $mainBranch = $this->getRepository()->getMainBranch();
+        $this->assertInstanceOf('GitElephant\Objects\TreeBranch', $this->getRepository()->getMainBranch(), 'main branch should be an instance of TreeBranch');
+        $this->assertTrue($this->getRepository()->getMainBranch()->getCurrent(), 'getCurrent on main branch should be true');
+        $this->assertEquals('master', $this->getRepository()->getMainBranch()->getName(), 'main branch should be named "master"');
+    }
 }

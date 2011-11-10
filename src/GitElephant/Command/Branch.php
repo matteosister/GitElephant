@@ -31,7 +31,23 @@ class Branch extends BaseCommand
         $this->addCommandName('branch');
         $subject = $startPoint == null ? $name : $name.' '.$startPoint;
         $this->addCommandSubject($subject);
+        return $this->getCommand();
+    }
 
+    public function lists()
+    {
+        $this->addCommandName('branch');
+        $this->addCommandArgument('-v');
+        $this->addCommandArgument('--no-color');
+        $this->addCommandArgument('--no-abbrev');
+        return $this->getCommand();
+    }
+
+    public function delete($name)
+    {
+        $this->addCommandName('branch');
+        $this->addCommandArgument('-d');
+        $this->addCommandSubject($name);
         return $this->getCommand();
     }
 }

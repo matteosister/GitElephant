@@ -22,7 +22,7 @@ namespace GitElephant\Objects;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class Node
+class TreeNode
 {
     const TYPE_BLOB = 'blob';
     const TYPE_TREE = 'tree';
