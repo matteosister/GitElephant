@@ -46,6 +46,9 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return $this->caller;
     }
 
+    /**
+     * @return void
+     */
     protected function initRepository()
     {
         if ($this->repository == null) {
@@ -58,5 +61,29 @@ class TestCase extends \PHPUnit_Framework_TestCase
             $this->caller = new Caller($binary, $this->path);
             $this->repository = new Repository($this->path);
         }
+    }
+
+    /**
+     * @param string $name
+     * @param string|null $folder
+     * @return void
+     */
+    protected function addFile($name, $folder = null)
+    {
+        $filename = $folder == null ?
+                $this->path.DIRECTORY_SEPARATOR.$name :
+                $this->path.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name;
+        $handle = fopen($filename, 'w');
+        fwrite($handle, 'test content');
+        fclose($handle);
+    }
+
+    /**
+     * @param string $name
+     * @return void
+     */
+    protected function addFolder($name)
+    {
+        mkdir($this->path.DIRECTORY_SEPARATOR.$name);
     }
 }

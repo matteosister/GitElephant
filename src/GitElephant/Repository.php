@@ -38,13 +38,11 @@ class Repository
         if ($binary == null) {
             $binary = new GitBinary();
         }
+        if (!is_dir($repository_path)) {
+            throw new \InvalidArgumentException(sprintf('the path "%s" is not a folder', $repository_path));
+        }
         $this->path = $repository_path;
         $this->caller = new Caller($binary, $repository_path);
-    }
-
-    public function getPath()
-    {
-        return $this->path;
     }
     
     /**
@@ -58,14 +56,13 @@ class Repository
     }
 
     /**
-     * stage all working tree content
+     * stage working tree content
      * @return void
      */
-    
-    public function stageAll()
+    public function stage($path = '.')
     {
         $main = new Main();
-        $this->caller->execute($main->add());
+        $this->caller->execute($main->add($path));
     }
 
     /**

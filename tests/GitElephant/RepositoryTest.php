@@ -30,7 +30,17 @@ class RepositoryTest extends TestCase
     }
 
     /**
+     * @covers GitElephant\Repository::__construct
+     * @expectedException InvalidArgumentException
+     */
+    public function testRepository()
+    {
+        $repo = new Repository('foo');
+    }
+
+    /**
      * @expectedException RuntimeException
+     * @covers GitElephant\Repository::getStatus
      */
     public function testGetStatus()
     {
@@ -39,6 +49,7 @@ class RepositoryTest extends TestCase
 
     /**
      * @depends testGetStatus
+     * @covers GitElephant\Repository::init
      */
     public function testInit()
     {
@@ -48,29 +59,32 @@ class RepositoryTest extends TestCase
 
     /**
      * @depends testInit
+     * @covers GitElephant\Repository::stage
      */
-    public function testStageAll()
+    public function testStage()
     {
         $this->getRepository()->init();
         $this->addFile('test');
-        $this->getRepository()->stageAll();
+        $this->getRepository()->stage();
         $this->assertRegExp('/(.*)Changes to be committed(.*)/', $this->getRepository()->getStatus(true), 'stageAll error, git status should give Changes to be committed');
     }
 
     /**
-     * @depends testStageAll
+     * @depends testStage
+     * @covers GitElephant\Repository::commit
      */
     public function testCommit()
     {
         $this->getRepository()->init();
         $this->addFile('test');
-        $this->getRepository()->stageAll();
+        $this->getRepository()->stage();
         $this->getRepository()->commit('initial import');
         $this->assertRegExp('/(.*)nothing to commit(.*)/', $this->getRepository()->getStatus(true), 'commit error, git status should give nothing to commit');
     }
 
     /**
      * @depends testCommit
+     * @covers GitElephant\Repository::getTree
      */
     public function testGetTree()
     {
@@ -79,7 +93,7 @@ class RepositoryTest extends TestCase
         $this->addFolder('test-folder');
         $this->addFile('test2', 'test-folder');
 
-        $this->getRepository()->stageAll();
+        $this->getRepository()->stage();
         $this->getRepository()->commit('initial import');
 
         $tree = $this->getRepository()->getTree();
@@ -97,18 +111,5 @@ class RepositoryTest extends TestCase
         $this->assertEquals('test2', $subnode->getFilename(), 'subnode should be named "test2"');
     }
 
-    private function addFile($name, $folder = null)
-    {
-        $filename = $folder == null ?
-                $this->getRepository()->getPath().DIRECTORY_SEPARATOR.$name :
-                $this->getRepository()->getPath().DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name;
-        $handle = fopen($filename, 'w');
-        fwrite($handle, 'test content');
-        fclose($handle);
-    }
 
-    private function addFolder($name)
-    {
-        mkdir($this->getRepository()->getPath().DIRECTORY_SEPARATOR.$name);
-    }
 }
