@@ -39,7 +39,7 @@ class Repository
             $binary = new GitBinary();
         }
         if (!is_dir($repository_path)) {
-            throw new \InvalidArgumentException(sprintf('the path "%s" is not a folder', $repository_path));
+            throw new \InvalidArgumentException(sprintf('the path "%s" is not a repository folder', $repository_path));
         }
         $this->path = $repository_path;
         $this->caller = new Caller($binary, $repository_path);
