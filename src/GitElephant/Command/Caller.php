@@ -27,7 +27,7 @@ class Caller
     private $binary;
     private $repositoryPath;
     private $stdErr;
-    private $outputLines;
+    private $outputLines = array();
 
     public function __construct(GitBinary $binary, $repositoryPath)
     {
