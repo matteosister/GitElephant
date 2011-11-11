@@ -125,8 +125,7 @@ class Repository
     public function getTree($what = 'HEAD')
     {
         $tree = new Tree($what);
-        $tree->lsTree($what);
-        $this->caller->execute($tree->getCommand());
+        $this->caller->execute($tree->lsTree($what));
         foreach($this->caller->getOutputLines() as $nodeString) {
             $tree[] = new TreeNode($nodeString);
         }

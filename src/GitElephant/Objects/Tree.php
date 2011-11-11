@@ -42,6 +42,7 @@ class Tree extends BaseCommand implements \ArrayAccess, \Iterator, \Countable
     public function lsTree($subject)
     {
         $this->addCommandName('ls-tree');
+        $this->addCommandArgument('--full-name');
         $this->addCommandSubject($subject);
         return $this->getCommand();
     }

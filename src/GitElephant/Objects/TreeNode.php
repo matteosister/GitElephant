@@ -83,5 +83,9 @@ class TreeNode
         return $this->type;
     }
 
+    public function isTree()
+    {
+        return self::TYPE_TREE == $this->getType();
+    }
 
 }
