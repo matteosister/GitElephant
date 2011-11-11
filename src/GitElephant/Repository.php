@@ -18,8 +18,9 @@ use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree;
 use GitElephant\Objects\TreeNode;
 use GitElephant\Objects\TreeBranch;
-use GitElephant\Command\Main;
-use GitElephant\Command\Branch;
+use GitElephant\Command\MainCommand;
+use GitElephant\Command\BranchCommand;
+use GitElephant\Command\LsTreeCommand;
 
 /**
  * Repository
@@ -34,6 +35,10 @@ class Repository
     private $path;
     private $caller;
 
+    private $mainCommand;
+    private $branchCommand;
+    private $lsTreeCommand;
+
     public function __construct($repository_path, GitBinary $binary = null)
     {
         if ($binary == null) {
@@ -44,6 +49,11 @@ class Repository
         }
         $this->path = $repository_path;
         $this->caller = new Caller($binary, $repository_path);
+
+        // command objects
+        $this->mainCommand = new MainCommand();
+        $this->branchCommand = new BranchCommand();
+        $this->lsTreeCommand = new LsTreeCommand();
     }
     
     /**
@@ -52,8 +62,7 @@ class Repository
      */
     public function init()
     {
-        $main = new Main();
-        $this->caller->execute($main->init());
+        $this->caller->execute($this->mainCommand->init());
     }
 
     /**
@@ -62,50 +71,49 @@ class Repository
      */
     public function stage($path = '.')
     {
-        $main = new Main();
-        $this->caller->execute($main->add($path));
+        $this->caller->execute($this->mainCommand->add($path));
     }
 
     /**
-     * commit the staged contents
+     * Commit
+     *
      * @param $message
+     * @param whether to stage or not content before the commit
      * @return void
      */
-    public function commit($message)
+    public function commit($message, $stage = false)
     {
-        $main = new Main();
-        $this->caller->execute($main->commit($message));
+        if ($stage) $this->stage();
+        $this->caller->execute($this->mainCommand->commit($message));
     }
 
     public function getStatus($oneLine = false)
     {
-        $main = new Main();
-        $this->caller->execute($main->status());
+        $this->caller->execute($this->mainCommand->status());
         return $oneLine ? $this->caller->getOutput() : $this->caller->getOutputLines();
     }
 
     public function createBranch($name, $startPoint = null)
     {
-        $branch = new Branch();
-        $this->caller->execute($branch->create($name, $startPoint));
+        $this->caller->execute($this->branchCommand->create($name, $startPoint));
     }
 
     public function deleteBranch($name)
     {
-        $branch = new Branch();
-        $this->caller->execute($branch->delete($name));
+        $this->caller->execute($this->branchCommand->delete($name));
     }
 
     public function getBranches()
     {
         $branches = array();
-        $branch = new Branch();
-        $this->caller->execute($branch->lists());
+        $this->caller->execute($this->branchCommand->lists());
         foreach($this->caller->getOutputLines() as $branchString) {
             $branches[] = new TreeBranch($branchString);
         }
         return $branches;
     }
+
+    
 
     /**
      * @return \GitElephant\Objects\TreeBranch
@@ -119,16 +127,15 @@ class Repository
     }
 
     /**
-     * @param string $what the name of the tree, HEAD by default
+     * @param string|null $what the name of the tree, root by default
      * @return GitElephant\Command\Tree\Tree
      */
-    public function getTree($what = 'HEAD')
+    public function getTree($path = '', $ref = 'HEAD')
     {
-        $tree = new Tree($what);
-        $this->caller->execute($tree->lsTree($what));
-        foreach($this->caller->getOutputLines() as $nodeString) {
-            $tree[] = new TreeNode($nodeString);
-        }
+        $command = $this->lsTreeCommand->callLsTree($ref);
+        $tree = new Tree($this->caller->execute($command, true, $this->path.'/'.$path)->getOutputLines());
         return $tree;
     }
+
+
 }

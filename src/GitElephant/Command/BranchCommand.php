@@ -24,10 +24,11 @@ use GitElephant\Command\BaseCommand;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class Branch extends BaseCommand
+class BranchCommand extends BaseCommand
 {
     public function create($name, $startPoint = null)
     {
+        $this->clearAll();
         $this->addCommandName('branch');
         $subject = $startPoint == null ? $name : $name.' '.$startPoint;
         $this->addCommandSubject($subject);
@@ -36,6 +37,7 @@ class Branch extends BaseCommand
 
     public function lists()
     {
+        $this->clearAll();
         $this->addCommandName('branch');
         $this->addCommandArgument('-v');
         $this->addCommandArgument('--no-color');
@@ -45,6 +47,7 @@ class Branch extends BaseCommand
 
     public function delete($name)
     {
+        $this->clearAll();
         $this->addCommandName('branch');
         $this->addCommandArgument('-d');
         $this->addCommandSubject($name);

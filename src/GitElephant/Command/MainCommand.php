@@ -23,7 +23,7 @@ use GitElephant\GitBinary;
  * @author Matteo Giachino <matteog@gmail.com>
  */
  
-class Main extends BaseCommand
+class MainCommand extends BaseCommand
 {
     const GIT_INIT = 'init';
     const GIT_STATUS = 'status';
@@ -36,12 +36,14 @@ class Main extends BaseCommand
      */
     public function init()
     {
+        $this->clearAll();
         $this->addCommandName(self::GIT_INIT);
         return $this->getCommand();
     }
 
     public function status()
     {
+        $this->clearAll();
         $this->addCommandName(self::GIT_STATUS);
         return $this->getCommand();
     }
@@ -53,6 +55,7 @@ class Main extends BaseCommand
      */
     public function add($what = '.')
     {
+        $this->clearAll();
         $this->addCommandName(self::GIT_ADD);
         $this->addCommandSubject($what);
         return $this->getCommand();
@@ -65,6 +68,7 @@ class Main extends BaseCommand
      * @return Main
      */
     public function commit($message, $all = false) {
+        $this->clearAll();
         if (trim($message) == '' || $message == null) {
             throw new \InvalidArgumentException(sprintf('You can\'t commit whitout message'));
         }

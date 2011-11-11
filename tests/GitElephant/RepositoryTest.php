@@ -12,8 +12,8 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\Main;
-use GitElephant\Objects\TreeNode;
+use GitElephant\Command\MainCommand;
+use GitElephant\Objects\TreeObject;
 
 /**
  * RepositoryTest
@@ -99,16 +99,16 @@ class RepositoryTest extends TestCase
         $tree = $this->getRepository()->getTree();
         $this->assertCount(2, $tree, 'One file in the repository');
         $firstNode = $tree[0];
-        $this->assertInstanceOf('GitElephant\Objects\TreeNode', $firstNode, 'array access on tree should give always a node type');
-        $this->assertEquals('test', $firstNode->getFilename(), 'First repository file should be named "test"');
+        $this->assertInstanceOf('GitElephant\Objects\TreeObject', $firstNode, 'array access on tree should give always a node type');
+        $this->assertEquals('test', $firstNode->getName(), 'First repository file should be named "test"');
         $secondNode = $tree[1];
-        $this->assertInstanceOf('GitElephant\Objects\TreeNode', $secondNode, 'array access on tree should give always a node type');
-        $this->assertEquals(TreeNode::TYPE_TREE, $secondNode->getType(), 'second node should be of type tree');
-        $subtree = $this->getRepository()->getTree($secondNode->getSha());
+        $this->assertInstanceOf('GitElephant\Objects\TreeObject', $secondNode, 'array access on tree should give always a node type');
+        $this->assertEquals(TreeObject::TYPE_TREE, $secondNode->getType(), 'second node should be of type tree');
+        $subtree = $this->getRepository()->getTree('/test-folder');
         $subnode = $subtree[0];
-        $this->assertInstanceOf('GitElephant\Objects\TreeNode', $subnode, 'array access on tree should give always a node type');
-        $this->assertEquals(TreeNode::TYPE_BLOB, $subnode->getType(), 'subnode should be of type blob');
-        $this->assertEquals('test2', $subnode->getFilename(), 'subnode should be named "test2"');
+        $this->assertInstanceOf('GitElephant\Objects\TreeObject', $subnode, 'array access on tree should give always a node type');
+        $this->assertEquals(TreeObject::TYPE_BLOB, $subnode->getType(), 'subnode should be of type blob');
+        $this->assertEquals('test2', $subnode->getName(), 'subnode should be named "test2"');
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the GitElephant package.
+ * This file is part of the GitWrapper package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
  *
@@ -15,42 +15,35 @@ namespace GitElephant\Objects;
 
 
 /**
- * Node
+ * TreeObject
  *
- * Represent a node in a git tree
+ * generic class for tree objects
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class TreeNode
+class TreeObject
 {
     const TYPE_BLOB = 'blob';
     const TYPE_TREE = 'tree';
 
-
     private $permissions;
     private $type;
     private $sha;
-    private $filename;
+    private $name;
 
-    public function __construct($line)
+
+    public function __construct($permissions, $type, $sha, $name)
     {
-        $arr = explode(" ", $line);
-        $this->setPermissions(trim($arr[0]));
-        $this->setType(trim($arr[1]));
-        list($sha, $filename) = explode("\t", $arr[2]);
-        $this->setSha(trim($sha));
-        $this->setFilename(trim($filename));
+        $this->permissions = $permissions;
+        $this->type = $type;
+        $this->sha = $sha;
+        $this->name = $name;
     }
 
-    public function setFilename($filename)
+    public function isTree()
     {
-        $this->filename = $filename;
-    }
-
-    public function getFilename()
-    {
-        return $this->filename;
+        return self::TYPE_TREE == $this->getType();
     }
 
     public function setPermissions($permissions)
@@ -83,9 +76,13 @@ class TreeNode
         return $this->type;
     }
 
-    public function isTree()
+    public function setName($name)
     {
-        return self::TYPE_TREE == $this->getType();
+        $this->name = $name;
     }
 
+    public function getName()
+    {
+        return $this->name;
+    }
 }

@@ -40,7 +40,7 @@ class Caller
         return $this->binary->getPath();
     }
 
-    public function execute($cmd, $git = true)
+    public function execute($cmd, $git = true, $cwd = null)
     {
         $this->outputLines = array();
         if ($git) {
@@ -58,7 +58,7 @@ class Caller
             $cmd,
             $descriptorSpec,
             $pipes,
-            $this->repositoryPath,
+            $cwd == null ? $this->repositoryPath : $cwd,
             null
         );
 

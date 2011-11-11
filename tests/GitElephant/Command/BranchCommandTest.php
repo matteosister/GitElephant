@@ -12,7 +12,7 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\Branch;
+use GitElephant\Command\BranchCommand;
 
 /**
  * BranchTest
@@ -22,11 +22,11 @@ use GitElephant\Command\Branch;
  * @author Matteo Giachino <matteog@gmail.com>
  */
  
-class BranchTest extends \PHPUnit_Framework_TestCase
+class BranchCommandTest extends \PHPUnit_Framework_TestCase
 {
     public function testCreate()
     {
-        $branch = new Branch();
+        $branch = new BranchCommand();
         $this->assertEquals($branch->create('test'), 'branch test', 'create branch command');
         $this->assertEquals($branch->create('test', 'test-from'), 'branch test test-from', 'create branch command from start point');
     }

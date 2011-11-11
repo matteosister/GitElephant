@@ -15,8 +15,9 @@ namespace GitElephant\Objects;
 
 use GitElephant\Command\BaseCommand;
 use GitElephant\Command\Caller;
-use GitElephant\Objects\Node;
+use GitElephant\Objects\TreeObject;
 use GitElephant\GitBinary;
+use GitElephant\Utilities;
 
 
 /**
@@ -27,26 +28,32 @@ use GitElephant\GitBinary;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class Tree extends BaseCommand implements \ArrayAccess, \Iterator, \Countable
+class Tree implements \ArrayAccess, \Countable, \Iterator
 {
-    private $sha;
+    private $position;
     private $children = array();
-    private $position = 0;
 
-    public function __construct($sha)
+    public function __construct($result, $parent = null)
     {
-        $this->sha = $sha;
         $this->position = 0;
+        foreach($result as $line) {
+            $this->parseLine($line);
+        }
     }
 
-    public function lsTree($subject)
+    private function parseLine($line)
     {
-        $this->addCommandName('ls-tree');
-        $this->addCommandArgument('--full-name');
-        $this->addCommandSubject($subject);
-        return $this->getCommand();
+        //040000 tree e260d84fb199a040e913816164bcea2e7d464025	pippone/pluto
+        preg_match('/(\d+)\ (\w+)\ ([a-z0-9]+)\t(.*)/', $line, $matches);
+        $permissions = $matches[1];
+        $type = $matches[2] == 'tree' ? TreeObject::TYPE_TREE : TreeObject::TYPE_BLOB;
+        $sha = $matches[3];
+        $name = $matches[4];
+        $treeObject = new TreeObject($permissions, $type, $sha, $name);
+        $this->children[] = $treeObject;
     }
 
+    // ArrayAccess
     public function offsetExists($offset)
     {
         return isset($this->children[$offset]);
@@ -71,6 +78,13 @@ class Tree extends BaseCommand implements \ArrayAccess, \Iterator, \Countable
         unset($this->children[$offset]);
     }
 
+    // Countable
+    public function count()
+    {
+        return count($this->children);
+    }
+
+    // Iterator
     public function current()
     {
         return $this->children[$this->position];
@@ -94,11 +108,6 @@ class Tree extends BaseCommand implements \ArrayAccess, \Iterator, \Countable
     public function rewind()
     {
         $this->position = 0;
-    }
-
-    public function count()
-    {
-        return count($this->children);
     }
 
 

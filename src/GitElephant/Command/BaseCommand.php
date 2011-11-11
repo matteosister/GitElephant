@@ -29,6 +29,13 @@ class BaseCommand
     private $commandArguments = array();
     private $commandSubject;
 
+    public function clearAll()
+    {
+        $this->commandName = null;
+        $this->commandArguments = null;
+        $this->commandSubject = null;
+    }
+
     protected function addCommandName($commandName)
     {
         $this->commandName = $commandName;
