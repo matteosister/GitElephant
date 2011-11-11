@@ -16,7 +16,7 @@ namespace GitElephant;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree;
-use GitElephant\Objects\TreeNode;
+use GitElephant\Objects\NestedTree;
 use GitElephant\Objects\TreeBranch;
 use GitElephant\Command\MainCommand;
 use GitElephant\Command\BranchCommand;
@@ -137,5 +137,8 @@ class Repository
         return $tree;
     }
 
-
+    public function getNestedTree($ref = 'HEAD')
+    {
+        $tree = new NestedTree($this->caller);
+    }
 }
