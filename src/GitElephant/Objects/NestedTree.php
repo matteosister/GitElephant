@@ -29,6 +29,8 @@ use GitElephant\Objects\NestedTreeNode;
 class NestedTree
 {
     private $tree = array();
+    private $treeNodes = array();
+    private $blobNodes = array();
     protected $caller;
     protected $lsTreeCommand;
 
@@ -37,19 +39,28 @@ class NestedTree
         $this->caller = $caller;
         $this->lsTreeCommand = new LsTreeCommand();
         $this->tree = $this->parseSubNodes();
+        var_dump($this->tree);
+    }
+
+    public function getFilesIn($sha = null)
+    {
+        return $this->blobNodes[$sha];
     }
 
     private function parseSubNodes(NestedTreeNode $node = null)
     {
         $tree = array();
+        $this->blobNodes['HEAD'] = $this->getBlobs();
         $command = $node == null ? $this->lsTreeCommand->listTrees() : $this->lsTreeCommand->listTrees($node->getSha());
         $baseFolders = $this->caller->execute($command)->getOutputLines();
         foreach($baseFolders as $baseFolder) {
-            $node = new NestedTreeNode($baseFolder);
+            $node = new NestedTreeNode($baseFolder, $node);
+            $this->blobNodes[$node->getSha()] = $this->getBlobs($node);
             if ($this->hasSubTrees($node)) {
                 $tree[$node->getSha()] = $this->parseSubNodes($node);
             } else {
-                $tree[$node->getSha()]['blobs'] = $this->getBlobs($node);
+                $tree[$node->getSha()] = null;
+                $this->treeNodes[$node->getSha()] = $this->getBlobs($node);
             }
         }
         return $tree;
@@ -60,13 +71,14 @@ class NestedTree
         $folderLines = $this->caller->execute($this->lsTreeCommand->listTrees($node->getSha()))->getOutputLines();
         return count($folderLines) > 0;
     }
-    private function getBlobs(NestedTreeNode $node)
+    private function getBlobs(NestedTreeNode $node = null)
     {
         $blobs = array();
-        $folderLines = $this->caller->execute($this->lsTreeCommand->listAll($node->getSha()))->getOutputLines();
+        $command = $node == null ? $this->lsTreeCommand->listAll('HEAD') : $this->lsTreeCommand->listAll($node->getSha());
+        $folderLines = $this->caller->execute($command)->getOutputLines();
         foreach($folderLines as $line) {
-            $node = new NestedTreeNode($line);
-            if ($node->getType() == NestedTreeNode::TYPE_BLOB) $blobs[] = $node;
+            $theNode = new NestedTreeNode($line, $node);
+            if ($theNode->getType() == NestedTreeNode::TYPE_BLOB) $blobs[] = $theNode;
         }
         return $blobs;
     }

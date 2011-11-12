@@ -26,14 +26,16 @@ class NestedTreeNode
     const TYPE_TREE = 'tree';
 
     private $line;
+    private $parent;
     private $permissions;
     private $type;
     private $sha;
     private $name;
 
-    public function __construct($line)
+    public function __construct($line, $parent = null)
     {
         $this->line = $line;
+        $this->parent = $parent;
 
         preg_match('/(\d+)\ (\w+)\ ([a-z0-9]+)\t(.*)/', $line, $matches);
         $this->permissions = $matches[1];
