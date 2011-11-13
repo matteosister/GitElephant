@@ -66,7 +66,7 @@ class Repository
     }
 
     /**
-     * stage working tree content
+     * Stage the working tree content
      * @return void
      */
     public function stage($path = '.')
@@ -113,34 +113,31 @@ class Repository
         return $branches;
     }
 
-    
-
     /**
-     * @return \GitElephant\Objects\TreeBranch
+     * @return GitElephant\Objects\TreeBranch
      */
     public function getMainBranch()
     {
-        $filtered = array_filter($this->getBranches(), function($var) {
-            return $var->getCurrent();
+        $filtered = array_filter($this->getBranches(), function(TreeBranch $branch) {
+            return $branch->getCurrent();
         });
         return $filtered[0];
     }
 
     /**
-     * @param string|null $what the name of the tree, root by default
-     * @return GitElephant\Command\Tree\Tree
+     * @param string $path the physical path to the tree relative to the repository root
+     * @param string|null $ref the treeish to check
+     * @return GitElephant\Objects\Tree
      */
     public function getTree($path = '', $ref = 'HEAD')
     {
+        $parent = strrpos($path, '/') === FALSE ? null : substr($path, 0, strrpos($path, '/'));
         $command = $this->lsTreeCommand->callLsTree($ref);
-        $tree = new Tree($this->caller->execute($command, true, $this->path.'/'.$path)->getOutputLines());
-        return $tree;
+        return new Tree($this->caller->execute($command, true, $this->path.'/'.$path)->getOutputLines(), $parent);
     }
 
     public function getNestedTree($ref = 'HEAD')
     {
-        $tree = new NestedTree($this->caller);
-        $trees = $tree->getTrees();
-        var_dump($trees[0]);
+        return new NestedTree($this->caller);
     }
 }

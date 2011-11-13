@@ -31,19 +31,29 @@ use GitElephant\Utilities;
 class Tree implements \ArrayAccess, \Countable, \Iterator
 {
     private $position;
+    private $parent;
     private $children = array();
 
     public function __construct($result, $parent = null)
     {
         $this->position = 0;
+        $this->parent = $parent;
         foreach($result as $line) {
             $this->parseLine($line);
         }
+        usort($this->children, array($this, 'sortChildren'));
+    }
+
+    private function sortChildren($a, $b)
+    {
+        if ($a->getType() == $b->getType()) {
+            return 0;
+        }
+        return $a->getType() == TreeObject::TYPE_TREE && $b->getType() == TreeObject::TYPE_BLOB ? -1 : 1;
     }
 
     private function parseLine($line)
     {
-        //040000 tree e260d84fb199a040e913816164bcea2e7d464025	pippone/pluto
         preg_match('/(\d+)\ (\w+)\ ([a-z0-9]+)\t(.*)/', $line, $matches);
         $permissions = $matches[1];
         $type = $matches[2] == 'tree' ? TreeObject::TYPE_TREE : TreeObject::TYPE_BLOB;
@@ -110,5 +120,8 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         $this->position = 0;
     }
 
-
+    public function getParent()
+    {
+        return $this->parent;
+    }
 }

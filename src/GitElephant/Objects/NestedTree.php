@@ -35,7 +35,7 @@ class NestedTree
     protected $caller;
     protected $lsTreeCommand;
 
-    public function __construct(Caller $caller, $line = null)
+    public function __construct(Caller $caller)
     {
         $this->caller = $caller;
         $this->lsTreeCommand = new LsTreeCommand();
