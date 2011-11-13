@@ -29,8 +29,8 @@ class TreeTest extends TestCase
     {
         $this->initRepository();
     }
-    public function testLsTree()
+    public function testParseLine()
     {
-        $this->assertTrue(true, 'true is true');
+
     }
 }

@@ -67,6 +67,6 @@ class BaseCommand
             $command .= $this->commandSubject;
         }
 
-        return $command;
+        return trim($command);
     }
 }

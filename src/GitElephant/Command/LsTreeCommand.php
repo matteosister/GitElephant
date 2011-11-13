@@ -19,7 +19,7 @@ use GitElephant\Command\BaseCommand;
 /**
  * LsTreeCommand
  *
- * @todo: description
+ * ls-tree command wrapper
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -31,18 +31,13 @@ class LsTreeCommand extends BaseCommand
         $this->clearAll();
 
         $this->addCommandName('ls-tree');
-        // display the full path instead of the file name
-        //$this->addCommandArgument('--full-name');
-        // tree AND blobs
-        //$this->addCommandArgument('-t');
-        
         $this->addCommandSubject($ref);
         return $this->getCommand();
     }
 
     public function listTrees($ref = null)
     {
-        if ($ref == null) $ref = 'HEAD';
+        if ($ref == null) $ref = 'master';
         $this->clearAll();
 
         $this->addCommandName('ls-tree');

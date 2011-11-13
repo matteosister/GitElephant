@@ -25,7 +25,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     private $finder;
 
     /**
-     * @return Repository
+     * @return \GitElephant\Repository
      */
     protected function getRepository()
     {
@@ -36,7 +36,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return Caller
+     * @return \GitElephant\Command\Caller
      */
     protected function getCaller()
     {

@@ -13,6 +13,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BranchCommand;
+use GitElephant\TestCase;
 
 /**
  * BranchTest
@@ -22,12 +23,39 @@ use GitElephant\Command\BranchCommand;
  * @author Matteo Giachino <matteog@gmail.com>
  */
  
-class BranchCommandTest extends \PHPUnit_Framework_TestCase
+class BranchCommandTest extends TestCase
 {
+    public function setUp()
+    {
+        $this->initRepository();
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->getRepository()->commit('first commit', true);
+    }
+
     public function testCreate()
     {
         $branch = new BranchCommand();
-        $this->assertEquals($branch->create('test'), 'branch test', 'create branch command');
-        $this->assertEquals($branch->create('test', 'test-from'), 'branch test test-from', 'create branch command from start point');
+        $this->assertEquals($branch->create('test'), "branch test", 'create branch command');
+        $this->assertEquals(1, count($this->getRepository()->getBranches()), 'one branch in initiated git repo');
+        $this->getCaller()->execute($branch->create('test'));
+        $this->assertEquals(2, count($this->getRepository()->getBranches()), 'two branches after add branch command');
+        $this->getCaller()->execute($branch->create('test2'));
+        $this->assertEquals(3, count($this->getRepository()->getBranches()), 'three branches after add branch command');
+    }
+
+    public function testList()
+    {
+        $branch = new BranchCommand();
+        $this->assertEquals($branch->lists(), "branch '-v' '--no-color' '--no-abbrev'", 'list branch command');
+    }
+
+    public function testDelete()
+    {
+        $branch = new BranchCommand();
+        $this->assertEquals($branch->delete('test-branch'), "branch '-d' test-branch", 'list branch command');
+        $this->getCaller()->execute($branch->create('test'));
+        $this->getCaller()->execute($branch->delete('test'));
+        $this->assertEquals(1, count($this->getRepository()->getBranches()), 'two branches after add branch command');
     }
 }

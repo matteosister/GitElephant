@@ -18,7 +18,7 @@ use GitElephant\GitBinary;
 /**
  * Init
  *
- * Issue init command
+ * main commands wrapper
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */

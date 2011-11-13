@@ -129,10 +129,11 @@ class Repository
      * @param string|null $ref the treeish to check
      * @return GitElephant\Objects\Tree
      */
-    public function getTree($path = '', $ref = 'HEAD')
+    public function getTree($path = '', $ref = 'master')
     {
         $parent = strrpos($path, '/') === FALSE ? null : substr($path, 0, strrpos($path, '/'));
         $command = $this->lsTreeCommand->callLsTree($ref);
+        var_dump($command);
         return new Tree($this->caller->execute($command, true, $this->path.'/'.$path)->getOutputLines(), $parent);
     }
 

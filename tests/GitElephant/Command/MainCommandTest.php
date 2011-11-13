@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the GitWrapper package.
+ * This file is part of the GitElephant package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
  *
@@ -13,22 +12,20 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\BaseCommand;
-
+use GitElephant\TestCase;
 
 /**
- * LsFiles
+ * MainTest
  *
- * @todo: description
+ * MainCommand class tests
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
-class LsFilesCommand extends BaseCommand
+ 
+class MainCommandTest extends TestCase
 {
-    public function listFiles()
+    public function testStatus()
     {
-        $this->addCommandName('ls-files');
-        return $this->getCommand();
+
     }
 }

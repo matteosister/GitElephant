@@ -100,10 +100,10 @@ class RepositoryTest extends TestCase
         $this->assertCount(2, $tree, 'One file in the repository');
         $firstNode = $tree[0];
         $this->assertInstanceOf('GitElephant\Objects\TreeObject', $firstNode, 'array access on tree should give always a node type');
-        $this->assertEquals('test', $firstNode->getName(), 'First repository file should be named "test"');
+        $this->assertEquals('test-folder', $firstNode->getName(), 'First repository file should be named "test"');
         $secondNode = $tree[1];
         $this->assertInstanceOf('GitElephant\Objects\TreeObject', $secondNode, 'array access on tree should give always a node type');
-        $this->assertEquals(TreeObject::TYPE_TREE, $secondNode->getType(), 'second node should be of type tree');
+        $this->assertEquals(TreeObject::TYPE_BLOB, $secondNode->getType(), 'second node should be of type tree');
         $subtree = $this->getRepository()->getTree('/test-folder');
         $subnode = $subtree[0];
         $this->assertInstanceOf('GitElephant\Objects\TreeObject', $subnode, 'array access on tree should give always a node type');
