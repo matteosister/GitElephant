@@ -1,7 +1,6 @@
 <?php
-
 /*
- * This file is part of the GitWrapper package.
+ * This file is part of the GitElephant package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
  *
@@ -14,37 +13,29 @@
 namespace GitElephant\Objects;
 
 use GitElephant\Command\Caller;
-use GitElephant\Command\LsTreeCommand;
-use GitElephant\Objects\NestedTreeBlob;
-use GitElephant\Objects\NestedTreeTree;
 use GitElephant\Objects\NestedTreeObject;
 
-
 /**
- * NestedTree
+ * NestedTreeTree
  *
  * @todo: description
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class NestedTree
+class NestedTreeTree extends NestedTreeObject
 {
-    protected $blobs = array();
-    protected $trees = array();
-    protected $caller;
-    protected $lsTreeCommand;
-
-    public function __construct(Caller $caller, $line = null)
+    public function __construct(Caller $caller, $line)
     {
+        parent::__construct();
         $this->caller = $caller;
-        $this->lsTreeCommand = new LsTreeCommand();
+        $this->setAttributes($line);
         $this->parse();
     }
 
     protected function parse()
     {
-        $command = $this->lsTreeCommand->listAll();
+        $command = $this->lsTreeCommand->listAll($this->getSha());
         $baseNodes = $this->caller->execute($command)->getOutputLines();
         foreach($baseNodes as $nodeLine) {
             $arrLine = NestedTreeObject::parseLine($nodeLine);
@@ -59,13 +50,28 @@ class NestedTree
         }
     }
 
-    public function getBlobs()
+    protected function hasSubTrees()
     {
-        return $this->blobs;
+        return count($this->caller->execute($this->lsTreeCommand->listTrees($this->getSha()))->getOutputLines()) > 0;
     }
 
-    public function getTrees()
+    public function getName()
     {
-        return $this->trees;
+        return $this->name;
+    }
+
+    public function getPermissions()
+    {
+        return $this->permissions;
+    }
+
+    public function getSha()
+    {
+        return $this->sha;
+    }
+
+    public function getType()
+    {
+        return $this->type;
     }
 }

@@ -12,6 +12,10 @@
 
 namespace GitElephant\Objects;
 
+use GitElephant\Command\LsTreeCommand;
+use GitElephant\Command\Caller;
+use GitElephant\Objects\NestedTreeObject;
+
 /**
  * NestedTreeNode
  *
@@ -20,28 +24,11 @@ namespace GitElephant\Objects;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class NestedTreeNode
+class NestedTreeBlob extends NestedTreeObject
 {
-    const TYPE_BLOB = 'blob';
-    const TYPE_TREE = 'tree';
-
-    private $line;
-    private $parent;
-    private $permissions;
-    private $type;
-    private $sha;
-    private $name;
-
-    public function __construct($line, $parent = null)
+    public function __construct($line)
     {
-        $this->line = $line;
-        $this->parent = $parent;
-
-        preg_match('/(\d+)\ (\w+)\ ([a-z0-9]+)\t(.*)/', $line, $matches);
-        $this->permissions = $matches[1];
-        $this->type = $matches[2] == self::TYPE_TREE ? self::TYPE_TREE : self::TYPE_BLOB;
-        $this->sha = $matches[3];
-        $this->name = $matches[4];
+        $this->setAttributes($line);
     }
 
     public function getName()

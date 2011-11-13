@@ -140,6 +140,7 @@ class Repository
     public function getNestedTree($ref = 'HEAD')
     {
         $tree = new NestedTree($this->caller);
-        var_dump($tree->getFilesIn('22a498449649ed1b02c557cdf4c86b762fbf9b85'));
+        $trees = $tree->getTrees();
+        var_dump($trees[0]);
     }
 }
