@@ -26,7 +26,7 @@ use GitElephant\Command\BaseCommand;
 
 class LsTreeCommand extends BaseCommand
 {
-    public function callLsTree($ref = 'HEAD')
+    public function tree($ref = 'HEAD')
     {
         $this->clearAll();
 
@@ -38,17 +38,6 @@ class LsTreeCommand extends BaseCommand
         $this->addCommandSubject($ref);
         return $this->getCommand();
     }
-
-//    public function listTrees($ref = null)
-//    {
-//        if ($ref == null) $ref = 'master';
-//        $this->clearAll();
-//
-//        $this->addCommandName('ls-tree');
-//        $this->addCommandArgument('-d');
-//        $this->addCommandSubject($ref);
-//        return $this->getCommand();
-//    }
 
     public function listAll($ref = null)
     {

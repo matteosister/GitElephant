@@ -33,6 +33,9 @@ class BranchCommandTest extends TestCase
         $this->getRepository()->commit('first commit', true);
     }
 
+    /**
+     * @covers GitElephant\BranchCommand::create
+     */
     public function testCreate()
     {
         $branch = new BranchCommand();
@@ -44,12 +47,18 @@ class BranchCommandTest extends TestCase
         $this->assertEquals(3, count($this->getRepository()->getBranches()), 'three branches after add branch command');
     }
 
-    public function testList()
+    /**
+     * @covers GitElephant\BranchCommand::lists
+     */
+    public function testLists()
     {
         $branch = new BranchCommand();
         $this->assertEquals($branch->lists(), "branch '-v' '--no-color' '--no-abbrev'", 'list branch command');
     }
 
+    /**
+     * @covers GitElephant\BranchCommand::delete
+     */
     public function testDelete()
     {
         $branch = new BranchCommand();

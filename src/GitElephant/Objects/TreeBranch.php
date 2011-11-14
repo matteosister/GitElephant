@@ -29,7 +29,7 @@ class TreeBranch
     private $sha;
     private $comment;
 
-    public function __construct($branchString)
+    public function __construct($branchString = null)
     {
         $branchString = trim($branchString);
         if (preg_match('/^\*\ (.*)/', $branchString)) {

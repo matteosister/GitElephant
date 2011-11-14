@@ -135,7 +135,7 @@ class Repository
      */
     public function getTree($ref = 'master', $path = '')
     {
-        $command = $this->lsTreeCommand->callLsTree($ref);
+        $command = $this->lsTreeCommand->tree($ref);
         return new Tree($this->caller->execute($command)->getOutputLines(), $path);
     }
 

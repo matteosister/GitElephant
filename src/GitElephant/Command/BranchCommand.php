@@ -26,6 +26,13 @@ use GitElephant\Command\BaseCommand;
 
 class BranchCommand extends BaseCommand
 {
+    /**
+     * Create a new branch
+     *
+     * @param string $name The new branch name
+     * @param string|null $startPoint the new branch start point.
+     * @return string the command
+     */
     public function create($name, $startPoint = null)
     {
         $this->clearAll();
@@ -35,6 +42,11 @@ class BranchCommand extends BaseCommand
         return $this->getCommand();
     }
 
+    /**
+     * Lists branches
+     *
+     * @return string the command
+     */
     public function lists()
     {
         $this->clearAll();
@@ -45,6 +57,12 @@ class BranchCommand extends BaseCommand
         return $this->getCommand();
     }
 
+    /**
+     * Delete a branch by its name
+     *
+     * @param $name The branch to delete
+     * @return string the command
+     */
     public function delete($name)
     {
         $this->clearAll();
