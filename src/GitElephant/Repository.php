@@ -75,7 +75,7 @@ class Repository
     }
 
     /**
-     * Commit
+     * Commit;
      *
      * @param $message
      * @param whether to stage or not content before the commit
@@ -131,10 +131,8 @@ class Repository
      */
     public function getTree($path = '', $ref = 'master')
     {
-        $parent = strrpos($path, '/') === FALSE ? null : substr($path, 0, strrpos($path, '/'));
         $command = $this->lsTreeCommand->callLsTree($ref);
-        var_dump($command);
-        return new Tree($this->caller->execute($command, true, $this->path.'/'.$path)->getOutputLines(), $parent);
+        return new Tree($this->caller->execute($command, true, $this->path.'/'.$path)->getOutputLines(), $path);
     }
 
     public function getNestedTree($ref = 'HEAD')

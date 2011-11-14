@@ -31,17 +31,31 @@ use GitElephant\Utilities;
 class Tree implements \ArrayAccess, \Countable, \Iterator
 {
     private $position;
-    private $parent;
+    private $path;
     private $children = array();
 
-    public function __construct($result, $parent = null)
+    public function __construct($result, $path = null)
     {
         $this->position = 0;
-        $this->parent = $parent;
+        $this->path = $path;
         foreach($result as $line) {
             $this->parseLine($line);
         }
         usort($this->children, array($this, 'sortChildren'));
+    }
+
+    public function getParent()
+    {
+        if (strrpos($this->path, '/') === FALSE) {
+            return null;
+        } else {
+            return substr($this->path, 0, strrpos($this->path, '/'));
+        }
+    }
+
+    public function isRoot()
+    {
+        return $this->path == '';
     }
 
     private function sortChildren($a, $b)
@@ -118,10 +132,5 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     public function rewind()
     {
         $this->position = 0;
-    }
-
-    public function getParent()
-    {
-        return $this->parent;
     }
 }
