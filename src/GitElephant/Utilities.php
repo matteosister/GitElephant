@@ -13,6 +13,8 @@
 
 namespace GitElephant;
 
+use GitElephant\Objects\TreeBranch;
+
 
 /**
  * Utilities

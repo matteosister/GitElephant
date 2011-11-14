@@ -24,13 +24,10 @@ namespace GitElephant\Objects;
 
 class TreeBranch
 {
-    private $current;
+    private $current = false;
     private $name;
     private $sha;
     private $comment;
-
-    //* master 5879e9fe4d46a172e11c702e6f3a5fc398f3a9ff initial import
-    //  pippo  5879e9fe4d46a172e11c702e6f3a5fc398f3a9ff initial import
 
     public function __construct($branchString)
     {

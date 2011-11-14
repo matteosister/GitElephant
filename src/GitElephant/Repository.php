@@ -16,11 +16,11 @@ namespace GitElephant;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree;
-use GitElephant\Objects\NestedTree;
 use GitElephant\Objects\TreeBranch;
 use GitElephant\Command\MainCommand;
 use GitElephant\Command\BranchCommand;
 use GitElephant\Command\LsTreeCommand;
+use GitElephant\Utilities;
 
 /**
  * Repository
@@ -110,6 +110,7 @@ class Repository
         foreach($this->caller->getOutputLines() as $branchString) {
             $branches[] = new TreeBranch($branchString);
         }
+        usort($branches, array($this, 'sortBranches'));
         return $branches;
     }
 
@@ -121,6 +122,7 @@ class Repository
         $filtered = array_filter($this->getBranches(), function(TreeBranch $branch) {
             return $branch->getCurrent();
         });
+        sort($filtered);
         return $filtered[0];
     }
 
@@ -133,5 +135,16 @@ class Repository
     {
         $command = $this->lsTreeCommand->callLsTree($ref);
         return new Tree($this->caller->execute($command)->getOutputLines(), $path);
+    }
+
+
+    private function sortBranches(TreeBranch $a, TreeBranch $b) {
+        if ($a->getName() == 'master') {
+            return -1;
+        } else if ($b->getName() == 'master') {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
