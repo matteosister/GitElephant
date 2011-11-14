@@ -132,11 +132,6 @@ class Repository
     public function getTree($ref = 'master', $path = '')
     {
         $command = $this->lsTreeCommand->callLsTree($ref);
-        return new Tree($this->caller->execute($command, true, $this->path.'/'.$path)->getOutputLines(), $path);
-    }
-
-    public function getNestedTree($ref = 'HEAD')
-    {
-        return new NestedTree($this->caller);
+        return new Tree($this->caller->execute($command)->getOutputLines(), $path);
     }
 }

@@ -33,6 +33,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     private $position;
     private $path;
     private $children = array();
+    private $pathChildren = array();
 
     public function __construct($result, $path = null)
     {
@@ -64,8 +65,9 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         if (!$this->isRoot()) {
             $arrayNames = explode('/', $this->path);
             $pathString = '';
-            foreach ($arrayNames as $name) {
-                $bc[$name] = $pathString.$name;
+            foreach ($arrayNames as $i => $name) {
+                $bc[$i]['path'] = $pathString.$name;
+                $bc[$i]['label'] = $name;
                 $pathString .= $name.'/';
             }
         }
@@ -75,7 +77,9 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     private function sortChildren($a, $b)
     {
         if ($a->getType() == $b->getType()) {
-            return 0;
+            $names = array($a->getName(), $b->getName());
+            sort($names);
+            return ($a->getName() == $names[0]) ? -1 : 1;
         }
         return $a->getType() == TreeObject::TYPE_TREE && $b->getType() == TreeObject::TYPE_BLOB ? -1 : 1;
     }
@@ -87,8 +91,26 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         $type = $matches[2] == 'tree' ? TreeObject::TYPE_TREE : TreeObject::TYPE_BLOB;
         $sha = $matches[3];
         $name = $matches[4];
-        $treeObject = new TreeObject($permissions, $type, $sha, $name);
-        $this->children[] = $treeObject;
+
+        if ($this->isRoot()) {
+            $pattern = '/(\w+)\/(.*)/';
+            $replacement = '$1';
+        } else {
+            if (!preg_match(sprintf('/^%s\/(.*)/', preg_quote($this->path, '/')), $name)) {
+                return;
+            }
+            $pattern = sprintf('/^%s\/(\w*)/', preg_quote($this->path, '/'));
+            $replacement = '$1';
+        }
+        $newName = preg_replace($pattern, $replacement, $name);
+        if (strpos($newName, '/') !== FALSE) {
+            return;
+        }
+        if (!in_array($newName, $this->pathChildren)) {
+            $this->pathChildren[] = $newName;
+            $treeObject = new TreeObject($permissions, $type, $sha, $newName);
+            $this->children[] = $treeObject;
+        }
     }
 
     // ArrayAccess

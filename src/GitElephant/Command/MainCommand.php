@@ -41,6 +41,10 @@ class MainCommand extends BaseCommand
         return $this->getCommand();
     }
 
+    /**
+     * Get the repository status
+     * @return string
+     */
     public function status()
     {
         $this->clearAll();
