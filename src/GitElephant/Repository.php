@@ -67,6 +67,8 @@ class Repository
 
     /**
      * Stage the working tree content
+     * 
+     * @param string $path the path to store
      * @return void
      */
     public function stage($path = '.')
@@ -75,10 +77,10 @@ class Repository
     }
 
     /**
-     * Commit;
+     * Commit content to the repository, eventually staging all unstaged content
      *
-     * @param $message
-     * @param whether to stage or not content before the commit
+     * @param $message The commit message
+     * @param bool $stage whether stage or not content before the commit
      * @return void
      */
     public function commit($message, $stage = false)
