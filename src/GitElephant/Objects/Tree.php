@@ -58,6 +58,20 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         return $this->path == '';
     }
 
+    public function getBreadcrumb()
+    {
+        $bc = array();
+        if (!$this->isRoot()) {
+            $arrayNames = explode('/', $this->path);
+            $pathString = '';
+            foreach ($arrayNames as $name) {
+                $bc[$name] = $pathString.$name;
+                $pathString .= $name.'/';
+            }
+        }
+        return $bc;
+    }
+
     private function sortChildren($a, $b)
     {
         if ($a->getType() == $b->getType()) {
