@@ -17,8 +17,10 @@ use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree;
 use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\TreeTag;
 use GitElephant\Command\MainCommand;
 use GitElephant\Command\BranchCommand;
+use GitElephant\Command\TagCommand;
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Utilities;
 
@@ -37,6 +39,7 @@ class Repository
 
     private $mainCommand;
     private $branchCommand;
+    private $tagCommand;
     private $lsTreeCommand;
 
     public function __construct($repository_path, GitBinary $binary = null)
@@ -53,6 +56,7 @@ class Repository
         // command objects
         $this->mainCommand = new MainCommand();
         $this->branchCommand = new BranchCommand();
+        $this->tagCommand = new TagCommand();
         $this->lsTreeCommand = new LsTreeCommand();
     }
     
@@ -114,6 +118,26 @@ class Repository
         }
         usort($branches, array($this, 'sortBranches'));
         return $branches;
+    }
+
+    public function createTag($name, $startPoint = null, $message)
+    {
+        $this->caller->execute($this->tagCommand->create($name, $startPoint, $message));
+    }
+
+    public function deleteTag($name)
+    {
+        $this->caller->execute($this->tagCommand->delete($name));
+    }
+
+    public function getTags()
+    {
+        $tags = array();
+        $this->caller->execute($this->tagCommand->lists());
+        foreach($this->caller->getOutputLines() as $tagString) {
+            $tags[] = new TreeTag($tagString);
+        }
+        return $tags;
     }
 
     /**

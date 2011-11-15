@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the GitElephant package.
+ * This file is part of the GitWrapper package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
  *
@@ -17,58 +17,59 @@ use GitElephant\Command\BaseCommand;
 
 
 /**
- * Branch
+ * TagCommand
  *
- *
+ * @todo: description
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class BranchCommand extends BaseCommand
+class TagCommand extends BaseCommand
 {
-    const BRANCH_COMMAND = 'branch';
+    const TAG_COMMAND = 'tag';
 
     /**
-     * Create a new branch
+     * Create a new tag
      *
-     * @param string $name The new branch name
-     * @param string|null $startPoint the new branch start point.
+     * @param string $name The new tag name
+     * @param string|null $startPoint the new tag start point.
+     * @param null $message the tag message
      * @return string the command
      */
-    public function create($name, $startPoint = null)
+    public function create($name, $startPoint = null, $message = null)
     {
         $this->clearAll();
-        $this->addCommandName(self::BRANCH_COMMAND);
+        $this->addCommandName(self::TAG_COMMAND);
+        if ($message != null) {
+            $this->addCommandArgument(sprintf('-m %s', $message));
+        }
         $subject = $startPoint == null ? $name : $name.' '.$startPoint;
         $this->addCommandSubject($subject);
         return $this->getCommand();
     }
 
     /**
-     * Lists branches
+     * Lists tags
      *
      * @return string the command
      */
     public function lists()
     {
         $this->clearAll();
-        $this->addCommandName(self::BRANCH_COMMAND);
-        $this->addCommandArgument('-v');
-        $this->addCommandArgument('--no-color');
-        $this->addCommandArgument('--no-abbrev');
+        $this->addCommandName(self::TAG_COMMAND);
         return $this->getCommand();
     }
 
     /**
-     * Delete a branch by its name
+     * Delete a tag
      *
-     * @param $name The branch to delete
+     * @param $name The tag to delete
      * @return string the command
      */
     public function delete($name)
     {
         $this->clearAll();
-        $this->addCommandName(self::BRANCH_COMMAND);
+        $this->addCommandName(self::TAG_COMMAND);
         $this->addCommandArgument('-d');
         $this->addCommandSubject($name);
         return $this->getCommand();
