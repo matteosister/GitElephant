@@ -28,6 +28,7 @@ class TreeBranch
     private $name;
     private $sha;
     private $comment;
+    private $fullRef;
 
     public function __construct($branchString = null)
     {
@@ -39,6 +40,7 @@ class TreeBranch
 
         $first_blank = strpos($branchString, ' ');
         $this->name = trim(substr($branchString, 0, $first_blank));
+        $this->fullRef = 'refs/heads/'.$this->name;
         $branchString = substr($branchString, $first_blank);
         $branchString = preg_replace('/^\ +/', '', $branchString);
         $first_blank = strpos($branchString, ' ');
@@ -84,5 +86,15 @@ class TreeBranch
     public function getComment()
     {
         return $this->comment;
+    }
+
+    public function setFullRef($fullRef)
+    {
+        $this->fullRef = $fullRef;
+    }
+
+    public function getFullRef()
+    {
+        return $this->fullRef;
     }
 }

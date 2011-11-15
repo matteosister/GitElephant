@@ -120,6 +120,28 @@ class Repository
         return $branches;
     }
 
+    /**
+     * @return GitElephant\Objects\TreeBranch
+     */
+    public function getMainBranch()
+    {
+        $filtered = array_filter($this->getBranches(), function(TreeBranch $branch) {
+            return $branch->getCurrent();
+        });
+        sort($filtered);
+        return $filtered[0];
+    }
+
+    public function getBranch($name)
+    {
+        foreach ($this->getBranches() as $treeBranch) {
+            if ($treeBranch->getName() == $name) {
+                return $treeBranch;
+            }
+        }
+        return null;
+    }
+
     public function createTag($name, $startPoint = null, $message)
     {
         $this->caller->execute($this->tagCommand->create($name, $startPoint, $message));
@@ -141,15 +163,16 @@ class Repository
     }
 
     /**
-     * @return GitElephant\Objects\TreeBranch
+     * @return GitElephant\Objects\TreeTag
      */
-    public function getMainBranch()
+    public function getTag($name)
     {
-        $filtered = array_filter($this->getBranches(), function(TreeBranch $branch) {
-            return $branch->getCurrent();
-        });
-        sort($filtered);
-        return $filtered[0];
+        foreach ($this->getTags() as $treeTag) {
+            if ($treeTag->getName() == $name) {
+                return $treeTag;
+            }
+        }
+        return null;
     }
 
     /**
@@ -157,9 +180,18 @@ class Repository
      * @param string|null $ref the treeish to check
      * @return GitElephant\Objects\Tree
      */
-    public function getTree($ref = 'master', $path = '')
+    public function getTree($ref, $path = '')
     {
-        $command = $this->lsTreeCommand->tree($ref);
+        if (is_string($ref)) {
+            $command = $this->lsTreeCommand->tree($ref);
+        }
+        if ($ref instanceof TreeBranch) {
+            $command = $this->lsTreeCommand->tree($ref->getFullRef());
+        }
+        if ($ref instanceof TreeTag) {
+            $command = $this->lsTreeCommand->tree($ref->getFullRef());
+        }
+
         return new Tree($this->caller->execute($command)->getOutputLines(), $path);
     }
 

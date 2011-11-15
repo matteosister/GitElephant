@@ -25,10 +25,12 @@ namespace GitElephant\Objects;
 class TreeTag
 {
     private $name;
+    private $fullRef;
 
     public function __construct($line)
     {
         $this->name = $line;
+        $this->fullRef = 'refs/tags/'.$this->name;
     }
 
     public function setName($name)
@@ -39,5 +41,15 @@ class TreeTag
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setFullRef($fullRef)
+    {
+        $this->fullRef = $fullRef;
+    }
+
+    public function getFullRef()
+    {
+        return $this->fullRef;
     }
 }
