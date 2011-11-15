@@ -89,6 +89,17 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         preg_match('/(\d+)\ (\w+)\ ([a-z0-9]+)\t(.*)/', $line, $matches);
         $permissions = $matches[1];
         $type = $matches[2] == 'tree' ? TreeObject::TYPE_TREE : TreeObject::TYPE_BLOB;
+        switch($matches[2]) {
+            case TreeObject::TYPE_TREE:
+                $type = TreeObject::TYPE_TREE;
+                break;
+            case TreeObject::TYPE_BLOB:
+                $type = TreeObject::TYPE_BLOB;
+                break;
+            case TreeObject::TYPE_LINK:
+                $type = TreeObject::TYPE_LINK;
+                break;
+        }
         $sha = $matches[3];
         $name = $matches[4];
 

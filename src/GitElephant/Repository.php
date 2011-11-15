@@ -191,7 +191,6 @@ class Repository
         if ($ref instanceof TreeTag) {
             $command = $this->lsTreeCommand->tree($ref->getFullRef());
         }
-
         return new Tree($this->caller->execute($command)->getOutputLines(), $path);
     }
 

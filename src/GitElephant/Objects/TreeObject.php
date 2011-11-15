@@ -26,6 +26,7 @@ class TreeObject
 {
     const TYPE_BLOB = 'blob';
     const TYPE_TREE = 'tree';
+    const TYPE_LINK = 'commit';
 
     private $permissions;
     private $type;
@@ -44,6 +45,10 @@ class TreeObject
     public function isTree()
     {
         return self::TYPE_TREE == $this->getType();
+    }
+    public function isLink()
+    {
+        return self::TYPE_LINK == $this->getType();
     }
 
     public function setPermissions($permissions)
