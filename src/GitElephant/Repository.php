@@ -142,7 +142,7 @@ class Repository
         return null;
     }
 
-    public function createTag($name, $startPoint = null, $message)
+    public function createTag($name, $startPoint = null, $message = null)
     {
         $this->caller->execute($this->tagCommand->create($name, $startPoint, $message));
     }
