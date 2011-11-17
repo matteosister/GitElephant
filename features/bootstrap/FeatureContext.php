@@ -265,5 +265,68 @@ class FeatureContext extends BehatContext
         $this->repository->deleteTag($name);
     }
 
+    /**
+     * @Then /^Method should get an object "([^"]*)" "([^"]*)"$/
+     */
+    public function methodShouldGetAnObject($methodName, $objectName)
+    {
+        $result = call_user_func(array($this->repository, $methodName));
+        $reflectionClass = new ReflectionClass($result);
+        assertEquals($objectName, $reflectionClass->getName(), sprintf("method return %s instead of %s", $reflectionClass->getName(),$objectName));
+    }
+
+    /**
+     * @Given /^Method should get an object with attribute "([^"]*)" "([^"]*)" "([^"]*)"$/
+     */
+    public function methodShouldGetAnObjectWithAttribute($methodName, $attributeMethod, $expected)
+    {
+        $obj = call_user_func(array($this->repository, $methodName));
+        $result = call_user_func(array($obj, $attributeMethod));
+        assertEquals($expected, $result, sprintf("Method %s return %s instead of %s", $attributeMethod, $result, $expected));
+    }
+
+    /**
+     * @When /^I get tree for a branch object "([^"]*)"$/
+     */
+    public function iGetTreeForABranchObject($branchName)
+    {
+        $branch = $this->repository->getBranch($branchName);
+        $this->tree = $this->repository->getTree($branch);
+    }
+
+    /**
+     * @When /^I get tree for the main branch$/
+     */
+    public function iGetTreeForTheMainBranch()
+    {
+        $this->iGetTreeForABranchObject($this->repository->getMainBranch()->getName());
+    }
+
+
+    /**
+     * @Given /^I get tree for a tag object "([^"]*)"$/
+     */
+    public function iGetTreeForATagObject($tagName)
+    {
+        $tag = $this->repository->getTag($tagName);
+        $this->tree = $this->repository->getTree($tag);
+    }
+
+    /**
+     * @Given /^I checkout "([^"]*)"$/
+     */
+    public function iCheckout($what)
+    {
+        //var_dump($this->repository->getBranches());
+        $this->repository->checkout($what);
+    }
+
+    /**
+     * @When /^I checkout to main branch$/
+     */
+    public function iCheckoutToMainBranch()
+    {
+        $this->repository->checkout($this->repository->getMainBranch());
+    }
 
 }

@@ -84,13 +84,20 @@ class Repository
      * Commit content to the repository, eventually staging all unstaged content
      *
      * @param $message The commit message
-     * @param bool $stage whether stage or not content before the commit
+     * @param bool $stageAll whether stage or not content before the commit
      * @return void
      */
-    public function commit($message, $stage = false)
+    public function commit($message, $stageAll = false, $ref = null)
     {
-        if ($stage) $this->stage();
+        if ($ref != null) {
+            $currentBranch = $this->getMainBranch();
+            $this->checkout($ref);
+        }
+        if ($stageAll) $this->stage();
         $this->caller->execute($this->mainCommand->commit($message));
+        if ($ref != null) {
+            $this->checkout($currentBranch);
+        }
     }
 
     public function getStatus($oneLine = false)
@@ -147,11 +154,21 @@ class Repository
         $this->caller->execute($this->tagCommand->create($name, $startPoint, $message));
     }
 
-    public function deleteTag($name)
+    /**
+     * Delete a tag by it's name or by passing a TreeTag object
+     *
+     * @param string|TreeTag $tag
+     */
+    public function deleteTag($tag)
     {
-        $this->caller->execute($this->tagCommand->delete($name));
+        $this->caller->execute($this->tagCommand->delete($tag));
     }
 
+    /**
+     * Gets an array of TreeTag objects
+     *
+     * @return array An array of TreeTag objects
+     */
     public function getTags()
     {
         $tags = array();
@@ -163,6 +180,9 @@ class Repository
     }
 
     /**
+     * Return a tag object
+     *
+     * @param $name the tag name
      * @return GitElephant\Objects\TreeTag
      */
     public function getTag($name)
@@ -176,22 +196,27 @@ class Repository
     }
 
     /**
+     * Checkout a branch
+     * This command change the state of the repository on the filesystem
+     *
+     * @param string|TreeBranch $ref the ref to checkout
+     */
+    public function checkout($ref)
+    {
+        $this->caller->execute($this->mainCommand->checkout($ref));
+    }
+
+    /**
+     * Retrieve an instance of Tree
+     * Tree Object is Countable, Iterable and has ArrayAccess for easy manipulation
+     *
      * @param string $path the physical path to the tree relative to the repository root
      * @param string|null $ref the treeish to check
      * @return GitElephant\Objects\Tree
      */
-    public function getTree($ref, $path = '')
+    public function getTree($ref = 'HEAD', $path = '')
     {
-        if (is_string($ref)) {
-            $command = $this->lsTreeCommand->tree($ref);
-        }
-        if ($ref instanceof TreeBranch) {
-            $command = $this->lsTreeCommand->tree($ref->getFullRef());
-        }
-        if ($ref instanceof TreeTag) {
-            $command = $this->lsTreeCommand->tree($ref->getFullRef());
-        }
-        return new Tree($this->caller->execute($command)->getOutputLines(), $path);
+        return new Tree($this->caller->execute($this->lsTreeCommand->tree($ref))->getOutputLines(), $path);
     }
 
 

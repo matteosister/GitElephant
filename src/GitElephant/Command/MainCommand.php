@@ -14,6 +14,7 @@ namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
 use GitElephant\GitBinary;
+use GitElephant\Objects\TreeBranch;
 
 /**
  * Init
@@ -29,6 +30,7 @@ class MainCommand extends BaseCommand
     const GIT_STATUS = 'status';
     const GIT_ADD = 'add';
     const GIT_COMMIT = 'commit';
+    const GIT_CHECKOUT = 'checkout';
 
     /**
      * Init the repo
@@ -71,16 +73,28 @@ class MainCommand extends BaseCommand
      * @param bool $all
      * @return Main
      */
-    public function commit($message, $all = false) {
+    public function commit($message) {
         $this->clearAll();
         if (trim($message) == '' || $message == null) {
             throw new \InvalidArgumentException(sprintf('You can\'t commit whitout message'));
         }
         $this->addCommandName(self::GIT_COMMIT);
-        if ($all) {
-            $this->addCommandArgument('-a');
-        }
         $this->addCommandArgument(sprintf("-m '%s'", $message));
+        return $this->getCommand();
+    }
+
+    public function checkout($ref)
+    {
+        $this->clearAll();
+
+        $what = $ref;
+        if ($ref instanceof TreeBranch) {
+            $what = $ref->getName();
+        }
+
+        $this->addCommandName(self::GIT_CHECKOUT);
+        $this->addCommandArgument('-q');
+        $this->addCommandSubject($what);
         return $this->getCommand();
     }
 }

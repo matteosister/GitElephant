@@ -14,6 +14,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
+use GitElephant\Objects\TreeTag;
 
 
 /**
@@ -63,12 +64,18 @@ class TagCommand extends BaseCommand
     /**
      * Delete a tag
      *
-     * @param $name The tag to delete
+     * @param $tag The tag to delete
      * @return string the command
      */
-    public function delete($name)
+    public function delete($tag)
     {
         $this->clearAll();
+
+        $name = $tag;
+        if ($tag instanceof TreeTag) {
+            $name = $tag->getName();
+        }
+
         $this->addCommandName(self::TAG_COMMAND);
         $this->addCommandArgument('-d');
         $this->addCommandSubject($name);

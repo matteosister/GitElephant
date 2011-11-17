@@ -14,6 +14,8 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
+use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\TreeTag;
 
 
 /**
@@ -28,6 +30,11 @@ class LsTreeCommand extends BaseCommand
 {
     public function tree($ref = 'HEAD')
     {
+        $what = $ref;
+        if ($ref instanceof TreeBranch || $ref instanceof TreeTag) {
+            $what = $ref->getFullRef();
+        }
+
         $this->clearAll();
 
         $this->addCommandName('ls-tree');
@@ -35,7 +42,7 @@ class LsTreeCommand extends BaseCommand
         $this->addCommandArgument('-r');
         // show trees
         $this->addCommandArgument('-t');
-        $this->addCommandSubject($ref);
+        $this->addCommandSubject($what);
         return $this->getCommand();
     }
 
