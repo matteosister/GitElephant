@@ -31,6 +31,7 @@ use GitElephant\Utilities;
 
 class Tree implements \ArrayAccess, \Countable, \Iterator
 {
+    private $result;
     private $position;
     private $path;
     private $children = array();
@@ -51,12 +52,37 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      */
     public function __construct($result, $path = null)
     {
+        $this->result = $result;
         $this->position = 0;
         $this->path = $path;
         foreach($result as $line) {
             $this->parseLine($line);
         }
         usort($this->children, array($this, 'sortChildren'));
+        $this->scanPathsForBlob();
+    }
+
+    private function scanPathsForBlob()
+    {
+        // no children, empty folder or blob!
+        if (count($this->children) > 0) {
+            return;
+        }
+        foreach ($this->result as $line) {
+            $slices = $this->getLineSlices($line);
+            if ($slices['fullPath'] == $this->path) {
+                $pos = strrpos($slices['fullPath'], '/');
+                if ($pos === false) {
+                    $name = $this->path;
+                    $this->path = '';
+                } else {
+                    $path = $this->path;
+                    $this->path = substr($path, 0, $pos);
+                    $name = substr($path, $pos + 1);
+                }
+                $this->blob = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $name, $slices['fullPath']);
+            }
+        }
     }
 
     /**
@@ -133,6 +159,34 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
 
     private function parseLine($line)
     {
+        $slices = $this->getLineSlices($line);
+        if ($this->isRoot()) {
+            // if is root check for first children
+            $pattern = '/(\w+)\/(.*)/';
+            $replacement = '$1';
+        } else {
+            // filter by the children of the path
+            if (!preg_match(sprintf('/^%s\/(\w*)/', preg_quote($this->path, '/')), $slices['fullPath'])) {
+                return;
+            }
+            $pattern = sprintf('/^%s\/(\w*)/', preg_quote($this->path, '/'));
+            $replacement = '$1';
+        }
+        $name = preg_replace($pattern, $replacement, $slices['fullPath']);
+        if (strpos($name, '/') !== FALSE) {
+            return;
+        }
+
+        if (!in_array($name, $this->pathChildren)) {
+            $path = rtrim(str_replace($name, '', $slices['fullPath']), '/');
+            $treeObject = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $name, $path);
+            $this->children[] = $treeObject;
+            $this->pathChildren[] = $name;
+        }
+    }
+
+    private function getLineSlices($line)
+    {
         preg_match('/(\d+)\ (\w+)\ ([a-z0-9]+)\t(.*)/', $line, $matches);
         $permissions = $matches[1];
         $type = null;
@@ -148,32 +202,14 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
                 break;
         }
         $sha = $matches[3];
-        $name = $matches[4];
+        $fullPath = $matches[4];
 
-        if ($this->isRoot()) {
-            $pattern = '/(\w+)\/(.*)/';
-            $replacement = '$1';
-        } else {
-            // if do not match I check if it's a path to a blob
-            if (!preg_match(sprintf('/^%s\/(.*)/', preg_quote($this->path, '/')), $name)) {
-                if ($name == $this->path) {
-                    $newName = substr($name, strrpos($name, '/') + 1);
-                    $this->blob = new TreeObject($permissions, $type, $sha, $newName);
-                }
-                return;
-            }
-            $pattern = sprintf('/^%s\/(\w*)/', preg_quote($this->path, '/'));
-            $replacement = '$1';
-        }
-        $newName = preg_replace($pattern, $replacement, $name);
-        if (strpos($newName, '/') !== FALSE) {
-            return;
-        }
-        if (!in_array($newName, $this->pathChildren)) {
-            $this->pathChildren[] = $newName;
-            $treeObject = new TreeObject($permissions, $type, $sha, $newName);
-            $this->children[] = $treeObject;
-        }
+        return array(
+            'permissions' => $permissions,
+            'type' => $type,
+            'sha' => $sha,
+            'fullPath' => $fullPath
+        );
     }
 
     // ArrayAccess interface
@@ -236,5 +272,10 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     public function getBlob()
     {
         return $this->blob;
+    }
+
+    public function getPath()
+    {
+        return $this->path;
     }
 }

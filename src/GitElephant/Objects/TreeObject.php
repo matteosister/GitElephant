@@ -32,14 +32,21 @@ class TreeObject
     private $type;
     private $sha;
     private $name;
+    private $path;
 
 
-    public function __construct($permissions, $type, $sha, $name)
+    public function __construct($permissions, $type, $sha, $name, $path)
     {
         $this->permissions = $permissions;
         $this->type = $type;
         $this->sha = $sha;
         $this->name = $name;
+        $this->path = $path;
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 
     public function isTree()

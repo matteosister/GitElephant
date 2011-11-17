@@ -216,7 +216,8 @@ class Repository
      */
     public function getTree($ref = 'HEAD', $path = '')
     {
-        return new Tree($this->caller->execute($this->lsTreeCommand->tree($ref))->getOutputLines(), $path);
+        $outputLines = $this->caller->execute($this->lsTreeCommand->tree($ref))->getOutputLines();
+        return new Tree($outputLines, $path);
     }
 
 
