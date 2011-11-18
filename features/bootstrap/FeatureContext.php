@@ -198,6 +198,17 @@ class FeatureContext extends BehatContext
     }
 
     /**
+     * @Given /^The repository has the methods$/
+     */
+    public function theRepositoryHasTheMethods(PyStringNode $string)
+    {
+        foreach ($string->getLines() as $methodName) {
+            $this->theRepositoryHasTheMethod($methodName);
+        }
+    }
+
+
+    /**
      * @Given /^I should get an array of objects "([^"]*)"$/
      */
     public function iShouldGetAnArrayOfObjects($objectName)

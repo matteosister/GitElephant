@@ -100,10 +100,13 @@ class Repository
         }
     }
 
-    public function getStatus($oneLine = false)
+    /**
+     * @return array output lines
+     */
+    public function getStatus()
     {
         $this->caller->execute($this->mainCommand->status());
-        return $oneLine ? $this->caller->getOutput() : $this->caller->getOutputLines();
+        return $this->caller->getOutputLines();
     }
 
     public function createBranch($name, $startPoint = null)
@@ -111,11 +114,22 @@ class Repository
         $this->caller->execute($this->branchCommand->create($name, $startPoint));
     }
 
+    /**
+     * Delete a branch by his name
+     * This function change the state of the repository on the filesystem
+     *
+     * @param $name
+     */
     public function deleteBranch($name)
     {
         $this->caller->execute($this->branchCommand->delete($name));
     }
 
+    /**
+     * An array of TreeBranch objects
+     *
+     * @return array
+     */
     public function getBranches()
     {
         $branches = array();
@@ -128,6 +142,8 @@ class Repository
     }
 
     /**
+     * return the actually checked out branch
+     *
      * @return GitElephant\Objects\TreeBranch
      */
     public function getMainBranch()
@@ -139,6 +155,12 @@ class Repository
         return $filtered[0];
     }
 
+    /**
+     * Retrieve a TreeBranch object by a branch name
+     *
+     * @param string $name
+     * @return null|TreeBranch
+     */
     public function getBranch($name)
     {
         foreach ($this->getBranches() as $treeBranch) {
@@ -156,6 +178,7 @@ class Repository
 
     /**
      * Delete a tag by it's name or by passing a TreeTag object
+     * This function change the state of the repository on the filesystem
      *
      * @param string|TreeTag $tag
      */
@@ -197,7 +220,7 @@ class Repository
 
     /**
      * Checkout a branch
-     * This command change the state of the repository on the filesystem
+     * This function change the state of the repository on the filesystem
      *
      * @param string|TreeBranch $ref the ref to checkout
      */

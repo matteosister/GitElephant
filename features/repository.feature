@@ -5,9 +5,12 @@ Feature: Repository Class
 
 Scenario: stage and commit functions
   Given I am in a folder
-  And The repository has the method "init"
-  And The repository has the method "stage"
-  And The repository has the method "commit"
+  And The repository has the methods
+    """
+    init
+    stage
+    commit
+    """
   And I init the repository
   And I add a file named "test-file"
   When I add to the repository "test-file"
@@ -26,10 +29,13 @@ Scenario: init function
 
 Scenario: branch list, add and delete
   Given I start a test repository
-  And The repository has the method "deleteBranch"
-  And The repository has the method "createBranch"
-  And The repository has the method "getBranches"
-  And The repository has the method "getMainBranch"
+  And The repository has the methods
+    """
+    deleteBranch
+    createBranch
+    getBranches
+    getMainBranch
+    """
   Then Method should get an array of "getBranches" "GitElephant\Objects\TreeBranch"
   When I create a branch from "branch2" "master"
   Then Method should get a count of "getBranches" 2
@@ -44,9 +50,12 @@ Scenario: getMainBranch function
 
 Scenario: tag list, add and delete
   Given I start a test repository
-  And The repository has the method "deleteTag"
-  And The repository has the method "createTag"
-  And The repository has the method "getTags"
+  And The repository has the methods
+    """
+    deleteTag
+    createTag
+    getTags
+    """
   When I create a tag "tag-test"
   Then Method should get an array of "getTags" "GitElephant\Objects\TreeTag"
   Then Method should get a count of "getTags" 1

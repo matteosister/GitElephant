@@ -62,29 +62,6 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         $this->scanPathsForBlob();
     }
 
-    private function scanPathsForBlob()
-    {
-        // no children, empty folder or blob!
-        if (count($this->children) > 0) {
-            return;
-        }
-        foreach ($this->result as $line) {
-            $slices = $this->getLineSlices($line);
-            if ($slices['fullPath'] == $this->path) {
-                $pos = strrpos($slices['fullPath'], '/');
-                if ($pos === false) {
-                    $name = $this->path;
-                    $this->path = '';
-                } else {
-                    $path = $this->path;
-                    $this->path = substr($path, 0, $pos);
-                    $name = substr($path, $pos + 1);
-                }
-                $this->blob = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $name, $slices['fullPath']);
-            }
-        }
-    }
-
     /**
      * get the current tree parent, null if root
      * @return null|string
@@ -145,6 +122,29 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
             }
         }
         return $bc;
+    }
+
+    private function scanPathsForBlob()
+    {
+        // no children, empty folder or blob!
+        if (count($this->children) > 0) {
+            return;
+        }
+        foreach ($this->result as $line) {
+            $slices = $this->getLineSlices($line);
+            if ($slices['fullPath'] == $this->path) {
+                $pos = strrpos($slices['fullPath'], '/');
+                if ($pos === false) {
+                    $name = $this->path;
+                    $this->path = '';
+                } else {
+                    $path = $this->path;
+                    $this->path = substr($path, 0, $pos);
+                    $name = substr($path, $pos + 1);
+                }
+                $this->blob = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $name, $slices['fullPath']);
+            }
+        }
     }
 
     private function sortChildren(TreeObject $a, TreeObject $b)
