@@ -28,6 +28,8 @@ use GitElephant\Objects\TreeTag;
 
 class LsTreeCommand extends BaseCommand
 {
+    const LS_TREE_COMMAND = 'ls-tree';
+
     public function tree($ref = 'HEAD')
     {
         $what = $ref;
@@ -37,7 +39,7 @@ class LsTreeCommand extends BaseCommand
 
         $this->clearAll();
 
-        $this->addCommandName('ls-tree');
+        $this->addCommandName(self::LS_TREE_COMMAND);
         // recurse
         $this->addCommandArgument('-r');
         // show trees
@@ -51,7 +53,7 @@ class LsTreeCommand extends BaseCommand
         if ($ref == null) $ref = 'HEAD';
         $this->clearAll();
 
-        $this->addCommandName('ls-tree');
+        $this->addCommandName(self::LS_TREE_COMMAND);
         $this->addCommandSubject($ref);
         return $this->getCommand();
     }
