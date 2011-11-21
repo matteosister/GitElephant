@@ -33,11 +33,12 @@ class DiffCommand extends BaseCommand
      */
     public function diff($treeish, $srcTreeish = null, $path = null)
     {
+        $this->clearAll();
         $this->addCommandName(self::DIFF_COMMAND);
         $this->addCommandArgument('--full-index');
         $this->addCommandArgument('--no-color');
-        $this->addCommandArgument(sprintf('--dst-prefix=%s', $treeish));
-        $this->addCommandArgument(sprintf('--src-prefix=%s', $srcTreeish));
+        $this->addCommandArgument('--dst-prefix=DST/');
+        $this->addCommandArgument('--src-prefix=SRC/');
 
         $subject = $treeish;
         if ($srcTreeish != null) {
@@ -47,5 +48,6 @@ class DiffCommand extends BaseCommand
             $subject .= ' '.$path;
         }
         $this->addCommandSubject($subject);
+        return $this->getCommand();
     }
 }

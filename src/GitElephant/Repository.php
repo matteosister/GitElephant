@@ -15,13 +15,15 @@ namespace GitElephant;
 
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
-use GitElephant\Objects\Tree;
-use GitElephant\Objects\TreeBranch;
-use GitElephant\Objects\TreeTag;
-use GitElephant\Command\MainCommand;
-use GitElephant\Command\BranchCommand;
-use GitElephant\Command\TagCommand;
-use GitElephant\Command\LsTreeCommand;
+use GitElephant\Objects\Tree,
+    GitElephant\Objects\TreeBranch,
+    GitElephant\Objects\TreeTag,
+    GitElephant\Objects\Diff;
+use GitElephant\Command\MainCommand,
+    GitElephant\Command\BranchCommand,
+    GitElephant\Command\TagCommand,
+    GitElephant\Command\LsTreeCommand,
+    GitElephant\Command\DiffCommand;
 use GitElephant\Utilities;
 
 /**
@@ -41,6 +43,7 @@ class Repository
     private $branchCommand;
     private $tagCommand;
     private $lsTreeCommand;
+    private $diffCommand;
 
     public function __construct($repository_path, GitBinary $binary = null)
     {
@@ -58,6 +61,7 @@ class Repository
         $this->branchCommand = new BranchCommand();
         $this->tagCommand = new TagCommand();
         $this->lsTreeCommand = new LsTreeCommand();
+        $this->diffCommand = new DiffCommand();
     }
     
     /**
@@ -241,6 +245,13 @@ class Repository
     {
         $outputLines = $this->caller->execute($this->lsTreeCommand->tree($ref))->getOutputLines();
         return new Tree($outputLines, $path);
+    }
+
+    public function getDiff($with = 'HEAD~1', $of = null, $path = null) {
+        $command = $this->diffCommand->diff($with, $of, $path);
+        var_dump($command);
+        $outputLines = $this->caller->execute($command)->getOutputLines();
+        return new Diff($outputLines);
     }
 
 

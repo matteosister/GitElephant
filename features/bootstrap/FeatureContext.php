@@ -10,8 +10,8 @@ use GitElephant\GitBinary,
     GitElephant\Command\Caller,
     GitElephant\Repository,
     GitElephant\Objects\Tree,
-    GitElephant\Objects\TreeBranch;
-
+    GitElephant\Objects\TreeBranch,
+    GitElephant\Objects\Diff;
 
 require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
@@ -28,6 +28,7 @@ class FeatureContext extends BehatContext
     private $repository;
     private $caller;
     private $tree;
+    private $diff;
     private $callResult;
 
     /**
@@ -340,4 +341,20 @@ class FeatureContext extends BehatContext
         $this->repository->checkout($this->repository->getMainBranch());
     }
 
+    /**
+     * @Then /^I call diff with "([^"]*)"$/
+     */
+    public function iCallDiffWith($treeish)
+    {
+        $this->diff = $this->repository->getDiff($treeish);
+    }
+
+    /**
+     * @Then /^Diff should get a count of (\d+)$/
+     */
+    public function diffShouldGetACountOf($count)
+    {
+        assertInstanceOf('Countable', $this->diff, 'The result is not a Countable object');
+        assertEquals($count, count($this->diff), sprintf('The result is not %s but %s', $count, count($this->diff)));
+    }
 }

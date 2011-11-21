@@ -212,6 +212,16 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         );
     }
 
+    public function getBlob()
+    {
+        return $this->blob;
+    }
+
+    public function getPath()
+    {
+        return $this->path;
+    }
+
     // ArrayAccess interface
     public function offsetExists($offset)
     {
@@ -267,15 +277,5 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     public function rewind()
     {
         $this->position = 0;
-    }
-
-    public function getBlob()
-    {
-        return $this->blob;
-    }
-
-    public function getPath()
-    {
-        return $this->path;
     }
 }

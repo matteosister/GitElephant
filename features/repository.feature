@@ -90,4 +90,11 @@ Scenario: checkouts
   When I get tree for the main branch
   Then Tree should get a count of 2
 
+Scenario: diffs
+  Given I start a test repository
+  And I add a file named "test-file2"
+  And I commit and stage with message "second commit"
+  And I call diff with "HEAD~1"
+  Then Diff should get a count of 1
+
 
