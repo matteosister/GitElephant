@@ -57,10 +57,21 @@ class DiffChunk
 
     private function getLinesNumbers($line) {
         $matches = array();
-        preg_match('/@@ -(\d+),(\d+) \+(\d+),(\d+)?(.*)/', $line, $matches);
-        $this->origin_start_line = (int)$matches[1];
-        $this->origin_end_line = $matches[1] + $matches[2];
-        $this->dest_start_line = (int)$matches[3];
-        $this->dest_end_line = $matches[3] + $matches[4];
+        preg_match('/@@ -(.*) \+(.*) @@?(.*)/', $line, $matches);
+        //die();
+        if (!strpos($matches[1], ',')) {
+            // one line
+            $this->origin_start_line = $matches[1];
+            $this->origin_end_line = $matches[1];
+        } else {
+            list($this->origin_start_line, $this->origin_end_line) = explode(',', $matches[1]);
+        }
+        if (!strpos($matches[2], ',')) {
+            // one line
+            $this->dest_start_line = $matches[2];
+            $this->dest_end_line = $matches[2];
+        } else {
+            list($this->dest_start_line, $this->dest_end_line) = explode(',', $matches[2]);
+        }
     }
 }

@@ -71,6 +71,9 @@ class Commit
                 $date->createFromFormat("U P", $matches[3].' '.$matches[4]);
                 $this->datetime_committer = $date;
             }
+            if (preg_match('/^    (.*)$/', $line, $matches)) {
+                $this->message[] = $matches[1];
+            }
         }
     }
 

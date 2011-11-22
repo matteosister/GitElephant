@@ -78,7 +78,7 @@ Scenario: checkouts
   When I create a branch from "branch2" "master"
   And I checkout "branch2"
   And I add a file named "test-file-branch2"
-  And I commit and stage with message "commit branch2"
+  And I stage and commit with message "commit branch2"
   When I get tree for a branch object "master"
   Then Tree should get a count of 1
   When I get tree for a branch object "branch2"
@@ -116,13 +116,20 @@ Scenario: commit
     """
   Then Commit message should not be an empty array
 
-
-
 Scenario: diffs
   Given I start a test repository
   And I add a file named "test-file2"
-  And I commit and stage with message "second commit"
-  And I call diff with "HEAD~1"
+  And I stage and commit with message "second commit"
+  And I call getCommitDiff with last commit
   Then Diff should get a count of 1
+  And Diff should have a DiffObject named "test-file2"
+  And DiffObject should get a count of 0
+  When I add content to the file "test-file2" "line 2"
+  And I stage and commit with message "second commit"
+  And I call getCommitDiff with last commit
+  Then Diff should get a count of 1
+  And Diff should have a DiffObject named "test-file2"
+  And DiffObject should get a count of 1
+
 
 

@@ -257,9 +257,8 @@ class Repository
         return new Tree($outputLines, $path);
     }
 
-    public function getDiff($of = 'HEAD', $with = 'HEAD~1', $path = null) {
-        $command = $this->diffCommand->diff($with, $of, $path);
-        var_dump($command);
+    public function getCommitDiff(Commit $commit, $path = null) {
+        $command = $this->diffCommand->commitDiff($commit, $path);
         $outputLines = $this->caller->execute($command)->getOutputLines();
         return new Diff($outputLines);
     }

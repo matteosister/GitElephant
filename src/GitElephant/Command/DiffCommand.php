@@ -16,9 +16,7 @@ use GitElephant\Command\BaseCommand;
 use GitElephant\Objects\Commit;
 
 /**
- * DiffCommand
- *
- * @todo: description
+ * DiffCommand wrapper
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -42,12 +40,6 @@ class DiffCommand extends BaseCommand
         $this->addCommandArgument('--src-prefix=SRC/');
 
         $subject = $of;
-        if ($of instanceof Commit) {
-            $of = $of->getSha();
-            if ($with == null) {
-                $with = $of->getParent();
-            }
-        }
 
         if ($with != null) {
             $subject .= ' '.$with;
@@ -55,6 +47,24 @@ class DiffCommand extends BaseCommand
         if ($path != null) {
             $subject .= ' '.$path;
         }
+        $this->addCommandSubject($subject);
+        return $this->getCommand();
+    }
+
+    public function commitDiff(Commit $commit, $path)
+    {
+        $this->clearAll();
+        $this->addCommandName(self::DIFF_COMMAND);
+        $this->addCommandArgument('--full-index');
+        $this->addCommandArgument('--no-color');
+        $this->addCommandArgument('--dst-prefix=DST/');
+        $this->addCommandArgument('--src-prefix=SRC/');
+
+        $subject = $commit->getParent() . ' ' . $commit->getSha();
+        if ($path != null) {
+            $subject .= ' '.$path;
+        }
+
         $this->addCommandSubject($subject);
         return $this->getCommand();
     }

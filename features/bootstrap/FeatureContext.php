@@ -81,9 +81,21 @@ class FeatureContext extends BehatContext
     {
         $filename = $this->path.DIRECTORY_SEPARATOR.$name;
         $handle = fopen($filename, 'w');
-        fwrite($handle, 'test content');
+        fwrite($handle, 'test content'."\n");
         fclose($handle);
     }
+
+    /**
+     * @When /^I add content to the file "([^"]*)" "([^"]*)"$/
+     */
+    public function iAddContentToTheFile($filename, $content)
+    {
+        $filename = $this->path.DIRECTORY_SEPARATOR.$filename;
+        $handle = fopen($filename, 'a');
+        fwrite($handle, "\n".$content);
+        fclose($handle);
+    }
+
 
     /**
      * @Given /^I add a folder named "([^"]*)"$/
@@ -114,9 +126,9 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @Given /^I commit and stage with message "([^"]*)"$/
+     * @Given /^I stage and commit with message "([^"]*)"$/
      */
-    public function iCommitAndStageWithMessage($message)
+    public function iStageAndCommitWithMessage($message)
     {
         $this->repository->commit($message, true);
     }
@@ -137,7 +149,7 @@ class FeatureContext extends BehatContext
         $this->iAmInAFolder('test');
         $this->iInitTheRepository();
         $this->iAddAFileNamed('test-file');
-        $this->iCommitAndStageWithMessage('test-message');
+        $this->iStageAndCommitWithMessage('test-message');
     }
 
 
@@ -342,12 +354,14 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @Then /^I call diff with "([^"]*)"$/
+     * @Given /^I call getCommitDiff with last commit$/
      */
-    public function iCallDiffWith($treeish)
+    public function iCallGetcommitdiffWithLastCommit()
     {
-        $this->diff = $this->repository->getDiff($treeish);
+        $lastCommit = $this->repository->getCommit('HEAD');
+        $this->diff = $this->repository->getCommitDiff($lastCommit);
     }
+
 
     /**
      * @Then /^Diff should get a count of (\d+)$/
@@ -393,6 +407,24 @@ class FeatureContext extends BehatContext
     public function commitMessageShouldNotBeAnEmptyArray()
     {
         assertNotEquals(array(), $this->commit->getMessage(), 'Message is an empty array');
+    }
+
+    /**
+     * @Given /^Diff should have a DiffObject named "([^"]*)"$/
+     */
+    public function diffShouldHaveADiffobjectNamed($destPath)
+    {
+        $diffObject = $this->diff[0];
+        assertEquals($destPath, $diffObject->getDestPath(), sprintf('diff do not contains %s but %s', $destPath, $diffObject->getDestPath()));
+    }
+
+    /**
+     * @Given /^DiffObject should get a count of (\d+)$/
+     */
+    public function diffobjectShouldGetACountOf($count)
+    {
+        assertInstanceOf('Countable', $this->diff[0], 'The result is not a Countable object');
+        assertEquals($count, count($this->diff[0]), sprintf('The result is not %s but %s', $count, count($this->diff[0])));
     }
 
 
