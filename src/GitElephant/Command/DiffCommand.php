@@ -13,6 +13,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
+use GitElephant\Objects\Commit;
 
 /**
  * DiffCommand
@@ -41,6 +42,13 @@ class DiffCommand extends BaseCommand
         $this->addCommandArgument('--src-prefix=SRC/');
 
         $subject = $of;
+        if ($of instanceof Commit) {
+            $of = $of->getSha();
+            if ($with == null) {
+                $with = $of->getParent();
+            }
+        }
+
         if ($with != null) {
             $subject .= ' '.$with;
         }

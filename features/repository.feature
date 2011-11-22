@@ -101,15 +101,20 @@ Scenario: commit
     getAuthor
     getCommitter
     getMessage
+    getTree
+    getDatetimeAuthor
+    getDatetimeCommitter
     """
   And the commit should have not null values
     """
     getSha
-    getParent
     getAuthor
     getCommitter
-    getMessage
+    getTree
+    getDatetimeAuthor
+    getDatetimeCommitter
     """
+  Then Commit message should not be an empty array
 
 
 

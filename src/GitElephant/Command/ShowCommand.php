@@ -33,6 +33,7 @@ class ShowCommand extends BaseCommand
         $this->addCommandName(self::GIT_SHOW);
         $this->addCommandArgument('-s');
         $this->addCommandArgument('--pretty=raw');
+        $this->addCommandArgument('--no-color');
         $this->addCommandSubject($ref);
         return $this->getCommand();
     }

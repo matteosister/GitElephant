@@ -13,6 +13,8 @@
 
 namespace GitElephant\Objects;
 
+use GitElephant\Objects\GitAuthor;
+
 
 /**
  * Commit an object representing a commit
@@ -23,10 +25,13 @@ namespace GitElephant\Objects;
 class Commit
 {
     private $sha;
+    private $tree;
     private $parent;
     private $author;
     private $committer;
     private $message;
+    private $datetime_author;
+    private $datetime_committer;
 
     /**
      * Class constructor
@@ -36,7 +41,37 @@ class Commit
      */
     public function __construct($outputLines)
     {
-        var_dump($outputLines);
+        $this->message = array();
+        foreach ($outputLines as $line) {
+            $matches = array();
+            if (preg_match('/^commit (\w+)$/', $line, $matches) > 0) {
+                $this->sha = $matches[1];
+            }
+            if (preg_match('/^tree (\w+)$/', $line, $matches) > 0) {
+                $this->tree = $matches[1];
+            }
+            if (preg_match('/^parent (\w+)$/', $line, $matches) > 0) {
+                $this->parent = $matches[1];
+            }
+            if (preg_match('/^author (\w+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
+                $author = new GitAuthor();
+                $author->setName($matches[1]);
+                $author->setEmail($matches[2]);
+                $this->author = $author;
+                $date = new \DateTime();
+                $date->createFromFormat("U P", $matches[3].' '.$matches[4]);
+                $this->datetime_author = $date;
+            }
+            if (preg_match('/^committer (\w+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
+                $committer = new GitAuthor();
+                $committer->setName($matches[1]);
+                $committer->setEmail($matches[2]);
+                $this->committer = $committer;
+                $date = new \DateTime();
+                $date->createFromFormat("U P", $matches[3].' '.$matches[4]);
+                $this->datetime_committer = $date;
+            }
+        }
     }
 
     public function getAuthor()
@@ -64,5 +99,19 @@ class Commit
         return $this->sha;
     }
 
+    public function getTree()
+    {
+        return $this->tree;
+    }
+
+    public function getDatetimeAuthor()
+    {
+        return $this->datetime_author;
+    }
+
+    public function getDatetimeCommitter()
+    {
+        return $this->datetime_committer;
+    }
 
 }

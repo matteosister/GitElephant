@@ -387,4 +387,13 @@ class FeatureContext extends BehatContext
         }
     }
 
+    /**
+     * @Then /^Commit message should not be an empty array$/
+     */
+    public function commitMessageShouldNotBeAnEmptyArray()
+    {
+        assertNotEquals(array(), $this->commit->getMessage(), 'Message is an empty array');
+    }
+
+
 }
