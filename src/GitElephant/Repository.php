@@ -18,12 +18,14 @@ use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree,
     GitElephant\Objects\TreeBranch,
     GitElephant\Objects\TreeTag,
-    GitElephant\Objects\Diff;
+    GitElephant\Objects\Diff,
+    GitElephant\Objects\Commit;
 use GitElephant\Command\MainCommand,
     GitElephant\Command\BranchCommand,
     GitElephant\Command\TagCommand,
     GitElephant\Command\LsTreeCommand,
-    GitElephant\Command\DiffCommand;
+    GitElephant\Command\DiffCommand,
+    GitElephant\Command\ShowCommand;
 use GitElephant\Utilities;
 
 /**
@@ -44,6 +46,7 @@ class Repository
     private $tagCommand;
     private $lsTreeCommand;
     private $diffCommand;
+    private $showCommand;
 
     public function __construct($repository_path, GitBinary $binary = null)
     {
@@ -62,6 +65,7 @@ class Repository
         $this->tagCommand = new TagCommand();
         $this->lsTreeCommand = new LsTreeCommand();
         $this->diffCommand = new DiffCommand();
+        $this->showCommand = new ShowCommand();
     }
     
     /**
@@ -110,7 +114,7 @@ class Repository
     public function getStatus()
     {
         $this->caller->execute($this->mainCommand->status());
-        return $this->caller->getOutputLines();
+        return array_map('trim', $this->caller->getOutputLines());
     }
 
     public function createBranch($name, $startPoint = null)
@@ -222,6 +226,12 @@ class Repository
         return null;
     }
 
+    public function getCommit($ref = 'HEAD')
+    {
+        $command = $this->showCommand->showCommit($ref);
+        return new Commit($this->caller->execute($command)->getOutputLines());
+    }
+
     /**
      * Checkout a branch
      * This function change the state of the repository on the filesystem
@@ -247,7 +257,7 @@ class Repository
         return new Tree($outputLines, $path);
     }
 
-    public function getDiff($with = 'HEAD~1', $of = null, $path = null) {
+    public function getDiff($of = 'HEAD', $with = 'HEAD~1', $path = null) {
         $command = $this->diffCommand->diff($with, $of, $path);
         var_dump($command);
         $outputLines = $this->caller->execute($command)->getOutputLines();

@@ -19,8 +19,6 @@ use GitElephant\Objects\TreeTag;
 
 
 /**
- * LsTreeCommand
- *
  * ls-tree command wrapper
  *
  * @author Matteo Giachino <matteog@gmail.com>

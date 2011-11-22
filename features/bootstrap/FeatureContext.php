@@ -30,6 +30,7 @@ class FeatureContext extends BehatContext
     private $tree;
     private $diff;
     private $callResult;
+    private $commit;
 
     /**
      * Initializes context.
@@ -329,7 +330,6 @@ class FeatureContext extends BehatContext
      */
     public function iCheckout($what)
     {
-        //var_dump($this->repository->getBranches());
         $this->repository->checkout($what);
     }
 
@@ -357,4 +357,34 @@ class FeatureContext extends BehatContext
         assertInstanceOf('Countable', $this->diff, 'The result is not a Countable object');
         assertEquals($count, count($this->diff), sprintf('The result is not %s but %s', $count, count($this->diff)));
     }
+
+    /**
+     * @When /^I call getCommit$/
+     */
+    public function iCallGetcommit()
+    {
+        $this->commit = $this->repository->getCommit();
+    }
+
+    /**
+     * @Then /^The commit should have the methods$/
+     */
+    public function theCommitShouldHaveTheMethods(PyStringNode $methods)
+    {
+        $reflectionClass = new ReflectionClass($this->commit);
+        foreach ($methods->getLines() as $method) {
+            assertInstanceOf('ReflectionMethod', $reflectionClass->getMethod($method), sprintf('The Commit class do not have a %s method', $method));
+        }
+    }
+
+    /**
+     * @Given /^the commit should have not null values$/
+     */
+    public function theCommitShouldHaveNotNullValues(PyStringNode $methods)
+    {
+        foreach($methods->getLines() as $method) {
+            assertNotNull(call_user_func(array($this->commit, $method)), sprintf('The method %s return null', $method));
+        }
+    }
+
 }

@@ -27,11 +27,11 @@ class DiffCommand extends BaseCommand
     const DIFF_COMMAND = 'diff';
 
     /**
-     * @param $treeish the reference to diff
-     * @param null $srcTreeish the source refernce to diff with $treeish, if not specified is the current HEAD
+     * @param $of the reference to diff
+     * @param null $with the source refernce to diff with $of, if not specified is the current HEAD
      * @param null $path the path to diff, if not specified the full repository
      */
-    public function diff($treeish, $srcTreeish = null, $path = null)
+    public function diff($of = null, $with = null, $path = null)
     {
         $this->clearAll();
         $this->addCommandName(self::DIFF_COMMAND);
@@ -40,9 +40,9 @@ class DiffCommand extends BaseCommand
         $this->addCommandArgument('--dst-prefix=DST/');
         $this->addCommandArgument('--src-prefix=SRC/');
 
-        $subject = $treeish;
-        if ($srcTreeish != null) {
-            $subject .= ' '.$srcTreeish;
+        $subject = $of;
+        if ($with != null) {
+            $subject .= ' '.$with;
         }
         if ($path != null) {
             $subject .= ' '.$path;

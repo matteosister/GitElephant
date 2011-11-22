@@ -13,6 +13,7 @@
 namespace GitElephant\Objects;
 
 use GitElephant\Objects\DiffObject;
+use GitElephant\Utilities;
 
 /**
  * Represent a collection of diffs between two trees
@@ -27,37 +28,19 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
 
     public function __construct($lines)
     {
+        $this->diffObjects = array();
         $this->position = 0;
 
-        //var_dump($lines);
         $this->parseLines($lines);
     }
 
     private function parseLines($lines)
     {
-        // I split the diff in objects.
-        // I recognize an object from the starting line "diff --git SRC/test-diffs/new-file DST/test-diffs/new-file"
-        $lineNumbers = array();
-        foreach($lines as $i => $line) {
-            $matches = array();
-            if (preg_match('/^diff --git SRC\/(.*) DST\/(.*)$/', $line, $matches)) {
-                $lineNumbers[] = $i;
-            }
+        $splitArray = Utilities::preg_split_array($lines, '/^diff --git SRC\/(.*) DST\/(.*)$/');
+        foreach($splitArray as $diffObjectLines) {
+            $this->diffObjects[] = new DiffObject($diffObjectLines);
         }
-
-        foreach($lineNumbers as $i => $lineNum) {
-            if (isset($lineNumbers[$i+1])) {
-                $diffObject = new DiffObject(array_slice($lines, $lineNum, $lineNumbers[$i+1]));
-            } else {
-                $diffObject = new DiffObject(array_slice($lines, $lineNum));
-            }
-        }
-
-        //var_dump($lineNumbers);
     }
-
-
-
 
     // ArrayAccess interface
     public function offsetExists($offset)

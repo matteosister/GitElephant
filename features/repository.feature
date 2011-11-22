@@ -90,6 +90,29 @@ Scenario: checkouts
   When I get tree for the main branch
   Then Tree should get a count of 2
 
+Scenario: commit
+  Given I start a test repository
+  And The repository has the method "getCommit"
+  When I call getCommit
+  Then The commit should have the methods
+    """
+    getSha
+    getParent
+    getAuthor
+    getCommitter
+    getMessage
+    """
+  And the commit should have not null values
+    """
+    getSha
+    getParent
+    getAuthor
+    getCommitter
+    getMessage
+    """
+
+
+
 Scenario: diffs
   Given I start a test repository
   And I add a file named "test-file2"

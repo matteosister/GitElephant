@@ -12,6 +12,9 @@
 
 namespace GitElephant\Objects;
 
+use GitElephant\Utilities;
+use GitElephant\Objects\DiffChunk;
+
 
 /**
  * Represent a diff for a single object in the repository
@@ -29,16 +32,26 @@ class DiffObject
     private $origPath;
     private $destPath;
     private $mode;
+    private $chunks;
 
     public function __construct($lines)
     {
-        var_dump($lines);
+        $this->chunks = array();
+
         $this->findPath($lines[0]);
         $this->findMode($lines[1]);
 
-        var_dump($this->origPath);
-        var_dump($this->destPath);
-        var_dump($this->mode);
+        if ($this->mode == self::MODE_INDEX) {
+            $this->findChunks(array_slice($lines, 4));
+        }
+    }
+
+    private function findChunks($lines)
+    {
+        $arrayChunks = Utilities::preg_split_array($lines, '/@@ -(\d+,\d+) \+(\d+,\d+) @@?(.*)/');
+        foreach($arrayChunks as $chunkLines) {
+            $this->chunks[] = new DiffChunk($chunkLines);
+        }
     }
 
     private function findPath($line)

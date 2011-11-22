@@ -66,7 +66,7 @@ class Caller
             fclose($pipes[0]);
             while ($line = fgets($pipes[1])) {
                 if ($line !== FALSE) {
-                    $this->outputLines[] = trim($line);
+                    $this->outputLines[] = rtrim($line);
                 }
             }
             $this->stdErr = stream_get_contents($pipes[2]);

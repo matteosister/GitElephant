@@ -17,8 +17,6 @@ use GitElephant\GitBinary;
 use GitElephant\Objects\TreeBranch;
 
 /**
- * Init
- *
  * main commands wrapper
  *
  * @author Matteo Giachino <matteog@gmail.com>
