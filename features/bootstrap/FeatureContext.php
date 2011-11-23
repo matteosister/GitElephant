@@ -24,6 +24,7 @@ class FeatureContext extends BehatContext
     private $path;
     /**
      * @var GitElephant\Repository
+     * @var GitElephant\Repository
      */
     private $repository;
     private $caller;
@@ -92,7 +93,7 @@ class FeatureContext extends BehatContext
     {
         $filename = $this->path.DIRECTORY_SEPARATOR.$filename;
         $handle = fopen($filename, 'a');
-        fwrite($handle, "\n".$content);
+        fwrite($handle, "\n".$content."\n");
         fclose($handle);
     }
 

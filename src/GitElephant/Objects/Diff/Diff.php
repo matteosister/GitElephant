@@ -10,9 +10,9 @@
  * Just for fun...
  */
 
-namespace GitElephant\Objects;
+namespace GitElephant\Objects\Diff;
 
-use GitElephant\Objects\DiffObject;
+use GitElephant\Objects\Diff\DiffObject;
 use GitElephant\Utilities;
 
 /**

@@ -123,7 +123,7 @@ Scenario: diffs
   And I call getCommitDiff with last commit
   Then Diff should get a count of 1
   And Diff should have a DiffObject named "test-file2"
-  And DiffObject should get a count of 0
+  And DiffObject should get a count of 1
   When I add content to the file "test-file2" "line 2"
   And I stage and commit with message "second commit"
   And I call getCommitDiff with last commit

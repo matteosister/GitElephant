@@ -18,7 +18,7 @@ use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree,
     GitElephant\Objects\TreeBranch,
     GitElephant\Objects\TreeTag,
-    GitElephant\Objects\Diff,
+    GitElephant\Objects\Diff\Diff,
     GitElephant\Objects\Commit;
 use GitElephant\Command\MainCommand,
     GitElephant\Command\BranchCommand,

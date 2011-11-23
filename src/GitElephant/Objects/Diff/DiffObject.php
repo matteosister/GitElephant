@@ -10,10 +10,10 @@
  * Just for fun...
  */
 
-namespace GitElephant\Objects;
+namespace GitElephant\Objects\Diff;
 
 use GitElephant\Utilities;
-use GitElephant\Objects\DiffChunk;
+use GitElephant\Objects\Diff\DiffChunk;
 
 
 /**
@@ -43,9 +43,14 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
         $this->findPath($lines[0]);
         $this->findMode($lines[1]);
 
-        if ($this->mode == self::MODE_INDEX) {
+        if ($this->mode == self::MODE_INDEX || $this->mode == self::MODE_NEW_FILE) {
             $this->findChunks(array_slice($lines, 4));
         }
+    }
+
+    public function __toString()
+    {
+        return $this->origPath;
     }
 
     private function findChunks($lines)
