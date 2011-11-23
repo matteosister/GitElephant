@@ -54,7 +54,13 @@ class RepositoryTest extends TestCase
     public function testInit()
     {
         $this->getRepository()->init();
-        $this->assertRegExp('/(.*)nothing to commit(.*)/', $this->getRepository()->getStatus(true), 'init problem, git status on an empty repo should give nothing to commit');
+        $match = false;
+        foreach($this->getRepository()->getStatus() as $line) {
+            if (preg_match('/nothing to commit?(.*)/', $line)) {
+                $match = true;
+            }
+        }
+        $this->assertTrue($match, 'init problem, git status on an empty repo should give nothing to commit');
     }
 
     /**
@@ -66,7 +72,13 @@ class RepositoryTest extends TestCase
         $this->getRepository()->init();
         $this->addFile('test');
         $this->getRepository()->stage();
-        $this->assertRegExp('/(.*)Changes to be committed(.*)/', $this->getRepository()->getStatus(true), 'stageAll error, git status should give Changes to be committed');
+        $match = false;
+        foreach($this->getRepository()->getStatus() as $line) {
+            if (preg_match('/(.*)Changes to be committed(.*)/', $line)) {
+                $match = true;
+            }
+        }
+        $this->assertTrue($match, 'stageAll error, git status should give Changes to be committed');
     }
 
     /**
@@ -79,7 +91,12 @@ class RepositoryTest extends TestCase
         $this->addFile('test');
         $this->getRepository()->stage();
         $this->getRepository()->commit('initial import');
-        $this->assertRegExp('/(.*)nothing to commit(.*)/', $this->getRepository()->getStatus(true), 'commit error, git status should give nothing to commit');
+        foreach($this->getRepository()->getStatus() as $line) {
+            if (preg_match('/nothing to commit?(.*)/', $line)) {
+                $match = true;
+            }
+        }
+        $this->assertTrue($match, 'commit error, git status should give nothing to commit');
     }
 
     /**
