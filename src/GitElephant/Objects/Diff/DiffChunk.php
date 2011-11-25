@@ -47,21 +47,23 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
         foreach ($lines as $line) {
             if (preg_match('/^\+(.*)/', $line)) {
                 $this->lines[] = new DiffChunkLineAdded($i, preg_replace('/\+(.*)/', '$1', $line));
+                $i++;
             } else if (preg_match('/^-(.*)/', $line)) {
                 $this->lines[] = new DiffChunkLineDeleted($i, preg_replace('/-(.*)/', '$1', $line));
-            } else if (preg_match('/^ (.*)/', $line)) {
+            } else if (preg_match('/^ (.*)/', $line) || $line == '') {
                 $this->lines[] = new DiffChunkLineUnchanged($i, ltrim($line));
+                $i++;
+            } else if (preg_match('/\\ No newline at end of file/', $line)) {
+                $i++;
             } else {
                 throw new \Exception(sprintf('GitElephant was unable to parse the line %s', $line));
             }
-            $i++;
         }
     }
 
     private function getLinesNumbers($line) {
         $matches = array();
         preg_match('/@@ -(.*) \+(.*) @@?(.*)/', $line, $matches);
-        //die();
         if (!strpos($matches[1], ',')) {
             // one line
             $this->origin_start_line = $matches[1];

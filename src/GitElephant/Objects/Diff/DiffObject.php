@@ -55,7 +55,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
     private function findChunks($lines)
     {
-        $arrayChunks = Utilities::preg_split_array($lines, '/@@ -(\d+,\d+)|(\d+) \+(\d+,\d+)|(\d+) @@?(.*)/');
+        $arrayChunks = Utilities::preg_split_array($lines, '/^@@ -(\d+,\d+)|(\d+) \+(\d+,\d+)|(\d+) @@(.*)$/');
         foreach($arrayChunks as $chunkLines) {
             $this->chunks[] = new DiffChunk($chunkLines);
         }

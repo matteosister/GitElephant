@@ -54,8 +54,19 @@ abstract class DiffChunkLine
         $this->content = $content;
     }
 
-    public function getContent()
+    public function getContent($indent = true)
     {
         return $this->content;
+    }
+
+    public function indentation()
+    {
+        $count = 0;
+        $content = $this->content;
+        while (preg_match('/\t| /', substr($content, 0, 1))) {
+            $count++;
+            $content = substr($content, 1);
+        }
+        return $count;
     }
 }

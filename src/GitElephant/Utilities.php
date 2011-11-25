@@ -36,16 +36,14 @@ class Utilities
         $lineNumbers = array();
         $arrOut = array();
         foreach($array as $i => $line) {
-            $matches = array();
             if (preg_match($regexp, $line)) {
                 $lineNumbers[] = $i;
             }
         }
 
-
         foreach($lineNumbers as $i => $lineNum) {
             if (isset($lineNumbers[$i+1])) {
-                $arrOut[] = array_slice($array, $lineNum, $lineNumbers[$i+1]);
+                $arrOut[] = array_slice($array, $lineNum, $lineNumbers[$i+1] -$lineNum);
             } else {
                 $arrOut[] = array_slice($array, $lineNum);
             }
