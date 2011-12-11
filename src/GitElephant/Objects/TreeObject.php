@@ -49,6 +49,17 @@ class TreeObject
         return $this->name;
     }
 
+    public function output($basePath, $html = true)
+    {
+        switch($this->type)
+        {
+            case self::TYPE_BLOB:
+                $content = file_get_contents($basePath.DIRECTORY_SEPARATOR.$this->path);
+                return ('' == $content) ? 'empty file' : $content;
+                break;
+        }
+    }
+
     public function isTree()
     {
         return self::TYPE_TREE == $this->getType();

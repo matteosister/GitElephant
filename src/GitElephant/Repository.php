@@ -273,4 +273,9 @@ class Repository
             return 0;
         }
     }
+
+    public function getPath()
+    {
+        return $this->path;
+    }
 }
