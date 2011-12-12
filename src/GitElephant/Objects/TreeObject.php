@@ -38,11 +38,11 @@ class TreeObject
     public function __construct($permissions, $type, $sha, $size, $name, $path)
     {
         $this->permissions = $permissions;
-        $this->type = $type;
-        $this->sha = $sha;
-        $this->size = $size;
-        $this->name = $name;
-        $this->path = $path;
+        $this->type        = $type;
+        $this->sha         = $sha;
+        $this->size        = $size;
+        $this->name        = $name;
+        $this->path        = $path;
     }
 
     public function __toString()
@@ -52,10 +52,10 @@ class TreeObject
 
     public function output($basePath, $html = true)
     {
-        switch($this->type)
+        switch ($this->type)
         {
             case self::TYPE_BLOB:
-                $content = file_get_contents($basePath.DIRECTORY_SEPARATOR.$this->path);
+                $content = file_get_contents($basePath . DIRECTORY_SEPARATOR . $this->path);
                 return ('' == $content) ? 'empty file' : $content;
                 break;
         }
@@ -63,12 +63,12 @@ class TreeObject
 
     public function getMimeType($basePath)
     {
-        return mime_content_type($basePath.DIRECTORY_SEPARATOR.$this->path);
+        return mime_content_type($basePath . DIRECTORY_SEPARATOR . $this->path);
     }
 
     public function getExtension($basePath)
     {
-        $info = pathinfo($basePath.DIRECTORY_SEPARATOR.$this->path);
+        $info = pathinfo($basePath . DIRECTORY_SEPARATOR . $this->path);
         return isset($info['extension']) ? $info['extension'] : null;
     }
 
@@ -76,6 +76,7 @@ class TreeObject
     {
         return self::TYPE_TREE == $this->getType();
     }
+
     public function isLink()
     {
         return self::TYPE_LINK == $this->getType();
@@ -86,7 +87,7 @@ class TreeObject
         if ($this->path == '') {
             return $this->name;
         } else {
-            return $this->path.'/'.$this->name;
+            return $this->path . '/' . $this->name;
         }
     }
 

@@ -21,13 +21,13 @@ use GitElephant\Objects\TreeBranch;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
- 
+
 class MainCommand extends BaseCommand
 {
-    const GIT_INIT = 'init';
-    const GIT_STATUS = 'status';
-    const GIT_ADD = 'add';
-    const GIT_COMMIT = 'commit';
+    const GIT_INIT     = 'init';
+    const GIT_STATUS   = 'status';
+    const GIT_ADD      = 'add';
+    const GIT_COMMIT   = 'commit';
     const GIT_CHECKOUT = 'checkout';
 
     /**
@@ -54,7 +54,9 @@ class MainCommand extends BaseCommand
 
     /**
      * Add a node to the repository
+     *
      * @param string $what
+     *
      * @return Main
      */
     public function add($what = '.')
@@ -67,11 +69,14 @@ class MainCommand extends BaseCommand
 
     /**
      * Commit
-     * @param $message
+     *
+     * @param      $message
      * @param bool $all
+     *
      * @return Main
      */
-    public function commit($message) {
+    public function commit($message)
+    {
         $this->clearAll();
         if (trim($message) == '' || $message == null) {
             throw new \InvalidArgumentException(sprintf('You can\'t commit whitout message'));

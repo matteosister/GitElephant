@@ -47,15 +47,15 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *    folder1/folder2
      *    folder1/folder2/filename
      *
-     * @param $result an array with outpul lines from the Caller
-     * @param null $path the (physical) path of the repository relative to the root
+     * @param      $result an array with outpul lines from the Caller
+     * @param null $path   the (physical) path of the repository relative to the root
      */
     public function __construct($result, $path = null)
     {
-        $this->result = $result;
+        $this->result   = $result;
         $this->position = 0;
-        $this->path = $path;
-        foreach($result as $line) {
+        $this->path     = $path;
+        foreach ($result as $line) {
             $this->parseLine($line);
         }
         usort($this->children, array($this, 'sortChildren'));
@@ -111,13 +111,13 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
             $pathString = '';
             foreach ($arrayNames as $i => $name) {
                 if ($this->isBlob() && $name == $this->blob->getName()) {
-                    $bc[$i]['path'] = $pathString.$name;
+                    $bc[$i]['path']  = $pathString . $name;
                     $bc[$i]['label'] = $this->blob;
-                    $pathString .= $name.'/';
+                    $pathString .= $name . '/';
                 } else {
-                    $bc[$i]['path'] = $pathString.$name;
+                    $bc[$i]['path']  = $pathString . $name;
                     $bc[$i]['label'] = $name;
-                    $pathString .= $name.'/';
+                    $pathString .= $name . '/';
                 }
             }
         }
@@ -135,12 +135,12 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
             if ($slices['fullPath'] == $this->path) {
                 $pos = strrpos($slices['fullPath'], '/');
                 if ($pos === false) {
-                    $name = $this->path;
+                    $name       = $this->path;
                     $this->path = '';
                 } else {
-                    $path = $this->path;
+                    $path       = $this->path;
                     $this->path = substr($path, 0, $pos);
-                    $name = substr($path, $pos + 1);
+                    $name       = substr($path, $pos + 1);
                 }
                 $this->blob = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $slices['fullPath']);
             }
@@ -162,14 +162,14 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         $slices = $this->getLineSlices($line);
         if ($this->isRoot()) {
             // if is root check for first children
-            $pattern = '/(\w+)\/(.*)/';
+            $pattern     = '/(\w+)\/(.*)/';
             $replacement = '$1';
         } else {
             // filter by the children of the path
             if (!preg_match(sprintf('/^%s\/(\w*)/', preg_quote($this->path, '/')), $slices['fullPath'])) {
                 return;
             }
-            $pattern = sprintf('/^%s\/(\w*)/', preg_quote($this->path, '/'));
+            $pattern     = sprintf('/^%s\/(\w*)/', preg_quote($this->path, '/'));
             $replacement = '$1';
         }
         $name = preg_replace($pattern, $replacement, $slices['fullPath']);
@@ -179,9 +179,9 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
 
         if (!in_array($name, $this->pathChildren)) {
             //$path = preg_replace('/(.*)(\/'.$name.')$/', '$1', $slices['fullPath']);
-            $path = rtrim($slices['fullPath'], $name);
-            $treeObject = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
-            $this->children[] = $treeObject;
+            $path                 = rtrim($slices['fullPath'], $name);
+            $treeObject           = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
+            $this->children[]     = $treeObject;
             $this->pathChildren[] = $name;
         }
     }
@@ -190,8 +190,8 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     {
         preg_match('/^(\d+) (\w+) ([a-z0-9]+) +(\d+|-)\t(.*)$/', $line, $matches);
         $permissions = $matches[1];
-        $type = null;
-        switch($matches[2]) {
+        $type        = null;
+        switch ($matches[2]) {
             case TreeObject::TYPE_TREE:
                 $type = TreeObject::TYPE_TREE;
                 break;
@@ -202,16 +202,16 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
                 $type = TreeObject::TYPE_LINK;
                 break;
         }
-        $sha = $matches[3];
-        $size = $matches[4];
+        $sha      = $matches[3];
+        $size     = $matches[4];
         $fullPath = $matches[5];
 
         return array(
             'permissions' => $permissions,
-            'type' => $type,
-            'sha' => $sha,
-            'size' => $size,
-            'fullPath' => $fullPath
+            'type'        => $type,
+            'sha'         => $sha,
+            'size'        => $size,
+            'fullPath'    => $fullPath
         );
     }
 

@@ -37,6 +37,7 @@ class Commit
      * Class constructor
      *
      * @param $outputLines Output of the git show command
+     *
      * @see ShowCommand::commitInfo
      */
     public function __construct($outputLines)
@@ -58,8 +59,8 @@ class Commit
                 $author->setName($matches[1]);
                 $author->setEmail($matches[2]);
                 $this->author = $author;
-                $date = new \DateTime();
-                $date->createFromFormat("U P", $matches[3].' '.$matches[4]);
+                $date         = new \DateTime();
+                $date->createFromFormat("U P", $matches[3] . ' ' . $matches[4]);
                 $this->datetime_author = $date;
             }
             if (preg_match('/^committer (\w+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
@@ -67,8 +68,8 @@ class Commit
                 $committer->setName($matches[1]);
                 $committer->setEmail($matches[2]);
                 $this->committer = $committer;
-                $date = new \DateTime();
-                $date->createFromFormat("U P", $matches[3].' '.$matches[4]);
+                $date            = new \DateTime();
+                $date->createFromFormat("U P", $matches[3] . ' ' . $matches[4]);
                 $this->datetime_committer = $date;
             }
             if (preg_match('/^    (.*)$/', $line, $matches)) {

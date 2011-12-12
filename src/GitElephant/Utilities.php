@@ -34,16 +34,16 @@ class Utilities
     static public function preg_split_array($array, $regexp)
     {
         $lineNumbers = array();
-        $arrOut = array();
-        foreach($array as $i => $line) {
+        $arrOut      = array();
+        foreach ($array as $i => $line) {
             if (preg_match($regexp, $line)) {
                 $lineNumbers[] = $i;
             }
         }
 
-        foreach($lineNumbers as $i => $lineNum) {
-            if (isset($lineNumbers[$i+1])) {
-                $arrOut[] = array_slice($array, $lineNum, $lineNumbers[$i+1] -$lineNum);
+        foreach ($lineNumbers as $i => $lineNum) {
+            if (isset($lineNumbers[$i + 1])) {
+                $arrOut[] = array_slice($array, $lineNum, $lineNumbers[$i + 1] - $lineNum);
             } else {
                 $arrOut[] = array_slice($array, $lineNum);
             }

@@ -21,8 +21,8 @@ namespace GitElephant\Objects\Diff;
 abstract class DiffChunkLine
 {
     const UNCHANGED = "unchanged";
-    const ADDED = "added";
-    const DELETED = "deleted";
+    const ADDED     = "added";
+    const DELETED   = "deleted";
 
     protected $number;
     protected $type;
@@ -61,7 +61,7 @@ abstract class DiffChunkLine
 
     public function indentation()
     {
-        $count = 0;
+        $count   = 0;
         $content = $this->content;
         while (preg_match('/\t| /', substr($content, 0, 1))) {
             $count++;

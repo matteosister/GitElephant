@@ -31,15 +31,16 @@ class BranchCommand extends BaseCommand
     /**
      * Create a new branch
      *
-     * @param string $name The new branch name
+     * @param string      $name       The new branch name
      * @param string|null $startPoint the new branch start point.
+     *
      * @return string the command
      */
     public function create($name, $startPoint = null)
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
-        $subject = $startPoint == null ? $name : $name.' '.$startPoint;
+        $subject = $startPoint == null ? $name : $name . ' ' . $startPoint;
         $this->addCommandSubject($subject);
         return $this->getCommand();
     }
@@ -63,6 +64,7 @@ class BranchCommand extends BaseCommand
      * Delete a branch by its name
      *
      * @param $name The branch to delete
+     *
      * @return string the command
      */
     public function delete($name)

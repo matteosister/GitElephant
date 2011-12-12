@@ -24,9 +24,9 @@ use GitElephant\Objects\Diff\DiffChunk;
 
 class DiffObject implements \ArrayAccess, \Countable, \Iterator
 {
-    const MODE_INDEX = 'index';
-    const MODE_MODE = 'mode';
-    const MODE_NEW_FILE = 'new_file';
+    const MODE_INDEX        = 'index';
+    const MODE_MODE         = 'mode';
+    const MODE_NEW_FILE     = 'new_file';
     const MODE_DELETED_FILE = 'deleted_file';
 
     private $position;
@@ -38,7 +38,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     public function __construct($lines)
     {
         $this->position = 0;
-        $this->chunks = array();
+        $this->chunks   = array();
 
         $this->findPath($lines[0]);
         $this->findMode($lines[1]);
@@ -56,7 +56,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     private function findChunks($lines)
     {
         $arrayChunks = Utilities::preg_split_array($lines, '/^@@ -(\d+,\d+)|(\d+) \+(\d+,\d+)|(\d+) @@(.*)$/');
-        foreach($arrayChunks as $chunkLines) {
+        foreach ($arrayChunks as $chunkLines) {
             $this->chunks[] = new DiffChunk($chunkLines);
         }
     }

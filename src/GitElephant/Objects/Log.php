@@ -17,7 +17,7 @@ use GitElephant\Objects\GitAuthor;
 /**
  * Log
  *
- * @todo: description
+ * @todo   : description
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -62,11 +62,11 @@ class Log
         return $this->datetime;
     }
 
-    public function getMessage($trim= true, $trim_length = 50)
+    public function getMessage($trim = true, $trim_length = 50)
     {
         if ($trim) {
             $msg = implode(' ', $this->message);
-            return strlen($msg) > $trim_length ? substr($msg, 0, $trim_length).'...' : $msg;
+            return strlen($msg) > $trim_length ? substr($msg, 0, $trim_length) . '...' : $msg;
         }
         return $this->message;
     }

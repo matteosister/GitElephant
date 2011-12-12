@@ -31,9 +31,9 @@ class BaseCommand
 
     public function clearAll()
     {
-        $this->commandName = null;
+        $this->commandName      = null;
         $this->commandArguments = null;
-        $this->commandSubject = null;
+        $this->commandSubject   = null;
     }
 
     protected function addCommandName($commandName)
@@ -56,7 +56,7 @@ class BaseCommand
         if ($this->commandName == null) {
             throw new \InvalidParameterException("You should pass a commandName to execute a command");
         }
-        
+
         $command = $this->commandName;
         $command .= ' ';
         if (count($this->commandArguments) > 0) {

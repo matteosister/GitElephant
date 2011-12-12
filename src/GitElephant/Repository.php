@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the GitElephant package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
@@ -16,18 +16,18 @@ namespace GitElephant;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree,
-    GitElephant\Objects\TreeBranch,
-    GitElephant\Objects\TreeTag,
-    GitElephant\Objects\Diff\Diff,
-    GitElephant\Objects\Commit,
-    GitElephant\Objects\Log;
+GitElephant\Objects\TreeBranch,
+GitElephant\Objects\TreeTag,
+GitElephant\Objects\Diff\Diff,
+GitElephant\Objects\Commit,
+GitElephant\Objects\Log;
 use GitElephant\Command\MainCommand,
-    GitElephant\Command\BranchCommand,
-    GitElephant\Command\TagCommand,
-    GitElephant\Command\LsTreeCommand,
-    GitElephant\Command\DiffCommand,
-    GitElephant\Command\ShowCommand,
-    GitElephant\Command\LogCommand;
+GitElephant\Command\BranchCommand,
+GitElephant\Command\TagCommand,
+GitElephant\Command\LsTreeCommand,
+GitElephant\Command\DiffCommand,
+GitElephant\Command\ShowCommand,
+GitElephant\Command\LogCommand;
 use GitElephant\Utilities;
 
 /**
@@ -51,29 +51,36 @@ class Repository
     private $showCommand;
     private $logCommand;
 
-    public function __construct($repository_path, GitBinary $binary = null)
+    /**
+     * Class constructor
+     *
+     * @param string         $repositoryPath the path of the git repository
+     * @param GitBinary|null $binary         the GitBinary instance that calls the commands
+     */
+    public function __construct($repositoryPath, GitBinary $binary = null)
     {
         if ($binary == null) {
             $binary = new GitBinary();
         }
-        if (!is_dir($repository_path)) {
-            throw new \InvalidArgumentException(sprintf('the path "%s" is not a repository folder', $repository_path));
+        if (!is_dir($repositoryPath)) {
+            throw new \InvalidArgumentException(sprintf('the path "%s" is not a repository folder', $repositoryPath));
         }
-        $this->path = $repository_path;
-        $this->caller = new Caller($binary, $repository_path);
+        $this->path   = $repositoryPath;
+        $this->caller = new Caller($binary, $repositoryPath);
 
         // command objects
-        $this->mainCommand = new MainCommand();
+        $this->mainCommand   = new MainCommand();
         $this->branchCommand = new BranchCommand();
-        $this->tagCommand = new TagCommand();
+        $this->tagCommand    = new TagCommand();
         $this->lsTreeCommand = new LsTreeCommand();
-        $this->diffCommand = new DiffCommand();
-        $this->showCommand = new ShowCommand();
-        $this->logCommand = new LogCommand();
+        $this->diffCommand   = new DiffCommand();
+        $this->showCommand   = new ShowCommand();
+        $this->logCommand    = new LogCommand();
     }
-    
+
     /**
      * Init the repository
+     *
      * @return void
      */
     public function init()
@@ -83,8 +90,9 @@ class Repository
 
     /**
      * Stage the working tree content
-     * 
+     *
      * @param string $path the path to store
+     *
      * @return void
      */
     public function stage($path = '.')
@@ -95,9 +103,9 @@ class Repository
     /**
      * Commit content to the repository, eventually staging all unstaged content
      *
-     * @param $message The commit message
-     * @param bool $stageAll whether stage or not content before the commit
-     * @return void
+     * @param string      $message  the commit message
+     * @param bool        $stageAll whether to stage on not everything before commit
+     * @param string|null $ref      the reference to commit to (checkout -> commit -> checkout previous)
      */
     public function commit($message, $stageAll = false, $ref = null)
     {
@@ -105,7 +113,9 @@ class Repository
             $currentBranch = $this->getMainBranch();
             $this->checkout($ref);
         }
-        if ($stageAll) $this->stage();
+        if ($stageAll) {
+            $this->stage();
+        }
         $this->caller->execute($this->mainCommand->commit($message));
         if ($ref != null) {
             $this->checkout($currentBranch);
@@ -113,6 +123,8 @@ class Repository
     }
 
     /**
+     * Get the repository status
+     *
      * @return array output lines
      */
     public function getStatus()
@@ -121,16 +133,22 @@ class Repository
         return array_map('trim', $this->caller->getOutputLines());
     }
 
+    /**
+     * Create a new branch
+     *
+     * @param string $name       the new branch name
+     * @param null   $startPoint the reference to create the branch from
+     */
     public function createBranch($name, $startPoint = null)
     {
         $this->caller->execute($this->branchCommand->create($name, $startPoint));
     }
 
     /**
-     * Delete a branch by his name
+     * Delete a branch by its name
      * This function change the state of the repository on the filesystem
      *
-     * @param $name
+     * @param string $name The branch to delete
      */
     public function deleteBranch($name)
     {
@@ -146,7 +164,7 @@ class Repository
     {
         $branches = array();
         $this->caller->execute($this->branchCommand->lists());
-        foreach($this->caller->getOutputLines() as $branchString) {
+        foreach ($this->caller->getOutputLines() as $branchString) {
             $branches[] = new TreeBranch($branchString);
         }
         usort($branches, array($this, 'sortBranches'));
@@ -154,15 +172,18 @@ class Repository
     }
 
     /**
-     * return the actually checked out branch
+     * Return the actually checked out branch
      *
      * @return GitElephant\Objects\TreeBranch
      */
     public function getMainBranch()
     {
-        $filtered = array_filter($this->getBranches(), function(TreeBranch $branch) {
-            return $branch->getCurrent();
-        });
+        $filtered = array_filter(
+            $this->getBranches(), function(TreeBranch $branch)
+            {
+                return $branch->getCurrent();
+            }
+        );
         sort($filtered);
         return $filtered[0];
     }
@@ -170,7 +191,8 @@ class Repository
     /**
      * Retrieve a TreeBranch object by a branch name
      *
-     * @param string $name
+     * @param string $name The branch name
+     *
      * @return null|TreeBranch
      */
     public function getBranch($name)
@@ -183,6 +205,14 @@ class Repository
         return null;
     }
 
+    /**
+     * Create a new tag
+     * This function change the state of the repository on the filesystem
+     *
+     * @param string $name       The new tag name
+     * @param null   $startPoint The reference to create the tag from
+     * @param null   $message    the tag message
+     */
     public function createTag($name, $startPoint = null, $message = null)
     {
         $this->caller->execute($this->tagCommand->create($name, $startPoint, $message));
@@ -192,7 +222,7 @@ class Repository
      * Delete a tag by it's name or by passing a TreeTag object
      * This function change the state of the repository on the filesystem
      *
-     * @param string|TreeTag $tag
+     * @param string|TreeTag $tag The tag name or the TreeTag object
      */
     public function deleteTag($tag)
     {
@@ -208,7 +238,7 @@ class Repository
     {
         $tags = array();
         $this->caller->execute($this->tagCommand->lists());
-        foreach($this->caller->getOutputLines() as $tagString) {
+        foreach ($this->caller->getOutputLines() as $tagString) {
             $tags[] = new TreeTag($tagString);
         }
         return $tags;
@@ -217,7 +247,8 @@ class Repository
     /**
      * Return a tag object
      *
-     * @param $name the tag name
+     * @param string $name The tag name
+     *
      * @return GitElephant\Objects\TreeTag
      */
     public function getTag($name)
@@ -233,7 +264,8 @@ class Repository
     /**
      * Return a Commit object
      *
-     * @param string $ref
+     * @param string $ref The commit reference
+     *
      * @return Objects\Commit
      */
     public function getCommit($ref = 'HEAD')
@@ -242,6 +274,14 @@ class Repository
         return new Commit($this->caller->execute($command)->getOutputLines());
     }
 
+    /**
+     * Get a log object
+     *
+     * @param TreeObject $obj    The TreeObject instance
+     * @param null       $branch The branch to read from
+     *
+     * @return Objects\Log
+     */
     public function getLog($obj, $branch = null)
     {
         $command = $this->logCommand->showLog($obj, $branch);
@@ -264,8 +304,9 @@ class Repository
      * Retrieve an instance of Tree
      * Tree Object is Countable, Iterable and has ArrayAccess for easy manipulation
      *
-     * @param string $path the physical path to the tree relative to the repository root
-     * @param string|null $ref the treeish to check
+     * @param string|null $ref  the treeish to check
+     * @param string      $path the physical path to the tree relative to the repository root
+     *
      * @return GitElephant\Objects\Tree
      */
     public function getTree($ref = 'HEAD', $path = '')
@@ -274,23 +315,47 @@ class Repository
         return new Tree($outputLines, $path);
     }
 
-    public function getCommitDiff(Commit $commit, $path = null) {
-        $command = $this->diffCommand->commitDiff($commit, $path);
+    /**
+     * Get a Diff object for a commit with its parent
+     *
+     * @param Objects\Commit $commit The Commit object
+     * @param null           $path   The path to get the diff for
+     *
+     * @return Objects\Diff\Diff
+     */
+    public function getCommitDiff(Commit $commit, $path = null)
+    {
+        $command     = $this->diffCommand->commitDiff($commit, $path);
         $outputLines = $this->caller->execute($command)->getOutputLines();
         return new Diff($outputLines);
     }
 
-
-    private function sortBranches(TreeBranch $a, TreeBranch $b) {
+    /**
+     * Order the branches list
+     *
+     * @param Objects\TreeBranch $a first branch
+     * @param Objects\TreeBranch $b second branch
+     *
+     * @return int
+     */
+    private function sortBranches(TreeBranch $a, TreeBranch $b)
+    {
         if ($a->getName() == 'master') {
             return -1;
-        } else if ($b->getName() == 'master') {
-            return 1;
         } else {
-            return 0;
+            if ($b->getName() == 'master') {
+                return 1;
+            } else {
+                return 0;
+            }
         }
     }
 
+    /**
+     * Get the path
+     *
+     * @return string
+     */
     public function getPath()
     {
         return $this->path;

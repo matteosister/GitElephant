@@ -20,7 +20,7 @@ use GitElephant\Objects\TreeTag;
 /**
  * TagCommand
  *
- * @todo: description
+ * @todo   : description
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -32,9 +32,10 @@ class TagCommand extends BaseCommand
     /**
      * Create a new tag
      *
-     * @param string $name The new tag name
+     * @param string      $name       The new tag name
      * @param string|null $startPoint the new tag start point.
-     * @param null $message the tag message
+     * @param null        $message    the tag message
+     *
      * @return string the command
      */
     public function create($name, $startPoint = null, $message = null)
@@ -44,7 +45,7 @@ class TagCommand extends BaseCommand
         if ($message != null) {
             $this->addCommandArgument(sprintf('-m %s', $message));
         }
-        $subject = $startPoint == null ? $name : $name.' '.$startPoint;
+        $subject = $startPoint == null ? $name : $name . ' ' . $startPoint;
         $this->addCommandSubject($subject);
         return $this->getCommand();
     }
@@ -65,6 +66,7 @@ class TagCommand extends BaseCommand
      * Delete a tag
      *
      * @param $tag The tag to delete
+     *
      * @return string the command
      */
     public function delete($tag)

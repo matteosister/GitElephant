@@ -19,7 +19,7 @@ use GitElephant\Objects\TreeBranch;
 /**
  * LogCommand
  *
- * @todo: description
+ * @todo   : description
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -39,9 +39,9 @@ class LogCommand extends BaseCommand
 
         $subject = '';
         if (null !== $branch) {
-            $subject.= $branch->getName();
+            $subject .= $branch->getName();
         }
-        $subject .= ' -- '.$obj->getFullPath();
+        $subject .= ' -- ' . $obj->getFullPath();
         $this->addCommandSubject($subject);
         return $this->getCommand();
     }

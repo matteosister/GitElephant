@@ -21,7 +21,7 @@ use GitElephant\GitBinary;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
- 
+
 class Caller
 {
     private $binary;
@@ -31,7 +31,7 @@ class Caller
 
     public function __construct(GitBinary $binary, $repositoryPath)
     {
-        $this->binary = $binary;
+        $this->binary         = $binary;
         $this->repositoryPath = $repositoryPath;
     }
 
@@ -44,16 +44,16 @@ class Caller
     {
         $this->outputLines = array();
         if ($git) {
-            $cmd = $this->binary->getPath().' '.$cmd;
+            $cmd = $this->binary->getPath() . ' ' . $cmd;
         }
 
         $descriptorSpec = array(
-           0 => array("pipe", "r"), // Input
-           1 => array("pipe", "w"), // Output
-           2 => array("pipe", "w")  // Error
+            0 => array("pipe", "r"), // Input
+            1 => array("pipe", "w"), // Output
+            2 => array("pipe", "w") // Error
         );
 
-        $pipes = array();
+        $pipes   = array();
         $process = proc_open(
             $cmd,
             $descriptorSpec,

@@ -26,7 +26,7 @@ class DiffCommand extends BaseCommand
     const DIFF_COMMAND = 'diff';
 
     /**
-     * @param $of the reference to diff
+     * @param      $of   the reference to diff
      * @param null $with the source refernce to diff with $of, if not specified is the current HEAD
      * @param null $path the path to diff, if not specified the full repository
      */
@@ -42,10 +42,10 @@ class DiffCommand extends BaseCommand
         $subject = $of;
 
         if ($with != null) {
-            $subject .= ' '.$with;
+            $subject .= ' ' . $with;
         }
         if ($path != null) {
-            $subject .= ' '.$path;
+            $subject .= ' ' . $path;
         }
         $this->addCommandSubject($subject);
         return $this->getCommand();
@@ -62,7 +62,7 @@ class DiffCommand extends BaseCommand
 
         $subject = $commit->getParent() . ' ' . $commit->getSha();
         if ($path != null) {
-            $subject .= ' '.$path;
+            $subject .= ' ' . $path;
         }
 
         $this->addCommandSubject($subject);

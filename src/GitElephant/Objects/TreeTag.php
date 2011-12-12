@@ -29,8 +29,8 @@ class TreeTag
 
     public function __construct($line)
     {
-        $this->name = trim($line);
-        $this->fullRef = 'refs/tags/'.$this->name;
+        $this->name    = trim($line);
+        $this->fullRef = 'refs/tags/' . $this->name;
     }
 
     public function setName($name)

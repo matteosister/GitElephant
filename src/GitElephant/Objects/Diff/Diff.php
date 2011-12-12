@@ -29,7 +29,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     public function __construct($lines)
     {
         $this->diffObjects = array();
-        $this->position = 0;
+        $this->position    = 0;
 
         $this->parseLines($lines);
     }
@@ -37,7 +37,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     private function parseLines($lines)
     {
         $splitArray = Utilities::preg_split_array($lines, '/^diff --git SRC\/(.*) DST\/(.*)$/');
-        foreach($splitArray as $diffObjectLines) {
+        foreach ($splitArray as $diffObjectLines) {
             $this->diffObjects[] = new DiffObject($diffObjectLines);
         }
     }

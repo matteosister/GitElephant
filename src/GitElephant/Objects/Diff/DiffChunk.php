@@ -14,8 +14,8 @@
 namespace GitElephant\Objects\Diff;
 
 use GitElephant\Objects\Diff\DiffChunkLineAdded,
-    GitElephant\Objects\Diff\DiffChunkLineDeleted,
-    GitElephant\Objects\Diff\DiffChunkLineUnchanged;
+GitElephant\Objects\Diff\DiffChunkLineDeleted,
+GitElephant\Objects\Diff\DiffChunkLineUnchanged;
 
 
 /**
@@ -48,33 +48,40 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
             if (preg_match('/^\+(.*)/', $line)) {
                 $this->lines[] = new DiffChunkLineAdded($i, preg_replace('/\+(.*)/', '$1', $line));
                 $i++;
-            } else if (preg_match('/^-(.*)/', $line)) {
-                $this->lines[] = new DiffChunkLineDeleted($i, preg_replace('/-(.*)/', '$1', $line));
-            } else if (preg_match('/^ (.*)/', $line) || $line == '') {
-                $this->lines[] = new DiffChunkLineUnchanged($i, ltrim($line));
-                $i++;
-            } else if (preg_match('/\\ No newline at end of file/', $line)) {
-                $i++;
             } else {
-                throw new \Exception(sprintf('GitElephant was unable to parse the line %s', $line));
+                if (preg_match('/^-(.*)/', $line)) {
+                    $this->lines[] = new DiffChunkLineDeleted($i, preg_replace('/-(.*)/', '$1', $line));
+                } else {
+                    if (preg_match('/^ (.*)/', $line) || $line == '') {
+                        $this->lines[] = new DiffChunkLineUnchanged($i, ltrim($line));
+                        $i++;
+                    } else {
+                        if (preg_match('/\\ No newline at end of file/', $line)) {
+                            $i++;
+                        } else {
+                            throw new \Exception(sprintf('GitElephant was unable to parse the line %s', $line));
+                        }
+                    }
+                }
             }
         }
     }
 
-    private function getLinesNumbers($line) {
+    private function getLinesNumbers($line)
+    {
         $matches = array();
         preg_match('/@@ -(.*) \+(.*) @@?(.*)/', $line, $matches);
         if (!strpos($matches[1], ',')) {
             // one line
             $this->origin_start_line = $matches[1];
-            $this->origin_end_line = $matches[1];
+            $this->origin_end_line   = $matches[1];
         } else {
             list($this->origin_start_line, $this->origin_end_line) = explode(',', $matches[1]);
         }
         if (!strpos($matches[2], ',')) {
             // one line
             $this->dest_start_line = $matches[2];
-            $this->dest_end_line = $matches[2];
+            $this->dest_end_line   = $matches[2];
         } else {
             list($this->dest_start_line, $this->dest_end_line) = explode(',', $matches[2]);
         }
