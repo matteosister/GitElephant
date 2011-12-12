@@ -1,5 +1,6 @@
 <?php
-/*
+
+/**
  * This file is part of the GitElephant package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>

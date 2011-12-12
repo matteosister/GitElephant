@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This file is part of the GitWrapper package.
  *
  * (c) Matteo Giachino <matteog@gmail.com>
