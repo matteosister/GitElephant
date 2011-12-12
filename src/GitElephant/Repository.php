@@ -19,13 +19,15 @@ use GitElephant\Objects\Tree,
     GitElephant\Objects\TreeBranch,
     GitElephant\Objects\TreeTag,
     GitElephant\Objects\Diff\Diff,
-    GitElephant\Objects\Commit;
+    GitElephant\Objects\Commit,
+    GitElephant\Objects\Log;
 use GitElephant\Command\MainCommand,
     GitElephant\Command\BranchCommand,
     GitElephant\Command\TagCommand,
     GitElephant\Command\LsTreeCommand,
     GitElephant\Command\DiffCommand,
-    GitElephant\Command\ShowCommand;
+    GitElephant\Command\ShowCommand,
+    GitElephant\Command\LogCommand;
 use GitElephant\Utilities;
 
 /**
@@ -47,6 +49,7 @@ class Repository
     private $lsTreeCommand;
     private $diffCommand;
     private $showCommand;
+    private $logCommand;
 
     public function __construct($repository_path, GitBinary $binary = null)
     {
@@ -66,6 +69,7 @@ class Repository
         $this->lsTreeCommand = new LsTreeCommand();
         $this->diffCommand = new DiffCommand();
         $this->showCommand = new ShowCommand();
+        $this->logCommand = new LogCommand();
     }
     
     /**
@@ -226,10 +230,22 @@ class Repository
         return null;
     }
 
+    /**
+     * Return a Commit object
+     *
+     * @param string $ref
+     * @return Objects\Commit
+     */
     public function getCommit($ref = 'HEAD')
     {
         $command = $this->showCommand->showCommit($ref);
         return new Commit($this->caller->execute($command)->getOutputLines());
+    }
+
+    public function getLog($obj, $branch = null)
+    {
+        $command = $this->logCommand->showLog($obj, $branch);
+        return new Log($this->caller->execute($command)->getOutputLines());
     }
 
     /**

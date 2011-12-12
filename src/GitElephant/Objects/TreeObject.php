@@ -69,9 +69,13 @@ class TreeObject
         return self::TYPE_LINK == $this->getType();
     }
 
-    public function setPermissions($permissions)
+    public function getFullPath()
     {
-        $this->permissions = $permissions;
+        if ($this->path == '') {
+            return $this->name;
+        } else {
+            return $this->path.'/'.$this->name;
+        }
     }
 
     public function getPermissions()
@@ -79,19 +83,9 @@ class TreeObject
         return $this->permissions;
     }
 
-    public function setSha($sha)
-    {
-        $this->sha = $sha;
-    }
-
     public function getSha()
     {
         return $this->sha;
-    }
-
-    public function setType($type)
-    {
-        $this->type = $type;
     }
 
     public function getType()
@@ -99,13 +93,13 @@ class TreeObject
         return $this->type;
     }
 
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getPath()
+    {
+        return $this->path;
     }
 }
