@@ -142,7 +142,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
                     $this->path = substr($path, 0, $pos);
                     $name = substr($path, $pos + 1);
                 }
-                $this->blob = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $name, $slices['fullPath']);
+                $this->blob = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $slices['fullPath']);
             }
         }
     }
@@ -178,8 +178,9 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         }
 
         if (!in_array($name, $this->pathChildren)) {
-            $path = rtrim(str_replace($name, '', $slices['fullPath']), '/');
-            $treeObject = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $name, $path);
+            //$path = preg_replace('/(.*)(\/'.$name.')$/', '$1', $slices['fullPath']);
+            $path = rtrim($slices['fullPath'], $name);
+            $treeObject = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
             $this->children[] = $treeObject;
             $this->pathChildren[] = $name;
         }
@@ -187,7 +188,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
 
     private function getLineSlices($line)
     {
-        preg_match('/(\d+)\ (\w+)\ ([a-z0-9]+)\t(.*)/', $line, $matches);
+        preg_match('/^(\d+) (\w+) ([a-z0-9]+) +(\d+|-)\t(.*)$/', $line, $matches);
         $permissions = $matches[1];
         $type = null;
         switch($matches[2]) {
@@ -202,12 +203,14 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
                 break;
         }
         $sha = $matches[3];
-        $fullPath = $matches[4];
+        $size = $matches[4];
+        $fullPath = $matches[5];
 
         return array(
             'permissions' => $permissions,
             'type' => $type,
             'sha' => $sha,
+            'size' => $size,
             'fullPath' => $fullPath
         );
     }

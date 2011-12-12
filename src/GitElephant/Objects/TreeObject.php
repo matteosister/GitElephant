@@ -31,15 +31,16 @@ class TreeObject
     private $permissions;
     private $type;
     private $sha;
+    private $size;
     private $name;
     private $path;
 
-
-    public function __construct($permissions, $type, $sha, $name, $path)
+    public function __construct($permissions, $type, $sha, $size, $name, $path)
     {
         $this->permissions = $permissions;
         $this->type = $type;
         $this->sha = $sha;
+        $this->size = $size;
         $this->name = $name;
         $this->path = $path;
     }
@@ -58,6 +59,17 @@ class TreeObject
                 return ('' == $content) ? 'empty file' : $content;
                 break;
         }
+    }
+
+    public function getMimeType($basePath)
+    {
+        return mime_content_type($basePath.DIRECTORY_SEPARATOR.$this->path);
+    }
+
+    public function getExtension($basePath)
+    {
+        $info = pathinfo($basePath.DIRECTORY_SEPARATOR.$this->path);
+        return isset($info['extension']) ? $info['extension'] : null;
     }
 
     public function isTree()
@@ -101,5 +113,10 @@ class TreeObject
     public function getPath()
     {
         return $this->path;
+    }
+
+    public function getSize()
+    {
+        return $this->size;
     }
 }

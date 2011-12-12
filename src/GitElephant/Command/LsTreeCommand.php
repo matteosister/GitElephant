@@ -42,6 +42,7 @@ class LsTreeCommand extends BaseCommand
         $this->addCommandArgument('-r');
         // show trees
         $this->addCommandArgument('-t');
+        $this->addCommandArgument('-l');
         $this->addCommandSubject($what);
         return $this->getCommand();
     }

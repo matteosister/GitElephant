@@ -245,6 +245,7 @@ class Repository
     public function getLog($obj, $branch = null)
     {
         $command = $this->logCommand->showLog($obj, $branch);
+        //var_dump($command);
         return new Log($this->caller->execute($command)->getOutputLines());
     }
 
