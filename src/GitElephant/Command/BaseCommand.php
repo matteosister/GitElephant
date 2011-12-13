@@ -18,7 +18,7 @@ use GitElephant\Command\Caller;
 /**
  * BaseCommand
  *
- * The base class for all the git commands wrapper
+ * The base class for all the git commands wrappers
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -29,6 +29,9 @@ class BaseCommand
     private $commandArguments = array();
     private $commandSubject;
 
+    /**
+     * Clear all previuos variables
+     */
     public function clearAll()
     {
         $this->commandName      = null;
@@ -36,21 +39,42 @@ class BaseCommand
         $this->commandSubject   = null;
     }
 
+    /**
+     * Add the command name
+     *
+     * @param string $commandName the command name
+     */
     protected function addCommandName($commandName)
     {
         $this->commandName = $commandName;
     }
 
+    /**
+     * Add a command argument
+     *
+     * @param string $commandArgument the command argument
+     */
     protected function addCommandArgument($commandArgument)
     {
         $this->commandArguments[] = $commandArgument;
     }
 
+    /**
+     * Add a command subject
+     *
+     * @param string $commandSubject the command subject
+     */
     protected function addCommandSubject($commandSubject)
     {
         $this->commandSubject = $commandSubject;
     }
 
+    /**
+     * Get the current command
+     *
+     * @return string
+     * @throws \InvalidParameterException
+     */
     public function getCommand()
     {
         if ($this->commandName == null) {

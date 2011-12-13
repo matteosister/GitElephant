@@ -18,9 +18,7 @@ use GitElephant\Objects\TreeObject;
 use GitElephant\Objects\TreeBranch;
 
 /**
- * LogCommand
- *
- * @todo   : description
+ * Log command generator
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -29,6 +27,15 @@ class LogCommand extends BaseCommand
 {
     const GIT_LOG = 'log';
 
+    /**
+     * build a log command
+     *
+     * @param \GitElephant\Objects\TreeObject      $obj    the TreeObject to get the log for
+     * @param \GitElephant\Objects\TreeBranch|null $branch the branch to consider
+     * @param bool                                 $last   gets only the last log
+     *
+     * @return string
+     */
     public function showLog(TreeObject $obj, TreeBranch $branch = null, $last = true)
     {
         $this->clearAll();

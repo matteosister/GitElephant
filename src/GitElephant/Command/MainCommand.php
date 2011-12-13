@@ -18,7 +18,7 @@ use GitElephant\GitBinary;
 use GitElephant\Objects\TreeBranch;
 
 /**
- * main commands wrapper
+ * Main command generator (init, status, add, commit, checkout)
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -32,7 +32,8 @@ class MainCommand extends BaseCommand
     const GIT_CHECKOUT = 'checkout';
 
     /**
-     * Init the repo
+     * Init the repository
+     *
      * @return Main
      */
     public function init()
@@ -44,6 +45,7 @@ class MainCommand extends BaseCommand
 
     /**
      * Get the repository status
+     *
      * @return string
      */
     public function status()
@@ -56,9 +58,9 @@ class MainCommand extends BaseCommand
     /**
      * Add a node to the repository
      *
-     * @param string $what
+     * @param string $what what should be added to the repository
      *
-     * @return Main
+     * @return string
      */
     public function add($what = '.')
     {
@@ -71,10 +73,9 @@ class MainCommand extends BaseCommand
     /**
      * Commit
      *
-     * @param      $message
-     * @param bool $all
+     * @param string $message the commit message
      *
-     * @return Main
+     * @return string
      */
     public function commit($message)
     {
@@ -87,6 +88,13 @@ class MainCommand extends BaseCommand
         return $this->getCommand();
     }
 
+    /**
+     * Checkout a treeish reference
+     *
+     * @param string|TreeBranch $ref the reference to checkout
+     *
+     * @return string
+     */
     public function checkout($ref)
     {
         $this->clearAll();

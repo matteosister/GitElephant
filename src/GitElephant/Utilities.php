@@ -17,8 +17,6 @@ use GitElephant\Objects\TreeBranch;
 
 
 /**
- * Utilities
- *
  * Utilities class
  *
  * @author Matteo Giachino <matteog@gmail.com>
@@ -26,11 +24,26 @@ use GitElephant\Objects\TreeBranch;
 
 class Utilities
 {
+    /**
+     * Replace / with the system directory separator
+     *
+     * @param string $path the original path
+     *
+     * @return mixed
+     */
     static public function normalizeDirectorySeparator($path)
     {
         return str_replace(DIRECTORY_SEPARATOR, '/', $path);
     }
 
+    /**
+     * explode an array by lines that match a regular expression
+     *
+     * @param array  $array  the original array
+     * @param string $regexp the regular expression
+     *
+     * @return array
+     */
     static public function preg_split_array($array, $regexp)
     {
         $lineNumbers = array();

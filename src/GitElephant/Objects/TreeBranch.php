@@ -48,6 +48,11 @@ class TreeBranch
         $this->comment = trim(substr($branchString, $first_blank));
     }
 
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function setName($name)
     {
         $this->name = $name;

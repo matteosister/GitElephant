@@ -17,7 +17,7 @@ use GitElephant\Objects\GitAuthor;
 
 
 /**
- * Commit an object representing a commit
+ * The Commit object represent a commit
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -30,13 +30,13 @@ class Commit
     private $author;
     private $committer;
     private $message;
-    private $datetime_author;
-    private $datetime_committer;
+    private $datetimeAuthor;
+    private $datetimeCommitter;
 
     /**
      * Class constructor
      *
-     * @param $outputLines Output of the git show command
+     * @param array $outputLines Output of the git show command
      *
      * @see ShowCommand::commitInfo
      */
@@ -61,7 +61,7 @@ class Commit
                 $this->author = $author;
                 $date         = new \DateTime();
                 $date->createFromFormat("U P", $matches[3] . ' ' . $matches[4]);
-                $this->datetime_author = $date;
+                $this->datetimeAuthor = $date;
             }
             if (preg_match('/^committer (\w+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
                 $committer = new GitAuthor();
@@ -70,7 +70,7 @@ class Commit
                 $this->committer = $committer;
                 $date            = new \DateTime();
                 $date->createFromFormat("U P", $matches[3] . ' ' . $matches[4]);
-                $this->datetime_committer = $date;
+                $this->datetimeCommitter = $date;
             }
             if (preg_match('/^    (.*)$/', $line, $matches)) {
                 $this->message[] = $matches[1];
@@ -78,44 +78,84 @@ class Commit
         }
     }
 
+    /**
+     * author getter
+     *
+     * @return GitAuthor
+     */
     public function getAuthor()
     {
         return $this->author;
     }
 
+    /**
+     * committer getter
+     *
+     * @return GitAuthor
+     */
     public function getCommitter()
     {
         return $this->committer;
     }
 
+    /**
+     * message getter
+     *
+     * @return array
+     */
     public function getMessage()
     {
         return $this->message;
     }
 
+    /**
+     * parent getter
+     *
+     * @return mixed
+     */
     public function getParent()
     {
         return $this->parent;
     }
 
+    /**
+     * sha getter
+     *
+     * @return mixed
+     */
     public function getSha()
     {
         return $this->sha;
     }
 
+    /**
+     * tree getter
+     *
+     * @return mixed
+     */
     public function getTree()
     {
         return $this->tree;
     }
 
+    /**
+     * datetimeAuthor getter
+     *
+     * @return mixed
+     */
     public function getDatetimeAuthor()
     {
-        return $this->datetime_author;
+        return $this->datetimeAuthor;
     }
 
+    /**
+     * datetimeCommitter getter
+     *
+     * @return \DateTime
+     */
     public function getDatetimeCommitter()
     {
-        return $this->datetime_committer;
+        return $this->datetimeCommitter;
     }
 
 }

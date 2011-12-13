@@ -15,7 +15,7 @@ namespace GitElephant;
 
 
 /**
- * Binary
+ * Git binary
  *
  * It contains the reference to the system git binary
  *
@@ -27,6 +27,11 @@ class GitBinary
 {
     private $path;
 
+    /**
+     * Class constructor
+     *
+     * @param null $path the physical path to the git binary
+     */
     public function __construct($path = null)
     {
         if ($path == null) {
@@ -35,11 +40,11 @@ class GitBinary
         $this->setPath($path);
     }
 
-    public function setPath($path)
-    {
-        $this->path = $path;
-    }
-
+    /**
+     * returns the path of the binary
+     *
+     * @return mixed
+     */
     public function getPath()
     {
         return $this->path;

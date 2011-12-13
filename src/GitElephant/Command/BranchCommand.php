@@ -17,9 +17,7 @@ use GitElephant\Command\BaseCommand;
 
 
 /**
- * Branch
- *
- *
+ * Branch command generator
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -63,7 +61,7 @@ class BranchCommand extends BaseCommand
     /**
      * Delete a branch by its name
      *
-     * @param $name The branch to delete
+     * @param string $name The branch to delete
      *
      * @return string the command
      */

@@ -18,8 +18,6 @@ use GitElephant\GitBinary;
 /**
  * Caller
  *
- * Caller Class
- *
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
@@ -30,17 +28,38 @@ class Caller
     private $stdErr;
     private $outputLines = array();
 
+    /**
+     * Class constructor
+     *
+     * @param \GitElephant\GitBinary $binary         the binary
+     * @param string                 $repositoryPath the physical base path for the repository
+     */
     public function __construct(GitBinary $binary, $repositoryPath)
     {
         $this->binary         = $binary;
         $this->repositoryPath = $repositoryPath;
     }
 
+    /**
+     * Get the binary path
+     *
+     * @return mixed
+     */
     public function getBinaryPath()
     {
         return $this->binary->getPath();
     }
 
+    /**
+     * Executes a command
+     *
+     * @param string $cmd the command to execute
+     * @param bool   $git if the command is git or a generic command
+     * @param null   $cwd the directory where the command must be executed
+     *
+     * @return Caller
+     * @throws \RuntimeException
+     */
     public function execute($cmd, $git = true, $cwd = null)
     {
         $this->outputLines = array();
@@ -66,7 +85,7 @@ class Caller
         if (is_resource($process)) {
             fclose($pipes[0]);
             while ($line = fgets($pipes[1])) {
-                if ($line !== FALSE) {
+                if ($line !== false) {
                     $this->outputLines[] = rtrim($line);
                 }
             }
@@ -84,16 +103,31 @@ class Caller
         }
     }
 
+    /**
+     * returns the error output of the last executed command
+     *
+     * @return bool|string
+     */
     public function getError()
     {
         return $this->stdErr == '' ? false : trim($this->stdErr);
     }
 
+    /**
+     * returns the raw output of the last executed command
+     *
+     * @return string
+     */
     public function getOutput()
     {
         return implode(" ", $this->outputLines);
     }
 
+    /**
+     * returns the output of the last executed command as an array of lines
+     *
+     * @return array
+     */
     public function getOutputLines()
     {
         return $this->outputLines;

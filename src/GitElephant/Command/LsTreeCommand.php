@@ -19,7 +19,7 @@ use GitElephant\Objects\TreeTag;
 
 
 /**
- * ls-tree command wrapper
+ * ls-tree command generator
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -28,6 +28,13 @@ class LsTreeCommand extends BaseCommand
 {
     const LS_TREE_COMMAND = 'ls-tree';
 
+    /**
+     * build a ls-tree command
+     *
+     * @param string|TreeBranch $ref The reference to build the tree from
+     *
+     * @return string
+     */
     public function tree($ref = 'HEAD')
     {
         $what = $ref;
@@ -47,9 +54,18 @@ class LsTreeCommand extends BaseCommand
         return $this->getCommand();
     }
 
+    /**
+     * build ls-tree command that list all
+     *
+     * @param null|string $ref the reference to build the tree from
+     *
+     * @return string
+     */
     public function listAll($ref = null)
     {
-        if ($ref == null) $ref = 'HEAD';
+        if ($ref == null) {
+            $ref = 'HEAD';
+        }
         $this->clearAll();
 
         $this->addCommandName(self::LS_TREE_COMMAND);

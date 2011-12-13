@@ -17,7 +17,7 @@ use GitElephant\Command\BaseCommand;
 
 
 /**
- * show command wrapper
+ * show command generator
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -26,6 +26,13 @@ class ShowCommand extends BaseCommand
 {
     const GIT_SHOW = 'show';
 
+    /**
+     * build the show command
+     *
+     * @param string|TreeBranch $ref the reference for the show command
+     *
+     * @return string
+     */
     public function showCommit($ref)
     {
         $this->clearAll();

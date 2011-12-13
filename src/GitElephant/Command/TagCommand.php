@@ -18,9 +18,7 @@ use GitElephant\Objects\TreeTag;
 
 
 /**
- * TagCommand
- *
- * @todo   : description
+ * Tag command generator
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -65,7 +63,7 @@ class TagCommand extends BaseCommand
     /**
      * Delete a tag
      *
-     * @param $tag The tag to delete
+     * @param string|TreeTag $tag The name of tag, or the TreeTag instance to delete
      *
      * @return string the command
      */
