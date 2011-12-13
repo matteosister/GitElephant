@@ -16,9 +16,7 @@ namespace GitElephant\Objects;
 use GitElephant\Objects\GitAuthor;
 
 /**
- * Log
- *
- * @todo   : description
+ * Git log abstraction object
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -30,6 +28,11 @@ class Log
     private $message;
     private $datetime;
 
+    /**
+     * Class constructor
+     *
+     * @param array $outputLines the command output lines
+     */
     public function __construct($outputLines)
     {
         $this->message = array();
@@ -53,25 +56,48 @@ class Log
         }
     }
 
+    /**
+     * Author getter
+     *
+     * @return GitAuthor
+     */
     public function getAuthor()
     {
         return $this->author;
     }
 
+    /**
+     * datetime getter
+     *
+     * @return mixed
+     */
     public function getDatetime()
     {
         return $this->datetime;
     }
 
-    public function getMessage($trim = true, $trim_length = 50)
+    /**
+     * message getter
+     *
+     * @param bool $trim       output the message as a string
+     * @param int  $trimLength the length of the message
+     *
+     * @return array|string
+     */
+    public function getMessage($trim = true, $trimLength = 50)
     {
         if ($trim) {
             $msg = implode(' ', $this->message);
-            return strlen($msg) > $trim_length ? substr($msg, 0, $trim_length) . '...' : $msg;
+            return strlen($msg) > $trimLength ? substr($msg, 0, $trimLength) . '...' : $msg;
         }
         return $this->message;
     }
 
+    /**
+     * Sha getter
+     *
+     * @return mixed
+     */
     public function getSha()
     {
         return $this->sha;

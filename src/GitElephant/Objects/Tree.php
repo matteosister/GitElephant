@@ -21,7 +21,7 @@ use GitElephant\Utilities;
 
 
 /**
- * Tree
+ * An abstraction of a git tree
  *
  * Retrieve an object with array access, iterable and countable
  * with a collection of TreeObject at the given path of the repository
@@ -31,7 +31,7 @@ use GitElephant\Utilities;
 
 class Tree implements \ArrayAccess, \Countable, \Iterator
 {
-    private $result;
+    private $outputLines;
     private $position;
     private $path;
     private $children = array();
@@ -47,15 +47,15 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *    folder1/folder2
      *    folder1/folder2/filename
      *
-     * @param      $result an array with outpul lines from the Caller
-     * @param null $path   the (physical) path of the repository relative to the root
+     * @param array $outputLines an array with outpul lines from the Caller
+     * @param null  $path        the (physical) path of the repository relative to the root
      */
-    public function __construct($result, $path = null)
+    public function __construct($outputLines, $path = null)
     {
-        $this->result   = $result;
-        $this->position = 0;
-        $this->path     = $path;
-        foreach ($result as $line) {
+        $this->outputLines = $outputLines;
+        $this->position    = 0;
+        $this->path        = $path;
+        foreach ($outputLines as $line) {
             $this->parseLine($line);
         }
         usort($this->children, array($this, 'sortChildren'));
@@ -64,11 +64,12 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * get the current tree parent, null if root
+     *
      * @return null|string
      */
     public function getParent()
     {
-        if (strrpos($this->path, '/') === FALSE) {
+        if (strrpos($this->path, '/') === false) {
             return null;
         } else {
             return substr($this->path, 0, strrpos($this->path, '/'));
@@ -77,6 +78,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * tell if the tree created is the root of the repository
+     *
      * @return bool
      */
     public function isRoot()
@@ -86,6 +88,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * tell if the path given is a blob path
+     *
      * @return bool
      */
     public function isBlob()
@@ -101,6 +104,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *   ),
      *   1 => array(),
      *   ...
+     *
      * @return array
      */
     public function getBreadcrumb()
@@ -124,13 +128,19 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         return $bc;
     }
 
+    /**
+     * check if the path is equals to a fullPath
+     * to tell if it's a blob
+     *
+     * @return mixed
+     */
     private function scanPathsForBlob()
     {
         // no children, empty folder or blob!
         if (count($this->children) > 0) {
             return;
         }
-        foreach ($this->result as $line) {
+        foreach ($this->outputLines as $line) {
             $slices = $this->getLineSlices($line);
             if ($slices['fullPath'] == $this->path) {
                 $pos = strrpos($slices['fullPath'], '/');
@@ -147,6 +157,15 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         }
     }
 
+    /**
+     * Reorder children of the tree
+     * Tree first (alphabetically) and then blobs (alphabetically)
+     *
+     * @param TreeObject $a the first object
+     * @param TreeObject $b the second object
+     *
+     * @return int
+     */
     private function sortChildren(TreeObject $a, TreeObject $b)
     {
         if ($a->getType() == $b->getType()) {
@@ -157,6 +176,13 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         return $a->getType() == TreeObject::TYPE_TREE && $b->getType() == TreeObject::TYPE_BLOB ? -1 : 1;
     }
 
+    /**
+     * Parse a single line into pieces
+     *
+     * @param string $line a single line output from the git binary
+     *
+     * @return mixed
+     */
     private function parseLine($line)
     {
         $slices = $this->getLineSlices($line);
@@ -173,7 +199,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
             $replacement = '$1';
         }
         $name = preg_replace($pattern, $replacement, $slices['fullPath']);
-        if (strpos($name, '/') !== FALSE) {
+        if (strpos($name, '/') !== false) {
             return;
         }
 
@@ -186,6 +212,13 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         }
     }
 
+    /**
+     * Take a line and actually turn in slices
+     *
+     * @param string $line a single line output from the git binary
+     *
+     * @return array
+     */
     private function getLineSlices($line)
     {
         preg_match('/^(\d+) (\w+) ([a-z0-9]+) +(\d+|-)\t(.*)$/', $line, $matches);
@@ -215,27 +248,57 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         );
     }
 
+    /**
+     * Blob getter
+     *
+     * @return TreeObject
+     */
     public function getBlob()
     {
         return $this->blob;
     }
 
+    /**
+     * Path getter
+     *
+     * @return null
+     */
     public function getPath()
     {
         return $this->path;
     }
 
-    // ArrayAccess interface
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     *
+     * @return bool
+     */
     public function offsetExists($offset)
     {
         return isset($this->children[$offset]);
     }
 
+
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     *
+     * @return null
+     */
     public function offsetGet($offset)
     {
         return isset($this->children[$offset]) ? $this->children[$offset] : null;
     }
 
+    /**
+     * ArrayAccess interface
+     *
+     * @param int   $offset offset
+     * @param mixed $value  value
+     */
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
@@ -245,38 +308,67 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         }
     }
 
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     */
     public function offsetUnset($offset)
     {
         unset($this->children[$offset]);
     }
 
-    // Countable interface
+    /**
+     * Countable interface
+     *
+     * @return int|void
+     */
     public function count()
     {
         return count($this->children);
     }
 
-    // Iterator interface
+    /**
+     * Iterator interface
+     *
+     * @return mixed
+     */
     public function current()
     {
         return $this->children[$this->position];
     }
 
+    /**
+     * Iterator interface
+     */
     public function next()
     {
         ++$this->position;
     }
 
+    /**
+     * Iterator interface
+     *
+     * @return int
+     */
     public function key()
     {
         return $this->position;
     }
 
+    /**
+     * Iterator interface
+     *
+     * @return bool
+     */
     public function valid()
     {
         return isset($this->children[$this->position]);
     }
 
+    /**
+     * Iterator interface
+     */
     public function rewind()
     {
         $this->position = 0;

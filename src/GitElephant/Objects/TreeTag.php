@@ -15,8 +15,6 @@ namespace GitElephant\Objects;
 
 
 /**
- * TreeTag
- *
  * An object representing a git tag
  *
  * @author Matteo Giachino <matteog@gmail.com>
@@ -27,27 +25,32 @@ class TreeTag
     private $name;
     private $fullRef;
 
+    /**
+     * Class constructor
+     *
+     * @param string $line a single tag line from the git binary
+     */
     public function __construct($line)
     {
         $this->name    = trim($line);
         $this->fullRef = 'refs/tags/' . $this->name;
     }
 
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
+    /**
+     * name getter
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
-    public function setFullRef($fullRef)
-    {
-        $this->fullRef = $fullRef;
-    }
-
+    /**
+     * fullRef getter
+     *
+     * @return string
+     */
     public function getFullRef()
     {
         return $this->fullRef;
