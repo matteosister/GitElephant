@@ -31,11 +31,16 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     const MODE_DELETED_FILE = 'deleted_file';
 
     private $position;
-    private $origPath;
-    private $destPath;
+    private $originalPath;
+    private $destinationPath;
     private $mode;
     private $chunks;
 
+    /**
+     * Class constructor
+     *
+     * @param array $lines output lines for the diff
+     */
     public function __construct($lines)
     {
         $this->position = 0;
@@ -49,28 +54,48 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
         }
     }
 
+    /**
+     * toString magic method
+     *
+     * @return mixed
+     */
     public function __toString()
     {
-        return $this->origPath;
+        return $this->originalPath;
     }
 
+    /**
+     * Find the diff chunks
+     *
+     * @param array $lines output lines for the diff
+     */
     private function findChunks($lines)
     {
-        $arrayChunks = Utilities::preg_split_array($lines, '/^@@ -(\d+,\d+)|(\d+) \+(\d+,\d+)|(\d+) @@(.*)$/');
+        $arrayChunks = Utilities::pregSplitArray($lines, '/^@@ -(\d+,\d+)|(\d+) \+(\d+,\d+)|(\d+) @@(.*)$/');
         foreach ($arrayChunks as $chunkLines) {
             $this->chunks[] = new DiffChunk($chunkLines);
         }
     }
 
+    /**
+     * look for the path in the line
+     *
+     * @param string $line line content
+     */
     private function findPath($line)
     {
         $matches = array();
         if (preg_match('/^diff --git SRC\/(.*) DST\/(.*)$/', $line, $matches)) {
-            $this->origPath = $matches[1];
-            $this->destPath = $matches[2];
+            $this->originalPath    = $matches[1];
+            $this->destinationPath = $matches[2];
         }
     }
 
+    /**
+     * find the line mode
+     *
+     * @param string $line line content
+     */
     private function findMode($line)
     {
         if (preg_match('/^index (.*)\.\.(.*) (.*)$/', $line)) {
@@ -87,37 +112,77 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
         }
     }
 
+    /**
+     * chunks getter
+     *
+     * @return array
+     */
     public function getChunks()
     {
         return $this->chunks;
     }
 
-    public function getDestPath()
+    /**
+     * destinationPath getter
+     *
+     * @return string
+     */
+    public function getDestinationPath()
     {
-        return $this->destPath;
+        return $this->destinationPath;
     }
 
+    /**
+     * mode getter
+     *
+     * @return string
+     */
     public function getMode()
     {
         return $this->mode;
     }
 
-    public function getOrigPath()
+    /**
+     * originalPath getter
+     *
+     * @return string
+     */
+    public function getOriginalPath()
     {
-        return $this->origPath;
+        return $this->originalPath;
     }
 
-    // ArrayAccess interface
+
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     *
+     * @return bool
+     */
     public function offsetExists($offset)
     {
         return isset($this->chunks[$offset]);
     }
 
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     *
+     * @return null
+     */
     public function offsetGet($offset)
     {
         return isset($this->chunks[$offset]) ? $this->chunks[$offset] : null;
     }
 
+    /**
+     * ArrayAccess interface
+     *
+     * @param int   $offset offset
+     * @param mixed $value  value
+     */
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
@@ -127,38 +192,67 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
         }
     }
 
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     */
     public function offsetUnset($offset)
     {
         unset($this->chunks[$offset]);
     }
 
-    // Countable interface
+    /**
+     * Countable interface
+     *
+     * @return int
+     */
     public function count()
     {
         return count($this->chunks);
     }
 
-    // Iterator interface
+    /**
+     * Iterator interface
+     *
+     * @return mixed
+     */
     public function current()
     {
         return $this->chunks[$this->position];
     }
 
+    /**
+     * Iterator interface
+     */
     public function next()
     {
         ++$this->position;
     }
 
+    /**
+     * Iterator interface
+     *
+     * @return int
+     */
     public function key()
     {
         return $this->position;
     }
 
+    /**
+     * Iterator interface
+     *
+     * @return bool
+     */
     public function valid()
     {
         return isset($this->chunks[$this->position]);
     }
 
+    /**
+     * Iterator interface
+     */
     public function rewind()
     {
         $this->position = 0;

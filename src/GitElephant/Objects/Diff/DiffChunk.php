@@ -19,7 +19,7 @@ GitElephant\Objects\Diff\DiffChunkLineUnchanged;
 
 
 /**
- * Represent a single portion of a file changed in a diff
+ * A single portion of a file changed in a diff
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -27,12 +27,17 @@ GitElephant\Objects\Diff\DiffChunkLineUnchanged;
 class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 {
     private $position;
-    private $origin_start_line;
-    private $origin_end_line;
-    private $dest_start_line;
-    private $dest_end_line;
+    private $originStartLine;
+    private $originEndLine;
+    private $destStartLine;
+    private $destEndLine;
     private $lines;
 
+    /**
+     * Class constructor
+     *
+     * @param array $lines output lines from git binary
+     */
     public function __construct($lines)
     {
         $this->position = 0;
@@ -41,9 +46,16 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
         $this->parseLines(array_slice($lines, 1));
     }
 
+    /**
+     * Parse lines
+     *
+     * @param array $lines output lines
+     *
+     * @throws \Exception
+     */
     private function parseLines($lines)
     {
-        $i = $this->dest_start_line;
+        $i = $this->destStartLine;
         foreach ($lines as $line) {
             if (preg_match('/^\+(.*)/', $line)) {
                 $this->lines[] = new DiffChunkLineAdded($i, preg_replace('/\+(.*)/', '$1', $line));
@@ -67,57 +79,101 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
         }
     }
 
+    /**
+     * Get line numbers
+     *
+     * @param string $line a single line
+     */
     private function getLinesNumbers($line)
     {
         $matches = array();
         preg_match('/@@ -(.*) \+(.*) @@?(.*)/', $line, $matches);
         if (!strpos($matches[1], ',')) {
             // one line
-            $this->origin_start_line = $matches[1];
-            $this->origin_end_line   = $matches[1];
+            $this->originStartLine = $matches[1];
+            $this->originEndLine   = $matches[1];
         } else {
-            list($this->origin_start_line, $this->origin_end_line) = explode(',', $matches[1]);
+            list($this->originStartLine, $this->originEndLine) = explode(',', $matches[1]);
         }
         if (!strpos($matches[2], ',')) {
             // one line
-            $this->dest_start_line = $matches[2];
-            $this->dest_end_line   = $matches[2];
+            $this->destStartLine = $matches[2];
+            $this->destEndLine   = $matches[2];
         } else {
-            list($this->dest_start_line, $this->dest_end_line) = explode(',', $matches[2]);
+            list($this->destStartLine, $this->destEndLine) = explode(',', $matches[2]);
         }
     }
 
-    public function getDestEndLine()
-    {
-        return $this->dest_end_line;
-    }
-
+    /**
+     * destStartLine getter
+     *
+     * @return int
+     */
     public function getDestStartLine()
     {
-        return $this->dest_start_line;
+        return $this->destStartLine;
     }
 
-    public function getOriginEndLine()
+    /**
+     * destEndLine getter
+     *
+     * @return int
+     */
+    public function getDestEndLine()
     {
-        return $this->origin_end_line;
+        return $this->destEndLine;
     }
 
+    /**
+     * originStartLine getter
+     *
+     * @return int
+     */
     public function getOriginStartLine()
     {
-        return $this->origin_start_line;
+        return $this->originStartLine;
     }
 
-    // ArrayAccess interface
+    /**
+     * originEndLine getter
+     *
+     * @return int
+     */
+    public function getOriginEndLine()
+    {
+        return $this->originEndLine;
+    }
+
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     *
+     * @return bool
+     */
     public function offsetExists($offset)
     {
         return isset($this->lines[$offset]);
     }
 
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     *
+     * @return null
+     */
     public function offsetGet($offset)
     {
         return isset($this->lines[$offset]) ? $this->lines[$offset] : null;
     }
 
+    /**
+     * ArrayAccess interface
+     *
+     * @param int   $offset offset
+     * @param mixed $value  value
+     */
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
@@ -127,38 +183,67 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
         }
     }
 
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     */
     public function offsetUnset($offset)
     {
         unset($this->lines[$offset]);
     }
 
-    // Countable interface
+    /**
+     * Countable interface
+     *
+     * @return int|void
+     */
     public function count()
     {
         return count($this->lines);
     }
 
-    // Iterator interface
+    /**
+     * Iterator interface
+     *
+     * @return mixed
+     */
     public function current()
     {
         return $this->lines[$this->position];
     }
 
+    /**
+     * Iterator interface
+     */
     public function next()
     {
         ++$this->position;
     }
 
+    /**
+     * Iterator interface
+     *
+     * @return int
+     */
     public function key()
     {
         return $this->position;
     }
 
+    /**
+     * Iterator interface
+     *
+     * @return bool
+     */
     public function valid()
     {
         return isset($this->lines[$this->position]);
     }
 
+    /**
+     * Iterator interface
+     */
     public function rewind()
     {
         $this->position = 0;

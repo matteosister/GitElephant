@@ -174,7 +174,7 @@ class Repository
     /**
      * Return the actually checked out branch
      *
-     * @return GitElephant\Objects\TreeBranch
+     * @return Objects\TreeBranch
      */
     public function getMainBranch()
     {
@@ -307,7 +307,7 @@ class Repository
      * @param string|null $ref  the treeish to check
      * @param string      $path the physical path to the tree relative to the repository root
      *
-     * @return GitElephant\Objects\Tree
+     * @return Objects\Tree
      */
     public function getTree($ref = 'HEAD', $path = '')
     {

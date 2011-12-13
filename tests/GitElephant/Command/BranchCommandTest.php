@@ -35,7 +35,7 @@ class BranchCommandTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\BranchCommand::create
+     * @covers GitElephant\Command\BranchCommand::create
      */
     public function testCreate()
     {
@@ -49,7 +49,7 @@ class BranchCommandTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\BranchCommand::lists
+     * @covers GitElephant\Command\BranchCommand::lists
      */
     public function testLists()
     {
@@ -58,7 +58,7 @@ class BranchCommandTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\BranchCommand::delete
+     * @covers GitElephant\Command\BranchCommand::delete
      */
     public function testDelete()
     {

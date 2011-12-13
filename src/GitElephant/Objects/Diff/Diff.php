@@ -27,33 +27,52 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     private $position;
     private $diffObjects;
 
+    /**
+     * Class constructor
+     *
+     * @param array $lines diff output lines from git binary
+     */
     public function __construct($lines)
     {
         $this->diffObjects = array();
         $this->position    = 0;
 
-        $this->parseLines($lines);
-    }
-
-    private function parseLines($lines)
-    {
-        $splitArray = Utilities::preg_split_array($lines, '/^diff --git SRC\/(.*) DST\/(.*)$/');
+        $splitArray = Utilities::pregSplitArray($lines, '/^diff --git SRC\/(.*) DST\/(.*)$/');
         foreach ($splitArray as $diffObjectLines) {
             $this->diffObjects[] = new DiffObject($diffObjectLines);
         }
     }
 
-    // ArrayAccess interface
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     *
+     * @return bool
+     */
     public function offsetExists($offset)
     {
         return isset($this->diffObjects[$offset]);
     }
 
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     *
+     * @return null|mixed
+     */
     public function offsetGet($offset)
     {
         return isset($this->diffObjects[$offset]) ? $this->diffObjects[$offset] : null;
     }
 
+    /**
+     * ArrayAccess interface
+     *
+     * @param int   $offset offset
+     * @param mixed $value  value
+     */
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
@@ -63,38 +82,67 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
         }
     }
 
+    /**
+     * ArrayAccess interface
+     *
+     * @param int $offset offset
+     */
     public function offsetUnset($offset)
     {
         unset($this->diffObjects[$offset]);
     }
 
-    // Countable interface
+    /**
+     * Countable interface
+     *
+     * @return int|void
+     */
     public function count()
     {
         return count($this->diffObjects);
     }
 
-    // Iterator interface
+    /**
+     * Iterator interface
+     *
+     * @return mixed
+     */
     public function current()
     {
         return $this->diffObjects[$this->position];
     }
 
+    /**
+     * Iterator interface
+     */
     public function next()
     {
         ++$this->position;
     }
 
+    /**
+     * Iterator interface
+     *
+     * @return int
+     */
     public function key()
     {
         return $this->position;
     }
 
+    /**
+     * Iterator interface
+     *
+     * @return bool
+     */
     public function valid()
     {
         return isset($this->diffObjects[$this->position]);
     }
 
+    /**
+     * Iterator interface
+     */
     public function rewind()
     {
         $this->position = 0;

@@ -20,10 +20,10 @@ use Symfony\Component\Finder\Finder;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
-    private $caller;
-    private $repository;
-    private $path;
-    private $finder;
+    protected $caller;
+    protected $repository;
+    protected $path;
+    protected $finder;
 
     /**
      * @return \GitElephant\Repository

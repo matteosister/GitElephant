@@ -37,15 +37,19 @@ class Utilities
     }
 
     /**
-     * explode an array by lines that match a regular expression
-     *
-     * @param array  $array  the original array
-     * @param string $regexp the regular expression
-     *
-     * @return array
-     */
-    static public function preg_split_array($array, $regexp)
+    * explode an array by lines that match a regular expression
+    *
+    * @param array  $array  the original array, should be a non-associative array
+    * @param string $regexp the regular expression
+    *
+    * @return array an array of array pieces
+    * @throws \InvalidArgumentException
+    */
+    static public function pregSplitArray($array, $regexp)
     {
+        if (static::isAssociative($array)) {
+            throw new \InvalidArgumentException('pregSplitArray only accepts non-associative arrays');
+        }
         $lineNumbers = array();
         $arrOut      = array();
         foreach ($array as $i => $line) {
@@ -63,5 +67,17 @@ class Utilities
         }
 
         return $arrOut;
+    }
+
+    /**
+     * Tell if an array is associative
+     *
+     * @param array $arr an array
+     *
+     * @return bool
+     */
+    static public function isAssociative($arr)
+    {
+        return array_keys($arr) !== range(0, count($arr) - 1);
     }
 }

@@ -41,6 +41,7 @@ class GitBinary
     }
 
     /**
+     * path getter
      * returns the path of the binary
      *
      * @return mixed
@@ -48,5 +49,15 @@ class GitBinary
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * path setter
+     *
+     * @param string $path the path to the system git binary
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
     }
 }

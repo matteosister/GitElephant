@@ -416,7 +416,7 @@ class FeatureContext extends BehatContext
     public function diffShouldHaveADiffobjectNamed($destPath)
     {
         $diffObject = $this->diff[0];
-        assertEquals($destPath, $diffObject->getDestPath(), sprintf('diff do not contains %s but %s', $destPath, $diffObject->getDestPath()));
+        assertEquals($destPath, $diffObject->getDestinationPath(), sprintf('diff do not contains %s but %s', $destPath, $diffObject->getDestinationPath()));
     }
 
     /**

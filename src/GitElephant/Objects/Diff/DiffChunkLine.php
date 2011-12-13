@@ -14,7 +14,7 @@
 namespace GitElephant\Objects\Diff;
 
 /**
- * DiffChunkLine
+ * A single line in the DiffChunk
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
@@ -30,44 +30,63 @@ abstract class DiffChunkLine
     protected $content;
 
 
+    /**
+     * number setter
+     *
+     * @param int $number line number
+     */
     public function setNumber($number)
     {
         $this->number = $number;
     }
 
+    /**
+     * number getter
+     *
+     * @return mixed
+     */
     public function getNumber()
     {
         return $this->number;
     }
 
+    /**
+     * type setter
+     *
+     * @param string $type line type
+     */
     public function setType($type)
     {
         $this->type = $type;
     }
 
+    /**
+     * type getter
+     *
+     * @return mixed
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * content setter
+     *
+     * @param string $content line content
+     */
     public function setContent($content)
     {
         $this->content = $content;
     }
 
-    public function getContent($indent = true)
+    /**
+     * content getter
+     *
+     * @return mixed
+     */
+    public function getContent()
     {
         return $this->content;
-    }
-
-    public function indentation()
-    {
-        $count   = 0;
-        $content = $this->content;
-        while (preg_match('/\t| /', substr($content, 0, 1))) {
-            $count++;
-            $content = substr($content, 1);
-        }
-        return $count;
     }
 }

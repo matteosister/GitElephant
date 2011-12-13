@@ -16,14 +16,20 @@ namespace GitElephant\Objects\Diff;
 use GitElephant\Objects\Diff\DiffChunkLine;
 
 /**
- * DiffChunkLineAdded
+ * DiffChunkLine deleted
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
 class DiffChunkLineDeleted extends DiffChunkLine
 {
-    function __construct($number, $content)
+    /**
+     * Class constructor
+     *
+     * @param int    $number  line number
+     * @param string $content line content
+     */
+    public function __construct($number, $content)
     {
         $this->setNumber($number);
         $this->setContent($content);
