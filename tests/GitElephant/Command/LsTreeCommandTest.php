@@ -23,7 +23,7 @@ use GitElephant\TestCase;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
- 
+
 class LsTreeCommandTest extends TestCase
 {
     /**
@@ -31,19 +31,29 @@ class LsTreeCommandTest extends TestCase
      */
     private $lsTreeCommand;
 
+    /**
+     * setUp function
+     */
     public function setUp()
     {
         $this->lsTreeCommand = new LsTreeCommand();
     }
 
     /**
-     * @covers \GitElephant\Command\LsTreeCommand
+     * tree test
+     *
+     * @covers \GitElephant\Command\LsTreeCommand::tree
      */
     public function testTree()
     {
         $this->assertEquals("ls-tree '-r' '-t' '-l' HEAD", $this->lsTreeCommand->tree(), 'ls-tree command test');
     }
 
+    /**
+     * listAll test
+     *
+     * @covers \GitElephant\Command\LsTreeCommand::listAll
+     */
     public function testListAll()
     {
         $this->assertEquals("ls-tree HEAD", $this->lsTreeCommand->listAll(), 'ls-tree command test');
