@@ -50,7 +50,7 @@ class DiffCommand extends BaseCommand
             $subject .= ' ' . $with;
         }
         if ($path != null) {
-            $subject .= ' ' . $path;
+            $subject .= ' -- ' . $path;
         }
         $this->addCommandSubject($subject);
         return $this->getCommand();
