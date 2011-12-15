@@ -23,9 +23,11 @@ use GitElephant\TestCase;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
- 
 class BranchCommandTest extends TestCase
 {
+    /**
+     * setUp, called on every method
+     */
     public function setUp()
     {
         $this->initRepository();
@@ -35,6 +37,8 @@ class BranchCommandTest extends TestCase
     }
 
     /**
+     * create test
+     *
      * @covers GitElephant\Command\BranchCommand::create
      */
     public function testCreate()
@@ -49,6 +53,8 @@ class BranchCommandTest extends TestCase
     }
 
     /**
+     * lists test
+     *
      * @covers GitElephant\Command\BranchCommand::lists
      */
     public function testLists()
@@ -58,6 +64,8 @@ class BranchCommandTest extends TestCase
     }
 
     /**
+     * delete test
+     *
      * @covers GitElephant\Command\BranchCommand::delete
      */
     public function testDelete()

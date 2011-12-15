@@ -84,7 +84,8 @@ class MainCommand extends BaseCommand
             throw new \InvalidArgumentException(sprintf('You can\'t commit whitout message'));
         }
         $this->addCommandName(self::GIT_COMMIT);
-        $this->addCommandArgument(sprintf("-m '%s'", $message));
+        $this->addCommandArgument('-m');
+        $this->addCommandSubject(sprintf("'%s'",$message));
         return $this->getCommand();
     }
 
