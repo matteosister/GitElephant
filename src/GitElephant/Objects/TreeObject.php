@@ -78,17 +78,16 @@ class TreeObject
     /**
      * get extension if it's a blob
      *
-     * @param string $basePath the base path of the repository
-     *
      * @return string|null
      */
-    public function getExtension($basePath)
+    public function getExtension()
     {
-        if ($this->type != self::TYPE_BLOB) {
+        $pos = strrpos($this->name, '.');
+        if ($pos == false) {
             return null;
+        } else {
+            return substr($this->name, $pos+1);
         }
-        $info = pathinfo($basePath . DIRECTORY_SEPARATOR . $this->path);
-        return isset($info['extension']) ? $info['extension'] : null;
     }
 
     /**
