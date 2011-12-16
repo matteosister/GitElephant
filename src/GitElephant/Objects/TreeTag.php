@@ -13,6 +13,8 @@
 
 namespace GitElephant\Objects;
 
+use GitElephant\Objects\TreeishInterface;
+
 
 /**
  * An object representing a git tag
@@ -20,10 +22,11 @@ namespace GitElephant\Objects;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class TreeTag
+class TreeTag implements TreeishInterface
 {
     private $name;
     private $fullRef;
+    private $sha;
 
     /**
      * Class constructor
@@ -54,5 +57,15 @@ class TreeTag
     public function getFullRef()
     {
         return $this->fullRef;
+    }
+
+    public function setSha($sha)
+    {
+        $this->sha = $sha;
+    }
+
+    public function getSha()
+    {
+        return $this->sha;
     }
 }

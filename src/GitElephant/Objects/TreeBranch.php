@@ -13,6 +13,8 @@
 
 namespace GitElephant\Objects;
 
+use GitElephant\Objects\TreeishInterface;
+
 
 /**
  * An object representing a git branch
@@ -20,7 +22,7 @@ namespace GitElephant\Objects;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class TreeBranch
+class TreeBranch implements TreeishInterface
 {
     private $current = false;
     private $name;

@@ -11,25 +11,20 @@
  * Just for fun...
  */
 
-namespace GitElephant\Command;
-
-use GitElephant\TestCase;
-use GitElephant\Command\Caller;
-use GitElephant\GitBinary;
+namespace GitElephant\Objects;
 
 /**
- * CallerTest
+ * TreeishInterface
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class CallerTest extends TestCase
+interface TreeishInterface
 {
-    protected $caller;
-
-    public function setUp()
-    {
-        $binary = new GitBinary();
-        $this->caller = new Caller($binary);
-    }
+    /**
+     * @abstract
+     *
+     * get the unique sha for the treeish object
+     */
+    public function getSha();
 }

@@ -18,16 +18,20 @@ use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree,
 GitElephant\Objects\TreeBranch,
 GitElephant\Objects\TreeTag,
+GitElephant\Objects\TreeObject,
 GitElephant\Objects\Diff\Diff,
 GitElephant\Objects\Commit,
-GitElephant\Objects\Log;
+GitElephant\Objects\Log,
+GitElephant\Objects\TreeishInterface;
 use GitElephant\Command\MainCommand,
 GitElephant\Command\BranchCommand,
 GitElephant\Command\TagCommand,
 GitElephant\Command\LsTreeCommand,
 GitElephant\Command\DiffCommand,
 GitElephant\Command\ShowCommand,
-GitElephant\Command\LogCommand;
+GitElephant\Command\LogCommand,
+GitElephant\Command\RevListCommand,
+GitElephant\Command\CatFileCommand;
 use GitElephant\Utilities;
 
 /**
@@ -50,6 +54,8 @@ class Repository
     private $diffCommand;
     private $showCommand;
     private $logCommand;
+    private $revListCommand;
+    private $catFileCommand;
 
     /**
      * Class constructor
@@ -69,13 +75,15 @@ class Repository
         $this->caller = new Caller($binary, $repositoryPath);
 
         // command objects
-        $this->mainCommand   = new MainCommand();
-        $this->branchCommand = new BranchCommand();
-        $this->tagCommand    = new TagCommand();
-        $this->lsTreeCommand = new LsTreeCommand();
-        $this->diffCommand   = new DiffCommand();
-        $this->showCommand   = new ShowCommand();
-        $this->logCommand    = new LogCommand();
+        $this->mainCommand    = new MainCommand();
+        $this->branchCommand  = new BranchCommand();
+        $this->tagCommand     = new TagCommand();
+        $this->lsTreeCommand  = new LsTreeCommand();
+        $this->diffCommand    = new DiffCommand();
+        $this->showCommand    = new ShowCommand();
+        $this->logCommand     = new LogCommand();
+        $this->revListCommand = new RevListCommand();
+        $this->catFileCommand = new CatFileCommand();
     }
 
     /**
@@ -239,7 +247,10 @@ class Repository
         $tags = array();
         $this->caller->execute($this->tagCommand->lists());
         foreach ($this->caller->getOutputLines() as $tagString) {
-            $tags[] = new TreeTag($tagString);
+            $tag = new TreeTag($tagString);
+            $outputLines = $this->caller->execute($this->revListCommand->getTagCommit($tag))->getOutputLines();
+            $tag->setSha($outputLines[0]);
+            $tags[] = $tag;
         }
         return $tags;
     }
@@ -349,6 +360,20 @@ class Repository
                 return 0;
             }
         }
+    }
+
+    /**
+     * output a node content
+     *
+     * @param \GitElephant\Objects\TreeObject $obj The TreeObject of type BLOB
+     *
+     * @return string
+     * @throws \InvalidArgumentException
+     */
+    public function outputContent(TreeObject $obj, TreeishInterface $treeish)
+    {
+        $command = $this->catFileCommand->content($obj, $treeish);
+        return $this->caller->execute($command)->getOutputLines();
     }
 
     /**

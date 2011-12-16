@@ -14,6 +14,7 @@
 namespace GitElephant\Objects;
 
 use GitElephant\Objects\GitAuthor;
+use GitElephant\Objects\TreeishInterface;
 
 
 /**
@@ -22,7 +23,7 @@ use GitElephant\Objects\GitAuthor;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class Commit
+class Commit implements TreeishInterface
 {
     private $sha;
     private $tree;

@@ -64,24 +64,6 @@ class TreeObject
     }
 
     /**
-     * output the node in pretty formats
-     *
-     * @param string $basePath the base path of the repository
-     *
-     * @return string
-     */
-    public function output($basePath)
-    {
-        switch ($this->type)
-        {
-            case self::TYPE_BLOB:
-                $content = file_get_contents($basePath . DIRECTORY_SEPARATOR . $this->path);
-                return ('' == $content) ? 'empty file' : $content;
-                break;
-        }
-    }
-
-    /**
      * Mime Type getter
      *
      * @param string $basePath the base path of the repository
