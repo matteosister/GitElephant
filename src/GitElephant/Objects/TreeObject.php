@@ -121,7 +121,7 @@ class TreeObject
         if ($this->path == '') {
             return $this->name;
         } else {
-            return $this->path . '/' . $this->name;
+            return $this->path;
         }
     }
 

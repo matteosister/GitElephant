@@ -38,7 +38,7 @@ class CatFileCommand extends BaseCommand
         $this->addCommandName(static::GIT_CAT_FILE);
         // pretty format
         $this->addCommandArgument('-p');
-        $this->addCommandSubject($treeish->getSha().':'.$object->getName());
+        $this->addCommandSubject($treeish->getSha().':'.$object->getFullPath());
         return $this->getCommand();
     }
 
@@ -54,7 +54,7 @@ class CatFileCommand extends BaseCommand
         $this->addCommandName(static::GIT_CAT_FILE);
         // pretty format
         $this->addCommandArgument('-p');
-        $this->addCommandSubject($treeish->getSha().':'.$object->getName());
+        $this->addCommandSubject($treeish->getSha().':'.$object->getFullPath());
         return $this->getCommand();
     }
 
@@ -70,7 +70,7 @@ class CatFileCommand extends BaseCommand
         $this->addCommandName(static::GIT_CAT_FILE);
         // pretty format
         $this->addCommandArgument('-p');
-        $this->addCommandSubject($treeish->getSha().':'.$object->getName());
+        $this->addCommandSubject($treeish->getSha().':'.$object->getFullPath());
         return $this->getCommand();
     }
 
