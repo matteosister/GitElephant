@@ -33,8 +33,12 @@ Coding standards
 
 GitElephant follows the Symfony2 Coding Standard
 
-Want to contribute?
--------------------
+How to use
+----------
 
+    <?php
 
+    use GitElephant\Repository,
+    GitElephant
 
+    $repo = new Repository();

@@ -35,7 +35,8 @@ class GitBinary
     public function __construct($path = null)
     {
         if ($path == null) {
-            $path = '/usr/local/bin/git';
+            // unix only!
+            $path = exec('which git');
         }
         $this->setPath($path);
     }

@@ -58,7 +58,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             $this->path = $tempName;
             unlink($this->path);
             mkdir($this->path);
-            $binary = new GitBinary('/usr/local/bin/git');
+            $binary = new GitBinary();
             $this->caller = new Caller($binary, $this->path);
             $this->repository = new Repository($this->path);
         }
