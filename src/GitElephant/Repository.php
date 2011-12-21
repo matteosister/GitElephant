@@ -365,7 +365,8 @@ class Repository
     /**
      * output a node content
      *
-     * @param \GitElephant\Objects\TreeObject $obj The TreeObject of type BLOB
+     * @param \GitElephant\Objects\TreeObject       $obj     The TreeObject of type BLOB
+     * @param \GitElephant\Objects\TreeishInterface $treeish A treeish object
      *
      * @return string
      * @throws \InvalidArgumentException

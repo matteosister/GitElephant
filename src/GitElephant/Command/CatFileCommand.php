@@ -15,7 +15,10 @@ namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand,
 GitElephant\Objects\TreeObject,
-GitElephant\Objects\TreeishInterface;
+GitElephant\Objects\TreeishInterface,
+GitElephant\Objects\TreeTag,
+GitElephant\Objects\TreeBranch,
+GitElephant\Objects\Commit;
 
 /**
  * cat-file command generator
@@ -26,11 +29,14 @@ GitElephant\Objects\TreeishInterface;
 class CatFileCommand extends BaseCommand
 {
     const GIT_CAT_FILE = 'cat-file';
+
     /**
      * command to show content of a TreeObject at a given Treeish point
      *
      * @param \GitElephant\Objects\TreeObject       $object  a TreeObject instance
      * @param \GitElephant\Objects\TreeishInterface $treeish an object with TreeishInterface interface
+     *
+     * @return string
      */
     public function content(TreeObject $object, TreeishInterface $treeish)
     {
@@ -38,7 +44,7 @@ class CatFileCommand extends BaseCommand
         $this->addCommandName(static::GIT_CAT_FILE);
         // pretty format
         $this->addCommandArgument('-p');
-        $this->addCommandSubject($treeish->getSha().':'.$object->getFullPath());
+        $this->addCommandSubject($treeish->getSha() . ':' . $object->getFullPath());
         return $this->getCommand();
     }
 
@@ -47,6 +53,8 @@ class CatFileCommand extends BaseCommand
      *
      * @param \GitElephant\Objects\TreeObject       $object  a TreeObject instance
      * @param \GitElephant\Objects\TreeishInterface $treeish an object with TreeishInterface interface
+     *
+     * @return string
      */
     public function type(TreeObject $object, TreeishInterface $treeish)
     {
@@ -54,7 +62,7 @@ class CatFileCommand extends BaseCommand
         $this->addCommandName(static::GIT_CAT_FILE);
         // pretty format
         $this->addCommandArgument('-p');
-        $this->addCommandSubject($treeish->getSha().':'.$object->getFullPath());
+        $this->addCommandSubject($treeish->getSha() . ':' . $object->getFullPath());
         return $this->getCommand();
     }
 
@@ -63,6 +71,8 @@ class CatFileCommand extends BaseCommand
      *
      * @param \GitElephant\Objects\TreeObject       $object  a TreeObject instance
      * @param \GitElephant\Objects\TreeishInterface $treeish an object with TreeishInterface interface
+     *
+     * @return string
      */
     public function size(TreeObject $object, TreeishInterface $treeish)
     {
@@ -70,36 +80,29 @@ class CatFileCommand extends BaseCommand
         $this->addCommandName(static::GIT_CAT_FILE);
         // pretty format
         $this->addCommandArgument('-p');
-        $this->addCommandSubject($treeish->getSha().':'.$object->getFullPath());
+        $this->addCommandSubject($treeish->getSha() . ':' . $object->getFullPath());
         return $this->getCommand();
     }
 
     /**
-     *
+     * Get a reference name
      *
      * @param \GitElephant\Objects\TreeObject $object a TreeObject instance
-     * @param                                 $ref    could be a string (like HEAD, master etc...) or an instance of: TreeTag, TreeBranch, Commit
+     * @param string|TreeishInterface         $ref    could be a string (like HEAD, master etc...) or an instance of TreeishInterface
      *
+     * @return \GitElephant\Command\could
      * @throws \InvalidArgumentException
      */
     private function getReferenceName(TreeObject $object, $ref)
     {
         $refName = '';
         if (is_string($ref)) {
-            $refName = $ref;
+            return $ref;
         } else {
-            if ($ref instanceof TreeTag) {
-
+            if ($ref instanceof TreeishInterface) {
+                return $ref->getFullRef();
             } else {
-                if ($ref instanceof TreeBranch) {
-
-                } else {
-                    if ($ref instanceof Commit) {
-
-                    } else {
-                        throw new \InvalidArgumentException(sprintf('ref passed to CatFileCommand should be one of string, TreeTag, TreeBranch or Commit'));
-                    }
-                }
+                throw new \InvalidArgumentException(sprintf('ref passed to CatFileCommand should be one of string, TreeTag, TreeBranch or Commit'));
             }
         }
     }

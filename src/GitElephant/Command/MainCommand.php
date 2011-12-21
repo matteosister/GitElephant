@@ -85,7 +85,7 @@ class MainCommand extends BaseCommand
         }
         $this->addCommandName(self::GIT_COMMIT);
         $this->addCommandArgument('-m');
-        $this->addCommandSubject(sprintf("'%s'",$message));
+        $this->addCommandSubject(sprintf("'%s'", $message));
         return $this->getCommand();
     }
 

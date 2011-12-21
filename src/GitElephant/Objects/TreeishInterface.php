@@ -22,9 +22,9 @@ namespace GitElephant\Objects;
 interface TreeishInterface
 {
     /**
-     * @abstract
-     *
      * get the unique sha for the treeish object
+     *
+     * @abstract
      */
     public function getSha();
 }

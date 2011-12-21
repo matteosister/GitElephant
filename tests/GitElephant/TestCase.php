@@ -69,13 +69,14 @@ class TestCase extends \PHPUnit_Framework_TestCase
      * @param string|null $folder
      * @return void
      */
-    protected function addFile($name, $folder = null)
+    protected function addFile($name, $folder = null, $content = null)
     {
         $filename = $folder == null ?
                 $this->path.DIRECTORY_SEPARATOR.$name :
                 $this->path.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name;
         $handle = fopen($filename, 'w');
-        fwrite($handle, 'test content');
+        $file_content = $content == null ? 'test content' : $content;
+        fwrite($handle, $file_content);
         fclose($handle);
     }
 

@@ -59,11 +59,21 @@ class TreeTag implements TreeishInterface
         return $this->fullRef;
     }
 
+    /**
+     * sha setter
+     *
+     * @param string $sha sha
+     */
     public function setSha($sha)
     {
         $this->sha = $sha;
     }
 
+    /**
+     * sha getter
+     *
+     * @return string
+     */
     public function getSha()
     {
         return $this->sha;
