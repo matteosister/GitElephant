@@ -15,6 +15,7 @@ namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
 use GitElephant\Objects\TreeTag;
+use GitElephant\Objects\TreeishInterface;
 
 
 /**
@@ -43,7 +44,15 @@ class TagCommand extends BaseCommand
         if ($message != null) {
             $this->addCommandArgument(sprintf('-m %s', $message));
         }
-        $subject = $startPoint == null ? $name : $name . ' ' . $startPoint;
+        $subject = $name;
+        if ($startPoint != null) {
+            if (is_string($startPoint)) {
+                $subject .= ' '.$startPoint;
+            } else if ($startPoint instanceof TreeishInterface) {
+                $subject .= ' '.$startPoint->getSha();
+            }
+        }
+
         $this->addCommandSubject($subject);
         return $this->getCommand();
     }
