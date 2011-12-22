@@ -14,8 +14,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
-use GitElephant\Objects\TreeBranch;
-use GitElephant\Objects\TreeTag;
+use GitElephant\Objects\TreeishInterface;
 
 
 /**
@@ -38,8 +37,8 @@ class LsTreeCommand extends BaseCommand
     public function tree($ref = 'HEAD')
     {
         $what = $ref;
-        if ($ref instanceof TreeBranch || $ref instanceof TreeTag) {
-            $what = $ref->getFullRef();
+        if ($ref instanceof TreeishInterface) {
+            $what = $ref->getSha();
         }
 
         $this->clearAll();

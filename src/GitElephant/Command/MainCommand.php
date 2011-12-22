@@ -16,6 +16,7 @@ namespace GitElephant\Command;
 use GitElephant\Command\BaseCommand;
 use GitElephant\GitBinary;
 use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\TreeishInterface;
 
 /**
  * Main command generator (init, status, add, commit, checkout)
@@ -101,8 +102,8 @@ class MainCommand extends BaseCommand
         $this->clearAll();
 
         $what = $ref;
-        if ($ref instanceof TreeBranch) {
-            $what = $ref->getName();
+        if ($ref instanceof TreeishInterface) {
+            $what = $ref->getSha();
         }
 
         $this->addCommandName(self::GIT_CHECKOUT);

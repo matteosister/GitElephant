@@ -52,11 +52,9 @@ class DiffTest extends TestCase
         $this->addFile('foo', null, "content line 1\ncontent line 2 changed");
         $this->getCaller()->execute($mainCommand->add());
         $this->getCaller()->execute($mainCommand->commit('first commit'));
-        $showCommand = new ShowCommand();
-        $this->getCaller()->execute($showCommand->showCommit('HEAD'));
-        $commit = new Commit($this->getCaller()->getOutputLines());
+        $commit = $this->getRepository()->getCommit();
 
-        $command = $diffCommand->commitDiff($commit, null);
+        $command = $diffCommand->diff($commit);
         $diff = new Diff($this->getCaller()->execute($command)->getOutputLines());
 
         $this->assertInstanceOf('\GitElephant\Objects\Diff\Diff', $diff);

@@ -296,7 +296,6 @@ class Repository
     public function getLog($obj, $branch = null)
     {
         $command = $this->logCommand->showLog($obj, $branch);
-        //var_dump($command);
         return new Log($this->caller->execute($command)->getOutputLines());
     }
 
@@ -304,7 +303,7 @@ class Repository
      * Checkout a branch
      * This function change the state of the repository on the filesystem
      *
-     * @param string|TreeBranch $ref the ref to checkout
+     * @param string|TreeishInterface $ref the ref to checkout
      */
     public function checkout($ref)
     {
@@ -315,8 +314,8 @@ class Repository
      * Retrieve an instance of Tree
      * Tree Object is Countable, Iterable and has ArrayAccess for easy manipulation
      *
-     * @param string|null $ref  the treeish to check
-     * @param string      $path the physical path to the tree relative to the repository root
+     * @param string|TreeishInterface $ref  the treeish to check
+     * @param string|TreeObject       $path the physical path to the tree relative to the repository root
      *
      * @return Objects\Tree
      */
@@ -329,14 +328,15 @@ class Repository
     /**
      * Get a Diff object for a commit with its parent
      *
-     * @param Objects\Commit $commit The Commit object
-     * @param null           $path   The path to get the diff for
+     * @param Objects\TreeishInterface      $treeish1 A TreeishInterface instance
+     * @param Objects\TreeishInterface|null $treeish2 A TreeishInterface instance
+     * @param null|string|TreeObject        $path     The path to get the diff for or a TreeObject instance
      *
      * @return Objects\Diff\Diff
      */
-    public function getCommitDiff(Commit $commit, $path = null)
+    public function getDiff(TreeishInterface $treeish1, TreeishInterface $treeish2 = null, $path = null)
     {
-        $command     = $this->diffCommand->commitDiff($commit, $path);
+        $command     = $this->diffCommand->diff($treeish1, $treeish2, $path);
         $outputLines = $this->caller->execute($command)->getOutputLines();
         return new Diff($outputLines);
     }
