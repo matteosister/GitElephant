@@ -119,7 +119,7 @@ a tree representation of the repository, at a given point in history.
     // retrieve a tree for a given path
     $tree = $repo->getTree('master', 'lib/vendor');
 
-The Tree object implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
+The Tree class implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
 
 You can use it as an array of git objects.
 
@@ -147,4 +147,75 @@ You can also pass a tree object to the repository to get its subtree
 Diffs
 -----
 
-If you want to display a Diff between two commits the Diff class comes in
+If you want to check a Diff between two commits the Diff class comes in
+
+    <?php
+    // get the diff between the given commit and it parent
+    $diff = $repo->getDiff($repo->getCommit());
+    // get the diff between two commits
+    $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getTag('v0.4'));
+    // same as before for a given path
+    $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getTag('v0.4'), 'lib/vendor');
+    // or even pass a TreeObject
+    $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getTag('v0.4'), $treeObject);
+
+The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
+
+You can iterate over DiffObject
+
+    <?php
+    foreach ($diff as $diffObject) {
+        // mode is a constant of the DiffObject class
+        // DiffObject::MODE_INDEX an index change
+        // DiffObject::MODE_MODE a mode change
+        // DiffObject::MODE_NEW_FILE a new file change
+        // DiffObject::MODE_DELETED_FILE a deleted file change
+        echo $diffObject->getMode();
+    }
+
+A DiffObject is a class that implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
+
+It represent a file, folder or submodule changed in the diff
+
+Every DiffObject can have multiple chunks of changes. For example "added 3 lines at line 20" and "modified 4 lines at line 560"
+
+So you can iterate over DiffObject to get DiffChunks. DiffChunks are the last steps of the diff iteration.
+
+They are a colletction of DiffChunkLine Objects
+
+    <?php
+    foreach ($diffObject as $diffChunk) {
+        if (count($diffChunk) > 0) {
+            echo "change detected from line ".$diffChunk->getDestStartLine()." to ".$diffChunk->getDestEndLine();
+            foreach ($diffChunk as $diffChunkLine) {
+                echo $diffChunkLine; // output the line content
+            }
+        }
+    }
+
+This is just an example on how to use the Diff class.
+
+Want to contribute?
+-------------------
+
+*You are my new hero!*
+
+Just remember:
+
+* Symfony2 coding standard
+* test everything you develop with phpunit AND behat.
+* if you don't want to use gitflow, develop on a branch (not master) and send a pull request
+
+
+Test
+----
+
+* Remote management (should be easy)
+* Check if there are problems with old git version. I'm on *1.7.7.x*
+* More tests
+
+Thanks
+------
+
+Many thanks to Linus and all those who have worked/contributed in any way to git.
+Because **it's awesome!!!** I can't imagine being a developer without it.
