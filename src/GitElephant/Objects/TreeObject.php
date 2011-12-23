@@ -24,7 +24,7 @@ class TreeObject
 {
     const TYPE_BLOB = 'blob';
     const TYPE_TREE = 'tree';
-    const TYPE_LINK = 'commit';
+    const TYPE_LINK = 'link';
 
     private $permissions;
     private $type;

@@ -40,6 +40,16 @@ class TreeTag implements TreeishInterface
     }
 
     /**
+     * toString magic method
+     *
+     * @return string the sha
+     */
+    public function __toString()
+    {
+        return $this->getSha();
+    }
+
+    /**
      * name getter
      *
      * @return string

@@ -48,13 +48,22 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *    folder1/folder2/filename
      *
      * @param array $outputLines an array with outpul lines from the Caller
-     * @param null  $path        the (physical) path of the repository relative to the root
+     * @param null  $path        the (physical) path of the repository relative to the root or TreeObject instance
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct($outputLines, $path = null)
     {
         $this->outputLines = $outputLines;
         $this->position    = 0;
-        $this->path        = $path;
+
+        if ($path instanceof TreeObject) {
+            $this->path = $path->getPath();
+        } else if (is_string($path)) {
+            $this->path = $path;
+        } else {
+            throw new \InvalidArgumentException('the path for a Tree instance should be a string or a TreeObject instance');
+        }
         foreach ($outputLines as $line) {
             $this->parseLine($line);
         }

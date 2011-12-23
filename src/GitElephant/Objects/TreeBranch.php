@@ -56,11 +56,11 @@ class TreeBranch implements TreeishInterface
     /**
      * toString magic method
      *
-     * @return string
+     * @return string the sha
      */
     public function __toString()
     {
-        return $this->name;
+        return $this->getSha();
     }
 
     /**

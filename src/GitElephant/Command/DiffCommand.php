@@ -15,6 +15,7 @@ namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
 use GitElephant\Objects\Commit;
+use GitElephant\Objects\TreeishInterface;
 
 /**
  * Diff command generator
@@ -29,13 +30,13 @@ class DiffCommand extends BaseCommand
     /**
      * build a diff command
      *
-     * @param mixed $of   the reference to diff
-     * @param null  $with the source refernce to diff with $of, if not specified is the current HEAD
-     * @param null  $path the path to diff, if not specified the full repository
+     * @param TreeishInterface      $of   the reference to diff
+     * @param TreeishInterface|null $with the source refernce to diff with $of, if not specified is the current HEAD
+     * @param null                  $path the path to diff, if not specified the full repository
      *
      * @return string
      */
-    public function diff($of = null, $with = null, $path = null)
+    public function diff($of, $with = null, $path = null)
     {
         $this->clearAll();
         $this->addCommandName(self::DIFF_COMMAND);
@@ -43,39 +44,22 @@ class DiffCommand extends BaseCommand
         $this->addCommandArgument('--no-color');
         $this->addCommandArgument('--dst-prefix=DST/');
         $this->addCommandArgument('--src-prefix=SRC/');
+
+        $subject = '';
 
         $subject = $of;
-
-        if ($with != null) {
+        if ($with == null) {
+            $subject .= ' ' . $of.'^';
+        } else {
             $subject .= ' ' . $with;
         }
-        if ($path != null) {
-            $subject .= ' -- ' . $path;
-        }
-        $this->addCommandSubject($subject);
-        return $this->getCommand();
-    }
 
-    /**
-     * build a diff command of a commit with its parent
-     *
-     * @param \GitElephant\Objects\Commit $commit the commit object
-     * @param string                      $path   the path to consider in diff
-     *
-     * @return string
-     */
-    public function commitDiff(Commit $commit, $path)
-    {
-        $this->clearAll();
-        $this->addCommandName(self::DIFF_COMMAND);
-        $this->addCommandArgument('--full-index');
-        $this->addCommandArgument('--no-color');
-        $this->addCommandArgument('--dst-prefix=DST/');
-        $this->addCommandArgument('--src-prefix=SRC/');
-
-        $subject = $commit->getParent() . ' ' . $commit->getSha();
         if ($path != null) {
-            $subject .= ' ' . $path;
+            if (is_string($path)) {
+                $subject .= ' -- ' . $path;
+            } else {
+                $subject .= ' -- ' . $path->getPath();
+            }
         }
 
         $this->addCommandSubject($subject);

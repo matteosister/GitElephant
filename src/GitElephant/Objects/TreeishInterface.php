@@ -27,4 +27,11 @@ interface TreeishInterface
      * @abstract
      */
     public function getSha();
+
+    /**
+     * toString magic method, should return the sha of the treeish
+     *
+     * @abstract
+     */
+    public function __toString();
 }

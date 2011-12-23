@@ -231,6 +231,7 @@ class RepositoryTest extends TestCase
 
     /**
      * @covers GitElephant\Repository::getTree
+     * @covers GitElephant\Objects\Tree
      */
     public function testGetTree()
     {
@@ -243,6 +244,8 @@ class RepositoryTest extends TestCase
         $this->getRepository()->commit('initial import');
 
         $tree = $this->getRepository()->getTree();
+        $this->assertFalse($tree->isBlob());
+        $this->assertTrue($this->getRepository()->getTree($this->getRepository()->getCommit(), 'test')->isBlob());
         $this->assertCount(2, $tree, 'One file in the repository');
         $firstNode = $tree[0];
         $this->assertInstanceOf('GitElephant\Objects\TreeObject', $firstNode, 'array access on tree should give always a node type');
@@ -257,13 +260,15 @@ class RepositoryTest extends TestCase
         $this->assertEquals('test2', $subnode->getName(), 'subnode should be named "test2"');
     }
 
-    public function testGetCommitDiff()
+    public function testGetDiff()
     {
         $this->getRepository()->init();
         $this->addFile('test-file');
         $this->getRepository()->commit('commit 1', true);
         $this->addFile('test-file2');
         $this->getRepository()->commit('commit 2', true);
-        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getCommitDiff($this->getRepository()->getCommit()));
+        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getDiff($this->getRepository()->getCommit()));
+        $this->getRepository()->createTag('v1.0');
+        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getDiff($this->getRepository()->getTag('v1.0')));
     }
 }
