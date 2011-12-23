@@ -163,6 +163,7 @@ The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
 
 You can iterate over DiffObject
 
+``` php
     <?php
     foreach ($diff as $diffObject) {
         // mode is a constant of the DiffObject class
@@ -172,6 +173,7 @@ You can iterate over DiffObject
         // DiffObject::MODE_DELETED_FILE a deleted file change
         echo $diffObject->getMode();
     }
+```
 
 A DiffObject is a class that implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
 
