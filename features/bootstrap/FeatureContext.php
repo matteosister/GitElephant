@@ -355,12 +355,12 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @Given /^I call getCommitDiff with last commit$/
+     * @Given /^I call getDiff with last commit$/
      */
     public function iCallGetcommitdiffWithLastCommit()
     {
-        $lastCommit = $this->repository->getCommit('HEAD');
-        $this->diff = $this->repository->getCommitDiff($lastCommit);
+        $lastCommit = $this->repository->getCommit();
+        $this->diff = $this->repository->getDiff($lastCommit);
     }
 
 
