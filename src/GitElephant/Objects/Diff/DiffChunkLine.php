@@ -29,6 +29,15 @@ abstract class DiffChunkLine
     protected $type;
     protected $content;
 
+    /**
+     * toString magic method
+     *
+     * @return string the line content
+     */
+    public function __toString()
+    {
+        return $this->getContent();
+    }
 
     /**
      * number setter
