@@ -153,12 +153,12 @@ class Repository
     }
 
     /**
-     * Delete a branch by its name or by passing a TreeBranch instance
+     * Delete a branch by its name
      * This function change the state of the repository on the filesystem
      *
-     * @param string|TreeBranch $branch The branch to delete
+     * @param string $name The branch to delete
      */
-    public function deleteBranch($branch)
+    public function deleteBranch($name)
     {
         $this->caller->execute($this->branchCommand->delete($name));
     }
@@ -217,9 +217,9 @@ class Repository
      * Create a new tag
      * This function change the state of the repository on the filesystem
      *
-     * @param string                    $name       The new tag name
-     * @param string|TreeishInterface   $startPoint The reference to create the tag from
-     * @param string                    $message    the tag message
+     * @param string $name       The new tag name
+     * @param null   $startPoint The reference to create the tag from
+     * @param null   $message    the tag message
      */
     public function createTag($name, $startPoint = null, $message = null)
     {
@@ -247,7 +247,7 @@ class Repository
         $tags = array();
         $this->caller->execute($this->tagCommand->lists());
         foreach ($this->caller->getOutputLines() as $tagString) {
-            $tag         = new TreeTag($tagString);
+            $tag = new TreeTag($tagString);
             $outputLines = $this->caller->execute($this->revListCommand->getTagCommit($tag))->getOutputLines();
             $tag->setSha($outputLines[0]);
             $tags[] = $tag;

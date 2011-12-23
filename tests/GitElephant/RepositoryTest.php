@@ -185,10 +185,6 @@ class RepositoryTest extends TestCase
         $this->assertInstanceOf('GitElephant\Objects\TreeTag', $this->getRepository()->getTag('test-tag'));
         $this->getRepository()->deleteTag('test-tag');
         $this->assertEquals(0, count($this->getRepository()->getTags()));
-        $this->getRepository()->createTag('test-tag-from-commit', $this->getRepository()->getCommit());
-        $this->assertEquals(1, count($this->getRepository()->getTags()));
-        $this->getRepository()->deleteTag($this->getRepository()->getTag('test-tag-from-commit'));
-        $this->assertEquals(0, count($this->getRepository()->getTags()));
     }
 
     /**
