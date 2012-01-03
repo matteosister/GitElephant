@@ -78,6 +78,9 @@ Your web server user (like www-data) needs to have access to the folder of the g
     // init
     $repo->init();
 
+    // stage changes
+    $repo->stage('file1.php');
+
     // commit
     $repo->commit('my first commit', true);
 
