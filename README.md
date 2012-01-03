@@ -78,6 +78,9 @@ Your web server user (like www-data) needs to have access to the folder of the g
     // init
     $repo->init();
 
+    // stage changes
+    $repo->stage('file1.php');
+
     // commit
     $repo->commit('my first commit', true);
 
@@ -163,7 +166,6 @@ The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
 
 You can iterate over DiffObject
 
-``` php
     <?php
     foreach ($diff as $diffObject) {
         // mode is a constant of the DiffObject class
@@ -173,7 +175,6 @@ You can iterate over DiffObject
         // DiffObject::MODE_DELETED_FILE a deleted file change
         echo $diffObject->getMode();
     }
-```
 
 A DiffObject is a class that implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
 
