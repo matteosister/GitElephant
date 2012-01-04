@@ -11,5 +11,6 @@ before_script:
   - wget -nc http://getcomposer.org/composer.phar
   - php composer.phar update
 
-script: vendor/behat/behat/bin/behat
-script: phpunit
+script:
+  - vendor/behat/behat/bin/behat
+  - phpunit
