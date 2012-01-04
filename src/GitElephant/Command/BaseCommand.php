@@ -18,7 +18,7 @@ use GitElephant\Command\Caller;
 /**
  * BaseCommand
  *
- * The base class for all the git commands wrappers
+ * The base class for all the command generators
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */

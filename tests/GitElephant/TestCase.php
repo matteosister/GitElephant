@@ -53,8 +53,8 @@ class TestCase extends \PHPUnit_Framework_TestCase
     protected function initRepository()
     {
         if ($this->repository == null) {
-            $tempDir = realpath(sys_get_temp_dir()).'gitwrapper_'.md5(uniqid(rand(),1));
-            $tempName = tempnam($tempDir, 'gitwrapper');
+            $tempDir = realpath(sys_get_temp_dir()).'gitelephant_'.md5(uniqid(rand(),1));
+            $tempName = tempnam($tempDir, 'gitelephant');
             $this->path = $tempName;
             unlink($this->path);
             mkdir($this->path);
