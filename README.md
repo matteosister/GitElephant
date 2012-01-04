@@ -82,6 +82,8 @@ Your web server user (like www-data) needs to have access to the folder of the g
     $repo->stage('file1.php');
 
     // commit
+    $repo->commit('my first commit');
+    // commit and stage every pending changes in the working tree
     $repo->commit('my first commit', true);
 
     // checkout a tag
