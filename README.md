@@ -18,10 +18,12 @@ The library is fully tested with PHPUnit for unit tests, and Behat for BDD. To r
 
 Go to the base library folder and run the test suites
 
+    ``` bash
     // phpunit test suite
     $ phpunit
     // behat test suite
     $ behat
+    ```
 
 Code style
 ----------
@@ -31,15 +33,19 @@ Code style
 
 How to use
 ----------
+
+    ``` php
     <?php
 
     use GitElephant\Repository,
     $repo = new Repository('/path/to/git/repository');
+    ```
 
 the *Repository* class is the main class where you can find every method you need...
 
  **Read repository**
 
+    ``` php
     <?php
     // get the current status
     // returns an array of lines of the status message
@@ -66,7 +72,7 @@ the *Repository* class is the main class where you can find every method you nee
     $repo->getCommit('v1.0');
     // sha (follow git standard to format the sha)
     $repo->getCommit('1ac370d');
-    ....
+    ```
 
 **Manage repository**
 
@@ -74,6 +80,7 @@ You could also use GitElephant to manage your git repositories via PHP.
 
 Your web server user (like www-data) needs to have access to the folder of the git repository
 
+    ``` php
     <?php
     // init
     $repo->init();
@@ -106,7 +113,7 @@ Your web server user (like www-data) needs to have access to the folder of the g
     $repo->createTag('v1.0', null, 'my first release!');
     // create a tag from a Commit object
     $repo->createTag($repo->getCommit());
-    .....
+    ```
 
 A versioned tree of files
 -------------------------
@@ -116,6 +123,7 @@ a tree representation of the repository, at a given point in history.
 
 **Tree class**
 
+    ``` php
     <?php
     // retrieve the actual *HEAD* tree
     $tree = $repo->getTree();
@@ -123,18 +131,22 @@ a tree representation of the repository, at a given point in history.
     $tree = $repo->getTree($repo->getCommit('1ac370d'));
     // retrieve a tree for a given path
     $tree = $repo->getTree('master', 'lib/vendor');
+    ```
 
 The Tree class implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
 
 You can use it as an array of git objects.
 
+    ``` php
     <?php
     foreach ($tree as $treeObject) {
         echo $treeObject;
     }
+    ```
 
 A TreeObject instance is a php representation of a node in a git tree
 
+    ``` php
     <?php
     echo $treeObject; // the name of the object (folder, file or link)
     $treeObject->getType(); // a class constanf of TreeObject::TYPE_BLOB, TreeObject::TYPE_TREE and TreeObject::TYPE_LINK
@@ -143,17 +155,21 @@ A TreeObject instance is a php representation of a node in a git tree
     $treeObject->getName();
     $treeObject->getSize();
     $treeObject->getPath();
+    ```
 
 You can also pass a tree object to the repository to get its subtree
 
+    ``` php
     <?php
     $subtree = $repo->getTree('master', $treeObject);
+    ```
 
 Diffs
 -----
 
 If you want to check a Diff between two commits the Diff class comes in
 
+    ``` php
     <?php
     // get the diff between the given commit and it parent
     $diff = $repo->getDiff($repo->getCommit());
@@ -163,11 +179,13 @@ If you want to check a Diff between two commits the Diff class comes in
     $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getTag('v0.4'), 'lib/vendor');
     // or even pass a TreeObject
     $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getTag('v0.4'), $treeObject);
+    ```
 
 The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
 
 You can iterate over DiffObject
 
+    ``` php
     <?php
     foreach ($diff as $diffObject) {
         // mode is a constant of the DiffObject class
@@ -177,6 +195,7 @@ You can iterate over DiffObject
         // DiffObject::MODE_DELETED_FILE a deleted file change
         echo $diffObject->getMode();
     }
+    ```
 
 A DiffObject is a class that implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
 
@@ -188,6 +207,7 @@ So you can iterate over DiffObject to get DiffChunks. DiffChunks are the last st
 
 They are a colletction of DiffChunkLine Objects
 
+    ``` php
     <?php
     foreach ($diffObject as $diffChunk) {
         if (count($diffChunk) > 0) {
@@ -197,6 +217,7 @@ They are a colletction of DiffChunkLine Objects
             }
         }
     }
+    ```
 
 This is just an example on how to use the Diff class.
 
