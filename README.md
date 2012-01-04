@@ -205,7 +205,7 @@ Every DiffObject can have multiple chunks of changes. For example "added 3 lines
 
 So you can iterate over DiffObject to get DiffChunks. DiffChunks are the last steps of the diff iteration.
 
-They are a colletction of DiffChunkLine Objects
+They are a collection of DiffChunkLine Objects
 
 ``` php
 <?php
