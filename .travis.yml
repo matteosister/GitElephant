@@ -12,3 +12,4 @@ before_script:
   - php composer.phar update
 
 script: vendor/behat/behat/bin/behat
+script: phpunit
