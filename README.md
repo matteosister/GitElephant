@@ -235,7 +235,7 @@ Just remember:
 * if you don't want to use gitflow, develop on a branch (not master) and send a pull request
 
 
-Test
+Todo
 ----
 
 * Remote management (should be easy)
