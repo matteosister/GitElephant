@@ -158,10 +158,10 @@ $treeObject->getPath();
 
 You can also pass a tree object to the repository to get its subtree
 
-    ``` php
-    <?php
-    $subtree = $repo->getTree('master', $treeObject);
-    ```
+``` php
+<?php
+$subtree = $repo->getTree('master', $treeObject);
+```
 
 Diffs
 -----
