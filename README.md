@@ -1,8 +1,9 @@
 GitElephant
 ===========
 
-<img src="http://stillmaintained.com/matteosister/GitElephant.png" alt="Still maintained" title="Still maintained" />
-<img style="padding-left: 1em" src="https://secure.travis-ci.org/matteosister/GitElephant.png" alt="Travis build status" title="Travis build status" />
+![Still maintained](http://stillmaintained.com/matteosister/GitElephant.png)
+
+![Travis build status](https://secure.travis-ci.org/matteosister/GitElephant.png)
 
 GitElephant is an abstraction layer to manage your git repositories with php
 
