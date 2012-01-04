@@ -22,9 +22,9 @@ The library is fully tested with PHPUnit for unit tests, and Behat for BDD. To r
 Go to the base library folder and run the test suites
 
 ``` bash
-// phpunit test suite
+# phpunit test suite
 $ phpunit
-// behat test suite
+# behat test suite
 $ behat
 ```
 
