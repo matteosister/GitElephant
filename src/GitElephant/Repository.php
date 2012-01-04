@@ -99,7 +99,7 @@ class Repository
     /**
      * Stage the working tree content
      *
-     * @param string $path the path to store
+     * @param string|TreeObject $path the path to store
      *
      * @return void
      */
