@@ -1,7 +1,7 @@
 GitElephant
 ===========
 
-![Travis build status](https://secure.travis-ci.org/matteosister/GitElephant.png)
+![Travis build status](https://secure.travis-ci.org/matteosister/GitElephant.png) ![Still mantainet](http://stillmaintained.com/matteosister/GitElephant.png)
 
 GitElephant is an abstraction layer to manage your git repositories with php
 
