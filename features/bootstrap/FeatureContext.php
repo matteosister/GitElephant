@@ -32,6 +32,7 @@ class FeatureContext extends BehatContext
     private $diff;
     private $callResult;
     private $commit;
+    private $treeObject;
 
     /**
      * Initializes context.
@@ -113,7 +114,6 @@ class FeatureContext extends BehatContext
     {
         $this->repository->stage($what);
     }
-
 
     /**
      * @Given /^I add a file in folder "([^"]*)" "([^"]*)"$/
