@@ -58,13 +58,14 @@ class CommitTest extends TestCase
         $this->assertInstanceOf('\Datetime', $this->commit->getDatetimeCommitter());
         $this->assertEquals(array('first commit'), $this->commit->getMessage());
         $this->assertRegExp('/^\w{40}$/', $this->commit->getSha());
-        $this->assertEquals('', $this->commit->getParent());
+        $this->assertEquals(array(), $this->commit->getParents());
         $this->addFile('foo2');
         $mainCommand = new MainCommand();
         $this->getCaller()->execute($mainCommand->add());
         $this->getCaller()->execute($mainCommand->commit('second commit'));
         $this->getCaller()->execute($showCommand->showCommit('HEAD'));
         $this->commit = new Commit($this->getCaller()->getOutputLines());
-        $this->assertRegExp('/^\w{40}$/', $this->commit->getParent());
+        $parents = $this->commit->getParents();
+        $this->assertRegExp('/^\w{40}$/', $parents[0]);
     }
 }
