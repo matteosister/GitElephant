@@ -28,3 +28,10 @@ Scenario: Multiple Parents
     And I add a file named "second-file"
     And I add to the repository "second-file"
     And I commit with message "second-commit"
+    And I checkout "master"
+    And I add a file named "third-file"
+    And I add to the repository "third-file"
+    And I commit with message "third-commit"
+    Then I merge "branch2"
+    And I get the last commit
+    Then the commit should have "2" parent

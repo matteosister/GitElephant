@@ -23,8 +23,7 @@ class FeatureContext extends BehatContext
 {
     private $path;
     /**
-     * @var GitElephant\Repository
-     * @var GitElephant\Repository
+     * @var \GitElephant\Repository
      */
     private $repository;
     private $caller;
@@ -446,5 +445,15 @@ class FeatureContext extends BehatContext
     public function theCommitShouldHaveParent($num)
     {
         assertCount((int)$num, $this->commit->getParents());
+    }
+
+    /**
+     * @Then /^I merge "([^"]*)"$/
+     */
+    public function iMerge($branchName)
+    {
+        $branch = $this->repository->getBranch($branchName);
+        assertNotNull($branch);
+        $this->repository->merge($branch);
     }
 }

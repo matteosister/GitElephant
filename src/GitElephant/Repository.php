@@ -16,22 +16,23 @@ namespace GitElephant;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree,
-GitElephant\Objects\TreeBranch,
-GitElephant\Objects\TreeTag,
-GitElephant\Objects\TreeObject,
-GitElephant\Objects\Diff\Diff,
-GitElephant\Objects\Commit,
-GitElephant\Objects\Log,
-GitElephant\Objects\TreeishInterface;
+    GitElephant\Objects\TreeBranch,
+    GitElephant\Objects\TreeTag,
+    GitElephant\Objects\TreeObject,
+    GitElephant\Objects\Diff\Diff,
+    GitElephant\Objects\Commit,
+    GitElephant\Objects\Log,
+    GitElephant\Objects\TreeishInterface;
 use GitElephant\Command\MainCommand,
-GitElephant\Command\BranchCommand,
-GitElephant\Command\TagCommand,
-GitElephant\Command\LsTreeCommand,
-GitElephant\Command\DiffCommand,
-GitElephant\Command\ShowCommand,
-GitElephant\Command\LogCommand,
-GitElephant\Command\RevListCommand,
-GitElephant\Command\CatFileCommand;
+    GitElephant\Command\BranchCommand,
+    GitElephant\Command\TagCommand,
+    GitElephant\Command\LsTreeCommand,
+    GitElephant\Command\DiffCommand,
+    GitElephant\Command\ShowCommand,
+    GitElephant\Command\LogCommand,
+    GitElephant\Command\RevListCommand,
+    GitElephant\Command\CatFileCommand,
+    GitElephant\Command\MergeCommand;
 use GitElephant\Utilities;
 
 /**
@@ -50,6 +51,7 @@ class Repository
     private $mainCommand;
     private $branchCommand;
     private $tagCommand;
+    private $mergeCommand;
     private $lsTreeCommand;
     private $diffCommand;
     private $showCommand;
@@ -78,6 +80,7 @@ class Repository
         $this->mainCommand    = new MainCommand();
         $this->branchCommand  = new BranchCommand();
         $this->tagCommand     = new TagCommand();
+        $this->mergeCommand   = new MergeCommand();
         $this->lsTreeCommand  = new LsTreeCommand();
         $this->diffCommand    = new DiffCommand();
         $this->showCommand    = new ShowCommand();
@@ -211,6 +214,16 @@ class Repository
             }
         }
         return null;
+    }
+
+    /**
+     * Merge a Branch in the current checked out branch
+     *
+     * @param Objects\TreeBranch $branch The branch to merge in the current checked out branch
+     */
+    public function merge(TreeBranch $branch)
+    {
+        $this->caller->execute($this->mergeCommand->merge($branch));
     }
 
     /**
