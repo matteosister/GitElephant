@@ -220,6 +220,11 @@ foreach ($diffObject as $diffChunk) {
 
 This is just an example on how to use the Diff class.
 
+Symfony2
+--------
+
+There is a [GitElephantBundle](https://github.com/matteosister/GitElephantBundle) to use this library inside a Symfony2 project.
+
 Want to contribute?
 -------------------
 
