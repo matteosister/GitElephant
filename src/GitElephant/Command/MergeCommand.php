@@ -26,6 +26,13 @@ class MergeCommand extends BaseCommand
 {
     const MERGE_COMMAND = 'merge';
 
+    /**
+     * Generate a merge command
+     *
+     * @param \GitElephant\Objects\TreeBranch $with the branch to merge
+     * 
+     * @return string
+     */
     public function merge(TreeBranch $with)
     {
         $this->clearAll();
