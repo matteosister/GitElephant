@@ -37,7 +37,7 @@ Scenario: branch list, add and delete
     getMainBranch
     """
   Then Method should get an array of "getBranches" "GitElephant\Objects\TreeBranch"
-  When I create a branch from "branch2" "master"
+  When I create the branch "branch2" from "master"
   Then Method should get a count of "getBranches" 2
   When I delete the branch "branch2"
   Then Method should get a count of "getBranches" 1
@@ -75,7 +75,7 @@ Scenario: getTree method should return a tree object
 
 Scenario: checkouts
   Given I start a test repository
-  When I create a branch from "branch2" "master"
+  When I create the branch "branch2" from "master"
   And I checkout "branch2"
   And I add a file named "test-file-branch2"
   And I stage and commit with message "commit branch2"
@@ -97,7 +97,7 @@ Scenario: commit
   Then The commit should have the methods
     """
     getSha
-    getParent
+    getParents
     getAuthor
     getCommitter
     getMessage
