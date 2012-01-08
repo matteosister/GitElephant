@@ -7,10 +7,10 @@ branches:
     - master
     - develop
 
-before_script:
-  - wget -nc http://getcomposer.org/composer.phar
-  - php composer.phar update
+#before_script:
+#  - wget -nc http://getcomposer.org/composer.phar
+#  - php composer.phar update
 
 script:
-  - vendor/behat/behat/bin/behat
+  #- vendor/behat/behat/bin/behat
   - phpunit
