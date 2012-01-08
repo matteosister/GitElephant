@@ -12,6 +12,28 @@ Requirements
 
 I work on an ubuntu box, but the lib should work well with every unix system. I don't have a windows installation to test...if someone want to help...
 
+Installation
+------------
+
+**composer**
+
+To install GitElephant with composer you simply need to create a *composer.json* in your project root and add:
+
+``` json
+{
+    "require": {
+        "cypresslab/gitelephant": ">=0.1"
+    },
+}
+```
+
+Then run
+
+``` bash
+$ wget -nc http://getcomposer.org/composer.phar
+$ php composer.phar install
+```
+
 Testing
 -------
 
