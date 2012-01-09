@@ -1,2 +1,4 @@
 bin/*
 package.ini
+*.tgz
+package.xml
