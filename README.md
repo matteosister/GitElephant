@@ -2,7 +2,7 @@
 
 GitElephant is an abstraction layer to manage your git repositories with php
 
-Watch a [simple live example](http://gitelephant.cypresslab.net.158.69-195-222.groveurl.com/) of what you can do with GitElephant, [GitElephantBundle](https://github.com/matteosister/GitElephantBundle), Symfony2 and a git repository...
+Watch a [simple live example](http://gitelephant.cypresslab.net/) of what you can do with GitElephant, [GitElephantBundle](https://github.com/matteosister/GitElephantBundle), Symfony2 and a git repository...
 
 [Download the demo bundle code](https://github.com/matteosister/GitElephantDemoBundle) used in the live example
 
