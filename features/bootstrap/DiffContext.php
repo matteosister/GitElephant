@@ -52,15 +52,15 @@ class DiffContext extends BehatContext
     /**
      * @var array
      */
-    private $diffObjects;
+    private $diffObjects = array();
     /**
      * @var array
      */
-    private $diffChunks;
+    private $diffChunks = array();
     /**
      * @var array
      */
-    private $diffChunkLines;
+    private $diffChunkLines = array();
 
     /**
      * @Given /^I start a repository for diff$/
@@ -109,6 +109,7 @@ class DiffContext extends BehatContext
      */
     public function theDiffShouldHaveObjectOfType($num, $mode)
     {
+        $this->diffObjects = array();
         $count = 0;
         foreach($this->diff as $diffObject) {
             $this->diffObjects[] = $diffObject;
@@ -124,6 +125,7 @@ class DiffContext extends BehatContext
      */
     public function theDiffobjectInPositionShouldHaveDiffchunk($num, $num_chunks)
     {
+        $this->diffChunks = array();
         $diffObject = $this->diffObjects[$num-1];
         assertCount((int)$num_chunks, $diffObject);
         foreach($diffObject as $diffChunk) {
@@ -136,6 +138,7 @@ class DiffContext extends BehatContext
      */
     public function theDiffchunkInPositionShouldHaveDiffchunklines($pos, $num)
     {
+        $this->diffChunkLines = array();
         $diffChunk = $this->diffChunks[$pos-1];
         assertCount((int)$num, $diffChunk);
         foreach($diffChunk as $diffChunkLine) {
