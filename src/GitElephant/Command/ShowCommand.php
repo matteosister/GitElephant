@@ -29,7 +29,7 @@ class ShowCommand extends BaseCommand
     /**
      * build the show command
      *
-     * @param string|TreeBranch $ref the reference for the show command
+     * @param string|\GitElephant\Objects\Commit $ref the reference for the show command
      *
      * @return string
      */

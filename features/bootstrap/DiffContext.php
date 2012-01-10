@@ -19,7 +19,11 @@ use Behat\Gherkin\Node\PyStringNode,
     Behat\Gherkin\Node\TableNode;
 use GitElephant\GitBinary,
     GitElephant\Repository,
-    GitElephant\Command\Caller;
+    GitElephant\Command\Caller,
+    GitElephant\Objects\Diff\Diff,
+    GitElephant\Objects\Diff\DiffObject,
+    GitElephant\Objects\Diff\DiffChunk,
+    GitElephant\Objects\Diff\DiffChunkLine;
 
 require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
@@ -27,23 +31,36 @@ require_once 'PHPUnit/Framework/Assert/Functions.php';
 /**
  * DiffContext
  *
- * @todo   : description
+ * Diff Behat Context
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
 class DiffContext extends BehatContext
 {
+    private $commit_number = 0;
     private $path;
     private $caller;
     /**
-     * @var GitElephant\Repository
+     * @var \GitElephant\Repository
      */
     private $repository;
     /**
-     * @var GitElephant\Objects\Diff\Diff
+     * @var \GitElephant\Objects\Diff\Diff
      */
     private $diff;
+    /**
+     * @var array
+     */
+    private $diffObjects;
+    /**
+     * @var array
+     */
+    private $diffChunks;
+    /**
+     * @var array
+     */
+    private $diffChunkLines;
 
     /**
      * @Given /^I start a repository for diff$/
@@ -68,13 +85,70 @@ class DiffContext extends BehatContext
     {
         $filename = $this->path.DIRECTORY_SEPARATOR.$name;
         $handle = fopen($filename, 'w');
-        foreach($string as $line)
+        foreach($string->getLines() as $line)
         {
-            fwrite($handle, 'test content'."\n");
+            fwrite($handle, $line."\n");
         }
         fclose($handle);
-        $this->repository->commit('commit message', true);
+        $this->repository->stage();
+        $this->repository->commit('commit '.++$this->commit_number, true);
         $this->diff = $this->repository->getDiff($this->repository->getCommit());
     }
 
+    /**
+     * @Then /^the last commit should be root$/
+     */
+    public function theLastCommitShouldBeRoot()
+    {
+        assertTrue($this->repository->getCommit()->isRoot());
+    }
+
+
+    /**
+     * @Then /^the diff should have "([^"]*)" object of mode "([^"]*)"$/
+     */
+    public function theDiffShouldHaveObjectOfType($num, $mode)
+    {
+        $count = 0;
+        foreach($this->diff as $diffObject) {
+            $this->diffObjects[] = $diffObject;
+            if ($diffObject->getMode() == $mode) {
+                $count++;
+            }
+        }
+        assertEquals((int)$num, $count);
+    }
+
+    /**
+     * @Given /^the diffObject in position "([^"]*)" should have "([^"]*)" diffChunk$/
+     */
+    public function theDiffobjectInPositionShouldHaveDiffchunk($num, $num_chunks)
+    {
+        $diffObject = $this->diffObjects[$num-1];
+        assertCount((int)$num_chunks, $diffObject);
+        foreach($diffObject as $diffChunk) {
+            $this->diffChunks[] = $diffChunk;
+        }
+    }
+
+    /**
+     * @Given /^the diffChunk in position "([^"]*)" should have "([^"]*)" diffChunkLine$/
+     */
+    public function theDiffchunkInPositionShouldHaveDiffchunklines($pos, $num)
+    {
+        $diffChunk = $this->diffChunks[$pos-1];
+        assertCount((int)$num, $diffChunk);
+        foreach($diffChunk as $diffChunkLine) {
+            $this->diffChunkLines[] = $diffChunkLine;
+        }
+    }
+
+    /**
+     * @Given /^the diffChunkLine in position "([^"]*)" should be "([^"]*)"$/
+     */
+    public function theDiffchunklineInPositionShouldBe($pos, $type)
+    {
+        $diffChunkLine = $this->diffChunkLines[$pos-1];
+        assertInstanceOf($type, $diffChunkLine);
+    }
 }

@@ -31,7 +31,7 @@ class DiffCommand extends BaseCommand
      * build a diff command
      *
      * @param TreeishInterface      $of   the reference to diff
-     * @param TreeishInterface|null $with the source refernce to diff with $of, if not specified is the current HEAD
+     * @param TreeishInterface|null $with the source reference to diff with $of, if not specified is the current HEAD
      * @param null                  $path the path to diff, if not specified the full repository
      *
      * @return string
@@ -47,11 +47,10 @@ class DiffCommand extends BaseCommand
 
         $subject = '';
 
-        $subject = $of;
         if ($with == null) {
-            $subject .= ' ' . $of.'^';
+            $subject .= $of.'^ '.$of;
         } else {
-            $subject .= ' ' . $with;
+            $subject .= $of.' '.$with;
         }
 
         if ($path != null) {

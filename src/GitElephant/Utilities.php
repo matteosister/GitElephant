@@ -48,7 +48,7 @@ class Utilities
     static public function pregSplitArray($array, $regexp)
     {
         if (static::isAssociative($array)) {
-            throw new \InvalidArgumentException('pregSplitArray only accepts non-associative arrays');
+            throw new \InvalidArgumentException('pregSplitArray only accepts non-associative arrays.');
         }
         $lineNumbers = array();
         $arrOut      = array();
