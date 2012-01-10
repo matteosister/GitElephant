@@ -90,6 +90,13 @@ class DiffContext extends BehatContext
             fwrite($handle, $line."\n");
         }
         fclose($handle);
+    }
+
+    /**
+     * @Given /^I stage and commit$/
+     */
+    public function iStageAndCommit()
+    {
         $this->repository->stage();
         $this->repository->commit('commit '.++$this->commit_number, true);
         $this->diff = $this->repository->getDiff($this->repository->getCommit());
