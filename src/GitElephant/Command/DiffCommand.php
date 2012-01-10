@@ -42,15 +42,17 @@ class DiffCommand extends BaseCommand
         $this->addCommandName(self::DIFF_COMMAND);
         $this->addCommandArgument('--full-index');
         $this->addCommandArgument('--no-color');
+        // no whitespaces
+        $this->addCommandArgument('-w');
         $this->addCommandArgument('--dst-prefix=DST/');
         $this->addCommandArgument('--src-prefix=SRC/');
 
         $subject = '';
 
         if ($with == null) {
-            $subject .= $of.'^ '.$of;
+            $subject .= $of.'^..'.$of;
         } else {
-            $subject .= $of.' '.$with;
+            $subject .= $with.'..'.$of;
         }
 
         if ($path != null) {

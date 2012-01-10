@@ -264,7 +264,5 @@ class RepositoryTest extends TestCase
         $this->addFile('test-file2');
         $this->getRepository()->commit('commit 2', true);
         $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getDiff($this->getRepository()->getCommit()));
-        $this->getRepository()->createTag('v1.0');
-        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getDiff($this->getRepository()->getTag('v1.0')));
     }
 }
