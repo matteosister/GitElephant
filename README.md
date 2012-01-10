@@ -40,6 +40,22 @@ You have now GitElephant installed in *vendor/cypresslab/gitelephant*
 
 And an handy autoload file to include in you project in *vendor/.composer/autoload.php*
 
+**pear**
+
+Add the Cypresslab channel
+
+``` bash
+$ pear channel-discover pear.cypresslab.net
+```
+
+And install the package. *By now GitElephant is in alpha state. So remember the -alpha in the library name*
+
+``` bash
+$ pear install cypresslab/GitElephant-alpha
+```
+
+On the [Cypresslab pear channel website](http://pear.cypresslab.net/) you can find other useful information
+
 Testing
 -------
 
