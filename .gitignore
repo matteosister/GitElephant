@@ -1,1 +1,3 @@
-tests/dummy_repo
+bin/*
+*.tgz
+package.xml

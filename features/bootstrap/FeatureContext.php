@@ -23,14 +23,16 @@ class FeatureContext extends BehatContext
 {
     private $path;
     /**
-     * @var GitElephant\Repository
-     * @var GitElephant\Repository
+     * @var \GitElephant\Repository
      */
     private $repository;
     private $caller;
     private $tree;
     private $diff;
     private $callResult;
+    /**
+     * @var \GitElephant\Objects\Commit
+     */
     private $commit;
     private $treeObject;
 
@@ -194,12 +196,13 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @When /^I create a branch from "([^"]*)" "([^"]*)"$/
+     * @When /^I create the branch "([^"]*)" from "([^"]*)"$/
      */
-    public function iCreateABranchFrom($name, $from)
+    public function iCreateTheBranchFrom($name, $from)
     {
         $this->repository->createBranch($name, $from);
     }
+
 
     /**
      * @Given /^The repository has the method "([^"]*)"$/
@@ -430,5 +433,29 @@ class FeatureContext extends BehatContext
         assertEquals($count, count($this->diff[0]), sprintf('The result is not %s but %s', $count, count($this->diff[0])));
     }
 
+    /**
+     * @Given /^I get the last commit$/
+     */
+    public function iGetTheLastCommit()
+    {
+        $this->commit = $this->repository->getCommit();
+    }
 
+    /**
+     * @Then /^the commit should have "([^"]*)" parent$/
+     */
+    public function theCommitShouldHaveParent($num)
+    {
+        assertCount((int)$num, $this->commit->getParents());
+    }
+
+    /**
+     * @Then /^I merge "([^"]*)"$/
+     */
+    public function iMerge($branchName)
+    {
+        $branch = $this->repository->getBranch($branchName);
+        assertNotNull($branch);
+        $this->repository->merge($branch);
+    }
 }

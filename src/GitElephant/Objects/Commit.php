@@ -27,7 +27,7 @@ class Commit implements TreeishInterface
 {
     private $sha;
     private $tree;
-    private $parent;
+    private $parents;
     private $author;
     private $committer;
     private $message;
@@ -43,6 +43,7 @@ class Commit implements TreeishInterface
      */
     public function __construct($outputLines)
     {
+        $this->parents = array();
         $this->message = array();
         foreach ($outputLines as $line) {
             $matches = array();
@@ -53,9 +54,9 @@ class Commit implements TreeishInterface
                 $this->tree = $matches[1];
             }
             if (preg_match('/^parent (\w+)$/', $line, $matches) > 0) {
-                $this->parent = $matches[1];
+                $this->parents[] = $matches[1];
             }
-            if (preg_match('/^author (\w+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
+            if (preg_match('/^author ([\w ]+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
                 $author = new GitAuthor();
                 $author->setName($matches[1]);
                 $author->setEmail($matches[2]);
@@ -64,7 +65,7 @@ class Commit implements TreeishInterface
                 $date->createFromFormat("U P", $matches[3] . ' ' . $matches[4]);
                 $this->datetimeAuthor = $date;
             }
-            if (preg_match('/^committer (\w+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
+            if (preg_match('/^committer ([\w ]+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
                 $committer = new GitAuthor();
                 $committer->setName($matches[1]);
                 $committer->setEmail($matches[2]);
@@ -77,6 +78,16 @@ class Commit implements TreeishInterface
                 $this->message[] = $matches[1];
             }
         }
+    }
+
+    /**
+     * Returns true if the commit is a root commit. Usually the first of the repository
+     *
+     * @return bool
+     */
+    public function isRoot()
+    {
+        return count($this->parents) == 0;
     }
 
     /**
@@ -124,9 +135,9 @@ class Commit implements TreeishInterface
      *
      * @return mixed
      */
-    public function getParent()
+    public function getParents()
     {
-        return $this->parent;
+        return $this->parents;
     }
 
     /**

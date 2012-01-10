@@ -2,6 +2,10 @@
 
 GitElephant is an abstraction layer to manage your git repositories with php
 
+Watch a [simple live example](http://gitelephant.cypresslab.net/) of what you can do with GitElephant, [GitElephantBundle](https://github.com/matteosister/GitElephantBundle), Symfony2 and a git repository...
+
+[Download the demo bundle code](https://github.com/matteosister/GitElephantDemoBundle) used in the live example
+
 Requirements
 ------------
 
@@ -9,6 +13,48 @@ Requirements
 - *nix system with git installed
 
 I work on an ubuntu box, but the lib should work well with every unix system. I don't have a windows installation to test...if someone want to help...
+
+Installation
+------------
+
+**composer**
+
+To install GitElephant with composer you simply need to create a *composer.json* in your project root and add:
+
+``` json
+{
+    "require": {
+        "cypresslab/gitelephant": ">=0.1"
+    }
+}
+```
+
+Then run
+
+``` bash
+$ wget -nc http://getcomposer.org/composer.phar
+$ php composer.phar install
+```
+
+You have now GitElephant installed in *vendor/cypresslab/gitelephant*
+
+And an handy autoload file to include in you project in *vendor/.composer/autoload.php*
+
+**pear**
+
+Add the Cypresslab channel
+
+``` bash
+$ pear channel-discover pear.cypresslab.net
+```
+
+And install the package. *By now GitElephant is in alpha state. So remember the -alpha in the library name*
+
+``` bash
+$ pear install cypresslab/GitElephant-alpha
+```
+
+On the [Cypresslab pear channel website](http://pear.cypresslab.net/) you can find other useful information
 
 Testing
 -------
@@ -219,6 +265,11 @@ foreach ($diffObject as $diffChunk) {
 ```
 
 This is just an example on how to use the Diff class.
+
+Symfony2
+--------
+
+There is a [GitElephantBundle](https://github.com/matteosister/GitElephantBundle) to use this library inside a Symfony2 project.
 
 Want to contribute?
 -------------------
