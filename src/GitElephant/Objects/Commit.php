@@ -56,7 +56,7 @@ class Commit implements TreeishInterface
             if (preg_match('/^parent (\w+)$/', $line, $matches) > 0) {
                 $this->parents[] = $matches[1];
             }
-            if (preg_match('/^author (\w+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
+            if (preg_match('/^author ([\w ]+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
                 $author = new GitAuthor();
                 $author->setName($matches[1]);
                 $author->setEmail($matches[2]);
@@ -65,7 +65,7 @@ class Commit implements TreeishInterface
                 $date->createFromFormat("U P", $matches[3] . ' ' . $matches[4]);
                 $this->datetimeAuthor = $date;
             }
-            if (preg_match('/^committer (\w+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
+            if (preg_match('/^committer ([\w ]+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
                 $committer = new GitAuthor();
                 $committer->setName($matches[1]);
                 $committer->setEmail($matches[2]);
