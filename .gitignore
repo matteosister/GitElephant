@@ -1,0 +1,3 @@
+bin/*
+*.tgz
+package.xml
