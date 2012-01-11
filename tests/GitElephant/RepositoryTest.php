@@ -234,11 +234,8 @@ class RepositoryTest extends TestCase
         $log = $this->getRepository()->getObjectLog($obj, null, null, null);
         $this->assertEquals(5, $log->count());
 
-        $message = $log->first()->getMessage();
-        $this->assertEquals('added E.txt', $message[0]);
-
-        $message = $log->last()->getMessage();
-        $this->assertEquals('added A.txt', $message[0]);
+        $this->assertEquals('added E.txt', $log->first()->getMessage()->toString());
+        $this->assertEquals('added A.txt', $log->last()->getMessage()->toString());
     }
 
     /**
@@ -276,8 +273,7 @@ class RepositoryTest extends TestCase
 
             $i = 2;
             foreach ($log as $commit) {
-                $message = $commit->getMessage();
-                $this->assertEquals($name . '/' . $name . $i, $message[0]);
+                $this->assertEquals($name . '/' . $name . $i, $commit->getMessage()->toString());
                 --$i;
             }
         }
@@ -313,9 +309,7 @@ class RepositoryTest extends TestCase
         $log = $repo->getObjectLog($dir, null, null, null);
 
         $this->assertEquals(2, $log->count());
-
-        $message = $log->first()->getMessage();
-        $this->assertEquals('A/A2', $message[0]);
+        $this->assertEquals('A/A2', $log->first()->getMessage()->toString());
 
         // test branch
         $repo->checkout('test-branch');
@@ -324,9 +318,7 @@ class RepositoryTest extends TestCase
         $log = $repo->getObjectLog($dir, null, null, null);
 
         $this->assertEquals(3, $log->count());
-
-        $message = $log->first()->getMessage();
-        $this->assertEquals('A/A3', $message[0]);
+        $this->assertEquals('A/A3', $log->first()->getMessage()->toString());
     }
 
     /**
