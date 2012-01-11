@@ -15,7 +15,7 @@ namespace GitElephant\Objects;
 
 use GitElephant\Objects\GitAuthor;
 use GitElephant\Objects\TreeishInterface;
-
+use GitElephant\Objects\Commit\Message;
 
 /**
  * The Commit object represent a commit
@@ -80,7 +80,7 @@ class Commit implements TreeishInterface
             }
         }
 
-        $this->message = new Commit\Message($message);
+        $this->message = new Message($message);
     }
 
     /**
@@ -126,7 +126,7 @@ class Commit implements TreeishInterface
     /**
      * message getter
      *
-     * @return Commit\Message
+     * @return Message
      */
     public function getMessage()
     {
