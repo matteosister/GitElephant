@@ -28,29 +28,59 @@ class LogCommand extends BaseCommand
     const GIT_LOG = 'log';
 
     /**
-     * build a log command
+     * Build an object log command
      *
      * @param \GitElephant\Objects\TreeObject      $obj    the TreeObject to get the log for
      * @param \GitElephant\Objects\TreeBranch|null $branch the branch to consider
-     * @param bool                                 $last   gets only the last log
+     * @param int|null                             $offset skip n entries
+     * @param int|null                             $limit  limit to n entries
      *
      * @return string
      */
-    public function showLog(TreeObject $obj, TreeBranch $branch = null, $last = true)
+    public function showObjectLog(TreeObject $obj, TreeBranch $branch = null, $offset = null, $limit = null)
     {
-        $this->clearAll();
-
-        $this->addCommandName(self::GIT_LOG);
-        if ($last) {
-            $this->addCommandArgument('-n 1');
-        }
-
         $subject = '';
         if (null !== $branch) {
             $subject .= $branch->getName();
         }
         $subject .= ' -- ' . $obj->getFullPath();
-        $this->addCommandSubject($subject);
+
+        return $this->showLog($subject, $offset, $limit);
+    }
+
+    /**
+     * Build a generic log command
+     *
+     * @param \GitElephant\Objects\TreeishInterface|string  $ref    the reference to build the log for
+     * @param int|null                                      $offset skip n entries
+     * @param int|null                                      $limit  limit to n entries
+     *
+     * @return string
+     */
+    public function showLog($ref, $offset = null, $limit = null)
+    {
+        $this->clearAll();
+
+        $this->addCommandName(self::GIT_LOG);
+        $this->addCommandArgument('-s');
+        $this->addCommandArgument('--pretty=raw');
+        $this->addCommandArgument('--no-color');
+
+        if (null !== $offset) {
+            $offset = (int) $offset;
+            $this->addCommandArgument('--skip=' . $offset);
+        }
+
+        if (null !== $limit) {
+            $limit = (int) $limit;
+            $this->addCommandArgument('--max-count=' . $limit);
+        }
+
+        if ($ref instanceof \GitElephant\Objects\TreeishInterface) {
+            $ref = $ref->getSha();
+        }
+
+        $this->addCommandSubject($ref);
         return $this->getCommand();
     }
 }

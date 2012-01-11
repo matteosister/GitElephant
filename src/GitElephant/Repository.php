@@ -299,16 +299,33 @@ class Repository
     }
 
     /**
-     * Get a log object
+     * Get a log for a ref
      *
-     * @param TreeObject $obj    The TreeObject instance
-     * @param null       $branch The branch to read from
+     * @param \GitElephant\Objects\TreeishInterface|string|null $ref    The reference to build the log for
+     * @param int|null                                          $offset Skip n entries
+     * @param int|null                                          $limit  Limit to n entries
      *
      * @return Objects\Log
      */
-    public function getLog($obj, $branch = null)
+    public function getLog($ref = null, $offset = null, $limit = 15)
     {
-        $command = $this->logCommand->showLog($obj, $branch);
+        $command = $this->logCommand->showLog($ref, $offset, $limit);
+        return new Log($this->caller->execute($command)->getOutputLines());
+    }
+
+    /**
+     * Get a log for an object
+     *
+     * @param TreeObject $obj    The TreeObject instance
+     * @param null       $branch The branch to read from
+     * @param int|null   $offset Skip n entries
+     * @param int|null   $limit  Limit to n entries
+     *
+     * @return Objects\Log
+     */
+    public function getObjectLog(TreeObject $obj, TreeBranch $branch = null, $offset = null, $limit = 1)
+    {
+        $command = $this->logCommand->showObjectLog($obj, $branch, $offset, $limit);
         return new Log($this->caller->execute($command)->getOutputLines());
     }
 
