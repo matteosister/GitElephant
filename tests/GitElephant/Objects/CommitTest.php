@@ -56,7 +56,8 @@ class CommitTest extends TestCase
         $this->assertInstanceOf('\GitElephant\Objects\GitAuthor', $this->commit->getCommitter());
         $this->assertInstanceOf('\Datetime', $this->commit->getDatetimeAuthor());
         $this->assertInstanceOf('\Datetime', $this->commit->getDatetimeCommitter());
-        $this->assertEquals(array('first commit'), $this->commit->getMessage());
+        $this->assertInstanceOf('\GitElephant\Objects\Commit\Message', $this->commit->getMessage());
+        $this->assertEquals('first commit', $this->commit->getMessage()->toString());
         $this->assertRegExp('/^\w{40}$/', $this->commit->getSha());
         $this->assertEquals(array(), $this->commit->getParents());
         $this->addFile('foo2');
