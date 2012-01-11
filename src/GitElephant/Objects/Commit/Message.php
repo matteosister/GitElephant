@@ -25,7 +25,7 @@ class Message
     /**
      * Class constructor
      *
-     * @param array $message|string Message lines
+     * @param array|string $message Message lines
      */
     public function __construct($message)
     {
@@ -60,7 +60,8 @@ class Message
     /**
      * Return message string
      *
-     * @param  bool $full
+     * @param bool $full get the full message
+     *
      * @return string|null
      */
     public function toString($full = false)

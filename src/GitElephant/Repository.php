@@ -305,7 +305,7 @@ class Repository
      * @param int|null                                          $limit  Limit to n entries
      * @param int|null                                          $offset Skip n entries
      *
-     * @return Objects\Log
+     * @return \GitElephant\Objects\Log
      */
     public function getLog($ref = null, $limit = 15, $offset = null)
     {
@@ -316,12 +316,12 @@ class Repository
     /**
      * Get a log for an object
      *
-     * @param TreeObject $obj    The TreeObject instance
-     * @param null       $branch The branch to read from
-     * @param int|null   $offset Skip n entries
-     * @param int|null   $limit  Limit to n entries
+     * @param \GitElephant\Objects\TreeObject             $obj    The TreeObject instance
+     * @param null|string|\GitElephant\Objects\TreeBranch $branch The branch to read from
+     * @param int                                         $limit  Limit to n entries
+     * @param int|null                                    $offset Skip n entries
      *
-     * @return Objects\Log
+     * @return \GitElephant\Objects\Log
      */
     public function getObjectLog(TreeObject $obj, $branch = null, $limit = 1, $offset = null)
     {

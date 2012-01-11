@@ -75,6 +75,8 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     /**
      * Get commit at index
      *
+     * @param int $index the commit index
+     *
      * @return Commit|null
      */
     public function index($index)
@@ -153,7 +155,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     public function next()
     {
         ++$this->position;
-        return $this->current();
     }
 
     /**

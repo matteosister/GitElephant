@@ -30,10 +30,10 @@ class LogCommand extends BaseCommand
     /**
      * Build an object log command
      *
-     * @param \GitElephant\Objects\TreeObject               $obj    the TreeObject to get the log for
-     * @param \GitElephant\Objects\TreeBranch|string|null   $branch the branch to consider
-     * @param int|null                                      $limit  limit to n entries
-     * @param int|null                                      $offset skip n entries
+     * @param \GitElephant\Objects\TreeObject             $obj    the TreeObject to get the log for
+     * @param \GitElephant\Objects\TreeBranch|string|null $branch the branch to consider
+     * @param int|null                                    $limit  limit to n entries
+     * @param int|null                                    $offset skip n entries
      *
      * @return string
      */
@@ -55,9 +55,9 @@ class LogCommand extends BaseCommand
     /**
      * Build a generic log command
      *
-     * @param \GitElephant\Objects\TreeishInterface|string  $ref    the reference to build the log for
-     * @param int|null                                      $limit  limit to n entries
-     * @param int|null                                      $offset skip n entries
+     * @param \GitElephant\Objects\TreeishInterface|string $ref    the reference to build the log for
+     * @param int|null                                     $limit  limit to n entries
+     * @param int|null                                     $offset skip n entries
      *
      * @return string
      */
