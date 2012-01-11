@@ -32,12 +32,12 @@ class LogCommand extends BaseCommand
      *
      * @param \GitElephant\Objects\TreeObject      $obj    the TreeObject to get the log for
      * @param \GitElephant\Objects\TreeBranch|null $branch the branch to consider
-     * @param int|null                             $offset skip n entries
      * @param int|null                             $limit  limit to n entries
+     * @param int|null                             $offset skip n entries
      *
      * @return string
      */
-    public function showObjectLog(TreeObject $obj, TreeBranch $branch = null, $offset = null, $limit = null)
+    public function showObjectLog(TreeObject $obj, TreeBranch $branch = null, $limit = null, $offset = null)
     {
         $subject = '';
         if (null !== $branch) {
@@ -45,19 +45,19 @@ class LogCommand extends BaseCommand
         }
         $subject .= ' -- ' . $obj->getFullPath();
 
-        return $this->showLog($subject, $offset, $limit);
+        return $this->showLog($subject, $limit, $offset);
     }
 
     /**
      * Build a generic log command
      *
      * @param \GitElephant\Objects\TreeishInterface|string  $ref    the reference to build the log for
-     * @param int|null                                      $offset skip n entries
      * @param int|null                                      $limit  limit to n entries
+     * @param int|null                                      $offset skip n entries
      *
      * @return string
      */
-    public function showLog($ref, $offset = null, $limit = null)
+    public function showLog($ref, $limit = null, $offset = null)
     {
         $this->clearAll();
 
@@ -66,14 +66,14 @@ class LogCommand extends BaseCommand
         $this->addCommandArgument('--pretty=raw');
         $this->addCommandArgument('--no-color');
 
-        if (null !== $offset) {
-            $offset = (int) $offset;
-            $this->addCommandArgument('--skip=' . $offset);
-        }
-
         if (null !== $limit) {
             $limit = (int) $limit;
             $this->addCommandArgument('--max-count=' . $limit);
+        }
+
+        if (null !== $offset) {
+            $offset = (int) $offset;
+            $this->addCommandArgument('--skip=' . $offset);
         }
 
         if ($ref instanceof \GitElephant\Objects\TreeishInterface) {
