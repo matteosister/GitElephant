@@ -61,8 +61,7 @@ class Commit implements TreeishInterface
                 $author->setName($matches[1]);
                 $author->setEmail($matches[2]);
                 $this->author = $author;
-                $date         = new \DateTime();
-                $date->createFromFormat("U P", $matches[3] . ' ' . $matches[4]);
+                $date = \DateTime::createFromFormat('U P', $matches[3] . ' ' . $matches[4]);
                 $this->datetimeAuthor = $date;
             }
             if (preg_match('/^committer ([\w ]+) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
@@ -70,8 +69,7 @@ class Commit implements TreeishInterface
                 $committer->setName($matches[1]);
                 $committer->setEmail($matches[2]);
                 $this->committer = $committer;
-                $date            = new \DateTime();
-                $date->createFromFormat("U P", $matches[3] . ' ' . $matches[4]);
+                $date = \DateTime::createFromFormat('U P', $matches[3] . ' ' . $matches[4]);
                 $this->datetimeCommitter = $date;
             }
             if (preg_match('/^    (.*)$/', $line, $matches)) {
@@ -179,5 +177,4 @@ class Commit implements TreeishInterface
     {
         return $this->datetimeCommitter;
     }
-
 }
