@@ -13,7 +13,7 @@ Scenario: find diffs in a repository
         """
     And I stage and commit
     Then the last commit should be root
-    And I add a file named "test-file2" to the repository with content
+    Then I add a file named "test-file2" to the repository with content
         """
         first line
         """
@@ -87,3 +87,9 @@ Scenario: find diffs in a repository
     And the diffChunk in position "2" should have "7" diffChunkLine
     And the diffChunkLine in position "4" should be "\GitElephant\Objects\Diff\DiffChunkLineDeleted"
     And the diffChunkLine in position "5" should be "\GitElephant\Objects\Diff\DiffChunkLineAdded"
+
+Scenario: diff without contents
+    Given I start a repository for diff
+    Then I add a file named "empty-file" to the repository without content
+    And I stage and commit
+    Then the last commit should be root

@@ -50,7 +50,10 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
         $this->findMode($lines[1]);
 
         if ($this->mode == self::MODE_INDEX || $this->mode == self::MODE_NEW_FILE) {
-            $this->findChunks(array_slice($lines, 4));
+            $lines = array_slice($lines, 4);
+            if (!empty($lines)) {
+                $this->findChunks($lines);
+            }
         }
     }
 
