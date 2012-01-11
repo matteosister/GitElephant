@@ -117,6 +117,21 @@ $repo->getCommit();
 $repo->getCommit('v1.0');
 // sha (follow git standard to format the sha)
 $repo->getCommit('1ac370d');
+
+// Log contains a collection of commit objects
+// syntax: getLog(<tree-ish>, limit = 15, offset = null)
+$log = $repo->getLog();
+$log = $repo->getLog('master', 5);
+$log = $repo->getLog('v0.1', 5, 10);
+
+// countable
+$log->count();
+count($log);
+
+// iterable
+foreach ($log as $commit) {
+    echo $commit->getMessage();
+}
 ```
 
 **Manage repository**

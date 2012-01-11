@@ -3,4 +3,3 @@ vendor/*
 *.tgz
 package.xml
 composer.phar
-composer.lock

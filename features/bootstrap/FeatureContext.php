@@ -147,6 +147,14 @@ class FeatureContext extends BehatContext
     }
 
     /**
+     * @Given /^I commit with message:$/
+     */
+    public function iCommitWithMessageMultiline(PyStringNode $message)
+    {
+        return $this->iCommitWithMessage($message->getRaw());
+    }
+
+    /**
      * @Given /^I start a test repository$/
      */
     public function iStartATestRepository()
@@ -447,6 +455,38 @@ class FeatureContext extends BehatContext
     public function theCommitShouldHaveParent($num)
     {
         assertCount((int)$num, $this->commit->getParents());
+    }
+
+    /**
+     * @Then /^the commit message should equal "([^"]*)"$/
+     */
+    public function theCommitMessageShouldEqual($message)
+    {
+        assertEquals($message, $this->commit->getMessage()->toString());
+    }
+
+   /**
+     * @Given /^the short commit message should equal "([^"]*)"$/
+     */
+    public function theShortCommitMessageShouldEqual($message)
+    {
+        assertEquals($message, $this->commit->getMessage()->getShortMessage());
+    }
+
+    /**
+     * @Given /^the full commit message should equal "([^"]*)"$/
+     */
+    public function theFullCommitMessageShouldEqual($message)
+    {
+        assertEquals($message, $this->commit->getMessage()->getFullMessage());
+    }
+
+    /**
+     * @Given /^the full commit message should equal:$/
+     */
+    public function theFullCommitMessageShouldEqualMultiline(PyStringNode $message)
+    {
+        return $this->theFullCommitMessageShouldEqual($message->getRaw());
     }
 
     /**

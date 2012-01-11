@@ -87,10 +87,20 @@ class DiffContext extends BehatContext
         $handle = fopen($filename, 'w');
         foreach($string->getLines() as $line)
         {
-            fwrite($handle, $line."\n");
+            fwrite($handle, $line.PHP_EOL);
         }
         fclose($handle);
     }
+
+    /**
+     * @Then /^I add a file named "([^"]*)" to the repository without content$/
+     */
+    public function iAddAFileNamedToTheRepositoryWithoutContent($name)
+    {
+        $filename = $this->path.DIRECTORY_SEPARATOR.$name;
+        touch($filename);
+    }
+
 
     /**
      * @Given /^I stage and commit$/
