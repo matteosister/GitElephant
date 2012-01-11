@@ -15,7 +15,7 @@ namespace GitElephant\Objects;
 
 use GitElephant\Objects\GitAuthor;
 use GitElephant\Objects\TreeishInterface;
-
+use GitElephant\Objects\Commit\Message;
 
 /**
  * The Commit object represent a commit
@@ -43,8 +43,9 @@ class Commit implements TreeishInterface
      */
     public function __construct($outputLines)
     {
+        $message = array();
         $this->parents = array();
-        $this->message = array();
+
         foreach ($outputLines as $line) {
             $matches = array();
             if (preg_match('/^commit (\w+)$/', $line, $matches) > 0) {
@@ -73,9 +74,11 @@ class Commit implements TreeishInterface
                 $this->datetimeCommitter = $date;
             }
             if (preg_match('/^    (.*)$/', $line, $matches)) {
-                $this->message[] = $matches[1];
+                $message[] = $matches[1];
             }
         }
+
+        $this->message = new Message($message);
     }
 
     /**
@@ -121,7 +124,7 @@ class Commit implements TreeishInterface
     /**
      * message getter
      *
-     * @return array
+     * @return Message
      */
     public function getMessage()
     {

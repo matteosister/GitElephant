@@ -23,10 +23,11 @@ use GitElephant\Objects\TreeObject;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
- 
+
 class RepositoryTest extends TestCase
 {
-    public function setUp() {
+    public function setUp()
+    {
         $this->initRepository();
     }
 
@@ -199,16 +200,142 @@ class RepositoryTest extends TestCase
     }
 
     /**
+     * @covers GitElephant\Repository::getObjectLog
+     */
+    public function testGetObjectLog()
+    {
+        $repo = $this->getRepository();
+        $repo->init();
+
+        $this->addFolder('test');
+
+        $this->addFile('A.txt', 'test');
+        $repo->commit('added A.txt', true);
+
+        $this->addFile('B.txt', 'test');
+        $repo->commit('added B.txt', true);
+
+        $this->addFile('C.txt', 'test');
+        $repo->commit('added C.txt', true);
+
+        $this->addFile('D.txt', 'test');
+        $repo->commit('added D.txt', true);
+
+        $this->addFile('E.txt', 'test');
+        $repo->commit('added E.txt', true);
+
+        $tree = $repo->getTree();
+        $obj = $tree[0];
+
+        $log = $this->getRepository()->getObjectLog($obj);
+        $this->assertInstanceOf('GitElephant\Objects\Log', $log);
+        $this->assertEquals(1, $log->count());
+
+        $log = $this->getRepository()->getObjectLog($obj, null, null, null);
+        $this->assertEquals(5, $log->count());
+
+        $this->assertEquals('added E.txt', $log->first()->getMessage()->toString());
+        $this->assertEquals('added A.txt', $log->last()->getMessage()->toString());
+    }
+
+    /**
+     * Test logs on different tree objects
+     *
+     * @covers GitElephant\Repository::getObjectLog
+     */
+    public function testGetObjectLogFolders()
+    {
+        $repo = $this->getRepository();
+        $repo->init();
+
+        $this->addFolder('A');
+        $this->addFile('A1.txt', 'A');
+        $repo->commit('A/A1', true);
+
+        $this->addFile('A2.txt', 'A');
+        $repo->commit('A/A2', true);
+
+        $this->addFolder('B');
+        $this->addFile('B1.txt', 'B');
+        $repo->commit('B/B1', true);
+
+        $this->addFile('B2.txt', 'B');
+        $repo->commit('B/B2', true);
+
+        $tree = $repo->getTree();
+
+        /* @var $treeObj TreeObject */
+        foreach ($tree as $treeObj) {
+            $name = $treeObj->getName();
+            $log = $repo->getObjectLog($treeObj, null, null, null);
+
+            $this->assertEquals(2, $log->count());
+
+            $i = 2;
+            foreach ($log as $commit) {
+                $this->assertEquals($name . '/' . $name . $i, $commit->getMessage()->toString());
+                --$i;
+            }
+        }
+    }
+
+    /**
+     * Test logs on different branches
+     *
+     * @covers GitElephant\Repository::getObjectLog
+     */
+    public function testGetObjectLogBranches()
+    {
+        $repo = $this->getRepository();
+        $repo->init();
+
+        $this->addFolder('A');
+        $this->addFile('A1.txt', 'A');
+        $repo->commit('A/A1', true);
+
+        $this->addFile('A2.txt', 'A');
+        $repo->commit('A/A2', true);
+
+        $repo->createBranch('test-branch');
+        $repo->checkout('test-branch');
+
+        $this->addFile('A3.txt', 'A');
+        $repo->commit('A/A3', true);
+
+        // master branch
+        $repo->checkout('master');
+        $tree = $repo->getTree();
+        $dir = $tree[0];
+        $log = $repo->getObjectLog($dir, null, null, null);
+
+        $this->assertEquals(2, $log->count());
+        $this->assertEquals('A/A2', $log->first()->getMessage()->toString());
+
+        // test branch
+        $repo->checkout('test-branch');
+        $tree = $repo->getTree();
+        $dir = $tree[0];
+        $log = $repo->getObjectLog($dir, null, null, null);
+
+        $this->assertEquals(3, $log->count());
+        $this->assertEquals('A/A3', $log->first()->getMessage()->toString());
+    }
+
+    /**
      * @covers GitElephant\Repository::getLog
      */
     public function testGetLog()
     {
         $this->getRepository()->init();
-        $this->addFile('test-file');
-        $this->getRepository()->commit('test', true);
-        $tree = $this->getRepository()->getTree();
-        $obj = $tree[0];
-        $this->assertInstanceOf('GitElephant\Objects\Log', $this->getRepository()->getLog($obj));
+
+        for ($i = 0; $i < 50; $i++) {
+            $this->addFile('test file ' . $i);
+            $this->getRepository()->commit('test commit ' . $i, true);
+        }
+
+        $log = $this->getRepository()->getLog();
+        $this->assertInstanceOf('GitElephant\Objects\Log', $this->getRepository()->getLog());
+        $this->assertEquals(15, $log->count());
     }
 
     /**
