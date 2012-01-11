@@ -227,11 +227,11 @@ class RepositoryTest extends TestCase
         $tree = $repo->getTree();
         $obj = $tree[0];
 
-        $log = $this->getRepository()->getObjectLog($obj);
+        $log = $this->getRepository()->getTreeObjectLog($obj);
         $this->assertInstanceOf('GitElephant\Objects\Log', $log);
         $this->assertEquals(1, $log->count());
 
-        $log = $this->getRepository()->getObjectLog($obj, null, null, null);
+        $log = $this->getRepository()->getTreeObjectLog($obj, null, null, null);
         $this->assertEquals(5, $log->count());
 
         $this->assertEquals('added E.txt', $log->first()->getMessage()->toString());
@@ -267,7 +267,7 @@ class RepositoryTest extends TestCase
         /* @var $treeObj TreeObject */
         foreach ($tree as $treeObj) {
             $name = $treeObj->getName();
-            $log = $repo->getObjectLog($treeObj, null, null, null);
+            $log = $repo->getTreeObjectLog($treeObj, null, null, null);
 
             $this->assertEquals(2, $log->count());
 
@@ -306,7 +306,7 @@ class RepositoryTest extends TestCase
         $repo->checkout('master');
         $tree = $repo->getTree();
         $dir = $tree[0];
-        $log = $repo->getObjectLog($dir, null, null, null);
+        $log = $repo->getTreeObjectLog($dir, null, null, null);
 
         $this->assertEquals(2, $log->count());
         $this->assertEquals('A/A2', $log->first()->getMessage()->toString());
@@ -315,7 +315,7 @@ class RepositoryTest extends TestCase
         $repo->checkout('test-branch');
         $tree = $repo->getTree();
         $dir = $tree[0];
-        $log = $repo->getObjectLog($dir, null, null, null);
+        $log = $repo->getTreeObjectLog($dir, null, null, null);
 
         $this->assertEquals(3, $log->count());
         $this->assertEquals('A/A3', $log->first()->getMessage()->toString());

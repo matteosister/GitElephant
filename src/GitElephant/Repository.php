@@ -323,7 +323,7 @@ class Repository
      *
      * @return \GitElephant\Objects\Log
      */
-    public function getObjectLog(TreeObject $obj, $branch = null, $limit = 1, $offset = null)
+    public function getTreeObjectLog(TreeObject $obj, $branch = null, $limit = 1, $offset = null)
     {
         $command = $this->logCommand->showObjectLog($obj, $branch, $limit, $offset);
         return new Log($this->caller->execute($command)->getOutputLines());

@@ -124,7 +124,7 @@ class Commit implements TreeishInterface
     /**
      * message getter
      *
-     * @return Message
+     * @return \GitElephant\Objects\Commit\Message
      */
     public function getMessage()
     {
