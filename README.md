@@ -42,19 +42,19 @@ And an handy autoload file to include in you project in *vendor/.composer/autolo
 
 **pear**
 
-Add the Cypresslab channel
+Add the Pearhub channel (the old channel will be shut down soon)
 
 ``` bash
-$ pear channel-discover pear.cypresslab.net
+$ pear channel-discover pearhub.org
 ```
 
 And install the package. *By now GitElephant is in alpha state. So remember the -alpha in the library name*
 
 ``` bash
-$ pear install cypresslab/GitElephant-alpha
+$ pear install pearhub/GitElephant-alpha
 ```
 
-On the [Cypresslab pear channel website](http://pear.cypresslab.net/) you can find other useful information
+On [Pearhub project homepage](http://pearhub.org/projects/GitElephant) you can find other useful information
 
 Testing
 -------
@@ -264,7 +264,7 @@ foreach ($diffObject as $diffChunk) {
 }
 ```
 
-This is just an example on how to use the Diff class. Run the diff behat test suite to check what the Diff class can do
+This is just an example of what the Diff class can do. Run the diff behat test suite for other nice things
 
 ``` bash
 $ behat features/diff.feature
