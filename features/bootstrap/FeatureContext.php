@@ -44,6 +44,8 @@ class FeatureContext extends BehatContext
      */
     public function __construct(array $parameters)
     {
+        $this->useContext('diff', new DiffContext());
+
         spl_autoload_register(function($class)
         {
             $file = __DIR__.'/../../src/'.strtr($class, '\\', '/').'.php';

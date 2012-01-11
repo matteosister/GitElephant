@@ -341,15 +341,23 @@ class Repository
     /**
      * Get a Diff object for a commit with its parent
      *
-     * @param Objects\TreeishInterface      $treeish1 A TreeishInterface instance
-     * @param Objects\TreeishInterface|null $treeish2 A TreeishInterface instance
-     * @param null|string|TreeObject        $path     The path to get the diff for or a TreeObject instance
+     * @param \GitElephant\Objects\Commit      $treeish1 A TreeishInterface instance
+     * @param \GitElephant\Objects\Commit|null $treeish2 A TreeishInterface instance
+     * @param null|string|TreeObject           $path     The path to get the diff for or a TreeObject instance
      *
-     * @return Objects\Diff\Diff
+     * @return Objects\Diff\Diff|false
      */
-    public function getDiff(TreeishInterface $treeish1, TreeishInterface $treeish2 = null, $path = null)
+    public function getDiff(Commit $commit1, Commit $commit2 = null, $path = null)
     {
-        $command     = $this->diffCommand->diff($treeish1, $treeish2, $path);
+        if ($commit2 === null) {
+            if ($commit1->isRoot()) {
+                return false;
+            } else {
+                $command = $this->diffCommand->diff($commit1);
+            }
+        } else {
+            $command = $this->diffCommand->diff($commit1, $commit2, $path);
+        }
         $outputLines = $this->caller->execute($command)->getOutputLines();
         return new Diff($outputLines);
     }
