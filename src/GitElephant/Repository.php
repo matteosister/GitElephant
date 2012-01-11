@@ -341,9 +341,9 @@ class Repository
     /**
      * Get a Diff object for a commit with its parent
      *
-     * @param \GitElephant\Objects\Commit      $treeish1 A TreeishInterface instance
-     * @param \GitElephant\Objects\Commit|null $treeish2 A TreeishInterface instance
-     * @param null|string|TreeObject           $path     The path to get the diff for or a TreeObject instance
+     * @param \GitElephant\Objects\Commit      $commit1 A TreeishInterface instance
+     * @param \GitElephant\Objects\Commit|null $commit2 A TreeishInterface instance
+     * @param null|string|TreeObject           $path    The path to get the diff for or a TreeObject instance
      *
      * @return Objects\Diff\Diff|false
      */

@@ -67,7 +67,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
                     if (preg_match('/^ (.*)/', $line) || $line == '') {
                         $this->lines[] = new DiffChunkLineUnchanged($i, ltrim($line));
                         $i++;
-                        } else {
+                    } else {
                         if (preg_match('/\\ No newline at end of file/', $line)) {
                             $i++;
                         } else {
