@@ -30,18 +30,22 @@ class LogCommand extends BaseCommand
     /**
      * Build an object log command
      *
-     * @param \GitElephant\Objects\TreeObject      $obj    the TreeObject to get the log for
-     * @param \GitElephant\Objects\TreeBranch|null $branch the branch to consider
-     * @param int|null                             $limit  limit to n entries
-     * @param int|null                             $offset skip n entries
+     * @param \GitElephant\Objects\TreeObject               $obj    the TreeObject to get the log for
+     * @param \GitElephant\Objects\TreeBranch|string|null   $branch the branch to consider
+     * @param int|null                                      $limit  limit to n entries
+     * @param int|null                                      $offset skip n entries
      *
      * @return string
      */
-    public function showObjectLog(TreeObject $obj, TreeBranch $branch = null, $limit = null, $offset = null)
+    public function showObjectLog(TreeObject $obj, $branch = null, $limit = null, $offset = null)
     {
         $subject = '';
         if (null !== $branch) {
-            $subject .= $branch->getName();
+            if ($branch instanceof TreeBranch) {
+                $subject .= $branch->getName();
+            } else {
+                $subject .= (string) $branch;
+            }
         }
         $subject .= ' -- ' . $obj->getFullPath();
 
