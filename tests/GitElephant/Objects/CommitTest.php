@@ -103,4 +103,19 @@ class CommitTest extends TestCase
         $this->assertEquals('matt jack', $committer->getName());
         $this->assertEquals('matt jack', $author->getName());
     }
+
+    public function testCommitDate()
+    {
+        $outputLines = array(
+            "commit c277373174aa442af12a8e59de1812f3472c15f5",
+            "tree 9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016",
+            "author John Doe <john.doe@example.org> 1326214449 +0100",
+            "committer John Doe <john.doe@example.org> 1326214449 +0100",
+            "",
+            "    Initial commit"
+        );
+
+        $commit = new Commit($outputLines);
+        $this->assertEquals('2012-01-10T16:54:09+01:00', $commit->getDatetimeAuthor()->format('c'));
+    }
 }
