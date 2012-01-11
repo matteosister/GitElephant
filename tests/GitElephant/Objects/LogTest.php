@@ -78,4 +78,14 @@ class LogTest extends TestCase
         $log = $this->getRepository()->getLog(null, null, 100);
         $this->assertEquals(0, $log->count());
     }
+
+    public function testLogIndex()
+    {
+        $log = $this->getRepository()->getLog(null, null, null);
+
+        // [0;50[ - 10 = 39
+        $this->assertEquals('test commit index:39', $log[10]->getMessage()->toString());
+        $this->assertEquals('test commit index:39', $log->index(10)->getMessage()->toString());
+        $this->assertEquals('test commit index:39', $log->offsetGet(10)->getMessage()->toString());
+    }
 }
