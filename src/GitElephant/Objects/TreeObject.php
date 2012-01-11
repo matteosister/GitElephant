@@ -117,11 +117,7 @@ class TreeObject
      */
     public function getFullPath()
     {
-        if ($this->path == '') {
-            return $this->name;
-        } else {
-            return $this->path;
-        }
+        return $this->path.$this->name;
     }
 
     /**

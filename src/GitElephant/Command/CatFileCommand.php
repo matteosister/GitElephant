@@ -44,7 +44,7 @@ class CatFileCommand extends BaseCommand
         $this->addCommandName(static::GIT_CAT_FILE);
         // pretty format
         $this->addCommandArgument('-p');
-        $this->addCommandSubject($treeish->getSha() . ':' . $object->getFullPath());
+        $this->addCommandSubject($treeish->getSha() . ':' . $object->getPath());
         return $this->getCommand();
     }
 
