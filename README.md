@@ -219,11 +219,11 @@ If you want to check a Diff between two commits the Diff class comes in
 // get the diff between the given commit and it parent
 $diff = $repo->getDiff($repo->getCommit());
 // get the diff between two commits
-$diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getTag('v0.4'));
+$diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'));
 // same as before for a given path
-$diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getTag('v0.4'), 'lib/vendor');
+$diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'), 'lib/vendor');
 // or even pass a TreeObject
-$diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getTag('v0.4'), $treeObject);
+$diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'), $treeObject);
 ```
 
 The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
@@ -264,7 +264,11 @@ foreach ($diffObject as $diffChunk) {
 }
 ```
 
-This is just an example on how to use the Diff class.
+This is just an example on how to use the Diff class. Run the diff behat test suite to check what the Diff class can do
+
+``` bash
+$ behat features/diff.feature
+```
 
 Symfony2
 --------
