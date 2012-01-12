@@ -24,7 +24,7 @@ To install GitElephant with composer you simply need to create a *composer.json*
 ``` json
 {
     "require": {
-        "cypresslab/gitelephant": ">=0.1"
+        "cypresslab/gitelephant": ">=0.5.0"
     }
 }
 ```
@@ -42,19 +42,19 @@ And an handy autoload file to include in you project in *vendor/.composer/autolo
 
 **pear**
 
-Add the Pearhub channel (the old channel will be shut down soon)
+Add the Cypresslab channel
 
 ``` bash
-$ pear channel-discover pearhub.org
+$ pear channel-discover pear.cypresslab.net
 ```
 
 And install the package. *By now GitElephant is in alpha state. So remember the -alpha in the library name*
 
 ``` bash
-$ pear install pearhub/GitElephant-alpha
+$ pear install cypresslab/GitElephant-alpha
 ```
 
-On [Pearhub project homepage](http://pearhub.org/projects/GitElephant) you can find other useful information
+On [Cypresslab pear channel homepage](http://http://pear.cypresslab.net/) you can find other useful information
 
 Testing
 -------
