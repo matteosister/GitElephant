@@ -54,7 +54,7 @@ And install the package. *By now GitElephant is in alpha state. So remember the 
 $ pear install cypresslab/GitElephant-alpha
 ```
 
-On [Cypresslab pear channel homepage](http://http://pear.cypresslab.net/) you can find other useful information
+On [Cypresslab pear channel homepage](http://pear.cypresslab.net/) you can find other useful information
 
 Testing
 -------
