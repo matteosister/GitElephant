@@ -286,6 +286,24 @@ class Repository
     }
 
     /**
+     * Try to get a branch or a tag by its name.
+     *
+     * @param string $name the reference name (a tag name or a branch name)
+     *
+     * @return \GitElephant\Objects\TreeTag|\GitElephant\Objects\TreeBranch|null
+     */
+    public function getBranchOrTag($name)
+    {
+        if ($branch = $this->getBranch($name)) {
+            return $branch;
+        } else if ($tag = $this->getTag($name)) {
+            return $tag;
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Return a Commit object
      *
      * @param string $ref The commit reference
