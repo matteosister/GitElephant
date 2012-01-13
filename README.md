@@ -82,7 +82,7 @@ How to use
 ``` php
 <?php
 
-use GitElephant\Repository,
+use GitElephant\Repository;
 $repo = new Repository('/path/to/git/repository');
 ```
 
