@@ -83,10 +83,14 @@ Scenario: find diffs in a repository
     And the diffObject in position "1" should have "2" diffChunk
     And the diffChunk in position "1" should have "7" diffChunkLine
     And the diffChunkLine in position "3" should be "\GitElephant\Objects\Diff\DiffChunkLineDeleted"
+    And the diffChunkLine in position "3" should have line number 3
     And the diffChunkLine in position "4" should be "\GitElephant\Objects\Diff\DiffChunkLineAdded"
+    And the diffChunkLine in position "4" should have line number 3
     And the diffChunk in position "2" should have "7" diffChunkLine
     And the diffChunkLine in position "4" should be "\GitElephant\Objects\Diff\DiffChunkLineDeleted"
+    And the diffChunkLine in position "4" should have line number 13
     And the diffChunkLine in position "5" should be "\GitElephant\Objects\Diff\DiffChunkLineAdded"
+    And the diffChunkLine in position "5" should have line number 13
 
 Scenario: diff without contents
     Given I start a repository for diff
