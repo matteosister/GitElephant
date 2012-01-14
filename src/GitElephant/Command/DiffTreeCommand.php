@@ -28,8 +28,18 @@ class DiffTreeCommand extends BaseCommand
 {
     const DIFF_TREE_COMMAND = 'diff-tree';
 
+    /**
+     * get a diff of a root commit with the empty repository
+     *
+     * @param \GitElephant\Objects\Commit $commit the root commit object
+     *
+     * @return string
+     */
     public function rootDiff(Commit $commit)
     {
+        if (!$commit->isRoot()) {
+            throw new \InvalidArgumentException('rootDiff method accept only root commits');
+        }
         $this->clearAll();
         $this->addCommandName(static::DIFF_TREE_COMMAND);
         $this->addCommandArgument('--cc');
