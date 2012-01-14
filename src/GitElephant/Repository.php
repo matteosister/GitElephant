@@ -32,7 +32,8 @@ use GitElephant\Command\MainCommand,
     GitElephant\Command\LogCommand,
     GitElephant\Command\RevListCommand,
     GitElephant\Command\CatFileCommand,
-    GitElephant\Command\MergeCommand;
+    GitElephant\Command\MergeCommand,
+    GitElephant\Command\DiffTreeCommand;
 use GitElephant\Utilities;
 
 /**
@@ -58,6 +59,7 @@ class Repository
     private $logCommand;
     private $revListCommand;
     private $catFileCommand;
+    private $diffTreeCommand;
 
     /**
      * Class constructor
@@ -77,16 +79,17 @@ class Repository
         $this->caller = new Caller($binary, $repositoryPath);
 
         // command objects
-        $this->mainCommand    = new MainCommand();
-        $this->branchCommand  = new BranchCommand();
-        $this->tagCommand     = new TagCommand();
-        $this->mergeCommand   = new MergeCommand();
-        $this->lsTreeCommand  = new LsTreeCommand();
-        $this->diffCommand    = new DiffCommand();
-        $this->showCommand    = new ShowCommand();
-        $this->logCommand     = new LogCommand();
-        $this->revListCommand = new RevListCommand();
-        $this->catFileCommand = new CatFileCommand();
+        $this->mainCommand     = new MainCommand();
+        $this->branchCommand   = new BranchCommand();
+        $this->tagCommand      = new TagCommand();
+        $this->mergeCommand    = new MergeCommand();
+        $this->lsTreeCommand   = new LsTreeCommand();
+        $this->diffCommand     = new DiffCommand();
+        $this->showCommand     = new ShowCommand();
+        $this->logCommand      = new LogCommand();
+        $this->revListCommand  = new RevListCommand();
+        $this->catFileCommand  = new CatFileCommand();
+        $this->diffTreeCommand = new DiffTreeCommand();
     }
 
     /**
@@ -386,7 +389,7 @@ class Repository
     {
         if ($commit2 === null) {
             if ($commit1->isRoot()) {
-                return false;
+                $command = $this->diffTreeCommand->rootDiff($commit1);
             } else {
                 $command = $this->diffCommand->diff($commit1);
             }
