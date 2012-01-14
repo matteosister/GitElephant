@@ -299,15 +299,7 @@ Just remember:
 
 * Symfony2 coding standard
 * test everything you develop with phpunit AND behat.
-* if you don't want to use gitflow, develop on a branch (not master) and send a pull request
-
-
-Todo
-----
-
-* Remote management (should be easy)
-* Check if there are problems with old git version. I'm on *1.7.7.x*
-* More tests
+* if you don't use gitflow, just remember to develop on a branch (not master) and send a pull request
 
 Thanks
 ------
