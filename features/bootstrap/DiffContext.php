@@ -171,4 +171,13 @@ class DiffContext extends BehatContext
         $diffChunkLine = $this->diffChunkLines[$pos-1];
         assertInstanceOf($type, $diffChunkLine);
     }
+
+    /**
+     * @Given /^the diffChunkLine in position "([^"]*)" should have line number (\d+)$/
+     */
+    public function theDiffchunklineInPositionShouldHaveLineNumber($pos, $num)
+    {
+        $diffChunkLine = $this->diffChunkLines[$pos-1];
+        assertEquals($diffChunkLine->getNumber(), (int)$num);
+    }
 }
