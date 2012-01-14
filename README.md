@@ -24,7 +24,7 @@ To install GitElephant with composer you simply need to create a *composer.json*
 ``` json
 {
     "require": {
-        "cypresslab/gitelephant": ">=0.5.0"
+        "cypresslab/gitelephant": ">=0.6.0"
     }
 }
 ```
