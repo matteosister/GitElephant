@@ -144,9 +144,12 @@ Your web server user (like www-data) needs to have access to the folder of the g
 <?php
 // init
 $repo->init();
+// or clone
+$repo->cloneFrom("git://github.com/matteosister/GitElephant.git");
 
 // stage changes
 $repo->stage('file1.php');
+$repo->stage(); // stage all
 
 // commit
 $repo->commit('my first commit');
