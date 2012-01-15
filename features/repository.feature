@@ -45,7 +45,7 @@ Scenario: branch list, add and delete
 Scenario: getMainBranch function
   Given I start a test repository
   And The repository has the method "getMainBranch"
-  Then Method should get an object "getMainBranch" "GitElephant\Objects\TreeBranch"
+  Then Method "getMainBranch" should get an object of type "GitElephant\Objects\TreeBranch"
   And Method should get an object with attribute "getMainBranch" "getName" "master"
 
 Scenario: tag list, add and delete
@@ -115,6 +115,11 @@ Scenario: commit
     getDatetimeCommitter
     """
   Then Commit message should not be an empty array
+
+Scenario: clone
+  Given I am in a folder
+  And I clone "git://github.com/matteosister/GitElephant.git"
+  Then Method "getCommit" should get an object of type "GitElephant\Objects\Commit"
 
 
 
