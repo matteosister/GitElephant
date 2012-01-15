@@ -33,7 +33,8 @@ use GitElephant\Command\MainCommand,
     GitElephant\Command\RevListCommand,
     GitElephant\Command\CatFileCommand,
     GitElephant\Command\MergeCommand,
-    GitElephant\Command\DiffTreeCommand;
+    GitElephant\Command\DiffTreeCommand,
+    GitElephant\Command\CloneCommand;
 use GitElephant\Utilities;
 
 /**
@@ -60,6 +61,7 @@ class Repository
     private $revListCommand;
     private $catFileCommand;
     private $diffTreeCommand;
+    private $cloneCommand;
 
     /**
      * Class constructor
@@ -90,6 +92,7 @@ class Repository
         $this->revListCommand  = new RevListCommand();
         $this->catFileCommand  = new CatFileCommand();
         $this->diffTreeCommand = new DiffTreeCommand();
+        $this->cloneCommand    = new CloneCommand();
     }
 
     /**
@@ -398,6 +401,16 @@ class Repository
         }
         $outputLines = $this->caller->execute($command)->getOutputLines();
         return new Diff($outputLines);
+    }
+
+    /**
+     * Clone a respository
+     *
+     * @param string $url the repository url (i.e. git://github.com/matteosister/GitElephant.git or matteo@192.168.1.12:~/git/GitElephant.git)
+     */
+    public function cloneFrom($url)
+    {
+        $this->caller->execute($this->cloneCommand->cloneUrl($url));
     }
 
     /**
