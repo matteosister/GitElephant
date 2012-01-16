@@ -62,6 +62,12 @@ class LogTest extends TestCase
 
         $log = $this->getRepository()->getLog(null, null, -1, null);
         $this->assertEquals(50, $log->count());
+
+        $log = $this->getRepository()->getLog(null, "test\ file\ 1", -1, null);
+        $this->assertEquals(1, $log->count());
+
+        $log = $this->getRepository()->getLog(null, "test\ file*", -1, null);
+        $this->assertEquals(50, $log->count());
     }
 
     public function testLogOffset()
