@@ -3,6 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. highlight:: php
+
 Welcome to GitElephant's documentation!
 =======================================
 
@@ -23,8 +25,8 @@ Watch a `simple live example <http://gitelephant.cypresslab.net/>`_ of what you 
 Requirements
 ------------
 
-- php >= 5.3
-- *nix system with git installed
+* php >= 5.3
+* \*nix system with git installed
 
 I work on an ubuntu box, but the lib should work well with every unix system. I don't have a windows installation to test...if someone want to help...
 
@@ -33,7 +35,9 @@ Installation
 
 **composer**
 
-To install GitElephant with composer you simply need to create a *composer.json* in your project root and add::
+To install GitElephant with composer you simply need to create a *composer.json* in your project root and add
+
+.. code-block:: javascript
 
     {
         "require": {
@@ -41,7 +45,9 @@ To install GitElephant with composer you simply need to create a *composer.json*
         }
     }
 
-Then run::
+Then run
+
+.. code-block:: bash
 
     $ wget -nc http://getcomposer.org/composer.phar
     $ php composer.phar install
@@ -52,21 +58,28 @@ And an handy autoload file to include in you project in *vendor/.composer/autolo
 
 **pear**
 
-Add the Cypresslab channel::
+Add the Cypresslab channel
+
+.. code-block:: bash
+
     $ pear channel-discover pear.cypresslab.net
 
-And install the package. *By now GitElephant is in alpha state. So remember the -alpha in the library name*::
+And install the package. *By now GitElephant is in alpha state. So remember the -alpha in the library name*
+
+.. code-block:: bash
 
     $ pear install cypresslab/GitElephant-alpha
 
-On [Cypresslab pear channel homepage](http://pear.cypresslab.net/) you can find other useful information
+On `Cypresslab pear channel homepage <http://pear.cypresslab.net/>`_ you can find other useful information
 
 Testing
 -------
 
 The library is fully tested with PHPUnit for unit tests, and Behat for BDD. To run tests you need these (awesome) libraries installed on your system.
 
-Go to the base library folder and run the test suites::
+Go to the base library folder and run the test suites
+
+.. code-block:: bash
 
     $ phpunit # phpunit test suite
     $ behat # behat test suite
