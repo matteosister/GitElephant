@@ -312,15 +312,16 @@ class Repository
     /**
      * Get a log for a ref
      *
-     * @param \GitElephant\Objects\TreeishInterface|string|null $ref    The reference to build the log for
-     * @param int|null                                          $limit  Limit to n entries
-     * @param int|null                                          $offset Skip n entries
+     * @param string|TreeishInterface $ref    the treeish to check
+     * @param string|TreeObject       $path   the physical path to the tree relative to the repository root
+     * @param int|null                $limit  limit to n entries
+     * @param int|null                $offset skip n entries
      *
      * @return \GitElephant\Objects\Log
      */
-    public function getLog($ref = null, $limit = 15, $offset = null)
+    public function getLog($ref = 'HEAD', $path = null, $limit = 15, $offset = null)
     {
-        $command = $this->container->get('command.log')->showLog($ref, $limit, $offset);
+        $command = $this->container->get('command.log')->showLog($ref, $path, $limit, $offset);
         return new Log($this->caller->execute($command)->getOutputLines());
     }
 
