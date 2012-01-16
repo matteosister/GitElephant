@@ -78,7 +78,7 @@ class Repository
         $this->caller = new Caller($binary, $repositoryPath);
 
         $this->container = new ContainerBuilder();
-        $loader = new XmlFileLoader($this->container, new FileLocator(__DIR__.'/../config'));
+        $loader = new XmlFileLoader($this->container, new FileLocator(__DIR__.'/Resources/config'));
         $loader->load('commands.xml');
     }
 
