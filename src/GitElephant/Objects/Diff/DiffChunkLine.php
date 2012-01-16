@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -7,6 +6,8 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @package GitElephant\Objects\Diff
  *
  * Just for fun...
  */
@@ -25,8 +26,25 @@ abstract class DiffChunkLine
     const ADDED     = "added";
     const DELETED   = "deleted";
 
+    /**
+     * line number
+     *
+     * @var int
+     */
     protected $number;
+
+    /**
+     * line type
+     *
+     * @var string
+     */
     protected $type;
+
+    /**
+     * line content
+     *
+     * @var string
+     */
     protected $content;
 
     /**

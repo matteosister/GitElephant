@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -8,12 +7,15 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
+ * @package GitElephant\Command
+ *
  * Just for fun...
  */
 
 namespace GitElephant\Command;
 
 use GitElephant\GitBinary;
+use Symfony\Component\Process\Process;
 
 /**
  * Caller
@@ -23,9 +25,25 @@ use GitElephant\GitBinary;
 
 class Caller
 {
+    /**
+     * GitBinary instance
+     *
+     * @var \GitElephant\GitBinary
+     */
     private $binary;
+
+    /**
+     * the repository path
+     *
+     * @var string
+     */
     private $repositoryPath;
-    private $stdErr;
+
+    /**
+     * the output lines of the command
+     *
+     * @var array
+     */
     private $outputLines = array();
 
     /**
@@ -67,50 +85,27 @@ class Caller
             $cmd = $this->binary->getPath() . ' ' . $cmd;
         }
 
-        $descriptorSpec = array(
-            0 => array("pipe", "r"), // Input
-            1 => array("pipe", "w"), // Output
-            2 => array("pipe", "w") // Error
-        );
-
-        $pipes   = array();
-        $process = proc_open(
-            $cmd,
-            $descriptorSpec,
-            $pipes,
-            $cwd == null ? $this->repositoryPath : $cwd,
-            null
-        );
-
-        if (is_resource($process)) {
-            fclose($pipes[0]);
-            while ($line = fgets($pipes[1])) {
-                if ($line !== false) {
-                    $this->outputLines[] = rtrim($line);
-                }
-            }
-            $this->stdErr = stream_get_contents($pipes[2]);
-            fclose($pipes[1]);
-            fclose($pipes[2]);
-            if ($this->getError() !== false) {
-                throw new \RuntimeException(sprintf('Cannot execute "%s", message: "%s", folder: "%s"', $cmd, $this->getError(), $this->repositoryPath));
-            }
-            return $this;
-        } else {
-            fclose($pipes[1]);
-            fclose($pipes[2]);
-            throw new \RuntimeException(sprintf('Cannot execute "%s"', $cmd));
+        $process = new Process($cmd, $cwd == null ? $this->repositoryPath : $cwd);
+        $process->setTimeout(15000);
+        $process->run();
+        if (!$process->isSuccessful()) {
+            throw new \RuntimeException($process->getErrorOutput());
         }
+        $this->outputLines = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
+        $this->outputLines = array_filter($this->outputLines, array($this, 'clearBlankLines'));
+        return $this;
     }
 
     /**
-     * returns the error output of the last executed command
+     * filter an array of output lines and remove the empty ones.
      *
-     * @return bool|string
+     * @param $var the array value
+     *
+     * @return bool
      */
-    public function getError()
+    private function clearBlankLines($var)
     {
-        return $this->stdErr == '' ? false : trim($this->stdErr);
+        return $var !== '';
     }
 
     /**

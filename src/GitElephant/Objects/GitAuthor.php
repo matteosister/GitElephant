@@ -8,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
+ * @package GitElephant\Objects
+ *
  * Just for fun...
  */
 
@@ -22,7 +24,18 @@ namespace GitElephant\Objects;
 
 class GitAuthor
 {
+    /**
+     * Author name
+     *
+     * @var string
+     */
     private $name;
+
+    /**
+     * Author email
+     *
+     * @var string
+     */
     private $email;
 
     /**

@@ -2,4 +2,4 @@ bin/*
 vendor/*
 *.tgz
 package.xml
-composer.phar
+output/

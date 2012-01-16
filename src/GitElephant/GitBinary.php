@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -8,11 +7,12 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
+ * @package GitElephant
+ *
  * Just for fun...
  */
 
 namespace GitElephant;
-
 
 /**
  * Git binary
@@ -21,10 +21,13 @@ namespace GitElephant;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
-
 class GitBinary
 {
+    /**
+     * the path to the repository
+     *
+     * @var string $path
+     */
     private $path;
 
     /**

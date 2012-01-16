@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -7,6 +6,8 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @package GitElephant\Command
  *
  * Just for fun...
  */
@@ -25,8 +26,25 @@ use GitElephant\Command\Caller;
 
 class BaseCommand
 {
+    /**
+     * the command name
+     *
+     * @var string
+     */
     private $commandName;
+
+    /**
+     * the command arguments
+     *
+     * @var array
+     */
     private $commandArguments = array();
+
+    /**
+     * the command subject
+     *
+     * @var string
+     */
     private $commandSubject;
 
     /**

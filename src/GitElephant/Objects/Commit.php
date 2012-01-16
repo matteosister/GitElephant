@@ -8,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
+ * @package GitElephant\Objects
+ *
  * Just for fun...
  */
 
@@ -25,13 +27,60 @@ use GitElephant\Objects\Commit\Message;
 
 class Commit implements TreeishInterface
 {
+    /**
+     * sha
+     *
+     * @var string
+     */
     private $sha;
+
+    /**
+     * tree
+     *
+     * @var string
+     */
     private $tree;
+
+    /**
+     * the commit parents
+     *
+     * @var array
+     */
     private $parents;
+
+    /**
+     * the GitAuthor instance for author
+     *
+     * @var \GitElephant\Objects\GitAuthor
+     */
     private $author;
+
+    /**
+     * the GitAuthor instance for committer
+     *
+     * @var \GitElephant\Objects\GitAuthor
+     */
     private $committer;
+
+    /**
+     * the Message instance
+     *
+     * @var \GitElephant\Objects\Commit\Message
+     */
     private $message;
+
+    /**
+     * the date for author
+     *
+     * @var \DateTime
+     */
     private $datetimeAuthor;
+
+    /**
+     * the date for committer
+     *
+     * @var \Datetime
+     */
     private $datetimeCommitter;
 
     /**

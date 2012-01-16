@@ -13,6 +13,7 @@ use GitElephant\GitBinary,
     GitElephant\Objects\TreeBranch,
     GitElephant\Objects\Diff;
 
+require_once __DIR__.'/../../vendor/.composer/autoload.php';
 require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
 

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -7,6 +6,8 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @package GitElephant\Command
  *
  * Just for fun...
  */
@@ -38,7 +39,7 @@ class DiffTreeCommand extends BaseCommand
     public function rootDiff(Commit $commit)
     {
         if (!$commit->isRoot()) {
-            throw new \InvalidArgumentException('rootDiff method accept only root commits');
+            throw new \InvalidArgumentException('rootDiff method accepts only root commits');
         }
         $this->clearAll();
         $this->addCommandName(static::DIFF_TREE_COMMAND);

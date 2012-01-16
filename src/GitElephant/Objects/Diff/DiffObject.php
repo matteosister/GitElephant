@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -7,6 +6,8 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @package GitElephant\Objects\Diff
  *
  * Just for fun...
  */
@@ -30,10 +31,39 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     const MODE_NEW_FILE     = 'new_file';
     const MODE_DELETED_FILE = 'deleted_file';
 
+    /**
+     * the cursor position
+     *
+     * @var int
+     */
     private $position;
+
+    /**
+     * the original file path for the diff object
+     *
+     * @var string
+     */
     private $originalPath;
+
+    /**
+     * the destination path for the diff object
+     *
+     * @var string
+     */
     private $destinationPath;
+
+    /**
+     * the diff mode
+     *
+     * @var string
+     */
     private $mode;
+
+    /**
+     * the diff chunks
+     *
+     * @var array
+     */
     private $chunks;
 
     /**

@@ -8,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
+ * @package GitElephant\Objects
+ *
  * Just for fun...
  */
 
@@ -31,13 +33,45 @@ use GitElephant\Utilities;
 
 class Tree implements \ArrayAccess, \Countable, \Iterator
 {
-    private $outputLines;
-    private $position;
-    private $path;
-    private $children = array();
-    private $pathChildren = array();
     /**
-     * @var TreeObject
+     * output lines from the ls-tree command
+     *
+     * @var array
+     */
+    private $outputLines;
+
+    /**
+     * the cursor position
+     *
+     * @var int
+     */
+    private $position;
+
+    /**
+     * the tree path
+     *
+     * @var string
+     */
+    private $path;
+
+    /**
+     * tree children
+     *
+     * @var array
+     */
+    private $children = array();
+
+    /**
+     * tree path children
+     *
+     * @var array
+     */
+    private $pathChildren = array();
+
+    /**
+     * the blob of the actual tree
+     *
+     * @var \GitElephant\Objects\TreeObject
      */
     private $blob;
 
