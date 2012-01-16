@@ -95,41 +95,31 @@ How to use
 
 ::
 
-    <?php
-
     use GitElephant\Repository;
     $repo = new Repository('/path/to/git/repository');
 
 the *Repository* class is the main class where you can find every method you need...
 
-**Read repository**::
+**Read repository**
 
-    <?php
+::
+
     // get the current status
-    // returns an array of lines of the status message
-    $repo->getStatus();
+    $repo->getStatus(); // returns an array of lines of the status message
 
     // branches
-    // return an array of TreeBranch objects
-    $repo->getBranches();
-    // return the TreeBranch instance of the current checked out branch
-    $repo->getMainBranch();
-    // return a TreeBranch instance by its name
-    $repo->getBranch('master');
+    $repo->getBranches(); // return an array of TreeBranch objects
+    $repo->getMainBranch(); // return the TreeBranch instance of the current checked out branch
+    $repo->getBranch('master'); // return a TreeBranch instance by its name
 
     // tags
-    // array of TreeTag instances
-    $repo->getTags();
-    // a TreeTag instance by name
-    $repo->getTag('v1.0');
+    $repo->getTags(); // array of TreeTag instances
+    $repo->getTag('v1.0'); // a TreeTag instance by name
 
     // commit
-    // get a Commit instance of the current HEAD
-    $repo->getCommit();
-    // get a Commit instance for a tag
-    $repo->getCommit('v1.0');
-    // sha (follow git standard to format the sha)
-    $repo->getCommit('1ac370d');
+    $repo->getCommit(); // get a Commit instance of the current HEAD
+    $repo->getCommit('v1.0'); // get a Commit instance for a tag
+    $repo->getCommit('1ac370d'); // sha (follow git standard to format the sha)
 
     // Log contains a collection of commit objects
     // syntax: getLog(<tree-ish>, limit = 15, offset = null)
@@ -150,11 +140,11 @@ the *Repository* class is the main class where you can find every method you nee
 
 You could also use GitElephant to manage your git repositories via PHP.
 
-Your web server user (like www-data) needs to have access to the folder of the git repository::
+Your web server user (like www-data) needs to have access to the folder of the git repository
 
-    <?php
-    // init
-    $repo->init();
+::
+
+    $repo->init(); // init
     // or clone
     $repo->cloneFrom("git://github.com/matteosister/GitElephant.git");
 
@@ -164,29 +154,20 @@ Your web server user (like www-data) needs to have access to the folder of the g
 
     // commit
     $repo->commit('my first commit');
-    // commit and stage every pending changes in the working tree
-    $repo->commit('my first commit', true);
+    $repo->commit('my first commit', true); // commit and stage every pending changes in the working tree
 
-    // checkout a tag
-    $repo->checkout($this->getCommit('v1.0'));
-    // checkout master
-    $repo->checkout('master');
+    $repo->checkout($this->getCommit('v1.0')); // checkout a tag
+    $repo->checkout('master'); // checkout master
 
     // manage branches
-    // create a develop branch from master
-    $repo->createBranch('develop', 'master');
-    // create a develop branch from current checked out branch
-    $repo->createBranch('develop');
-    // delete the develop branch
-    $repo->deleteBranch('develop');
+    $repo->createBranch('develop', 'master'); // create a develop branch from master
+    $repo->createBranch('develop'); // create a develop branch from current checked out branch
+    $repo->deleteBranch('develop'); // delete the develop branch
 
     // manage tags
-    // create  a tag named v1.0 from master with the given tag message
-    $repo->createTag('v1.0', 'master', 'my first release!');
-    // create  a tag named v1.0 from the current checked out branch with the given tag message
-    $repo->createTag('v1.0', null, 'my first release!');
-    // create a tag from a Commit object
-    $repo->createTag($repo->getCommit());
+    $repo->createTag('v1.0', 'master', 'my first release!'); // create  a tag named v1.0 from master with the given tag message
+    $repo->createTag('v1.0', null, 'my first release!'); // create  a tag named v1.0 from the current checked out branch with the given tag message
+    $repo->createTag($repo->getCommit()); // create a tag from a Commit object
 
 A versioned tree of files
 -------------------------
@@ -194,45 +175,48 @@ A versioned tree of files
 A git repository is a tree structure versioned in time. So if you need to represent a repository in a, let's say, web browser, you will need
 a tree representation of the repository, at a given point in history.
 
-**Tree class**::
+**Tree class**
 
-    <?php
-    // retrieve the actual *HEAD* tree
-    $tree = $repo->getTree();
-    // retrieve a tree for a given commit
-    $tree = $repo->getTree($repo->getCommit('1ac370d'));
-    // retrieve a tree for a given path
-    $tree = $repo->getTree('master', 'lib/vendor');
+::
+
+    $tree = $repo->getTree(); // retrieve the actual *HEAD* tree
+    $tree = $repo->getTree($repo->getCommit('1ac370d')); // retrieve a tree for a given commit
+    $tree = $repo->getTree('master', 'lib/vendor'); // retrieve a tree for a given path
 
 The Tree class implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
 
-You can use it as an array of git objects::
+You can use it as an array of git objects
 
-    <?php
+::
+
     foreach ($tree as $treeObject) {
         echo $treeObject;
     }
 
-A TreeObject instance is a php representation of a node in a git tree::
+A TreeObject instance is a php representation of a node in a git tree
 
-    <?php
+::
+
     echo $treeObject; // the name of the object (folder, file or link)
-    $treeObject->getType(); // a class constanf of TreeObject::TYPE_BLOB, TreeObject::TYPE_TREE and TreeObject::TYPE_LINK
-    $treeObject->getSha();
-    $treeObject->getSize();
-    $treeObject->getName();
-    $treeObject->getSize();
-    $treeObject->getPath();
+    // a class constanf of TreeObject::TYPE_BLOB, TreeObject::TYPE_TREE and TreeObject::TYPE_LINK
+    $treeObject->getType();
+    $treeObject->getSha(); // the sha
+    $treeObject->getSize(); // the file size (for BLOB type, "-" for others)
+    $treeObject->getName(); // the object name
+    $treeObject->getPath(); // the object path
 
-You can also pass a tree object to the repository to get its subtree::
+You can also pass a tree object to the repository to get its subtree
 
-    <?php
+::
+
     $subtree = $repo->getTree('master', $treeObject);
 
 Diffs
 -----
 
-If you want to check a Diff between two commits the Diff class comes in::
+If you want to check a Diff between two commits the Diff class comes in
+
+::
 
     <?php
     // get the diff between the given commit and it parent
@@ -246,9 +230,10 @@ If you want to check a Diff between two commits the Diff class comes in::
 
 The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
 
-You can iterate over DiffObject::
+You can iterate over DiffObject
 
-    <?php
+::
+
     foreach ($diff as $diffObject) {
         // mode is a constant of the DiffObject class
         // DiffObject::MODE_INDEX an index change
@@ -259,16 +244,14 @@ You can iterate over DiffObject::
     }
 
 A DiffObject is a class that implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
-
 It represent a file, folder or submodule changed in the diff
-
 Every DiffObject can have multiple chunks of changes. For example "added 3 lines at line 20" and "modified 4 lines at line 560"
-
 So you can iterate over DiffObject to get DiffChunks. DiffChunks are the last steps of the diff iteration.
 
-They are a collection of DiffChunkLine Objects::
+They are a collection of DiffChunkLine Objects
 
-    <?php
+::
+
     foreach ($diffObject as $diffChunk) {
         if (count($diffChunk) > 0) {
             echo "change detected from line ".$diffChunk->getDestStartLine()." to ".$diffChunk->getDestEndLine();
