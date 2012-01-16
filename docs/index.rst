@@ -95,6 +95,7 @@ How to use
 
 ::
 
+    <?php
     use GitElephant\Repository;
     $repo = new Repository('/path/to/git/repository');
 
@@ -104,6 +105,7 @@ the *Repository* class is the main class where you can find every method you nee
 
 ::
 
+    <?php
     // get the current status
     $repo->getStatus(); // returns an array of lines of the status message
 
@@ -144,6 +146,7 @@ Your web server user (like www-data) needs to have access to the folder of the g
 
 ::
 
+    <?php
     $repo->init(); // init
     // or clone
     $repo->cloneFrom("git://github.com/matteosister/GitElephant.git");
@@ -179,6 +182,7 @@ a tree representation of the repository, at a given point in history.
 
 ::
 
+    <?php
     $tree = $repo->getTree(); // retrieve the actual *HEAD* tree
     $tree = $repo->getTree($repo->getCommit('1ac370d')); // retrieve a tree for a given commit
     $tree = $repo->getTree('master', 'lib/vendor'); // retrieve a tree for a given path
@@ -189,6 +193,7 @@ You can use it as an array of git objects
 
 ::
 
+    <?php
     foreach ($tree as $treeObject) {
         echo $treeObject;
     }
@@ -197,6 +202,7 @@ A TreeObject instance is a php representation of a node in a git tree
 
 ::
 
+    <?php
     echo $treeObject; // the name of the object (folder, file or link)
     // a class constanf of TreeObject::TYPE_BLOB, TreeObject::TYPE_TREE and TreeObject::TYPE_LINK
     $treeObject->getType();
@@ -234,6 +240,7 @@ You can iterate over DiffObject
 
 ::
 
+    <?php
     foreach ($diff as $diffObject) {
         // mode is a constant of the DiffObject class
         // DiffObject::MODE_INDEX an index change
@@ -252,6 +259,7 @@ They are a collection of DiffChunkLine Objects
 
 ::
 
+    <?php
     foreach ($diffObject as $diffChunk) {
         if (count($diffChunk) > 0) {
             echo "change detected from line ".$diffChunk->getDestStartLine()." to ".$diffChunk->getDestEndLine();
@@ -261,7 +269,9 @@ They are a collection of DiffChunkLine Objects
         }
     }
 
-This is just an example of what the Diff class can do. Run the diff behat test suite for other nice things::
+This is just an example of what the Diff class can do. Run the diff behat test suite for other nice things
+
+.. code-block:: bash
 
     $ behat features/diff.feature
 
