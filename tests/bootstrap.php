@@ -11,7 +11,8 @@
  * Just for fun...
  */
 
-require_once __DIR__ . '/GitElephant/TestCase.php';
+require_once __DIR__.'/../vendor/.composer/autoload.php';
+require_once __DIR__.'/GitElephant/TestCase.php';
 
 spl_autoload_register(function($class)
 {

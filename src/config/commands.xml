@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="command.branch.class">\GitElephant\Command\BranchCommand</parameter>
+        <parameter key="command.cat_file.class">\GitElephant\Command\CatFileCommand</parameter>
+        <parameter key="command.clone.class">\GitElephant\Command\CloneCommand</parameter>
+        <parameter key="command.diff.class">\GitElephant\Command\DiffCommand</parameter>
+        <parameter key="command.diff_tree.class">\GitElephant\Command\DiffTreeCommand</parameter>
+        <parameter key="command.log.class">\GitElephant\Command\LogCommand</parameter>
+        <parameter key="command.ls_tree.class">\GitElephant\Command\LsTreeCommand</parameter>
+        <parameter key="command.main.class">\GitElephant\Command\MainCommand</parameter>
+        <parameter key="command.merge.class">\GitElephant\Command\MergeCommand</parameter>
+        <parameter key="command.rev_list.class">\GitElephant\Command\RevListCommand</parameter>
+        <parameter key="command.show.class">\GitElephant\Command\ShowCommand</parameter>
+        <parameter key="command.tag.class">\GitElephant\Command\TagCommand</parameter>
+    </parameters>
+
+    <services>
+        <service id="command.branch" class="%command.branch.class%" />
+        <service id="command.cat_file" class="%command.cat_file.class%" />
+        <service id="command.clone" class="%command.clone.class%" />
+        <service id="command.diff" class="%command.diff.class%" />
+        <service id="command.diff_tree" class="%command.diff_tree.class%" />
+        <service id="command.log" class="%command.log.class%" />
+        <service id="command.ls_tree" class="%command.ls_tree.class%" />
+        <service id="command.main" class="%command.main.class%" />
+        <service id="command.merge" class="%command.merge.class%" />
+        <service id="command.rev_list" class="%command.rev_list.class%" />
+        <service id="command.show" class="%command.show.class%" />
+        <service id="command.tag" class="%command.tag.class%" />
+    </services>
+</container>
