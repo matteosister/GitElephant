@@ -305,16 +305,6 @@ class FeatureContext extends BehatContext
     }
 
     /**
-     * @Then /^Method should get an object "([^"]*)" "([^"]*)"$/
-     */
-    public function methodShouldGetAnObject($methodName, $objectName)
-    {
-        $result = call_user_func(array($this->repository, $methodName));
-        $reflectionClass = new ReflectionClass($result);
-        assertEquals($objectName, $reflectionClass->getName(), sprintf("method return %s instead of %s", $reflectionClass->getName(),$objectName));
-    }
-
-    /**
      * @Given /^Method should get an object with attribute "([^"]*)" "([^"]*)" "([^"]*)"$/
      */
     public function methodShouldGetAnObjectWithAttribute($methodName, $attributeMethod, $expected)
@@ -497,5 +487,23 @@ class FeatureContext extends BehatContext
         $branch = $this->repository->getBranch($branchName);
         assertNotNull($branch);
         $this->repository->merge($branch);
+    }
+
+    /**
+     * @Given /^I clone "([^"]*)"$/
+     */
+    public function iClone($url)
+    {
+        $this->repository->cloneFrom($url);
+    }
+
+    /**
+     * @Then /^Method "([^"]*)" should get an object of type "([^"]*)"$/
+     */
+    public function methodShouldGetAnObjectOfType($methodName, $objectName)
+    {
+        $result = call_user_func(array($this->repository, $methodName));
+        $reflectionClass = new ReflectionClass($result);
+        assertEquals($objectName, $reflectionClass->getName(), sprintf("method return %s instead of %s", $reflectionClass->getName(),$objectName));
     }
 }
