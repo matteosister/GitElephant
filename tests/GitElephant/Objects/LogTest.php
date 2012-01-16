@@ -45,43 +45,43 @@ class LogTest extends TestCase
         $log = $this->getRepository()->getLog(null, null, null);
         $this->assertEquals(50, $log->count());
 
-        $log = $this->getRepository()->getLog(null, 10, null);
+        $log = $this->getRepository()->getLog(null, null, 10, null);
         $this->assertEquals(10, $log->count());
 
-        $log = $this->getRepository()->getLog(null, 50, null);
+        $log = $this->getRepository()->getLog(null, null, 50, null);
         $this->assertEquals(50, $log->count());
 
-        $log = $this->getRepository()->getLog(null, 60, null);
+        $log = $this->getRepository()->getLog(null, null, 60, null);
         $this->assertEquals(50, $log->count());
 
-        $log = $this->getRepository()->getLog(null, 1, null);
+        $log = $this->getRepository()->getLog(null, null, 1, null);
         $this->assertEquals(1, $log->count());
 
-        $log = $this->getRepository()->getLog(null, 0, null);
+        $log = $this->getRepository()->getLog(null, null, 0, null);
         $this->assertEquals(0, $log->count());
 
-        $log = $this->getRepository()->getLog(null, -1, null);
+        $log = $this->getRepository()->getLog(null, null, -1, null);
         $this->assertEquals(50, $log->count());
     }
 
     public function testLogOffset()
     {
-        $log = $this->getRepository()->getLog(null, null, 0);
+        $log = $this->getRepository()->getLog(null, null, null, 0);
         $this->assertEquals(50, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, 20);
+        $log = $this->getRepository()->getLog(null, null, null, 20);
         $this->assertEquals(30, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, 50);
+        $log = $this->getRepository()->getLog(null, null, null, 50);
         $this->assertEquals(0, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, 100);
+        $log = $this->getRepository()->getLog(null, null, null, 100);
         $this->assertEquals(0, $log->count());
     }
 
     public function testLogIndex()
     {
-        $log = $this->getRepository()->getLog(null, null, null);
+        $log = $this->getRepository()->getLog(null, null, null, null);
 
         // [0;50[ - 10 = 39
         $this->assertEquals('test commit index:39', $log[10]->getMessage()->toString());
