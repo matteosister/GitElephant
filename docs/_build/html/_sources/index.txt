@@ -3,6 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
+.. highlight:: php
+
 Welcome to GitElephant's documentation!
 =======================================
 
@@ -23,8 +25,8 @@ Watch a `simple live example <http://gitelephant.cypresslab.net/>`_ of what you 
 Requirements
 ------------
 
-- php >= 5.3
-- *nix system with git installed
+* php >= 5.3
+* \*nix system with git installed
 
 I work on an ubuntu box, but the lib should work well with every unix system. I don't have a windows installation to test...if someone want to help...
 
@@ -33,7 +35,9 @@ Installation
 
 **composer**
 
-To install GitElephant with composer you simply need to create a *composer.json* in your project root and add::
+To install GitElephant with composer you simply need to create a *composer.json* in your project root and add
+
+.. code-block:: javascript
 
     {
         "require": {
@@ -41,7 +45,9 @@ To install GitElephant with composer you simply need to create a *composer.json*
         }
     }
 
-Then run::
+Then run
+
+.. code-block:: bash
 
     $ wget -nc http://getcomposer.org/composer.phar
     $ php composer.phar install
@@ -52,21 +58,28 @@ And an handy autoload file to include in you project in *vendor/.composer/autolo
 
 **pear**
 
-Add the Cypresslab channel::
+Add the Cypresslab channel
+
+.. code-block:: bash
+
     $ pear channel-discover pear.cypresslab.net
 
-And install the package. *By now GitElephant is in alpha state. So remember the -alpha in the library name*::
+And install the package. *By now GitElephant is in alpha state. So remember the -alpha in the library name*
+
+.. code-block:: bash
 
     $ pear install cypresslab/GitElephant-alpha
 
-On [Cypresslab pear channel homepage](http://pear.cypresslab.net/) you can find other useful information
+On `Cypresslab pear channel homepage <http://pear.cypresslab.net/>`_ you can find other useful information
 
 Testing
 -------
 
 The library is fully tested with PHPUnit for unit tests, and Behat for BDD. To run tests you need these (awesome) libraries installed on your system.
 
-Go to the base library folder and run the test suites::
+Go to the base library folder and run the test suites
+
+.. code-block:: bash
 
     $ phpunit # phpunit test suite
     $ behat # behat test suite
@@ -83,40 +96,32 @@ How to use
 ::
 
     <?php
-
     use GitElephant\Repository;
     $repo = new Repository('/path/to/git/repository');
 
 the *Repository* class is the main class where you can find every method you need...
 
-**Read repository**::
+**Read repository**
+
+::
 
     <?php
     // get the current status
-    // returns an array of lines of the status message
-    $repo->getStatus();
+    $repo->getStatus(); // returns an array of lines of the status message
 
     // branches
-    // return an array of TreeBranch objects
-    $repo->getBranches();
-    // return the TreeBranch instance of the current checked out branch
-    $repo->getMainBranch();
-    // return a TreeBranch instance by its name
-    $repo->getBranch('master');
+    $repo->getBranches(); // return an array of TreeBranch objects
+    $repo->getMainBranch(); // return the TreeBranch instance of the current checked out branch
+    $repo->getBranch('master'); // return a TreeBranch instance by its name
 
     // tags
-    // array of TreeTag instances
-    $repo->getTags();
-    // a TreeTag instance by name
-    $repo->getTag('v1.0');
+    $repo->getTags(); // array of TreeTag instances
+    $repo->getTag('v1.0'); // a TreeTag instance by name
 
     // commit
-    // get a Commit instance of the current HEAD
-    $repo->getCommit();
-    // get a Commit instance for a tag
-    $repo->getCommit('v1.0');
-    // sha (follow git standard to format the sha)
-    $repo->getCommit('1ac370d');
+    $repo->getCommit(); // get a Commit instance of the current HEAD
+    $repo->getCommit('v1.0'); // get a Commit instance for a tag
+    $repo->getCommit('1ac370d'); // sha (follow git standard to format the sha)
 
     // Log contains a collection of commit objects
     // syntax: getLog(<tree-ish>, limit = 15, offset = null)
@@ -137,11 +142,12 @@ the *Repository* class is the main class where you can find every method you nee
 
 You could also use GitElephant to manage your git repositories via PHP.
 
-Your web server user (like www-data) needs to have access to the folder of the git repository::
+Your web server user (like www-data) needs to have access to the folder of the git repository
+
+::
 
     <?php
-    // init
-    $repo->init();
+    $repo->init(); // init
     // or clone
     $repo->cloneFrom("git://github.com/matteosister/GitElephant.git");
 
@@ -151,29 +157,20 @@ Your web server user (like www-data) needs to have access to the folder of the g
 
     // commit
     $repo->commit('my first commit');
-    // commit and stage every pending changes in the working tree
-    $repo->commit('my first commit', true);
+    $repo->commit('my first commit', true); // commit and stage every pending changes in the working tree
 
-    // checkout a tag
-    $repo->checkout($this->getCommit('v1.0'));
-    // checkout master
-    $repo->checkout('master');
+    $repo->checkout($this->getCommit('v1.0')); // checkout a tag
+    $repo->checkout('master'); // checkout master
 
     // manage branches
-    // create a develop branch from master
-    $repo->createBranch('develop', 'master');
-    // create a develop branch from current checked out branch
-    $repo->createBranch('develop');
-    // delete the develop branch
-    $repo->deleteBranch('develop');
+    $repo->createBranch('develop', 'master'); // create a develop branch from master
+    $repo->createBranch('develop'); // create a develop branch from current checked out branch
+    $repo->deleteBranch('develop'); // delete the develop branch
 
     // manage tags
-    // create  a tag named v1.0 from master with the given tag message
-    $repo->createTag('v1.0', 'master', 'my first release!');
-    // create  a tag named v1.0 from the current checked out branch with the given tag message
-    $repo->createTag('v1.0', null, 'my first release!');
-    // create a tag from a Commit object
-    $repo->createTag($repo->getCommit());
+    $repo->createTag('v1.0', 'master', 'my first release!'); // create  a tag named v1.0 from master with the given tag message
+    $repo->createTag('v1.0', null, 'my first release!'); // create  a tag named v1.0 from the current checked out branch with the given tag message
+    $repo->createTag($repo->getCommit()); // create a tag from a Commit object
 
 A versioned tree of files
 -------------------------
@@ -181,45 +178,51 @@ A versioned tree of files
 A git repository is a tree structure versioned in time. So if you need to represent a repository in a, let's say, web browser, you will need
 a tree representation of the repository, at a given point in history.
 
-**Tree class**::
+**Tree class**
+
+::
 
     <?php
-    // retrieve the actual *HEAD* tree
-    $tree = $repo->getTree();
-    // retrieve a tree for a given commit
-    $tree = $repo->getTree($repo->getCommit('1ac370d'));
-    // retrieve a tree for a given path
-    $tree = $repo->getTree('master', 'lib/vendor');
+    $tree = $repo->getTree(); // retrieve the actual *HEAD* tree
+    $tree = $repo->getTree($repo->getCommit('1ac370d')); // retrieve a tree for a given commit
+    $tree = $repo->getTree('master', 'lib/vendor'); // retrieve a tree for a given path
 
 The Tree class implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
 
-You can use it as an array of git objects::
+You can use it as an array of git objects
+
+::
 
     <?php
     foreach ($tree as $treeObject) {
         echo $treeObject;
     }
 
-A TreeObject instance is a php representation of a node in a git tree::
+A TreeObject instance is a php representation of a node in a git tree
+
+::
 
     <?php
     echo $treeObject; // the name of the object (folder, file or link)
-    $treeObject->getType(); // a class constanf of TreeObject::TYPE_BLOB, TreeObject::TYPE_TREE and TreeObject::TYPE_LINK
-    $treeObject->getSha();
-    $treeObject->getSize();
-    $treeObject->getName();
-    $treeObject->getSize();
-    $treeObject->getPath();
+    // a class constanf of TreeObject::TYPE_BLOB, TreeObject::TYPE_TREE and TreeObject::TYPE_LINK
+    $treeObject->getType();
+    $treeObject->getSha(); // the sha
+    $treeObject->getSize(); // the file size (for BLOB type, "-" for others)
+    $treeObject->getName(); // the object name
+    $treeObject->getPath(); // the object path
 
-You can also pass a tree object to the repository to get its subtree::
+You can also pass a tree object to the repository to get its subtree
 
-    <?php
+::
+
     $subtree = $repo->getTree('master', $treeObject);
 
 Diffs
 -----
 
-If you want to check a Diff between two commits the Diff class comes in::
+If you want to check a Diff between two commits the Diff class comes in
+
+::
 
     <?php
     // get the diff between the given commit and it parent
@@ -233,7 +236,9 @@ If you want to check a Diff between two commits the Diff class comes in::
 
 The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
 
-You can iterate over DiffObject::
+You can iterate over DiffObject
+
+::
 
     <?php
     foreach ($diff as $diffObject) {
@@ -246,14 +251,13 @@ You can iterate over DiffObject::
     }
 
 A DiffObject is a class that implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
-
 It represent a file, folder or submodule changed in the diff
-
 Every DiffObject can have multiple chunks of changes. For example "added 3 lines at line 20" and "modified 4 lines at line 560"
-
 So you can iterate over DiffObject to get DiffChunks. DiffChunks are the last steps of the diff iteration.
 
-They are a collection of DiffChunkLine Objects::
+They are a collection of DiffChunkLine Objects
+
+::
 
     <?php
     foreach ($diffObject as $diffChunk) {
@@ -265,7 +269,9 @@ They are a collection of DiffChunkLine Objects::
         }
     }
 
-This is just an example of what the Diff class can do. Run the diff behat test suite for other nice things::
+This is just an example of what the Diff class can do. Run the diff behat test suite for other nice things
+
+.. code-block:: bash
 
     $ behat features/diff.feature
 
