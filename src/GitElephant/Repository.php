@@ -38,6 +38,8 @@ use GitElephant\Command\MainCommand,
     GitElephant\Command\DiffTreeCommand,
     GitElephant\Command\CloneCommand;
 use GitElephant\Utilities;
+use Symfony\Component\DependencyInjection\ContainerBuilder,
+    Symfony\Component\DependencyInjection\Definition;
 
 /**
  * Repository
@@ -147,6 +149,8 @@ class Repository
      */
     private $cloneCommand;
 
+    private $container;
+
     /**
      * Class constructor
      *
@@ -177,6 +181,10 @@ class Repository
         $this->catFileCommand  = new CatFileCommand();
         $this->diffTreeCommand = new DiffTreeCommand();
         $this->cloneCommand    = new CloneCommand();
+
+        $this->container = new ContainerBuilder();
+        $mainCommandDef = new Definition('\GitElephant\Command\MainCommand');
+        $this->container->setDefinition('command.main', $mainCommandDef);
     }
 
     /**
@@ -445,6 +453,8 @@ class Repository
      */
     public function checkout($ref)
     {
+        var_dump($this->container->get('command.main'));
+        die();
         $this->caller->execute($this->mainCommand->checkout($ref));
     }
 
