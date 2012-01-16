@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -7,6 +6,8 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @package GitElephant\Command
  *
  * Just for fun...
  */
@@ -23,9 +24,32 @@ use GitElephant\GitBinary;
 
 class Caller
 {
+    /**
+     * GitBinary instance
+     *
+     * @var \GitElephant\GitBinary
+     */
     private $binary;
+
+    /**
+     * the repository path
+     *
+     * @var string
+     */
     private $repositoryPath;
+
+    /**
+     * error stream from the command
+     *
+     * @var string
+     */
     private $stdErr;
+
+    /**
+     * the output lines of the command
+     *
+     * @var array
+     */
     private $outputLines = array();
 
     /**
