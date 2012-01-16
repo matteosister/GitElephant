@@ -24,7 +24,18 @@ namespace GitElephant\Objects;
 
 class GitAuthor
 {
+    /**
+     * Author name
+     *
+     * @var string
+     */
     private $name;
+
+    /**
+     * Author email
+     *
+     * @var string
+     */
     private $email;
 
     /**

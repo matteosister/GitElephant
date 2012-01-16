@@ -21,6 +21,11 @@ namespace GitElephant\Objects\Commit;
  */
 class Message
 {
+    /**
+     * the message
+     *
+     * @var array|string
+     */
     private $message;
 
     /**

@@ -25,7 +25,18 @@ use GitElephant\Utilities;
 
 class Diff implements \ArrayAccess, \Countable, \Iterator
 {
+    /**
+     * the cursor position
+     *
+     * @var int
+     */
     private $position;
+
+    /**
+     * DiffObject instances
+     *
+     * @var array
+     */
     private $diffObjects;
 
     /**

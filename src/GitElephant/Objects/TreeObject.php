@@ -27,11 +27,46 @@ class TreeObject
     const TYPE_TREE = 'tree';
     const TYPE_LINK = 'link';
 
+    /**
+     * permissions
+     *
+     * @var string
+     */
     private $permissions;
+
+    /**
+     * type
+     *
+     * @var string
+     */
     private $type;
+
+    /**
+     * sha
+     *
+     * @var string
+     */
     private $sha;
+
+    /**
+     * size
+     *
+     * @var string
+     */
     private $size;
+
+    /**
+     * name
+     *
+     * @var string
+     */
     private $name;
+
+    /**
+     * path
+     *
+     * @var string
+     */
     private $path;
 
     /**

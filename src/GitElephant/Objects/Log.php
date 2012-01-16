@@ -25,7 +25,18 @@ use GitElephant\Objects\GitAuthor;
 
 class Log implements \ArrayAccess, \Countable, \Iterator
 {
+    /**
+     * the commits related to this log
+     *
+     * @var array
+     */
     private $commits  = array();
+
+    /**
+     * the cursor position
+     *
+     * @var int
+     */
     private $position = 0;
 
     /**

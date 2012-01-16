@@ -26,8 +26,25 @@ abstract class DiffChunkLine
     const ADDED     = "added";
     const DELETED   = "deleted";
 
+    /**
+     * line number
+     *
+     * @var int
+     */
     protected $number;
+
+    /**
+     * line type
+     *
+     * @var string
+     */
     protected $type;
+
+    /**
+     * line content
+     *
+     * @var string
+     */
     protected $content;
 
     /**

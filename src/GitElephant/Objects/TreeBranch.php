@@ -26,10 +26,39 @@ use GitElephant\Objects\TreeishInterface;
 
 class TreeBranch implements TreeishInterface
 {
+    /**
+     * current checked out branch
+     *
+     * @var bool
+     */
     private $current = false;
+
+    /**
+     * branch name
+     *
+     * @var string
+     */
     private $name;
+
+    /**
+     * sha
+     *
+     * @var string
+     */
     private $sha;
+
+    /**
+     * branch comment
+     *
+     * @var string
+     */
     private $comment;
+
+    /**
+     * the full branch reference
+     *
+     * @var string
+     */
     private $fullRef;
 
     /**

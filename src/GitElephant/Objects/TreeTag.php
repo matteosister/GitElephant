@@ -25,8 +25,25 @@ use GitElephant\Objects\TreeishInterface;
 
 class TreeTag implements TreeishInterface
 {
+    /**
+     * tag name
+     *
+     * @var string
+     */
     private $name;
+
+    /**
+     * full reference
+     *
+     * @var string
+     */
     private $fullRef;
+
+    /**
+     * sha
+     *
+     * @var string
+     */
     private $sha;
 
     /**
