@@ -44,7 +44,7 @@ HDOC;
     }
 
     /**
-     * @covers GitElephant\Objects\Commit::getShortMessage
+     * @covers GitElephant\Objects\Commit\Message::getShortMessage
      */
     public function testGetShortMessage()
     {
@@ -52,7 +52,7 @@ HDOC;
     }
 
     /**
-     * @covers GitElephant\Objects\Commit::getFullMessage
+     * @covers GitElephant\Objects\Commit\Message::getFullMessage
      */
     public function testGetFullMessage()
     {
@@ -60,7 +60,7 @@ HDOC;
     }
 
     /**
-     * @covers GitElephant\Objects\Commit::toString
+     * @covers GitElephant\Objects\Commit\Message::toString
      */
     public function testToString()
     {
