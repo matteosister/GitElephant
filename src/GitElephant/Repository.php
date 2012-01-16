@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -25,19 +24,10 @@ use GitElephant\Objects\Tree,
     GitElephant\Objects\Commit,
     GitElephant\Objects\Log,
     GitElephant\Objects\TreeishInterface;
-use GitElephant\Command\MainCommand,
-    GitElephant\Command\BranchCommand,
-    GitElephant\Command\TagCommand,
-    GitElephant\Command\LsTreeCommand,
-    GitElephant\Command\DiffCommand,
-    GitElephant\Command\ShowCommand,
-    GitElephant\Command\LogCommand,
-    GitElephant\Command\RevListCommand,
-    GitElephant\Command\CatFileCommand,
-    GitElephant\Command\MergeCommand,
-    GitElephant\Command\DiffTreeCommand,
-    GitElephant\Command\CloneCommand;
 use GitElephant\Utilities;
+use Symfony\Component\DependencyInjection\ContainerBuilder,
+    Symfony\Component\DependencyInjection\Loader\XmlFileLoader,
+    Symfony\Component\Config\FileLocator;
 
 /**
  * Repository
@@ -64,88 +54,11 @@ class Repository
     private $caller;
 
     /**
-     * MainCommand instance
+     * The Dependency Injection container
      *
-     * @var \GitElephant\Command\MainCommand
+     * @var \Symfony\Component\DependencyInjection\ContainerBuilder
      */
-    private $mainCommand;
-
-    /**
-     * BranchCommand instance
-     *
-     * @var \GitElephant\Command\BranchCommand
-     */
-    private $branchCommand;
-
-    /**
-     * TagCommand instance
-     *
-     * @var \GitElephant\Command\TagCommand
-     */
-    private $tagCommand;
-
-    /**
-     * MergeCommand instance
-     *
-     * @var \GitElephant\Command\MergeCommand
-     */
-    private $mergeCommand;
-
-    /**
-     * LsTreeCommand instance
-     *
-     * @var \GitElephant\Command\LsTreeCommand
-     */
-    private $lsTreeCommand;
-
-    /**
-     * DiffCommand instance
-     *
-     * @var \GitElephant\Command\DiffCommand
-     */
-    private $diffCommand;
-
-    /**
-     * ShowCommand instance
-     *
-     * @var \GitElephant\Command\ShowCommand
-     */
-    private $showCommand;
-
-    /**
-     * LogCommand instance
-     *
-     * @var \GitElephant\Command\LogCommand
-     */
-    private $logCommand;
-
-    /**
-     * RevListCommand instance
-     *
-     * @var \GitElephant\Command\RevListCommand
-     */
-    private $revListCommand;
-
-    /**
-     * CatFileCommand instance
-     *
-     * @var \GitElephant\Command\CatFileCommand
-     */
-    private $catFileCommand;
-
-    /**
-     * DiffTreeCommand instance
-     *
-     * @var \GitElephant\Command\DiffTreeCommand
-     */
-    private $diffTreeCommand;
-
-    /**
-     * CloneCommand instance
-     *
-     * @var \GitElephant\Command\CloneCommand
-     */
-    private $cloneCommand;
+    private $container;
 
     /**
      * Class constructor
@@ -164,19 +77,9 @@ class Repository
         $this->path   = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
 
-        // command objects
-        $this->mainCommand     = new MainCommand();
-        $this->branchCommand   = new BranchCommand();
-        $this->tagCommand      = new TagCommand();
-        $this->mergeCommand    = new MergeCommand();
-        $this->lsTreeCommand   = new LsTreeCommand();
-        $this->diffCommand     = new DiffCommand();
-        $this->showCommand     = new ShowCommand();
-        $this->logCommand      = new LogCommand();
-        $this->revListCommand  = new RevListCommand();
-        $this->catFileCommand  = new CatFileCommand();
-        $this->diffTreeCommand = new DiffTreeCommand();
-        $this->cloneCommand    = new CloneCommand();
+        $this->container = new ContainerBuilder();
+        $loader = new XmlFileLoader($this->container, new FileLocator(__DIR__.'/Resources/config'));
+        $loader->load('commands.xml');
     }
 
     /**
@@ -186,7 +89,7 @@ class Repository
      */
     public function init()
     {
-        $this->caller->execute($this->mainCommand->init());
+        $this->caller->execute($this->container->get('command.main')->init());
     }
 
     /**
@@ -198,7 +101,7 @@ class Repository
      */
     public function stage($path = '.')
     {
-        $this->caller->execute($this->mainCommand->add($path));
+        $this->caller->execute($this->container->get('command.main')->add($path));
     }
 
     /**
@@ -217,7 +120,7 @@ class Repository
         if ($stageAll) {
             $this->stage();
         }
-        $this->caller->execute($this->mainCommand->commit($message));
+        $this->caller->execute($this->container->get('command.main')->commit($message));
         if ($ref != null) {
             $this->checkout($currentBranch);
         }
@@ -230,7 +133,7 @@ class Repository
      */
     public function getStatus()
     {
-        $this->caller->execute($this->mainCommand->status());
+        $this->caller->execute($this->container->get('command.main')->status());
         return array_map('trim', $this->caller->getOutputLines());
     }
 
@@ -242,7 +145,7 @@ class Repository
      */
     public function createBranch($name, $startPoint = null)
     {
-        $this->caller->execute($this->branchCommand->create($name, $startPoint));
+        $this->caller->execute($this->container->get('command.branch')->create($name, $startPoint));
     }
 
     /**
@@ -253,7 +156,7 @@ class Repository
      */
     public function deleteBranch($name)
     {
-        $this->caller->execute($this->branchCommand->delete($name));
+        $this->caller->execute($this->container->get('command.branch')->delete($name));
     }
 
     /**
@@ -264,7 +167,7 @@ class Repository
     public function getBranches()
     {
         $branches = array();
-        $this->caller->execute($this->branchCommand->lists());
+        $this->caller->execute($this->container->get('command.branch')->lists());
         foreach ($this->caller->getOutputLines() as $branchString) {
             $branches[] = new TreeBranch($branchString);
         }
@@ -313,7 +216,7 @@ class Repository
      */
     public function merge(TreeBranch $branch)
     {
-        $this->caller->execute($this->mergeCommand->merge($branch));
+        $this->caller->execute($this->container->get('command.merge')->merge($branch));
     }
 
     /**
@@ -326,7 +229,7 @@ class Repository
      */
     public function createTag($name, $startPoint = null, $message = null)
     {
-        $this->caller->execute($this->tagCommand->create($name, $startPoint, $message));
+        $this->caller->execute($this->container->get('command.tag')->create($name, $startPoint, $message));
     }
 
     /**
@@ -337,7 +240,7 @@ class Repository
      */
     public function deleteTag($tag)
     {
-        $this->caller->execute($this->tagCommand->delete($tag));
+        $this->caller->execute($this->container->get('command.tag')->delete($tag));
     }
 
     /**
@@ -348,10 +251,10 @@ class Repository
     public function getTags()
     {
         $tags = array();
-        $this->caller->execute($this->tagCommand->lists());
+        $this->caller->execute($this->container->get('command.tag')->lists());
         foreach ($this->caller->getOutputLines() as $tagString) {
             $tag = new TreeTag($tagString);
-            $outputLines = $this->caller->execute($this->revListCommand->getTagCommit($tag))->getOutputLines();
+            $outputLines = $this->caller->execute($this->container->get('command.rev_list')->getTagCommit($tag))->getOutputLines();
             $tag->setSha($outputLines[0]);
             $tags[] = $tag;
         }
@@ -402,7 +305,7 @@ class Repository
      */
     public function getCommit($ref = 'HEAD')
     {
-        $command = $this->showCommand->showCommit($ref);
+        $command = $this->container->get('command.show')->showCommit($ref);
         return new Commit($this->caller->execute($command)->getOutputLines());
     }
 
@@ -417,7 +320,7 @@ class Repository
      */
     public function getLog($ref = null, $limit = 15, $offset = null)
     {
-        $command = $this->logCommand->showLog($ref, $limit, $offset);
+        $command = $this->container->get('command.log')->showLog($ref, $limit, $offset);
         return new Log($this->caller->execute($command)->getOutputLines());
     }
 
@@ -433,7 +336,7 @@ class Repository
      */
     public function getTreeObjectLog(TreeObject $obj, $branch = null, $limit = 1, $offset = null)
     {
-        $command = $this->logCommand->showObjectLog($obj, $branch, $limit, $offset);
+        $command = $this->container->get('command.log')->showObjectLog($obj, $branch, $limit, $offset);
         return new Log($this->caller->execute($command)->getOutputLines());
     }
 
@@ -445,7 +348,7 @@ class Repository
      */
     public function checkout($ref)
     {
-        $this->caller->execute($this->mainCommand->checkout($ref));
+        $this->caller->execute($this->container->get('command.main')->checkout($ref));
     }
 
     /**
@@ -459,7 +362,7 @@ class Repository
      */
     public function getTree($ref = 'HEAD', $path = '')
     {
-        $outputLines = $this->caller->execute($this->lsTreeCommand->tree($ref))->getOutputLines();
+        $outputLines = $this->caller->execute($this->container->get('command.ls_tree')->tree($ref))->getOutputLines();
         return new Tree($outputLines, $path);
     }
 
@@ -476,12 +379,12 @@ class Repository
     {
         if ($commit2 === null) {
             if ($commit1->isRoot()) {
-                $command = $this->diffTreeCommand->rootDiff($commit1);
+                $command = $this->container->get('command.diff_tree')->rootDiff($commit1);
             } else {
-                $command = $this->diffCommand->diff($commit1);
+                $command = $this->container->get('command.diff')->diff($commit1);
             }
         } else {
-            $command = $this->diffCommand->diff($commit1, $commit2, $path);
+            $command = $this->container->get('command.diff')->diff($commit1, $commit2, $path);
         }
         $outputLines = $this->caller->execute($command)->getOutputLines();
         return new Diff($outputLines);
@@ -494,7 +397,7 @@ class Repository
      */
     public function cloneFrom($url)
     {
-        $this->caller->execute($this->cloneCommand->cloneUrl($url));
+        $this->caller->execute($this->container->get('command.clone')->cloneUrl($url));
     }
 
     /**
@@ -529,7 +432,7 @@ class Repository
      */
     public function outputContent(TreeObject $obj, TreeishInterface $treeish)
     {
-        $command = $this->catFileCommand->content($obj, $treeish);
+        $command = $this->container->get('command.cat_file')->content($obj, $treeish);
         return $this->caller->execute($command)->getOutputLines();
     }
 
