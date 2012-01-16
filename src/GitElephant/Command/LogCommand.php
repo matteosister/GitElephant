@@ -48,21 +48,21 @@ class LogCommand extends BaseCommand
                 $subject .= (string) $branch;
             }
         }
-        $subject .= ' -- ' . $obj->getFullPath();
 
-        return $this->showLog($subject, $limit, $offset);
+        return $this->showLog($subject, $obj->getFullPath(), $limit, $offset);
     }
 
     /**
      * Build a generic log command
      *
      * @param \GitElephant\Objects\TreeishInterface|string $ref    the reference to build the log for
+     * @param string|null                                  $path   the physical path to the tree relative to the repository root
      * @param int|null                                     $limit  limit to n entries
      * @param int|null                                     $offset skip n entries
      *
      * @return string
      */
-    public function showLog($ref, $limit = null, $offset = null)
+    public function showLog($ref, $path = null, $limit = null, $offset = null)
     {
         $this->clearAll();
 
@@ -83,6 +83,10 @@ class LogCommand extends BaseCommand
 
         if ($ref instanceof \GitElephant\Objects\TreeishInterface) {
             $ref = $ref->getSha();
+        }
+
+        if (null !== $path && !empty($path)) {
+            $ref .= ' -- ' . $path;
         }
 
         $this->addCommandSubject($ref);
