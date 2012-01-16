@@ -82,22 +82,22 @@
 <p>You have now GitElephant installed in <em>vendor/cypresslab/gitelephant</em></p>
 <p>And an handy autoload file to include in you project in <em>vendor/.composer/autoload.php</em></p>
 <p><strong>pear</strong></p>
-<dl class="docutils">
-<dt>Add the Cypresslab channel::</dt>
-<dd>$ pear channel-discover pear.cypresslab.net</dd>
-</dl>
-<p>And install the package. <em>By now GitElephant is in alpha state. So remember the -alpha in the library name</em>:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="x">$ pear install cypresslab/GitElephant-alpha</span>
+<p>Add the Cypresslab channel</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pear channel-discover pear.cypresslab.net
 </pre></div>
 </div>
-<p>On [Cypresslab pear channel homepage](<a class="reference external" href="http://pear.cypresslab.net/">http://pear.cypresslab.net/</a>) you can find other useful information</p>
+<p>And install the package. <em>By now GitElephant is in alpha state. So remember the -alpha in the library name</em></p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>pear install cypresslab/GitElephant-alpha
+</pre></div>
+</div>
+<p>On <a class="reference external" href="http://pear.cypresslab.net/">Cypresslab pear channel homepage</a> you can find other useful information</p>
 </div>
 <div class="section" id="testing">
 <h2>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h2>
 <p>The library is fully tested with PHPUnit for unit tests, and Behat for BDD. To run tests you need these (awesome) libraries installed on your system.</p>
-<p>Go to the base library folder and run the test suites:</p>
-<div class="highlight-php"><div class="highlight"><pre><span class="x">$ phpunit # phpunit test suite</span>
-<span class="x">$ behat # behat test suite</span>
+<p>Go to the base library folder and run the test suites</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>phpunit <span class="c"># phpunit test suite</span>
+<span class="nv">$ </span>behat <span class="c"># behat test suite</span>
 </pre></div>
 </div>
 </div>
