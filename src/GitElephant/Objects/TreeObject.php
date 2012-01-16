@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -7,6 +6,8 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @package GitElephant\Objects
  *
  * Just for fun...
  */
@@ -26,11 +27,46 @@ class TreeObject
     const TYPE_TREE = 'tree';
     const TYPE_LINK = 'link';
 
+    /**
+     * permissions
+     *
+     * @var string
+     */
     private $permissions;
+
+    /**
+     * type
+     *
+     * @var string
+     */
     private $type;
+
+    /**
+     * sha
+     *
+     * @var string
+     */
     private $sha;
+
+    /**
+     * size
+     *
+     * @var string
+     */
     private $size;
+
+    /**
+     * name
+     *
+     * @var string
+     */
     private $name;
+
+    /**
+     * path
+     *
+     * @var string
+     */
     private $path;
 
     /**

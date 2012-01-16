@@ -8,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
+ * @package GitElephant\Objects
+ *
  * Just for fun...
  */
 
@@ -23,7 +25,18 @@ use GitElephant\Objects\GitAuthor;
 
 class Log implements \ArrayAccess, \Countable, \Iterator
 {
+    /**
+     * the commits related to this log
+     *
+     * @var array
+     */
     private $commits  = array();
+
+    /**
+     * the cursor position
+     *
+     * @var int
+     */
     private $position = 0;
 
     /**

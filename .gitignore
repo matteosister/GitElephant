@@ -3,3 +3,5 @@ vendor/*
 *.tgz
 package.xml
 composer.phar
+docblox/
+output/

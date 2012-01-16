@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -7,6 +6,8 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @package GitElephant\Objects\Commit
  *
  * Just for fun...
  */
@@ -20,6 +21,11 @@ namespace GitElephant\Objects\Commit;
  */
 class Message
 {
+    /**
+     * the message
+     *
+     * @var array|string
+     */
     private $message;
 
     /**

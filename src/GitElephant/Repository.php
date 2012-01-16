@@ -8,6 +8,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  *
+ * @package GitElephant
+ *
  * Just for fun...
  */
 
@@ -47,20 +49,102 @@ use GitElephant\Utilities;
 
 class Repository
 {
+    /**
+     * the repository path
+     *
+     * @var string
+     */
     private $path;
+
+    /**
+     * the caller instance
+     *
+     * @var \GitElephant\Command\Caller
+     */
     private $caller;
 
+    /**
+     * MainCommand instance
+     *
+     * @var \GitElephant\Command\MainCommand
+     */
     private $mainCommand;
+
+    /**
+     * BranchCommand instance
+     *
+     * @var \GitElephant\Command\BranchCommand
+     */
     private $branchCommand;
+
+    /**
+     * TagCommand instance
+     *
+     * @var \GitElephant\Command\TagCommand
+     */
     private $tagCommand;
+
+    /**
+     * MergeCommand instance
+     *
+     * @var \GitElephant\Command\MergeCommand
+     */
     private $mergeCommand;
+
+    /**
+     * LsTreeCommand instance
+     *
+     * @var \GitElephant\Command\LsTreeCommand
+     */
     private $lsTreeCommand;
+
+    /**
+     * DiffCommand instance
+     *
+     * @var \GitElephant\Command\DiffCommand
+     */
     private $diffCommand;
+
+    /**
+     * ShowCommand instance
+     *
+     * @var \GitElephant\Command\ShowCommand
+     */
     private $showCommand;
+
+    /**
+     * LogCommand instance
+     *
+     * @var \GitElephant\Command\LogCommand
+     */
     private $logCommand;
+
+    /**
+     * RevListCommand instance
+     *
+     * @var \GitElephant\Command\RevListCommand
+     */
     private $revListCommand;
+
+    /**
+     * CatFileCommand instance
+     *
+     * @var \GitElephant\Command\CatFileCommand
+     */
     private $catFileCommand;
+
+    /**
+     * DiffTreeCommand instance
+     *
+     * @var \GitElephant\Command\DiffTreeCommand
+     */
     private $diffTreeCommand;
+
+    /**
+     * CloneCommand instance
+     *
+     * @var \GitElephant\Command\CloneCommand
+     */
     private $cloneCommand;
 
     /**

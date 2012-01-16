@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -7,6 +6,8 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @package GitElephant\Objects\Diff
  *
  * Just for fun...
  */
@@ -26,11 +27,46 @@ GitElephant\Objects\Diff\DiffChunkLineUnchanged;
 
 class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 {
+    /**
+     * the cursor position
+     *
+     * @var int
+     */
     private $position;
+
+    /**
+     * diff start line from original file
+     *
+     * @var int
+     */
     private $originStartLine;
+
+    /**
+     * diff end line from original file
+     *
+     * @var int
+     */
     private $originEndLine;
+
+    /**
+     * diff start line from destination file
+     *
+     * @var int
+     */
     private $destStartLine;
+
+    /**
+     * diff end line from destination file
+     *
+     * @var int
+     */
     private $destEndLine;
+
+    /**
+     * array of lines
+     *
+     * @var array
+     */
     private $lines;
 
     /**

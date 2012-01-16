@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -7,6 +6,8 @@
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
+ *
+ * @package GitElephant\Objects\Diff
  *
  * Just for fun...
  */
@@ -24,7 +25,18 @@ use GitElephant\Utilities;
 
 class Diff implements \ArrayAccess, \Countable, \Iterator
 {
+    /**
+     * the cursor position
+     *
+     * @var int
+     */
     private $position;
+
+    /**
+     * DiffObject instances
+     *
+     * @var array
+     */
     private $diffObjects;
 
     /**
