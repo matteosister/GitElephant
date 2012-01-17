@@ -63,4 +63,19 @@ class CallerTest extends TestCase
         $caller->execute($mainCommand->init());
         $this->assertRegExp('/^Initialized empty Git repository in(.*)/', $caller->getOutput());
     }
+
+    public function testOutputLines()
+    {
+        $binary = new GitBinary();
+        $caller = new Caller($binary, $this->getRepository()->getPath());
+        $this->getRepository()->init();
+        for($i = 1; $i <= 50; $i++) {
+            $this->addFile('test'.$i, null, 'this is the content');
+        }
+        $this->getRepository()->commit('first commit', true);
+        $command = new LsTreeCommand();
+        $outputLines = $caller->execute($command->tree($this->getRepository()->getMainBranch()))->getOutputLines();
+        $this->assertTrue(is_array($outputLines));
+        $this->assertEquals(range(0, count($outputLines) - 1), array_keys($outputLines));
+    }
 }

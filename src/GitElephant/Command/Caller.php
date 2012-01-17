@@ -91,8 +91,15 @@ class Caller
         if (!$process->isSuccessful()) {
             throw new \RuntimeException($process->getErrorOutput());
         }
-        $this->outputLines = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
-        $this->outputLines = array_filter($this->outputLines, array($this, 'clearBlankLines'));
+
+        // rtrim values
+        $values = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
+        // remove blank lines
+        $values = array_filter($values, array($this, 'clearBlankLines'));
+        foreach($values as $value) {
+            $this->outputLines[] = $value;
+        }
+
         return $this;
     }
 
