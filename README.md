@@ -14,6 +14,18 @@ Requirements
 
 I work on an ubuntu box, but the lib should work well with every unix system. I don't have a windows installation to test...if someone want to help...
 
+Dependencies
+------------
+
+- [Symfony Config](https://github.com/symfony/Config)
+- [Symfony DependencyInjection](https://github.com/symfony/DependencyInjection)
+- [Symfony Process](https://github.com/symfony/Process)
+
+*for tests*
+
+- [PHPUnit](https://github.com/sebastianbergmann/phpunit)
+- [Behat](https://github.com/Behat/Behat)
+
 Installation
 ------------
 
