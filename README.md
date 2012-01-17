@@ -250,14 +250,9 @@ foreach ($diff as $diffObject) {
 }
 ```
 
-A DiffObject is a class that implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
-
-It represent a file, folder or submodule changed in the diff
-
+A DiffObject is a class that implements *ArrayAccess*, *Countable* and *Iterator* interfaces. It represent a file, folder or submodule changed in the diff
 Every DiffObject can have multiple chunks of changes. For example "added 3 lines at line 20" and "modified 4 lines at line 560"
-
 So you can iterate over DiffObject to get DiffChunks. DiffChunks are the last steps of the diff iteration.
-
 They are a collection of DiffChunkLine Objects
 
 ``` php
