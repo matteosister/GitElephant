@@ -256,7 +256,7 @@ Every DiffObject can have multiple chunks of changes. For example:
 
 ```
     added 3 lines at line 20
-    modified 4 lines at line 560
+    deleted 4 lines at line 560
 ```
 
 You can iterate over DiffObject to get DiffChunks. DiffChunks are the last steps of the Diff process, they are a collection of DiffChunkLine Objects
