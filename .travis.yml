@@ -12,5 +12,5 @@ before_script:
   - php composer.phar update
 
 script:
-  - vendor/behat/behat/bin/behat
+  - vendor/behat/behat/bin/behat --no-paths
   - phpunit

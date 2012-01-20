@@ -61,12 +61,19 @@ class Repository
     private $container;
 
     /**
+     * A general repository name
+     *
+     * @var string $name the repository name
+     */
+    private $name;
+
+    /**
      * Class constructor
      *
      * @param string         $repositoryPath the path of the git repository
      * @param GitBinary|null $binary         the GitBinary instance that calls the commands
      */
-    public function __construct($repositoryPath, GitBinary $binary = null)
+    public function __construct($repositoryPath, GitBinary $binary = null, $name = null)
     {
         if ($binary == null) {
             $binary = new GitBinary();
@@ -76,6 +83,7 @@ class Repository
         }
         $this->path   = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
+        $this->name = $name;
 
         $this->container = new ContainerBuilder();
         $loader = new XmlFileLoader($this->container, new FileLocator(__DIR__.'/Resources/config'));
@@ -445,5 +453,25 @@ class Repository
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Get the repository name
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Set the repository name
+     *
+     * @param string $name the repository name
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 }
