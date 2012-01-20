@@ -58,6 +58,12 @@ class RepositoryTest extends TestCase
         $this->assertTrue($match, 'init problem, git status on an empty repo should give nothing to commit');
     }
 
+    public function testName()
+    {
+        $this->getRepository()->setName('test-repo');
+        $this->assertEquals('test-repo', $this->getRepository()->getName());
+    }
+
     /**
      * @covers GitElephant\Repository::stage
      */
