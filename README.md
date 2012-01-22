@@ -131,10 +131,10 @@ $repo->getCommit('v1.0'); // get a Commit instance for a tag
 $repo->getCommit('1ac370d'); // sha (follow [git standards](http://book.git-scm.com/4_git_treeishes.html) to format the sha)
 
 // Log contains a collection of commit objects
-// syntax: getLog(<tree-ish>, limit = 15, offset = null)
+// syntax: getLog(<tree-ish>, path = null, limit = 15, offset = null)
 $log = $repo->getLog();
-$log = $repo->getLog('master', 5);
-$log = $repo->getLog('v0.1', 5, 10);
+$log = $repo->getLog('master', null, 5);
+$log = $repo->getLog('v0.1', null, 5, 10);
 
 // countable
 $log->count();
