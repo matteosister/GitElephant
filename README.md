@@ -305,7 +305,7 @@ Just remember:
 
 * Symfony2 coding standard
 * test everything you develop with phpunit AND behat.
-* if you don't use gitflow, just remember to develop on a branch (not master) and send a pull request
+* if you don't use gitflow, just remember to develop on a branch or on develop and send a pull request on the develop branch. **Please do not send pull requests on the master branch**.
 
 Thanks
 ------

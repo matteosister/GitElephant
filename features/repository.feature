@@ -25,6 +25,7 @@ Scenario: init function
     """
     # On branch master
     nothing to commit (working directory clean)
+
     """
 
 Scenario: branch list, add and delete

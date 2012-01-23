@@ -184,18 +184,20 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
             return;
         }
         foreach ($this->outputLines as $line) {
-            $slices = $this->getLineSlices($line);
-            if ($slices['fullPath'] == $this->path) {
-                $pos = strrpos($slices['fullPath'], '/');
-                if ($pos === false) {
-                    $name       = $this->path;
-                    $this->path = '';
-                } else {
-                    $path       = $this->path;
-                    $this->path = substr($path, 0, $pos);
-                    $name       = substr($path, $pos + 1);
+            if ($line != '') {
+                $slices = $this->getLineSlices($line);
+                if ($slices['fullPath'] == $this->path) {
+                    $pos = strrpos($slices['fullPath'], '/');
+                    if ($pos === false) {
+                        $name       = $this->path;
+                        $this->path = '';
+                    } else {
+                        $path       = $this->path;
+                        $this->path = substr($path, 0, $pos);
+                        $name       = substr($path, $pos + 1);
+                    }
+                    $this->blob = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $slices['fullPath']);
                 }
-                $this->blob = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $slices['fullPath']);
             }
         }
     }
@@ -228,6 +230,9 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      */
     private function parseLine($line)
     {
+        if ($line == '') {
+            return;
+        }
         $slices = $this->getLineSlices($line);
         if ($this->isRoot()) {
             // if is root check for first children

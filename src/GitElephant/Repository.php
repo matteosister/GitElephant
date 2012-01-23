@@ -177,7 +177,9 @@ class Repository
         $branches = array();
         $this->caller->execute($this->container->get('command.branch')->lists());
         foreach ($this->caller->getOutputLines() as $branchString) {
-            $branches[] = new TreeBranch($branchString);
+            if ($branchString != '') {
+                $branches[] = new TreeBranch($branchString);
+            }
         }
         usort($branches, array($this, 'sortBranches'));
         return $branches;
@@ -261,10 +263,12 @@ class Repository
         $tags = array();
         $this->caller->execute($this->container->get('command.tag')->lists());
         foreach ($this->caller->getOutputLines() as $tagString) {
-            $tag = new TreeTag($tagString);
-            $outputLines = $this->caller->execute($this->container->get('command.rev_list')->getTagCommit($tag))->getOutputLines();
-            $tag->setSha($outputLines[0]);
-            $tags[] = $tag;
+            if ($tagString != '') {
+                $tag = new TreeTag($tagString);
+                $outputLines = $this->caller->execute($this->container->get('command.rev_list')->getTagCommit($tag))->getOutputLines();
+                $tag->setSha($outputLines[0]);
+                $tags[] = $tag;
+            }
         }
         return $tags;
     }
