@@ -76,7 +76,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      */
     public function __construct($lines)
     {
-        var_dump($lines);
         $this->position = 0;
 
         $this->getLinesNumbers($lines[0]);
@@ -94,8 +93,9 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     {
         $unchanged = $this->originStartLine;
         $deleted = $this->originStartLine;
-        $new = $this->originStartLine;
+        $new = $this->destStartLine;
         foreach ($lines as $line) {
+            if ($line == '') continue;
             if (preg_match('/^\+(.*)/', $line)) {
                 $this->lines[] = new DiffChunkLineAdded($new++, preg_replace('/\+(.*)/', '$1', $line));
                 $unchanged++;

@@ -33,7 +33,7 @@ class DiffChunkLineUnchanged extends DiffChunkLine
     public function __construct($number, $content)
     {
         $this->setNumber($number);
-        $this->setContent($content);
+        $this->setContent(trim($content));
         $this->setType(self::UNCHANGED);
     }
 }
