@@ -91,22 +91,23 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      */
     private function parseLines($lines)
     {
-        $i = $this->destStartLine;
+        $unchanged = $this->originStartLine;
+        $deleted = $this->originStartLine;
+        $new = $this->originStartLine;
         foreach ($lines as $line) {
             if (preg_match('/^\+(.*)/', $line)) {
-                $this->lines[] = new DiffChunkLineAdded($i, preg_replace('/\+(.*)/', '$1', $line));
-                $i++;
+                $this->lines[] = new DiffChunkLineAdded($new++, preg_replace('/\+(.*)/', '$1', $line));
+                $unchanged++;
             } else {
                 if (preg_match('/^-(.*)/', $line)) {
-                    $this->lines[] = new DiffChunkLineDeleted($i, preg_replace('/-(.*)/', '$1', $line));
+                    $this->lines[] = new DiffChunkLineDeleted($deleted++, preg_replace('/-(.*)/', '$1', $line));
                 } else {
                     if (preg_match('/^ (.*)/', $line) || $line == '') {
-                        $this->lines[] = new DiffChunkLineUnchanged($i, $line);
-                        $i++;
+                        $this->lines[] = new DiffChunkLineUnchanged($unchanged++, $line);
+                        $deleted++;
+                        $new++;
                     } else {
-                        if (preg_match('/\\ No newline at end of file/', $line)) {
-                            $i++;
-                        } else {
+                        if (!preg_match('/\\ No newline at end of file/', $line)) {
                             throw new \Exception(sprintf('GitElephant was unable to parse the line %s', $line));
                         }
                     }
