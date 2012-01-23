@@ -76,6 +76,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      */
     public function __construct($lines)
     {
+        var_dump($lines);
         $this->position = 0;
 
         $this->getLinesNumbers($lines[0]);
