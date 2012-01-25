@@ -53,6 +53,13 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     private $destinationPath;
 
     /**
+     * rename similarity index
+     *
+     * @var int
+     */
+    private $similarityIndex;
+
+    /**
      * the diff mode
      *
      * @var string
@@ -77,10 +84,18 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
         $this->chunks   = array();
 
         $this->findPath($lines[0]);
-        $this->findMode($lines[1]);
+
+        $sliceIndex = 4;
+        if ($this->hasPathChanged()) {
+            $this->findSimilarityIndex($lines[1]);
+            $this->findMode($lines[4]);
+            $sliceIndex = 7;
+        } else {
+            $this->findMode($lines[1]);
+        }
 
         if ($this->mode == self::MODE_INDEX || $this->mode == self::MODE_NEW_FILE) {
-            $lines = array_slice($lines, 4);
+            $lines = array_slice($lines, $sliceIndex);
             if (!empty($lines)) {
                 $this->findChunks($lines);
             }
@@ -146,6 +161,19 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
+     * look for similarity index in the line
+     *
+     * @param string $line line content
+     */
+    private function findSimilarityIndex($line)
+    {
+        $matches = array();
+        if (preg_match('/^similarity index (.*)\%$/', $line, $matches)) {
+            $this->similarityIndex = $matches[1];
+        }
+    }
+
+    /**
      * chunks getter
      *
      * @return array
@@ -185,6 +213,30 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
         return $this->originalPath;
     }
 
+    /**
+     * Check if path has changed (file was renamed)
+     *
+     * @return bool
+     */
+    public function hasPathChanged()
+    {
+        return ($this->originalPath !== $this->destinationPath);
+    }
+
+    /**
+     * Get similarity index
+     *
+     * @return int
+     * @throws \RuntimeException if not a rename
+     */
+    public function getSimilarityIndex()
+    {
+        if ($this->hasPathChanged()) {
+            return $this->similiarityIndex;
+        }
+
+        throw new \RuntimeException('Cannot get similiarity index on non-renames');
+    }
 
     /**
      * ArrayAccess interface
