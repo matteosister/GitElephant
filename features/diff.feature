@@ -92,6 +92,34 @@ Scenario: find diffs in a repository
     And the diffChunkLine in position "5" should be "\GitElephant\Objects\Diff\DiffChunkLineAdded"
     And the diffChunkLine in position "5" should have line number 13
 
+Scenario: handle diff renames
+    Given I start a repository for diff
+    And I add a file named "foo-file" to the repository with content
+        """
+        first line
+        second line
+        third line
+        """
+    And I stage and commit
+    Then the diff should have "1" object of mode "new_file"
+    Then I rename "foo-file" to "bar-file"
+    And I stage and commit
+    Then the diff should have "1" object of mode "renamed_file"
+    And the diffObject in position "1" should be a rename from "foo-file" to "bar-file"
+    And the diffObject in position "1" should have a similarity of "100" percent
+    Then I rename "bar-file" to "baz-file"
+    And I add a file named "baz-file" to the repository with content
+        """
+        first line
+        second line
+        third line
+        fourth line
+        """
+    And I stage and commit
+    Then the diff should have "1" object of mode "index"
+    And the diffObject in position "1" should be a rename from "bar-file" to "baz-file"
+    And the diffObject in position "1" should have a similarity of "73" percent
+
 Scenario: diff without contents
     Given I start a repository for diff
     Then I add a file named "empty-file" to the repository without content
