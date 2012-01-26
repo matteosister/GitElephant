@@ -113,6 +113,29 @@ class Repository
     }
 
     /**
+     * Move a file/directory
+     *
+     * @param string|TreeObject $from source path
+     * @param string|TreeObject $to   destination path
+     */
+    public function move($from, $to)
+    {
+        $this->caller->execute($this->container->get('command.main')->move($from, $to));
+    }
+
+    /**
+     * Remove a file/directory
+     *
+     * @param string|TreeObject $path the path to remove
+     * @param bool              $recursive
+     * @param bool              $force
+     */
+    public function remove($path, $recursive = false, $force = false)
+    {
+        $this->caller->execute($this->container->get('command.main')->remove($path, $recursive, $force));
+    }
+
+    /**
      * Commit content to the repository, eventually staging all unstaged content
      *
      * @param string      $message  the commit message
