@@ -64,7 +64,7 @@ abstract class DiffChunkLineChanged extends DiffChunkLine
      *
      * @return int
      */
-    public function getDestinationNumber()
+    public function getDestNumber()
     {
         return $this->getNumber();
     }
