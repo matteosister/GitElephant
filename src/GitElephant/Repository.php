@@ -128,7 +128,7 @@ class Repository
         if ($stageAll) {
             $this->stage();
         }
-        $this->caller->execute($this->container->get('command.main')->commit($message));
+        $this->caller->execute($this->container->get('command.main')->commit($message, $stageAll));
         if ($ref != null) {
             $this->checkout($currentBranch);
         }

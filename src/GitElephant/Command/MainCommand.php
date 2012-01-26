@@ -75,17 +75,23 @@ class MainCommand extends BaseCommand
     /**
      * Commit
      *
-     * @param string $message the commit message
+     * @param string $message   the commit message
+     * @param bool   $commitAll commit all changes
      *
      * @return string
      */
-    public function commit($message)
+    public function commit($message, $commitAll = false)
     {
         $this->clearAll();
         if (trim($message) == '' || $message == null) {
             throw new \InvalidArgumentException(sprintf('You can\'t commit whitout message'));
         }
         $this->addCommandName(self::GIT_COMMIT);
+
+        if ($commitAll) {
+            $this->addCommandArgument('-a');
+        }
+
         $this->addCommandArgument('-m');
         $this->addCommandSubject(sprintf("'%s'", $message));
         return $this->getCommand();
