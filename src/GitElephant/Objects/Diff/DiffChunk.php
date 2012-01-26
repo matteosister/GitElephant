@@ -63,10 +63,10 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     private $destEndLine;
 
     /**
-    * header line
-    *
-    * @var string
-    */
+     * hunk header line
+     *
+     * @var string
+     */
     private $headerLine;
 
     /**
@@ -133,8 +133,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      */
     private function getLinesNumbers($line)
     {
-        $this->headerLine = trim($line);
-
         $matches = array();
         preg_match('/@@ -(.*) \+(.*) @@?(.*)/', $line, $matches);
         if (!strpos($matches[1], ',')) {
@@ -194,12 +192,21 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
-    * Get chunk header line
+    * Get hunk header line
     *
     * @return string
     */
     public function getHeaderLine()
     {
+        if (null === $this->headerLine) {
+            $line  = '@@';
+            $line .= ' -' . $this->getOriginStartLine() . ',' . $this->getOriginEndLine();
+            $line .= ' +' . $this->getDestStartLine() . ',' . $this->getDestEndLine();
+            $line .= ' @@';
+
+            $this->headerLine = $line;
+        }
+
         return $this->headerLine;
     }
 
