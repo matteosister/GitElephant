@@ -232,7 +232,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     public function getSimilarityIndex()
     {
         if ($this->hasPathChanged()) {
-            return $this->similiarityIndex;
+            return $this->similarityIndex;
         }
 
         throw new \RuntimeException('Cannot get similiarity index on non-renames');
