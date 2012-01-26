@@ -92,7 +92,6 @@ Scenario: find diffs in a repository
     And the diffChunkLine in position "5" should be "\GitElephant\Objects\Diff\DiffChunkLineAdded"
     And the diffChunkLine in position "5" should have line number 13
 
-@diffrename
 Scenario: handle diff renames
     Given I start a repository for diff
     And I add a file named "foo-file" to the repository with content
