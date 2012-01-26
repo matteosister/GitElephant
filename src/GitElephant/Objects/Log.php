@@ -67,6 +67,16 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
+     * Get array representation
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->commits;
+    }
+
+    /**
      * Get the first commit
      *
      * @return Commit|null
