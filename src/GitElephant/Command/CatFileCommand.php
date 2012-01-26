@@ -34,18 +34,24 @@ class CatFileCommand extends BaseCommand
     /**
      * command to show content of a TreeObject at a given Treeish point
      *
-     * @param \GitElephant\Objects\TreeObject       $object  a TreeObject instance
-     * @param \GitElephant\Objects\TreeishInterface $treeish an object with TreeishInterface interface
+     * @param \GitElephant\Objects\TreeObject              $object  a TreeObject instance
+     * @param \GitElephant\Objects\TreeishInterface|string $treeish an object with TreeishInterface interface
      *
      * @return string
      */
-    public function content(TreeObject $object, TreeishInterface $treeish)
+    public function content(TreeObject $object, $treeish)
     {
+        if ($treeish instanceof TreeishInterface) {
+            $sha = $treeish->getSha();
+        } else {
+            $sha = $treeish;
+        }
+
         $this->clearAll();
         $this->addCommandName(static::GIT_CAT_FILE);
         // pretty format
         $this->addCommandArgument('-p');
-        $this->addCommandSubject($treeish->getSha() . ':' . $object->getPath());
+        $this->addCommandSubject($sha . ':' . $object->getPath());
         return $this->getCommand();
     }
 

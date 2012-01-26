@@ -460,13 +460,13 @@ class Repository
     /**
      * output a node content
      *
-     * @param \GitElephant\Objects\TreeObject       $obj     The TreeObject of type BLOB
-     * @param \GitElephant\Objects\TreeishInterface $treeish A treeish object
+     * @param \GitElephant\Objects\TreeObject              $obj     The TreeObject of type BLOB
+     * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function outputContent(TreeObject $obj, TreeishInterface $treeish)
+    public function outputContent(TreeObject $obj, $treeish)
     {
         $command = $this->container->get('command.cat_file')->content($obj, $treeish);
         return $this->caller->execute($command)->getOutputLines();
