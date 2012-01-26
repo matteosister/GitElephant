@@ -47,10 +47,10 @@ class DiffCommandTest extends TestCase
     public function testDiff()
     {
         $commit = $this->getRepository()->getCommit();
-        $this->assertEquals(DiffCommand::DIFF_COMMAND." '--full-index' '--no-color' '-w' '--dst-prefix=DST/' '--src-prefix=SRC/' HEAD^..HEAD", $this->diffCommand->diff('HEAD'));
-        $this->assertEquals(DiffCommand::DIFF_COMMAND." '--full-index' '--no-color' '-w' '--dst-prefix=DST/' '--src-prefix=SRC/' branch2..HEAD -- foo", $this->diffCommand->diff('HEAD', 'branch2', 'foo'));
+        $this->assertEquals(DiffCommand::DIFF_COMMAND." '--full-index' '--no-color' '-w' '-M' '--dst-prefix=DST/' '--src-prefix=SRC/' HEAD^..HEAD", $this->diffCommand->diff('HEAD'));
+        $this->assertEquals(DiffCommand::DIFF_COMMAND." '--full-index' '--no-color' '-w' '-M' '--dst-prefix=DST/' '--src-prefix=SRC/' branch2..HEAD -- foo", $this->diffCommand->diff('HEAD', 'branch2', 'foo'));
         $this->assertEquals(
-            sprintf(DiffCommand::DIFF_COMMAND." '--full-index' '--no-color' '-w' '--dst-prefix=DST/' '--src-prefix=SRC/' %s^..%s",
+            sprintf(DiffCommand::DIFF_COMMAND." '--full-index' '--no-color' '-w' '-M' '--dst-prefix=DST/' '--src-prefix=SRC/' %s^..%s",
                 $commit->getSha(),
                 $commit->getSha()
             ), $this->diffCommand->diff($commit));
