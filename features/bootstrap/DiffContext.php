@@ -113,6 +113,14 @@ class DiffContext extends BehatContext
     }
 
     /**
+     * @Given /^I rename "([^"]*)" to "([^"]*)"$/
+     */
+    public function iRenameTo($from, $to)
+    {
+        rename($this->path . '/' . $from, $this->path . '/' . $to);
+    }
+
+    /**
      * @Then /^the last commit should be root$/
      */
     public function theLastCommitShouldBeRoot()
@@ -148,6 +156,30 @@ class DiffContext extends BehatContext
         foreach($diffObject as $diffChunk) {
             $this->diffChunks[] = $diffChunk;
         }
+    }
+
+    /**
+     * @Given /^the diffObject in position "([^"]*)" should be a rename from "([^"]*)" to "([^"]*)"$/
+     */
+    public function theDiffobjectInPositionShouldBeARenameFromTo($num, $from, $to)
+    {
+        /* @var $diffObject \GitElephant\Objects\Diff\DiffObject */
+        $diffObject = $diffObject = $this->diffObjects[$num-1];
+
+        assertTrue($diffObject->hasPathChanged());
+        assertEquals($from, $diffObject->getOriginalPath());
+        assertEquals($to, $diffObject->getDestinationPath());
+    }
+
+    /**
+     * @Given /^the diffObject in position "([^"]*)" should have a similarity of "([^"]*)" percent$/
+     */
+    public function theDiffobjectInPositionShouldHaveASimilarityOfPercent($num, $percent)
+    {
+        /* @var $diffObject \GitElephant\Objects\Diff\DiffObject */
+        $diffObject = $diffObject = $this->diffObjects[$num-1];
+
+        assertEquals($percent, $diffObject->getSimilarityIndex());
     }
 
     /**

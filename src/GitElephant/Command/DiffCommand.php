@@ -45,6 +45,8 @@ class DiffCommand extends BaseCommand
         $this->addCommandArgument('--no-color');
         // no whitespaces
         $this->addCommandArgument('-w');
+        // detect renames
+        $this->addCommandArgument('-M');
         $this->addCommandArgument('--dst-prefix=DST/');
         $this->addCommandArgument('--src-prefix=SRC/');
 
