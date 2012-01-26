@@ -30,6 +30,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     const MODE_MODE         = 'mode';
     const MODE_NEW_FILE     = 'new_file';
     const MODE_DELETED_FILE = 'deleted_file';
+    const MODE_RENAMED      = 'renamed_file';
 
     /**
      * the cursor position
@@ -88,8 +89,12 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
         $sliceIndex = 4;
         if ($this->hasPathChanged()) {
             $this->findSimilarityIndex($lines[1]);
-            $this->findMode($lines[4]);
-            $sliceIndex = 7;
+            if (isset($lines[4]) && !empty($lines[4])) {
+                $this->findMode($lines[4]);
+                $sliceIndex = 7;
+            } else {
+                $this->mode = self::MODE_RENAMED;
+            }
         } else {
             $this->findMode($lines[1]);
         }
