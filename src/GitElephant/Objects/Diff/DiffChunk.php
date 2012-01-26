@@ -98,20 +98,22 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      */
     private function parseLines($lines)
     {
-        $unchanged = $this->originStartLine;
+        $originUnchanged = $this->originStartLine;
+        $destUnchanged = $this->destStartLine;
+
         $deleted = $this->originStartLine;
         $new = $this->destStartLine;
         foreach ($lines as $line) {
-            if ($line == '') continue;
             if (preg_match('/^\+(.*)/', $line)) {
                 $this->lines[] = new DiffChunkLineAdded($new++, preg_replace('/\+(.*)/', '$1', $line));
-                $unchanged++;
+                $destUnchanged++;
             } else {
                 if (preg_match('/^-(.*)/', $line)) {
                     $this->lines[] = new DiffChunkLineDeleted($deleted++, preg_replace('/-(.*)/', '$1', $line));
+                    $originUnchanged++;
                 } else {
                     if (preg_match('/^ (.*)/', $line) || $line == '') {
-                        $this->lines[] = new DiffChunkLineUnchanged($unchanged++, $line);
+                        $this->lines[] = new DiffChunkLineUnchanged($originUnchanged++, $destUnchanged++, $line);
                         $deleted++;
                         $new++;
                     } else {

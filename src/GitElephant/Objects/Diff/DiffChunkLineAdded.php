@@ -22,7 +22,7 @@ use GitElephant\Objects\Diff\DiffChunkLine;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class DiffChunkLineAdded extends DiffChunkLine
+class DiffChunkLineAdded extends DiffChunkLineChanged
 {
     /**
      * Class constructor
