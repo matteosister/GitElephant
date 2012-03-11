@@ -3,3 +3,4 @@ vendor/*
 *.tgz
 package.xml
 output/
+.idea
