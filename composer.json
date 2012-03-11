@@ -4,7 +4,7 @@
     "keywords": ["git"],
     "homepage": "http://matteosister.github.com/GitElephant",
     "version": "0.7.3",
-    "license": "GPL3",
+    "license": "LGPLv3",
     "authors": [
         {
             "name": "Matteo Giachino",
