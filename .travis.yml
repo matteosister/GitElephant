@@ -10,8 +10,10 @@ branches:
 before_script:
   - wget -nc http://getcomposer.org/composer.phar
   - php composer.phar update
+  - wget https://github.com/downloads/Behat/Behat/behat.phar
 
 script:
-  - vendor/behat/behat/bin/behat --no-paths
+  #- vendor/behat/behat/bin/behat --no-paths
+  - php behat.phar
   - phpunit
   
