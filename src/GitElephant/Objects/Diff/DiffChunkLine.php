@@ -27,13 +27,6 @@ abstract class DiffChunkLine
     const DELETED   = "deleted";
 
     /**
-     * line number
-     *
-     * @var int
-     */
-    protected $number;
-
-    /**
      * line type
      *
      * @var string
@@ -55,26 +48,6 @@ abstract class DiffChunkLine
     public function __toString()
     {
         return $this->getContent();
-    }
-
-    /**
-     * number setter
-     *
-     * @param int $number line number
-     */
-    public function setNumber($number)
-    {
-        $this->number = $number;
-    }
-
-    /**
-     * number getter
-     *
-     * @return mixed
-     */
-    public function getNumber()
-    {
-        return $this->number;
     }
 
     /**

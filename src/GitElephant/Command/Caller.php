@@ -95,10 +95,11 @@ class Caller
         // rtrim values
         $values = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
         // remove blank lines
-        $values = array_filter($values, array($this, 'clearBlankLines'));
-        foreach($values as $value) {
-            $this->outputLines[] = $value;
-        }
+        //$values = array_filter($values, array($this, 'clearBlankLines'));
+//        foreach($values as $value) {
+//            $this->outputLines[] = $value;
+//        }
+        $this->outputLines = $values;
 
         return $this;
     }

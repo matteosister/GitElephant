@@ -63,6 +63,13 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     private $destEndLine;
 
     /**
+     * hunk header line
+     *
+     * @var string
+     */
+    private $headerLine;
+
+    /**
      * array of lines
      *
      * @var array
@@ -91,22 +98,26 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      */
     private function parseLines($lines)
     {
-        $i = $this->destStartLine;
+        $originUnchanged = $this->originStartLine;
+        $destUnchanged = $this->destStartLine;
+
+        $deleted = $this->originStartLine;
+        $new = $this->destStartLine;
         foreach ($lines as $line) {
             if (preg_match('/^\+(.*)/', $line)) {
-                $this->lines[] = new DiffChunkLineAdded($i, preg_replace('/\+(.*)/', '$1', $line));
-                $i++;
+                $this->lines[] = new DiffChunkLineAdded($new++, preg_replace('/\+(.*)/', '$1', $line));
+                $destUnchanged++;
             } else {
                 if (preg_match('/^-(.*)/', $line)) {
-                    $this->lines[] = new DiffChunkLineDeleted($i, preg_replace('/-(.*)/', '$1', $line));
+                    $this->lines[] = new DiffChunkLineDeleted($deleted++, preg_replace('/-(.*)/', '$1', $line));
+                    $originUnchanged++;
                 } else {
                     if (preg_match('/^ (.*)/', $line) || $line == '') {
-                        $this->lines[] = new DiffChunkLineUnchanged($i, $line);
-                        $i++;
+                        $this->lines[] = new DiffChunkLineUnchanged($originUnchanged++, $destUnchanged++, $line);
+                        $deleted++;
+                        $new++;
                     } else {
-                        if (preg_match('/\\ No newline at end of file/', $line)) {
-                            $i++;
-                        } else {
+                        if (!preg_match('/\\ No newline at end of file/', $line)) {
                             throw new \Exception(sprintf('GitElephant was unable to parse the line %s', $line));
                         }
                     }
@@ -178,6 +189,25 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     public function getOriginEndLine()
     {
         return $this->originEndLine;
+    }
+
+    /**
+    * Get hunk header line
+    *
+    * @return string
+    */
+    public function getHeaderLine()
+    {
+        if (null === $this->headerLine) {
+            $line  = '@@';
+            $line .= ' -' . $this->getOriginStartLine() . ',' . $this->getOriginEndLine();
+            $line .= ' +' . $this->getDestStartLine() . ',' . $this->getDestEndLine();
+            $line .= ' @@';
+
+            $this->headerLine = $line;
+        }
+
+        return $this->headerLine;
     }
 
     /**

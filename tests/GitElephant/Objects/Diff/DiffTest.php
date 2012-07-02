@@ -67,7 +67,7 @@ class DiffTest extends TestCase
         $chunk = $object[0];
         $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffChunk', $chunk);
         $this->assertArrayInterfaces($chunk);
-        $this->assertCount(4, $chunk);
+        $this->assertCount(5, $chunk);
         foreach($chunk as $chunkLine) {
             $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffChunkLine', $chunkLine);
         }

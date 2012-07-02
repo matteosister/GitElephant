@@ -1,1 +1,31 @@
-{"hash":"1be57b6386bc5588eb67c69a99344a27","packages":[{"package":"symfony\/yaml","version":"2.1.0-dev"},{"package":"symfony\/translation","version":"2.1.0-dev"},{"package":"symfony\/event-dispatcher","version":"2.1.0-dev"},{"package":"symfony\/console","version":"2.1.0-dev"},{"package":"symfony\/finder","version":"2.1.0-dev"},{"package":"behat\/gherkin","version":"v2.0.0"},{"package":"behat\/behat","version":"master-dev"},{"package":"symfony\/process","version":"2.1.0-dev"},{"package":"symfony\/config","version":"2.1.0-dev"},{"package":"symfony\/dependency-injection","version":"2.1.0-dev"}]}
+{
+    "hash": "0ff38a329b544bf10c80b04cbb6a67e2",
+    "packages": [
+        {
+            "package": "symfony/config",
+            "version": "2.0.x-dev",
+            "source-reference": "v2.0.15",
+            "commit-date": "1337154830"
+        },
+        {
+            "package": "symfony/dependency-injection",
+            "version": "2.0.x-dev",
+            "source-reference": "71176e740021a415ab55bc221aa0b32c72bf063e",
+            "commit-date": "1339502382"
+        },
+        {
+            "package": "symfony/process",
+            "version": "2.0.x-dev",
+            "source-reference": "cfeeff8ab95b41905c8c19a63d5d11502ce9b309",
+            "commit-date": "1337530510"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": [
+
+    ]
+}

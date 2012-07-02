@@ -49,6 +49,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
         $commitLines = null;
 
         foreach ($outputLines as $line) {
+            if ($line == '') continue;
             if (preg_match('/^commit (\w+)$/', $line) > 0) {
                 if (null !== $commitLines) {
                     $this->commits[] = new Commit($commitLines);
@@ -63,6 +64,16 @@ class Log implements \ArrayAccess, \Countable, \Iterator
         if (null !== $commitLines && count($commitLines) > 0) {
             $this->commits[] = new Commit($commitLines);
         }
+    }
+
+    /**
+     * Get array representation
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return $this->commits;
     }
 
     /**

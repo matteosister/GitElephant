@@ -23,7 +23,9 @@ use GitElephant\GitBinary,
     GitElephant\Objects\Diff\Diff,
     GitElephant\Objects\Diff\DiffObject,
     GitElephant\Objects\Diff\DiffChunk,
-    GitElephant\Objects\Diff\DiffChunkLine;
+    GitElephant\Objects\Diff\DiffChunkLine,
+    GitElephant\Objects\Diff\DiffChunkLineChanged,
+    GitElephant\Objects\Diff\DiffChunkLineUnchanged;
 
 require_once 'PHPUnit/Autoload.php';
 require_once 'PHPUnit/Framework/Assert/Functions.php';
@@ -101,7 +103,6 @@ class DiffContext extends BehatContext
         touch($filename);
     }
 
-
     /**
      * @Given /^I stage and commit$/
      */
@@ -113,13 +114,20 @@ class DiffContext extends BehatContext
     }
 
     /**
+     * @Given /^I rename "([^"]*)" to "([^"]*)"$/
+     */
+    public function iRenameTo($from, $to)
+    {
+        rename($this->path . '/' . $from, $this->path . '/' . $to);
+    }
+
+    /**
      * @Then /^the last commit should be root$/
      */
     public function theLastCommitShouldBeRoot()
     {
         assertTrue($this->repository->getCommit()->isRoot());
     }
-
 
     /**
      * @Then /^the diff should have "([^"]*)" object of mode "([^"]*)"$/
@@ -151,6 +159,30 @@ class DiffContext extends BehatContext
     }
 
     /**
+     * @Given /^the diffObject in position "([^"]*)" should be a rename from "([^"]*)" to "([^"]*)"$/
+     */
+    public function theDiffobjectInPositionShouldBeARenameFromTo($num, $from, $to)
+    {
+        /* @var $diffObject \GitElephant\Objects\Diff\DiffObject */
+        $diffObject = $this->diffObjects[$num-1];
+
+        assertTrue($diffObject->hasPathChanged());
+        assertEquals($from, $diffObject->getOriginalPath());
+        assertEquals($to, $diffObject->getDestinationPath());
+    }
+
+    /**
+     * @Given /^the diffObject in position "([^"]*)" should have a similarity of "([^"]*)" percent$/
+     */
+    public function theDiffobjectInPositionShouldHaveASimilarityOfPercent($num, $percent)
+    {
+        /* @var $diffObject \GitElephant\Objects\Diff\DiffObject */
+        $diffObject = $diffObject = $this->diffObjects[$num-1];
+
+        assertEquals($percent, $diffObject->getSimilarityIndex());
+    }
+
+    /**
      * @Given /^the diffChunk in position "([^"]*)" should have "([^"]*)" diffChunkLine$/
      */
     public function theDiffchunkInPositionShouldHaveDiffchunklines($pos, $num)
@@ -177,7 +209,28 @@ class DiffContext extends BehatContext
      */
     public function theDiffchunklineInPositionShouldHaveLineNumber($pos, $num)
     {
+        /* @var $diffChunkLine DiffChunkLineChanged */
         $diffChunkLine = $this->diffChunkLines[$pos-1];
         assertEquals($diffChunkLine->getNumber(), (int)$num);
+    }
+
+    /**
+     * @Given /^the diffChunkLine in position "([^"]*)" should have origin line number (\d+)$/
+     */
+    public function theDiffchunklineInPositionShouldHaveOriginLineNumber($pos, $num)
+    {
+        /* @var $diffChunkLine DiffChunkLineUnchanged */
+        $diffChunkLine = $this->diffChunkLines[$pos-1];
+        assertEquals($num, $diffChunkLine->getOriginNumber());
+    }
+
+    /**
+     * @Given /^the diffChunkLine in position "([^"]*)" should have destination line number (\d+)$/
+     */
+    public function theDiffchunklineInPositionShouldHaveDestinationLineNumber($pos, $num)
+    {
+        /* @var $diffChunkLine DiffChunkLineUnchanged */
+        $diffChunkLine = $this->diffChunkLines[$pos-1];
+        assertEquals($num, $diffChunkLine->getDestNumber());
     }
 }

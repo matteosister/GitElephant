@@ -3,4 +3,5 @@ vendor/*
 *.tgz
 package.xml
 output/
+.idea
 composer.phar

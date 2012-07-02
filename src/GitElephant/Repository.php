@@ -113,6 +113,29 @@ class Repository
     }
 
     /**
+     * Move a file/directory
+     *
+     * @param string|TreeObject $from source path
+     * @param string|TreeObject $to   destination path
+     */
+    public function move($from, $to)
+    {
+        $this->caller->execute($this->container->get('command.main')->move($from, $to));
+    }
+
+    /**
+     * Remove a file/directory
+     *
+     * @param string|TreeObject $path the path to remove
+     * @param bool              $recursive
+     * @param bool              $force
+     */
+    public function remove($path, $recursive = false, $force = false)
+    {
+        $this->caller->execute($this->container->get('command.main')->remove($path, $recursive, $force));
+    }
+
+    /**
      * Commit content to the repository, eventually staging all unstaged content
      *
      * @param string      $message  the commit message
@@ -128,7 +151,7 @@ class Repository
         if ($stageAll) {
             $this->stage();
         }
-        $this->caller->execute($this->container->get('command.main')->commit($message));
+        $this->caller->execute($this->container->get('command.main')->commit($message, $stageAll));
         if ($ref != null) {
             $this->checkout($currentBranch);
         }
@@ -177,7 +200,9 @@ class Repository
         $branches = array();
         $this->caller->execute($this->container->get('command.branch')->lists());
         foreach ($this->caller->getOutputLines() as $branchString) {
-            $branches[] = new TreeBranch($branchString);
+            if ($branchString != '') {
+                $branches[] = new TreeBranch($branchString);
+            }
         }
         usort($branches, array($this, 'sortBranches'));
         return $branches;
@@ -261,10 +286,12 @@ class Repository
         $tags = array();
         $this->caller->execute($this->container->get('command.tag')->lists());
         foreach ($this->caller->getOutputLines() as $tagString) {
-            $tag = new TreeTag($tagString);
-            $outputLines = $this->caller->execute($this->container->get('command.rev_list')->getTagCommit($tag))->getOutputLines();
-            $tag->setSha($outputLines[0]);
-            $tags[] = $tag;
+            if ($tagString != '') {
+                $tag = new TreeTag($tagString);
+                $outputLines = $this->caller->execute($this->container->get('command.rev_list')->getTagCommit($tag))->getOutputLines();
+                $tag->setSha($outputLines[0]);
+                $tags[] = $tag;
+            }
         }
         return $tags;
     }
@@ -433,13 +460,13 @@ class Repository
     /**
      * output a node content
      *
-     * @param \GitElephant\Objects\TreeObject       $obj     The TreeObject of type BLOB
-     * @param \GitElephant\Objects\TreeishInterface $treeish A treeish object
+     * @param \GitElephant\Objects\TreeObject              $obj     The TreeObject of type BLOB
+     * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
      * @return string
      * @throws \InvalidArgumentException
      */
-    public function outputContent(TreeObject $obj, TreeishInterface $treeish)
+    public function outputContent(TreeObject $obj, $treeish)
     {
         $command = $this->container->get('command.cat_file')->content($obj, $treeish);
         return $this->caller->execute($command)->getOutputLines();

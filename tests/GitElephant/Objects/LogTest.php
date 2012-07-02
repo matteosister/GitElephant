@@ -94,4 +94,13 @@ class LogTest extends TestCase
         $this->assertEquals('test commit index:39', $log->index(10)->getMessage()->toString());
         $this->assertEquals('test commit index:39', $log->offsetGet(10)->getMessage()->toString());
     }
+
+    public function testLogToArray()
+    {
+        $log = $this->getRepository()->getLog(null, null, null, null);
+
+        $this->assertTrue(is_array($log->toArray()));
+        $this->assertInternalType('array', $log->toArray());
+        $this->assertEquals($log->count(), count($log->toArray()));
+    }
 }
