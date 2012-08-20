@@ -8,7 +8,7 @@ branches:
     - develop
 
 before_script:
-  - wget -nc http://getcomposer.org/composer.phar
+  - curl -s https://getcomposer.org/installer | php
   - php composer.phar --dev install
 
 script:
