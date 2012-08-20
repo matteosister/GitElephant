@@ -20,6 +20,7 @@
     "require-dev": {
         "behat/behat": "2.3.*"
     },
+    "minimum-stability": "dev",
     "suggest": {
         "behat/behat": "2.3.*"
     },
