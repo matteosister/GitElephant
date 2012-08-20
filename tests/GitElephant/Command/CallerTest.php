@@ -61,7 +61,7 @@ class CallerTest extends TestCase
         $caller = new Caller($binary, $this->getRepository()->getPath());
         $mainCommand = new MainCommand();
         $caller->execute($mainCommand->init());
-        $this->assertRegExp('/^Initialized empty Git repository in(.*)/', $caller->getOutput());
+        $this->assertRegExp(sprintf('/^(.*)%s/', str_replace('/', '\/', $this->getRepository()->getPath())), $caller->getOutput());
     }
 
     public function testOutputLines()

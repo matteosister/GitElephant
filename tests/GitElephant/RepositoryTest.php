@@ -499,16 +499,9 @@ class RepositoryTest extends TestCase
         $this->addFile('foo');
         $this->getRepository()->commit('commit 1', true);
         $this->getRepository()->move('foo', 'bar');
-
-        $match = false;
         $status = $this->getRepository()->getStatus();
 
-        $line = $status[4];
-        if (false !== strpos($line, 'renamed:    foo -> bar')) {
-            $match = true;
-        }
-
-        $this->assertTrue($match);
+        $this->assertRegExp('/(.*):    foo -> bar/', $status[4]);
     }
 
     public function testRemove()
@@ -517,15 +510,8 @@ class RepositoryTest extends TestCase
         $this->addFile('foo');
         $this->getRepository()->commit('commit 1', true);
         $this->getRepository()->remove('foo');
-
-        $match = false;
         $status = $this->getRepository()->getStatus();
 
-        $line = $status[4];
-        if (false !== strpos($line, 'deleted:    foo')) {
-            $match = true;
-        }
-
-        $this->assertTrue($match);
+        $this->assertRegExp('/(.*):    foo/', $status[4]);
     }
 }

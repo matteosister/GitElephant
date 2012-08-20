@@ -14,19 +14,14 @@ Scenario: stage and commit functions
   And I init the repository
   And I add a file named "test-file"
   When I add to the repository "test-file"
-  Then The status should contains "new file:   test-file"
+  Then The status should contains ":   test-file"
   When I commit with message "test-commit"
   Then The status should contains "nothing to commit (working directory clean)"
 
 Scenario: init function
   Given I start a test repository
   And The repository has the method "getStatus"
-  Then I should get the status
-    """
-    # On branch master
-    nothing to commit (working directory clean)
-
-    """
+  Then The status should contains "nothing to commit (working directory clean)"
 
 Scenario: branch list, add and delete
   Given I start a test repository

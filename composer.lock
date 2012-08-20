@@ -1,31 +1,75 @@
 {
-    "hash": "0ff38a329b544bf10c80b04cbb6a67e2",
+    "hash": "effc77406c745baadaf462b4e6def2bb",
     "packages": [
         {
             "package": "symfony/config",
-            "version": "2.0.x-dev",
-            "source-reference": "v2.0.15",
-            "commit-date": "1337154830"
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/config",
+            "version": "dev-master",
+            "source-reference": "f68ad44f3ee1603ce96387bacba0ecba488c2a33",
+            "commit-date": "1344599303"
         },
         {
             "package": "symfony/dependency-injection",
-            "version": "2.0.x-dev",
-            "source-reference": "71176e740021a415ab55bc221aa0b32c72bf063e",
-            "commit-date": "1339502382"
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/dependency-injection",
+            "version": "dev-master",
+            "source-reference": "98fa735a7ef5dc07c43bfe6faa4367a983b6ba6f",
+            "commit-date": "1344599303"
         },
         {
             "package": "symfony/process",
-            "version": "2.0.x-dev",
-            "source-reference": "cfeeff8ab95b41905c8c19a63d5d11502ce9b309",
-            "commit-date": "1337530510"
+            "version": "dev-master",
+            "source-reference": "v2.1.0-RC1",
+            "commit-date": "1343512949"
         }
     ],
-    "packages-dev": null,
+    "packages-dev": [
+        {
+            "package": "behat/behat",
+            "version": "v2.4.0"
+        },
+        {
+            "package": "behat/gherkin",
+            "version": "v2.2.4"
+        },
+        {
+            "package": "symfony/console",
+            "version": "v2.0.16"
+        },
+        {
+            "package": "symfony/event-dispatcher",
+            "version": "v2.0.16"
+        },
+        {
+            "package": "symfony/finder",
+            "version": "v2.0.16"
+        },
+        {
+            "package": "symfony/translation",
+            "version": "v2.0.16"
+        },
+        {
+            "package": "symfony/yaml",
+            "version": "v2.0.16"
+        }
+    ],
     "aliases": [
 
     ],
-    "minimum-stability": "dev",
-    "stability-flags": [
-
-    ]
+    "minimum-stability": "stable",
+    "stability-flags": {
+        "symfony/dependency-injection": 20,
+        "symfony/config": 20,
+        "symfony/process": 20,
+        "behat/behat": 0
+    }
 }

@@ -4,3 +4,4 @@ vendor/*
 package.xml
 output/
 .idea
+composer.phar

@@ -8,11 +8,10 @@ branches:
     - develop
 
 before_script:
-  - wget -nc http://getcomposer.org/composer.phar
-  - php composer.phar install
-  - wget https://github.com/downloads/Behat/Behat/behat.phar
+  - curl -s https://getcomposer.org/installer | php
+  - php composer.phar --dev install
 
 script:
-  - php behat.phar
+  - vendor/bin/behat
   - phpunit
   
