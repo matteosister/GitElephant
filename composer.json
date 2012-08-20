@@ -17,6 +17,9 @@
         "symfony/config": "2.0.*",
         "symfony/process": "2.0.*"
     },
+    "require-dev": {
+        "behat/behat": "2.3.*"
+    },
     "suggest": {
         "behat/behat": "2.3.*"
     },
