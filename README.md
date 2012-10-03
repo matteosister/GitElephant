@@ -36,7 +36,7 @@ To install GitElephant with composer you simply need to create a *composer.json*
 ``` json
 {
     "require": {
-        "cypresslab/gitelephant": ">=0.6.0"
+        "cypresslab/gitelephant": "0.8.*"
     }
 }
 ```
@@ -44,7 +44,7 @@ To install GitElephant with composer you simply need to create a *composer.json*
 Then run
 
 ``` bash
-$ wget -nc http://getcomposer.org/composer.phar
+$ curl -s https://getcomposer.org/installer | php
 $ php composer.phar install
 ```
 
