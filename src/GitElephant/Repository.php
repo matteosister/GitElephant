@@ -341,7 +341,9 @@ class Repository
     public function getCommit($ref = 'HEAD')
     {
         $command = $this->container->get('command.show')->showCommit($ref);
-        return new Commit($this->caller->execute($command)->getOutputLines());
+        $commit = new Commit($this);
+        $commit->createFromCommand($this->caller, $command);
+        return $commit;
     }
 
     /**

@@ -18,6 +18,8 @@ namespace GitElephant\Objects;
 use GitElephant\Objects\GitAuthor;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Objects\Commit\Message;
+use GitElephant\Repository;
+use GitElephant\Command\CallerInterface;
 
 /**
  * The Commit object represent a commit
@@ -27,6 +29,11 @@ use GitElephant\Objects\Commit\Message;
 
 class Commit implements TreeishInterface
 {
+    /**
+     * @var \GitElephant\Repository
+     */
+    private $repository;
+
     /**
      * sha
      *
@@ -86,15 +93,23 @@ class Commit implements TreeishInterface
     /**
      * Class constructor
      *
-     * @param array $outputLines Output of the git show command
-     *
      * @see ShowCommand::commitInfo
      */
-    public function __construct($outputLines)
+    public function __construct(Repository $repository)
     {
-        $message = array();
+        $this->repository = $repository;
         $this->parents = array();
+    }
 
+    /**
+     * get the commit properties from a command
+     *
+     * @param \GitElephant\Command\CallerInterface $caller  caller
+     * @param string                               $command command
+     */
+    public function createFromCommand(CallerInterface $caller, $command)
+    {
+        $outputLines = $caller->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         foreach ($outputLines as $line) {
             $matches = array();
             if (preg_match('/^commit (\w+)$/', $line, $matches) > 0) {
@@ -148,6 +163,26 @@ class Commit implements TreeishInterface
     public function __toString()
     {
         return $this->getSha();
+    }
+
+    /**
+     * Repository setter
+     *
+     * @param \GitElephant\Repository $repository repository variable
+     */
+    public function setRepository($repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Repository getter
+     *
+     * @return \GitElephant\Repository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 
     /**

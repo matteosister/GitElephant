@@ -15,7 +15,9 @@
 namespace GitElephant\Command;
 
 use GitElephant\GitBinary;
+use GitElephant\Command\CallerInterface;
 use Symfony\Component\Process\Process;
+
 
 /**
  * Caller
@@ -23,7 +25,7 @@ use Symfony\Component\Process\Process;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class Caller
+class Caller implements CallerInterface
 {
     /**
      * GitBinary instance

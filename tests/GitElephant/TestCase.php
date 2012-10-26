@@ -88,4 +88,16 @@ class TestCase extends \PHPUnit_Framework_TestCase
     {
         mkdir($this->path.DIRECTORY_SEPARATOR.$name);
     }
+
+    protected function mockCaller($command, $output) {
+        $mock = $this->getMock('GitElephant\Command\CallerInterface');
+        $mock->expects($this->any())
+            ->method('execute')
+            ->with($this->equalTo($command))
+            ->will($this->returnValue($mock));
+        $mock->expects($this->any())
+            ->method('getOutputLines')
+            ->will($this->returnValue($output));
+        return $mock;
+    }
 }

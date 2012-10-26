@@ -48,9 +48,8 @@ class CommitTest extends TestCase
     public function testCommit()
     {
         $showCommand = new ShowCommand();
-        $this->getCaller()->execute($showCommand->showCommit('HEAD'));
-        $this->commit = new Commit($this->getCaller()->getOutputLines());
-
+        $this->commit = new Commit($this->getRepository());
+        $this->commit->createFromCommand($this->getCaller(), $showCommand->showCommit('HEAD'));
         $this->assertInstanceOf('\GitElephant\Objects\Commit', $this->commit);
         $this->assertInstanceOf('\GitElephant\Objects\GitAuthor', $this->commit->getAuthor());
         $this->assertInstanceOf('\GitElephant\Objects\GitAuthor', $this->commit->getCommitter());
@@ -65,7 +64,8 @@ class CommitTest extends TestCase
         $this->getCaller()->execute($mainCommand->add());
         $this->getCaller()->execute($mainCommand->commit('second commit'));
         $this->getCaller()->execute($showCommand->showCommit('HEAD'));
-        $this->commit = new Commit($this->getCaller()->getOutputLines());
+        $this->commit = new Commit($this->getRepository());
+        $this->commit->createFromCommand($this->getCaller(), $showCommand->showCommit('HEAD'));
         $parents = $this->commit->getParents();
         $this->assertRegExp('/^\w{40}$/', $parents[0]);
     }
@@ -84,7 +84,8 @@ class CommitTest extends TestCase
             "    first commit"
         );
 
-        $commit = new Commit($outputLines);
+        $commit = new Commit($this->getRepository());
+        $commit->createFromCommand($this->mockCaller('test', $outputLines), 'test');
         $committer = $commit->getCommitter();
         $author = $commit->getAuthor();
         $this->assertEquals('matt', $committer->getName());
@@ -98,7 +99,8 @@ class CommitTest extends TestCase
             "",
             "    first commit"
         );
-        $commit = new Commit($outputLines);
+        $commit = new Commit($this->getRepository());
+        $commit->createFromCommand($this->mockCaller('test', $outputLines), 'test');
         $committer = $commit->getCommitter();
         $author = $commit->getAuthor();
         $this->assertEquals('matt jack', $committer->getName());
@@ -116,7 +118,8 @@ class CommitTest extends TestCase
             "    Initial commit"
         );
 
-        $commit = new Commit($outputLines);
+        $commit = new Commit($this->getRepository());
+        $commit->createFromCommand($this->mockCaller('test', $outputLines), 'test');
         $this->assertEquals('2012-01-10T16:54:09+01:00', $commit->getDatetimeAuthor()->format('c'));
     }
 }
