@@ -13,5 +13,5 @@ before_script:
 
 script:
   - vendor/bin/behat
-  - phpunit
+  - vendor/bin/phpunit
   
