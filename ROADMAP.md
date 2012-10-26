@@ -5,6 +5,7 @@ todo
 
 * add interface for caller DONE
 * add interface for binary
+* commits count
 
 0.9.*
 * isolate objects like grit, clean constructor of Commit, Log, Tag, Tree, Diff by accepting the repository as mandatory argument, and a sha as optional argument
