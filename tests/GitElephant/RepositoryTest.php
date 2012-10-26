@@ -454,6 +454,8 @@ class RepositoryTest extends TestCase
         $commit2 = $this->getRepository()->getCommit();
         $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getDiff($commit2));
         $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getDiff($commit2, $commit1));
+        $shaHead = $this->getRepository()->getCommit();
+        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $diff = $this->getRepository()->getDiff($shaHead));
     }
 
     public function testCloneFrom()

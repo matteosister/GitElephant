@@ -405,14 +405,17 @@ class Repository
     /**
      * Get a Diff object for a commit with its parent
      *
-     * @param \GitElephant\Objects\Commit      $commit1 A TreeishInterface instance
-     * @param \GitElephant\Objects\Commit|null $commit2 A TreeishInterface instance
-     * @param null|string|TreeObject           $path    The path to get the diff for or a TreeObject instance
+     * @param \GitElephant\Objects\Commit|string      $commit1 A TreeishInterface instance
+     * @param \GitElephant\Objects\Commit|string|null $commit2 A TreeishInterface instance
+     * @param null|string|TreeObject                  $path    The path to get the diff for or a TreeObject instance
      *
-     * @return Objects\Diff\Diff|false
+     * @return Objects\Diff\Diff
      */
-    public function getDiff(Commit $commit1, Commit $commit2 = null, $path = null)
+    public function getDiff($commit1, $commit2 = null, $path = null)
     {
+        if (is_string($commit1)) {
+            $commit1 = $this->getCommit($commit1);
+        }
         if ($commit2 === null) {
             if ($commit1->isRoot()) {
                 $command = $this->container->get('command.diff_tree')->rootDiff($commit1);
@@ -420,6 +423,9 @@ class Repository
                 $command = $this->container->get('command.diff')->diff($commit1);
             }
         } else {
+            if (is_string($commit2)) {
+                $commit2 = $this->getCommit($commit2);
+            }
             $command = $this->container->get('command.diff')->diff($commit1, $commit2, $path);
         }
         $outputLines = $this->caller->execute($command)->getOutputLines();
