@@ -18,6 +18,8 @@ namespace GitElephant\Objects;
 use GitElephant\Objects\GitAuthor;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Objects\Commit\Message;
+use GitElephant\Repository;
+use GitElephant\Command\CallerInterface;
 
 /**
  * The Commit object represent a commit
@@ -27,6 +29,16 @@ use GitElephant\Objects\Commit\Message;
 
 class Commit implements TreeishInterface
 {
+    /**
+     * @var \GitElephant\Repository
+     */
+    private $repository;
+
+    /**
+     * @var string
+     */
+    private $ref;
+
     /**
      * sha
      *
@@ -84,17 +96,49 @@ class Commit implements TreeishInterface
     private $datetimeCommitter;
 
     /**
+     * static generator from output of command.show service
+     *
+     * @param \GitElephant\Repository $repository  repository
+     * @param array                   $outputLines output lines
+     *
+     * @return Commit
+     */
+    static function createFromOutputLines(Repository $repository, $outputLines)
+    {
+        $commit = new self($repository);
+        $commit->parseOutputLines($outputLines);
+        return $commit;
+    }
+
+    /**
      * Class constructor
      *
-     * @param array $outputLines Output of the git show command
+     * @param \GitElephant\Repository $repository the repository
+     * @param string                  $treeish    a treeish reference
+     */
+    public function __construct(Repository $repository, $treeish = 'HEAD')
+    {
+        $this->repository = $repository;
+        $this->ref = $treeish;
+        $this->parents = array();
+        $this->createFromCommand();
+    }
+
+    /**
+     * get the commit properties from command
      *
      * @see ShowCommand::commitInfo
      */
-    public function __construct($outputLines)
+    private function createFromCommand()
     {
-        $message = array();
-        $this->parents = array();
+        $command = $this->getRepository()->getContainer()->get('command.show')->showCommit($this->ref);
+        $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+        $this->parseOutputLines($outputLines);
+    }
 
+    private function parseOutputLines($outputLines)
+    {
+        $message = '';
         foreach ($outputLines as $line) {
             $matches = array();
             if (preg_match('/^commit (\w+)$/', $line, $matches) > 0) {
@@ -111,7 +155,7 @@ class Commit implements TreeishInterface
                 $author->setName($matches[1]);
                 $author->setEmail($matches[2]);
                 $this->author = $author;
-                $date = \DateTime::createFromFormat('U P', $matches[3] . ' ' . $matches[4]);
+                $date = \DateTime::createFromFormat('U', $matches[3]);
                 $this->datetimeAuthor = $date;
             }
             if (preg_match('/^committer (.*) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
@@ -119,14 +163,13 @@ class Commit implements TreeishInterface
                 $committer->setName($matches[1]);
                 $committer->setEmail($matches[2]);
                 $this->committer = $committer;
-                $date = \DateTime::createFromFormat('U P', $matches[3] . ' ' . $matches[4]);
+                $date = \DateTime::createFromFormat('U', $matches[3]);
                 $this->datetimeCommitter = $date;
             }
             if (preg_match('/^    (.*)$/', $line, $matches)) {
                 $message[] = $matches[1];
             }
         }
-
         $this->message = new Message($message);
     }
 
@@ -148,6 +191,26 @@ class Commit implements TreeishInterface
     public function __toString()
     {
         return $this->getSha();
+    }
+
+    /**
+     * Repository setter
+     *
+     * @param \GitElephant\Repository $repository repository variable
+     */
+    public function setRepository($repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Repository getter
+     *
+     * @return \GitElephant\Repository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 
     /**
