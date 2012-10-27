@@ -246,6 +246,8 @@ $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'))
 $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'), 'lib/vendor');
 // or even pass a TreeObject
 $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'), $treeObject);
+// alternatively you could directly use the sha of the commit
+$diff = $repo->getDiff('1ac370d', '8fb7281');
 ```
 
 The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
