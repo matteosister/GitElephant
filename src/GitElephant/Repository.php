@@ -357,8 +357,7 @@ class Repository
      */
     public function getLog($ref = 'HEAD', $path = null, $limit = 15, $offset = null)
     {
-        $command = $this->container->get('command.log')->showLog($ref, $path, $limit, $offset);
-        return new Log($this->caller->execute($command)->getOutputLines());
+        return new Log($this, $ref, $path, $limit, $offset);
     }
 
     /**
@@ -374,7 +373,7 @@ class Repository
     public function getTreeObjectLog(TreeObject $obj, $branch = null, $limit = 1, $offset = null)
     {
         $command = $this->container->get('command.log')->showObjectLog($obj, $branch, $limit, $offset);
-        return new Log($this->caller->execute($command)->getOutputLines());
+        return Log::createFromOutputLines($this, $this->caller->execute($command)->getOutputLines());
     }
 
     /**

@@ -96,8 +96,19 @@ class Commit implements TreeishInterface
     private $datetimeCommitter;
 
     /**
-     * Class constructor
+     * static generator from output of command.show service
+     *
+     * @param \GitElephant\Repository $repository  repository
+     * @param array                   $outputLines output lines
+     *
+     * @return Commit
      */
+    static function createFromOutputLines(Repository $repository, $outputLines)
+    {
+        $commit = new self($repository);
+        $commit->parseOutputLines($outputLines);
+        return $commit;
+    }
 
     /**
      * Class constructor
@@ -122,6 +133,11 @@ class Commit implements TreeishInterface
     {
         $command = $this->getRepository()->getContainer()->get('command.show')->showCommit($this->ref);
         $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+        $this->parseOutputLines($outputLines);
+    }
+
+    private function parseOutputLines($outputLines)
+    {
         $message = '';
         foreach ($outputLines as $line) {
             $matches = array();
@@ -139,7 +155,7 @@ class Commit implements TreeishInterface
                 $author->setName($matches[1]);
                 $author->setEmail($matches[2]);
                 $this->author = $author;
-                $date = \DateTime::createFromFormat('U P', $matches[3] . ' ' . $matches[4]);
+                $date = \DateTime::createFromFormat('U', $matches[3]);
                 $this->datetimeAuthor = $date;
             }
             if (preg_match('/^committer (.*) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
@@ -147,7 +163,7 @@ class Commit implements TreeishInterface
                 $committer->setName($matches[1]);
                 $committer->setEmail($matches[2]);
                 $this->committer = $committer;
-                $date = \DateTime::createFromFormat('U P', $matches[3] . ' ' . $matches[4]);
+                $date = \DateTime::createFromFormat('U', $matches[3]);
                 $this->datetimeCommitter = $date;
             }
             if (preg_match('/^    (.*)$/', $line, $matches)) {
