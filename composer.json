@@ -22,7 +22,8 @@
     },
     "minimum-stability": "dev",
     "suggest": {
-	    "behat/behat": "2.4@stable"
+	    "behat/behat": "2.4@stable",
+        "phpunit/phpunit": "@stable"
     },
     "autoload": {
         "psr-0": {
