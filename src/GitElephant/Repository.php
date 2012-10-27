@@ -301,7 +301,7 @@ class Repository
      *
      * @param string $name The tag name
      *
-     * @return GitElephant\Objects\TreeTag
+     * @return TreeTag
      */
     public function getTag($name)
     {
@@ -340,9 +340,8 @@ class Repository
      */
     public function getCommit($ref = 'HEAD')
     {
-        $command = $this->container->get('command.show')->showCommit($ref);
-        $commit = new Commit($this);
-        $commit->createFromCommand($this->caller, $command);
+
+        $commit = new Commit($this, $ref);
         return $commit;
     }
 
@@ -502,5 +501,45 @@ class Repository
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Container setter
+     *
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container the container variable
+     */
+    public function setContainer($container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * Container getter
+     *
+     * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * Caller setter
+     *
+     * @param \GitElephant\Command\Caller $caller the caller variable
+     */
+    public function setCaller($caller)
+    {
+        $this->caller = $caller;
+    }
+
+    /**
+     * Caller getter
+     *
+     * @return \GitElephant\Command\Caller
+     */
+    public function getCaller()
+    {
+        return $this->caller;
     }
 }
