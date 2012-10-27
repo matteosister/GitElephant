@@ -35,6 +35,11 @@ class Commit implements TreeishInterface
     private $repository;
 
     /**
+     * @var string
+     */
+    private $ref;
+
+    /**
      * sha
      *
      * @var string
@@ -92,24 +97,32 @@ class Commit implements TreeishInterface
 
     /**
      * Class constructor
-     *
-     * @see ShowCommand::commitInfo
      */
-    public function __construct(Repository $repository)
+
+    /**
+     * Class constructor
+     *
+     * @param \GitElephant\Repository $repository the repository
+     * @param string                  $treeish    a treeish reference
+     */
+    public function __construct(Repository $repository, $treeish = 'HEAD')
     {
         $this->repository = $repository;
+        $this->ref = $treeish;
         $this->parents = array();
+        $this->createFromCommand();
     }
 
     /**
-     * get the commit properties from a command
+     * get the commit properties from command
      *
-     * @param \GitElephant\Command\CallerInterface $caller  caller
-     * @param string                               $command command
+     * @see ShowCommand::commitInfo
      */
-    public function createFromCommand(CallerInterface $caller, $command)
+    private function createFromCommand()
     {
-        $outputLines = $caller->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+        $command = $this->getRepository()->getContainer()->get('command.show')->showCommit($this->ref);
+        $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+        $message = '';
         foreach ($outputLines as $line) {
             $matches = array();
             if (preg_match('/^commit (\w+)$/', $line, $matches) > 0) {
@@ -141,7 +154,6 @@ class Commit implements TreeishInterface
                 $message[] = $matches[1];
             }
         }
-
         $this->message = new Message($message);
     }
 
