@@ -48,9 +48,7 @@ class CommitTest extends TestCase
     public function testCommit()
     {
         $showCommand = new ShowCommand();
-        $this->getCaller()->execute($showCommand->showCommit('HEAD'));
-        $this->commit = new Commit($this->getCaller()->getOutputLines());
-
+        $this->commit = new Commit($this->getRepository());
         $this->assertInstanceOf('\GitElephant\Objects\Commit', $this->commit);
         $this->assertInstanceOf('\GitElephant\Objects\GitAuthor', $this->commit->getAuthor());
         $this->assertInstanceOf('\GitElephant\Objects\GitAuthor', $this->commit->getCommitter());
@@ -65,7 +63,7 @@ class CommitTest extends TestCase
         $this->getCaller()->execute($mainCommand->add());
         $this->getCaller()->execute($mainCommand->commit('second commit'));
         $this->getCaller()->execute($showCommand->showCommit('HEAD'));
-        $this->commit = new Commit($this->getCaller()->getOutputLines());
+        $this->commit = new Commit($this->getRepository());
         $parents = $this->commit->getParents();
         $this->assertRegExp('/^\w{40}$/', $parents[0]);
     }
@@ -84,7 +82,15 @@ class CommitTest extends TestCase
             "    first commit"
         );
 
-        $commit = new Commit($outputLines);
+        $mockContainer = $this->getMockContainer();
+        $this->addCommandToMockContainer($mockContainer, 'command.show');
+        $mockRepo = $this->getMockRepository();
+        $mockRepo->expects($this->any())
+            ->method('getContainer')
+            ->will($this->returnValue($mockContainer));
+        $this->addOutputToMockRepo($mockRepo, $outputLines);
+
+        $commit = new Commit($mockRepo);
         $committer = $commit->getCommitter();
         $author = $commit->getAuthor();
         $this->assertEquals('matt', $committer->getName());
@@ -98,25 +104,75 @@ class CommitTest extends TestCase
             "",
             "    first commit"
         );
-        $commit = new Commit($outputLines);
-        $committer = $commit->getCommitter();
-        $author = $commit->getAuthor();
-        $this->assertEquals('matt jack', $committer->getName());
-        $this->assertEquals('matt jack', $author->getName());
+
+        $mockContainer = $this->getMockContainer();
+        $this->addCommandToMockContainer($mockContainer, 'command.show');
+        $mockRepo = $this->getMockRepository();
+        $mockRepo->expects($this->any())
+            ->method('getContainer')
+            ->will($this->returnValue($mockContainer));
+        $this->addOutputToMockRepo($mockRepo, $outputLines);
+
+        $commit = new Commit($mockRepo);
+        $this->doCommitTest(
+            $commit,
+            'c277373174aa442af12a8e59de1812f3472c15f5', '9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016',
+            'matt jack', 'matt jack',
+            'matteog@gmail.com', 'matteog@gmail.com',
+            '1326214449', '1326214449',
+            'first commit'
+        );
     }
 
     public function testCommitDate()
     {
         $outputLines = array(
             "commit c277373174aa442af12a8e59de1812f3472c15f5",
-            "tree 9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016",
+            "tree c277373174aa442af12a8e59de1812f3472c15f6",
             "author John Doe <john.doe@example.org> 1326214449 +0100",
-            "committer John Doe <john.doe@example.org> 1326214449 +0100",
+            "committer Jack Doe <jack.doe@example.org> 1326214449 +0100",
+            "",
+            "    First commit"
+        );
+
+        $mockContainer = $this->getMockContainer();
+        $this->addCommandToMockContainer($mockContainer, 'command.show');
+        $mockRepo = $this->getMockRepository();
+        $mockRepo->expects($this->any())
+            ->method('getContainer')
+            ->will($this->returnValue($mockContainer));
+        $this->addOutputToMockRepo($mockRepo, $outputLines);
+
+        $commit = new Commit($mockRepo);
+        $this->doCommitTest(
+            $commit,
+            'c277373174aa442af12a8e59de1812f3472c15f5', 'c277373174aa442af12a8e59de1812f3472c15f6',
+            'John Doe', 'Jack Doe',
+            'john.doe@example.org', 'jack.doe@example.org',
+            '1326214449', '1326214449',
+            'First commit'
+        );
+    }
+
+    public function testCreateFromOutputLines()
+    {
+        $outputLines = array(
+            "commit c277373174aa442af12a8e59de1812f3472c15f5",
+            "tree 9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016",
+            "author John Doe <john.doe@example.org> 1326214000 +0100",
+            "committer Jack Doe <jack.doe@example.org> 1326214100 +0100",
             "",
             "    Initial commit"
         );
 
-        $commit = new Commit($outputLines);
-        $this->assertEquals('2012-01-10T16:54:09+01:00', $commit->getDatetimeAuthor()->format('c'));
+        $commit = Commit::createFromOutputLines($this->getRepository(), $outputLines);
+        $this->doCommitTest(
+            $commit,
+            'c277373174aa442af12a8e59de1812f3472c15f5', '9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016',
+            'John Doe', 'Jack Doe',
+            'john.doe@example.org', 'jack.doe@example.org',
+            '1326214000', '1326214100',
+            'Initial commit'
+        );
     }
 }

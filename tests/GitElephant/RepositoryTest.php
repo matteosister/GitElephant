@@ -454,6 +454,8 @@ class RepositoryTest extends TestCase
         $commit2 = $this->getRepository()->getCommit();
         $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getDiff($commit2));
         $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getDiff($commit2, $commit1));
+        $shaHead = $this->getRepository()->getCommit();
+        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $diff = $this->getRepository()->getDiff($shaHead));
     }
 
     public function testCloneFrom()
@@ -513,5 +515,24 @@ class RepositoryTest extends TestCase
         $status = $this->getRepository()->getStatus();
 
         $this->assertRegExp('/(.*):    foo/', $status[4]);
+    }
+
+    public function testCountCommits()
+    {
+        $this->getRepository()->init();
+        $this->addFile('foo');
+        $this->getRepository()->commit('commit 1', true);
+        $this->assertEquals(1, $this->getRepository()->countCommits());
+        $this->addFile('foo2');
+        $this->getRepository()->commit('commit 2', true);
+        $this->assertEquals(2, $this->getRepository()->countCommits());
+        $this->getRepository()->createBranch('new-branch');
+        $this->getRepository()->checkout('new-branch');
+        $this->assertEquals(2, $this->getRepository()->countCommits());
+        $this->addFile('bar');
+        $this->getRepository()->commit('commit 3', true);
+        $this->assertEquals(3, $this->getRepository()->countCommits());
+        $this->getRepository()->checkout('master');
+        $this->assertEquals(2, $this->getRepository()->countCommits());
     }
 }

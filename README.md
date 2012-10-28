@@ -16,18 +16,6 @@ Requirements
 
 I work on an ubuntu box, but the lib should work well with every unix system. I don't have a windows installation to test...if someone want to help...
 
-Dependencies
-------------
-
-- [Symfony Config](https://github.com/symfony/Config)
-- [Symfony DependencyInjection](https://github.com/symfony/DependencyInjection)
-- [Symfony Process](https://github.com/symfony/Process)
-
-*for tests*
-
-- [PHPUnit](https://github.com/sebastianbergmann/phpunit)
-- [Behat](https://github.com/Behat/Behat)
-
 Installation
 ------------
 
@@ -70,35 +58,6 @@ $ pear install cypresslab/GitElephant-alpha
 
 On [Cypresslab pear channel homepage](http://pear.cypresslab.net/) you can find other useful information
 
-Testing
--------
-
-The library is fully tested with PHPUnit for unit tests, and Behat for BDD. To run tests you need these (awesome) libraries installed on your system.
-
-Go to the base library folder and run the test suites
-
-``` bash
-$ phpunit # phpunit test suite
-$ behat # behat test suite
-```
-
-If you want to run the test suite you should have all the dependencies loaded.
-
-From the root of the library you have to do
-
-``` bash
-$ wget -nc http://getcomposer.org/composer.phar
-$ php composer.phar install
-```
-
-this will fetch all the needed dependencies inside the vendor dir
-
-Code style
-----------
-
-* GitElephant follows the [Symfony2 Coding Standard](https://github.com/opensky/Symfony2-coding-standard)
-* I'm using [gitflow](https://github.com/nvie/gitflow)
-
 How to use
 ----------
 
@@ -131,12 +90,25 @@ $repo->getTag('v1.0'); // a TreeTag instance by name
 $repo->getCommit(); // get a Commit instance of the current HEAD
 $repo->getCommit('v1.0'); // get a Commit instance for a tag
 $repo->getCommit('1ac370d'); // sha (follow [git standards](http://book.git-scm.com/4_git_treeishes.html) to format the sha)
+// or directly create a commit object
+$commit = new Commit($repo, '1ac370d');
+$commit = new Commit($repo, '1ac370d'); // head commit
+
+// count commits
+$repo->countCommits('1ac370d'); // number of commits to arrive at 1ac370d
+// commit is coutable, so, with a commit object, you can do
+$commit->count();
+// as well as
+count($commit);
 
 // Log contains a collection of commit objects
 // syntax: getLog(<tree-ish>, path = null, limit = 15, offset = null)
 $log = $repo->getLog();
 $log = $repo->getLog('master', null, 5);
 $log = $repo->getLog('v0.1', null, 5, 10);
+// or directly create a log object
+$log = new Log($repo);
+$log = new Log($repo, 'v0.1', null, 5, 10);
 
 // countable
 $log->count();
@@ -198,6 +170,8 @@ a tree representation of the repository, at a given point in history.
 $tree = $repo->getTree(); // retrieve the actual *HEAD* tree
 $tree = $repo->getTree($repo->getCommit('1ac370d')); // retrieve a tree for a given commit
 $tree = $repo->getTree('master', 'lib/vendor'); // retrieve a tree for a given path
+// generate a tree
+$tree = new Tree($repo);
 ```
 
 The Tree class implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
@@ -246,6 +220,12 @@ $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'))
 $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'), 'lib/vendor');
 // or even pass a TreeObject
 $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'), $treeObject);
+// alternatively you could directly use the sha of the commit
+$diff = $repo->getDiff('1ac370d', '8fb7281');
+// manually generate a Diff object
+$diff = new Diff($repo); // defaults to the last commit
+// or as explained before
+$diff = new Diff($repo, '1ac370d', '8fb7281');
 ```
 
 The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
@@ -287,16 +267,41 @@ foreach ($diffObject as $diffChunk) {
 }
 ```
 
-This is just an example of what the Diff class can do. Run the diff behat test suite for other nice things
+Testing
+-------
+
+The library is fully tested with PHPUnit.
+
+Go to the base library folder and install the dev dependencies with composer, and then run the phpunitt test suite
 
 ``` bash
-$ behat features/diff.feature
+$ php composer.phar --dev install
+$ ./vendor/bin/phpunit # phpunit test suite
 ```
+
+If you want to run the test suite you should have all the dependencies loaded.
 
 Symfony2
 --------
 
 There is a [GitElephantBundle](https://github.com/matteosister/GitElephantBundle) to use this library inside a Symfony2 project.
+
+Dependencies
+------------
+
+- [Symfony Config](https://github.com/symfony/Config)
+- [Symfony DependencyInjection](https://github.com/symfony/DependencyInjection)
+- [Symfony Process](https://github.com/symfony/Process)
+
+*for tests*
+
+- [PHPUnit](https://github.com/sebastianbergmann/phpunit)
+
+Code style
+----------
+
+* GitElephant follows the [Symfony2 Coding Standard](https://github.com/opensky/Symfony2-coding-standard)
+* I'm using [gitflow](https://github.com/nvie/gitflow)
 
 Want to contribute?
 -------------------
@@ -306,7 +311,7 @@ Want to contribute?
 Just remember:
 
 * Symfony2 coding standard
-* test everything you develop with phpunit AND behat.
+* test everything you develop with phpunit
 * if you don't use gitflow, just remember to develop on a branch or on develop and send a pull request on the develop branch. **Please do not send pull requests on the master branch**.
 
 Thanks

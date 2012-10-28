@@ -3,7 +3,7 @@
     "description": "An abstraction layer for git written in PHP 5.3",
     "keywords": ["git"],
     "homepage": "http://matteosister.github.com/GitElephant",
-    "version": "0.8.5",
+    "version": "0.9.0",
     "license": "LGPLv3",
     "authors": [
         {
@@ -18,13 +18,9 @@
         "symfony/process": "2.1.*@stable"
     },
     "require-dev": {
-        "behat/behat": "2.4@stable",
         "phpunit/phpunit": "@stable"
     },
     "minimum-stability": "dev",
-    "suggest": {
-	    "behat/behat": "2.4@stable"
-    },
     "autoload": {
         "psr-0": {
             "GitElephant": "src/"

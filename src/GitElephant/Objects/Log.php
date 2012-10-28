@@ -16,6 +16,7 @@
 namespace GitElephant\Objects;
 
 use GitElephant\Objects\GitAuthor;
+use GitElephant\Repository;
 
 /**
  * Git log abstraction object
@@ -25,6 +26,11 @@ use GitElephant\Objects\GitAuthor;
 
 class Log implements \ArrayAccess, \Countable, \Iterator
 {
+    /**
+     * @var \GitElephant\Repository
+     */
+    private $repository;
+
     /**
      * the commits related to this log
      *
@@ -40,29 +46,63 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     private $position = 0;
 
     /**
+     * static method to generate standalone log
+     *
+     * @param \GitElephant\Repository $repository  repo
+     * @param array                   $outputLines output lines from command.log
+     *
+     * @return \GitElephant\Objects\Log
+     */
+    static public function createFromOutputLines(Repository $repository, $outputLines)
+    {
+        $log = new self($repository);
+        $log->parseOutputLines($outputLines);
+        return $log;
+    }
+
+    /**
      * Class constructor
      *
-     * @param array $outputLines the command output lines
+     * @param \GitElephant\Repository $repository repo
+     * @param string                  $ref        treeish reference
+     * @param null                    $path       path
+     * @param int                     $limit      limit
+     * @param null                    $offset     offset
      */
-    public function __construct($outputLines)
+    public function __construct(Repository $repository, $ref = 'HEAD', $path = null, $limit = 15, $offset = null)
+    {
+        $this->repository = $repository;
+        $this->createFromCommand($ref, $path, $limit, $offset);
+    }
+
+    /**
+     * get the commit properties from command
+     *
+     * @see ShowCommand::commitInfo
+     */
+    private function createFromCommand($ref, $path, $limit, $offset)
+    {
+        $command = $this->getRepository()->getContainer()->get('command.log')->showLog($ref, $path, $limit, $offset);
+        $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+        $this->parseOutputLines($outputLines);
+    }
+
+    private function parseOutputLines($outputLines)
     {
         $commitLines = null;
-
+        $this->commits = array();
         foreach ($outputLines as $line) {
             if ($line == '') continue;
             if (preg_match('/^commit (\w+)$/', $line) > 0) {
                 if (null !== $commitLines) {
-                    $this->commits[] = new Commit($commitLines);
+                    $this->commits[] = Commit::createFromOutputLines($this->repository, $commitLines);
                 }
-
                 $commitLines = array();
             }
-
             $commitLines[] = $line;
         }
-
         if (null !== $commitLines && count($commitLines) > 0) {
-            $this->commits[] = new Commit($commitLines);
+            $this->commits[] = Commit::createFromOutputLines($this->repository, $commitLines);
         }
     }
 
@@ -207,5 +247,25 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     public function rewind()
     {
         $this->position = 0;
+    }
+
+    /**
+     * Repository setter
+     *
+     * @param \GitElephant\Repository $repository the repository variable
+     */
+    public function setRepository($repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Repository getter
+     *
+     * @return \GitElephant\Repository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 }

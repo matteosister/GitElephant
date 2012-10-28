@@ -20,6 +20,7 @@ use GitElephant\Command\Caller;
 use GitElephant\Objects\TreeObject;
 use GitElephant\GitBinary;
 use GitElephant\Utilities;
+use GitElephant\Repository;
 
 
 /**
@@ -34,11 +35,14 @@ use GitElephant\Utilities;
 class Tree implements \ArrayAccess, \Countable, \Iterator
 {
     /**
-     * output lines from the ls-tree command
-     *
-     * @var array
+     * @var Repository
      */
-    private $outputLines;
+    private $repository;
+
+    /**
+     * @var string
+     */
+    private $ref;
 
     /**
      * the cursor position
@@ -76,20 +80,37 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     private $blob;
 
     /**
+     * static method to generate standalone log
+     *
+     * @param \GitElephant\Repository $repository  repo
+     * @param array                   $outputLines output lines from command.log
+     *
+     * @return \GitElephant\Objects\Log
+     */
+    static public function createFromOutputLines(Repository $repository, $outputLines)
+    {
+        $tree = new self($repository);
+        $tree->parseOutputLines($outputLines);
+        return $tree;
+    }
+
+    /**
      * Some path examples:
      *    empty string for root
      *    folder1/folder2
      *    folder1/folder2/filename
      *
-     * @param array $outputLines an array with outpul lines from the Caller
-     * @param null  $path        the (physical) path of the repository relative to the root or TreeObject instance
+     * @param \GitElephant\Repository $repository the repository
+     * @param string                  $ref        a treeish reference
+     * @param string|TreeObject       $path       the (physical) path of the repository relative to the root or TreeObject instance
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($outputLines, $path = null)
+    public function __construct(Repository $repository, $ref = 'HEAD', $path = '')
     {
-        $this->outputLines = $outputLines;
-        $this->position    = 0;
+        $this->position   = 0;
+        $this->repository = $repository;
+        $this->ref = $ref;
 
         if ($path instanceof TreeObject) {
             $this->path = $path->getPath();
@@ -98,11 +119,41 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         } else {
             throw new \InvalidArgumentException('the path for a Tree instance should be a string or a TreeObject instance');
         }
+        $this->createFromCommand();
+    }
+
+    /**
+     * get the commit properties from command
+     *
+     * @see LsTreeCommand::tree
+     */
+    private function createFromCommand()
+    {
+        $command = $this->getRepository()->getContainer()->get('command.ls_tree')->tree($this->ref);
+        $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+        $this->parseOutputLines($outputLines);
+    }
+
+    /**
+     * parse the output of a git command showing a ls-tree
+     *
+     * @param array $outputLines output lines
+     */
+    private function parseOutputLines($outputLines)
+    {
         foreach ($outputLines as $line) {
             $this->parseLine($line);
         }
         usort($this->children, array($this, 'sortChildren'));
-        $this->scanPathsForBlob();
+        $this->scanPathsForBlob($outputLines);
+    }
+
+    /**
+     * @return \GitElephant\Command\Caller
+     */
+    private function getCaller()
+    {
+        return $this->getRepository()->getCaller();
     }
 
     /**
@@ -175,15 +226,16 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      * check if the path is equals to a fullPath
      * to tell if it's a blob
      *
+     * @param array $outputLines output lines
      * @return mixed
      */
-    private function scanPathsForBlob()
+    private function scanPathsForBlob($outputLines)
     {
         // no children, empty folder or blob!
         if (count($this->children) > 0) {
             return;
         }
-        foreach ($this->outputLines as $line) {
+        foreach ($outputLines as $line) {
             if ($line != '') {
                 $slices = $this->getLineSlices($line);
                 if ($slices['fullPath'] == $this->path) {
@@ -294,6 +346,26 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
             'size'        => $size,
             'fullPath'    => $fullPath
         );
+    }
+
+    /**
+     * Repository setter
+     *
+     * @param \GitElephant\Repository $repository the repository variable
+     */
+    public function setRepository($repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Repository getter
+     *
+     * @return \GitElephant\Repository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 
     /**

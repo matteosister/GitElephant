@@ -24,7 +24,6 @@ use GitElephant\Objects\Tree,
     GitElephant\Objects\Commit,
     GitElephant\Objects\Log,
     GitElephant\Objects\TreeishInterface;
-use GitElephant\Utilities;
 use Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\DependencyInjection\Loader\XmlFileLoader,
     Symfony\Component\Config\FileLocator;
@@ -72,6 +71,9 @@ class Repository
      *
      * @param string         $repositoryPath the path of the git repository
      * @param GitBinary|null $binary         the GitBinary instance that calls the commands
+     * @param string         $name           a repository name
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct($repositoryPath, GitBinary $binary = null, $name = null)
     {
@@ -144,6 +146,7 @@ class Repository
      */
     public function commit($message, $stageAll = false, $ref = null)
     {
+        $currentBranch = null;
         if ($ref != null) {
             $currentBranch = $this->getMainBranch();
             $this->checkout($ref);
@@ -287,10 +290,7 @@ class Repository
         $this->caller->execute($this->container->get('command.tag')->lists());
         foreach ($this->caller->getOutputLines() as $tagString) {
             if ($tagString != '') {
-                $tag = new TreeTag($tagString);
-                $outputLines = $this->caller->execute($this->container->get('command.rev_list')->getTagCommit($tag))->getOutputLines();
-                $tag->setSha($outputLines[0]);
-                $tags[] = $tag;
+                $tags[] = new TreeTag($this, trim($tagString));
             }
         }
         return $tags;
@@ -301,12 +301,12 @@ class Repository
      *
      * @param string $name The tag name
      *
-     * @return GitElephant\Objects\TreeTag
+     * @return TreeTag
      */
     public function getTag($name)
     {
         foreach ($this->getTags() as $treeTag) {
-            if ($treeTag->getName() == $name) {
+            if ($name === $treeTag->getName()) {
                 return $treeTag;
             }
         }
@@ -340,8 +340,21 @@ class Repository
      */
     public function getCommit($ref = 'HEAD')
     {
-        $command = $this->container->get('command.show')->showCommit($ref);
-        return new Commit($this->caller->execute($command)->getOutputLines());
+        $commit = new Commit($this, $ref);
+        return $commit;
+    }
+
+    /**
+     * count the commit to arrive to the given treeish
+     *
+     * @param string $start
+     *
+     * @return int|void
+     */
+    public function countCommits($start = 'HEAD')
+    {
+        $commit = new Commit($this, $start);
+        return $commit->count();
     }
 
     /**
@@ -356,8 +369,7 @@ class Repository
      */
     public function getLog($ref = 'HEAD', $path = null, $limit = 15, $offset = null)
     {
-        $command = $this->container->get('command.log')->showLog($ref, $path, $limit, $offset);
-        return new Log($this->caller->execute($command)->getOutputLines());
+        return new Log($this, $ref, $path, $limit, $offset);
     }
 
     /**
@@ -373,7 +385,7 @@ class Repository
     public function getTreeObjectLog(TreeObject $obj, $branch = null, $limit = 1, $offset = null)
     {
         $command = $this->container->get('command.log')->showObjectLog($obj, $branch, $limit, $offset);
-        return new Log($this->caller->execute($command)->getOutputLines());
+        return Log::createFromOutputLines($this, $this->caller->execute($command)->getOutputLines());
     }
 
     /**
@@ -398,36 +410,25 @@ class Repository
      */
     public function getTree($ref = 'HEAD', $path = '')
     {
-        $outputLines = $this->caller->execute($this->container->get('command.ls_tree')->tree($ref))->getOutputLines();
-        return new Tree($outputLines, $path);
+        return new Tree($this, $ref, $path);
     }
 
     /**
-     * Get a Diff object for a commit with its parent
+     * Get a Diff object for a commit with its parent, by default the diff is between the current head and its parent
      *
-     * @param \GitElephant\Objects\Commit      $commit1 A TreeishInterface instance
-     * @param \GitElephant\Objects\Commit|null $commit2 A TreeishInterface instance
-     * @param null|string|TreeObject           $path    The path to get the diff for or a TreeObject instance
+     * @param \GitElephant\Objects\Commit|string      $commit1 A TreeishInterface instance
+     * @param \GitElephant\Objects\Commit|string|null $commit2 A TreeishInterface instance
+     * @param null|string|TreeObject                  $path    The path to get the diff for or a TreeObject instance
      *
-     * @return Objects\Diff\Diff|false
+     * @return Objects\Diff\Diff
      */
-    public function getDiff(Commit $commit1, Commit $commit2 = null, $path = null)
+    public function getDiff($commit1 = null, $commit2 = null, $path = null)
     {
-        if ($commit2 === null) {
-            if ($commit1->isRoot()) {
-                $command = $this->container->get('command.diff_tree')->rootDiff($commit1);
-            } else {
-                $command = $this->container->get('command.diff')->diff($commit1);
-            }
-        } else {
-            $command = $this->container->get('command.diff')->diff($commit1, $commit2, $path);
-        }
-        $outputLines = $this->caller->execute($command)->getOutputLines();
-        return new Diff($outputLines);
+        return new Diff($this, $commit1, $commit2, $path);
     }
 
     /**
-     * Clone a respository
+     * Clone a repository
      *
      * @param string $url the repository url (i.e. git://github.com/matteosister/GitElephant.git or matteo@192.168.1.12:~/git/GitElephant.git)
      */
@@ -500,5 +501,45 @@ class Repository
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * Container setter
+     *
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container the container variable
+     */
+    public function setContainer($container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * Container getter
+     *
+     * @return \Symfony\Component\DependencyInjection\ContainerBuilder
+     */
+    public function getContainer()
+    {
+        return $this->container;
+    }
+
+    /**
+     * Caller setter
+     *
+     * @param \GitElephant\Command\Caller $caller the caller variable
+     */
+    public function setCaller($caller)
+    {
+        $this->caller = $caller;
+    }
+
+    /**
+     * Caller getter
+     *
+     * @return \GitElephant\Command\Caller
+     */
+    public function getCaller()
+    {
+        return $this->caller;
     }
 }

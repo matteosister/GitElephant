@@ -15,7 +15,9 @@
 namespace GitElephant\Command;
 
 use GitElephant\GitBinary;
+use GitElephant\Command\CallerInterface;
 use Symfony\Component\Process\Process;
+
 
 /**
  * Caller
@@ -23,7 +25,7 @@ use Symfony\Component\Process\Process;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class Caller
+class Caller implements CallerInterface
 {
     /**
      * GitBinary instance
@@ -124,10 +126,21 @@ class Caller
     /**
      * returns the output of the last executed command as an array of lines
      *
+     * @param bool $stripBlankLines remove the blank lines
+     *
      * @return array
      */
-    public function getOutputLines()
+    public function getOutputLines($stripBlankLines = false)
     {
+        if ($stripBlankLines) {
+            $output = array();
+            foreach ($this->outputLines as $line) {
+                if ('' !== $line) {
+                    $output[] = $line;
+                }
+            }
+            return $output;
+        }
         return $this->outputLines;
     }
 }

@@ -2,7 +2,7 @@
 
 <phpunit bootstrap="tests/bootstrap.php"
         colors="true"
-        stopOnFailure="false">
+        stopOnFailure="true">
     <testsuites>
         <testsuite name="GitElephant Test Suite">
             <directory>tests/GitElephant/</directory>
