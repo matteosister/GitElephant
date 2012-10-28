@@ -428,7 +428,7 @@ class Repository
     }
 
     /**
-     * Clone a respository
+     * Clone a repository
      *
      * @param string $url the repository url (i.e. git://github.com/matteosister/GitElephant.git or matteo@192.168.1.12:~/git/GitElephant.git)
      */
