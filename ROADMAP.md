@@ -4,8 +4,7 @@ todo
 0.8.*
 
 * add interface for caller DONE
-* add interface for binary
-* commits count
+* commits count DONE
 
 0.9.*
 * isolate objects like grit, clean constructor of Commit, Log, Tag, Tree, Diff by accepting the repository as mandatory argument, and a sha as optional argument
@@ -16,3 +15,4 @@ todo
 1.0.0
 * git blame
 * blobs management
+* introduce traits and make the library php 5.4 only?

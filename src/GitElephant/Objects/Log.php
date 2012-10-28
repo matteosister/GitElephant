@@ -31,11 +31,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      */
     private $repository;
 
-    private $ref;
-    private $path;
-    private $limit;
-    private $offset;
-
     /**
      * the commits related to this log
      *
@@ -51,7 +46,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     private $position = 0;
 
     /**
-     * static method
+     * static method to generate standalone log
      *
      * @param \GitElephant\Repository $repository  repo
      * @param array                   $outputLines output lines from command.log
@@ -61,7 +56,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     static public function createFromOutputLines(Repository $repository, $outputLines)
     {
         $log = new self($repository);
-        $log->commits = array();
         $log->parseOutputLines($outputLines);
         return $log;
     }
@@ -78,11 +72,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     public function __construct(Repository $repository, $ref = 'HEAD', $path = null, $limit = 15, $offset = null)
     {
         $this->repository = $repository;
-        $this->ref = $ref;
-        $this->path = $path;
-        $this->limit = $limit;
-        $this->offset = $offset;
-        $this->createFromCommand();
+        $this->createFromCommand($ref, $path, $limit, $offset);
     }
 
     /**
@@ -90,9 +80,9 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      *
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand()
+    private function createFromCommand($ref, $path, $limit, $offset)
     {
-        $command = $this->getRepository()->getContainer()->get('command.log')->showLog($this->ref, $this->path, $this->limit, $this->offset);
+        $command = $this->getRepository()->getContainer()->get('command.log')->showLog($ref, $path, $limit, $offset);
         $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
@@ -100,6 +90,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     private function parseOutputLines($outputLines)
     {
         $commitLines = null;
+        $this->commits = array();
         foreach ($outputLines as $line) {
             if ($line == '') continue;
             if (preg_match('/^commit (\w+)$/', $line) > 0) {

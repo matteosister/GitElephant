@@ -340,9 +340,21 @@ class Repository
      */
     public function getCommit($ref = 'HEAD')
     {
-
         $commit = new Commit($this, $ref);
         return $commit;
+    }
+
+    /**
+     * count the commit to arrive to the given treeish
+     *
+     * @param string $start
+     *
+     * @return int|void
+     */
+    public function countCommits($start = 'HEAD')
+    {
+        $commit = new Commit($this, $start);
+        return $commit->count();
     }
 
     /**
@@ -398,8 +410,7 @@ class Repository
      */
     public function getTree($ref = 'HEAD', $path = '')
     {
-        $outputLines = $this->caller->execute($this->container->get('command.ls_tree')->tree($ref))->getOutputLines();
-        return new Tree($outputLines, $path);
+        return new Tree($this, $ref, $path);
     }
 
     /**

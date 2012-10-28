@@ -15,7 +15,8 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand,
-GitElephant\Objects\TreeTag;
+    GitElephant\Objects\TreeTag,
+    GitElephant\Objects\Commit;
 
 /**
  * RevList Command generator
@@ -41,6 +42,21 @@ class RevListCommand extends BaseCommand
         // only the last commit
         $this->addCommandArgument('-n1');
         $this->addCommandSubject($tag->getFullRef());
+        return $this->getCommand();
+    }
+
+    /**
+     * get the commits path to the passed commit. Useful to count commits in a repo
+     *
+     * @param \GitElephant\Objects\Commit $commit
+     *
+     * @return string
+     */
+    public function commitPath(Commit $commit)
+    {
+        $this->clearAll();
+        $this->addCommandName(static::GIT_REVLIST);
+        $this->addCommandSubject($commit->getSha());
         return $this->getCommand();
     }
 }

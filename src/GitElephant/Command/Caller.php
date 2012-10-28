@@ -126,10 +126,21 @@ class Caller implements CallerInterface
     /**
      * returns the output of the last executed command as an array of lines
      *
+     * @param bool $stripBlankLines remove the blank lines
+     *
      * @return array
      */
-    public function getOutputLines()
+    public function getOutputLines($stripBlankLines = false)
     {
+        if ($stripBlankLines) {
+            $output = array();
+            foreach ($this->outputLines as $line) {
+                if ('' !== $line) {
+                    $output[] = $line;
+                }
+            }
+            return $output;
+        }
         return $this->outputLines;
     }
 }

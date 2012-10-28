@@ -27,7 +27,7 @@ use GitElephant\Command\CallerInterface;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class Commit implements TreeishInterface
+class Commit implements TreeishInterface, \Countable
 {
     /**
      * @var \GitElephant\Repository
@@ -96,7 +96,7 @@ class Commit implements TreeishInterface
     private $datetimeCommitter;
 
     /**
-     * static generator from output of command.show service
+     * static generator to generate a single commit from output of command.show service
      *
      * @param \GitElephant\Repository $repository  repository
      * @param array                   $outputLines output lines
@@ -132,10 +132,24 @@ class Commit implements TreeishInterface
     private function createFromCommand()
     {
         $command = $this->getRepository()->getContainer()->get('command.show')->showCommit($this->ref);
-        $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+        $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
 
+    /**
+     * @return int|void
+     */
+    public function count()
+    {
+        $command = $this->getRepository()->getContainer()->get('command.rev_list')->commitPath($this);
+        return count($this->getCaller()->execute($command)->getOutputLines(true));
+    }
+
+    /**
+     * parse the output of a git command showing a commit
+     *
+     * @param array $outputLines output lines
+     */
     private function parseOutputLines($outputLines)
     {
         $message = '';
@@ -191,6 +205,14 @@ class Commit implements TreeishInterface
     public function __toString()
     {
         return $this->getSha();
+    }
+
+    /**
+     * @return \GitElephant\Command\Caller
+     */
+    private function getCaller()
+    {
+        return $this->getRepository()->getCaller();
     }
 
     /**

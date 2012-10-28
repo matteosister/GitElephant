@@ -16,18 +16,6 @@ Requirements
 
 I work on an ubuntu box, but the lib should work well with every unix system. I don't have a windows installation to test...if someone want to help...
 
-Dependencies
-------------
-
-- [Symfony Config](https://github.com/symfony/Config)
-- [Symfony DependencyInjection](https://github.com/symfony/DependencyInjection)
-- [Symfony Process](https://github.com/symfony/Process)
-
-*for tests*
-
-- [PHPUnit](https://github.com/sebastianbergmann/phpunit)
-- [Behat](https://github.com/Behat/Behat)
-
 Installation
 ------------
 
@@ -131,12 +119,24 @@ $repo->getTag('v1.0'); // a TreeTag instance by name
 $repo->getCommit(); // get a Commit instance of the current HEAD
 $repo->getCommit('v1.0'); // get a Commit instance for a tag
 $repo->getCommit('1ac370d'); // sha (follow [git standards](http://book.git-scm.com/4_git_treeishes.html) to format the sha)
+// or directly create a commit object
+$commit = new Commit($repo, '1ac370d');
+$commit = new Commit($repo, '1ac370d'); // head commit
+
+// count commits
+$repo->countCommits('1ac370d'); // number of commits to arrive at 1ac370d
+// commit is coutable, so, with a commit object, you can do
+$commit->count();
+// as well as
+count($commit);
 
 // Log contains a collection of commit objects
 // syntax: getLog(<tree-ish>, path = null, limit = 15, offset = null)
 $log = $repo->getLog();
 $log = $repo->getLog('master', null, 5);
 $log = $repo->getLog('v0.1', null, 5, 10);
+// or directly create a log object
+$log = new Log($repo
 
 // countable
 $log->count();
@@ -299,6 +299,17 @@ Symfony2
 --------
 
 There is a [GitElephantBundle](https://github.com/matteosister/GitElephantBundle) to use this library inside a Symfony2 project.
+
+Dependencies
+------------
+
+- [Symfony Config](https://github.com/symfony/Config)
+- [Symfony DependencyInjection](https://github.com/symfony/DependencyInjection)
+- [Symfony Process](https://github.com/symfony/Process)
+
+*for tests*
+
+- [PHPUnit](https://github.com/sebastianbergmann/phpunit)
 
 Want to contribute?
 -------------------

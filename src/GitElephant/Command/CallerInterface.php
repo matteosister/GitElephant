@@ -27,5 +27,5 @@ interface CallerInterface
      *
      * @return array
      */
-    function getOutputLines();
+    function getOutputLines($stripBlankLines = false);
 }

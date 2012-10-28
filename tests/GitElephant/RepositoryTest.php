@@ -516,4 +516,23 @@ class RepositoryTest extends TestCase
 
         $this->assertRegExp('/(.*):    foo/', $status[4]);
     }
+
+    public function testCountCommits()
+    {
+        $this->getRepository()->init();
+        $this->addFile('foo');
+        $this->getRepository()->commit('commit 1', true);
+        $this->assertEquals(1, $this->getRepository()->countCommits());
+        $this->addFile('foo2');
+        $this->getRepository()->commit('commit 2', true);
+        $this->assertEquals(2, $this->getRepository()->countCommits());
+        $this->getRepository()->createBranch('new-branch');
+        $this->getRepository()->checkout('new-branch');
+        $this->assertEquals(2, $this->getRepository()->countCommits());
+        $this->addFile('bar');
+        $this->getRepository()->commit('commit 3', true);
+        $this->assertEquals(3, $this->getRepository()->countCommits());
+        $this->getRepository()->checkout('master');
+        $this->assertEquals(2, $this->getRepository()->countCommits());
+    }
 }
