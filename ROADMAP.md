@@ -7,10 +7,10 @@ todo
 * commits count DONE
 
 0.9.*
-* isolate objects like grit, clean constructor of Commit, Log, Tag, Tree, Diff by accepting the repository as mandatory argument, and a sha as optional argument
-* find a way to populate object props from the sha inside the objects
-* inject the caller and the command to the objects to populate props
-* use sha (default to HEAD) whenever it's possible inside constructors
+* isolate objects like grit, clean constructor of Commit, Log, Tag, Tree, Diff by accepting the repository as mandatory argument DONE
+* find a way to populate object props from the sha inside the objects DONE
+* inject the caller and the command to the objects to populate props DONE
+* use sha (default to HEAD) whenever it's possible inside constructors DONE
 * remove the dependency-injection and config dependency
 
 1.0.0

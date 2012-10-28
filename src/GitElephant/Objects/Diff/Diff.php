@@ -16,6 +16,7 @@ namespace GitElephant\Objects\Diff;
 
 use GitElephant\Objects\Diff\DiffObject;
 use GitElephant\Utilities;
+use GitElephant\Repository;
 
 /**
  * Represent a collection of diffs between two trees
@@ -25,6 +26,11 @@ use GitElephant\Utilities;
 
 class Diff implements \ArrayAccess, \Countable, \Iterator
 {
+    /**
+     * @var \GitElephant\Repository
+     */
+    private $repository;
+
     /**
      * the cursor position
      *
@@ -40,19 +46,99 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     private $diffObjects;
 
     /**
-     * Class constructor
+     * static generator to generate a single commit from output of command.diff or command.diff service
      *
-     * @param array $lines diff output lines from git binary
+     * @param \GitElephant\Repository $repository  repository
+     * @param array                   $outputLines output lines
+     *
+     * @return Diff
      */
-    public function __construct($lines)
+    static function createFromOutputLines(Repository $repository, $outputLines)
+    {
+        $commit = new self($repository);
+        $commit->parseOutputLines($outputLines);
+        return $commit;
+    }
+
+    /**
+     * Class constructor
+     */
+    public function __construct(Repository $repository, $commit1 = null, $commit2 = null, $path = null)
+    {
+        $this->position = 0;
+        $this->repository = $repository;
+        $this->createFromCommand($commit1, $commit2, $path);
+    }
+
+    /**
+     * get the commit properties from command
+     *
+     * @see ShowCommand::commitInfo
+     */
+    private function createFromCommand($commit1 = null, $commit2 = null, $path = null)
+    {
+        if (null === $commit1) {
+            $commit1 = $this->getRepository()->getCommit();
+        }
+        if (is_string($commit1)) {
+            $commit1 = $this->getRepository()->getCommit($commit1);
+        }
+        if ($commit2 === null) {
+            if ($commit1->isRoot()) {
+                $command = $this->getRepository()->getContainer()->get('command.diff_tree')->rootDiff($commit1);
+            } else {
+                $command = $this->getRepository()->getContainer()->get('command.diff')->diff($commit1);
+            }
+        } else {
+            if (is_string($commit2)) {
+                $commit2 = $this->getRepository()->getCommit($commit2);
+            }
+            $command = $this->getRepository()->getContainer()->get('command.diff')->diff($commit1, $commit2, $path);
+        }
+        $outputLines = $this->getCaller()->execute($command)->getOutputLines();
+        $this->parseOutputLines($outputLines);
+    }
+
+    /**
+     * parse the output of a git command showing a commit
+     *
+     * @param array $outputLines output lines
+     */
+    private function parseOutputLines($outputLines)
     {
         $this->diffObjects = array();
-        $this->position    = 0;
-
-        $splitArray = Utilities::pregSplitArray($lines, '/^diff --git SRC\/(.*) DST\/(.*)$/');
+        $splitArray = Utilities::pregSplitArray($outputLines, '/^diff --git SRC\/(.*) DST\/(.*)$/');
         foreach ($splitArray as $diffObjectLines) {
             $this->diffObjects[] = new DiffObject($diffObjectLines);
         }
+    }
+
+    /**
+     * @return \GitElephant\Command\Caller
+     */
+    private function getCaller()
+    {
+        return $this->getRepository()->getCaller();
+    }
+
+    /**
+     * Repository setter
+     *
+     * @param \GitElephant\Repository $repository the repository variable
+     */
+    public function setRepository($repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Repository getter
+     *
+     * @return \GitElephant\Repository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 
     /**

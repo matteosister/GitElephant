@@ -45,17 +45,14 @@ class DiffTest extends TestCase
         $mainCommand = new MainCommand();
         $diffCommand = new DiffCommand();
 
-        $this->getCaller()->execute($mainCommand->init());
+        $this->getRepository()->init();
         $this->addFile('foo', null, "content line 1\ncontent line 2\ncontent line 3");
-        $this->getCaller()->execute($mainCommand->add());
-        $this->getCaller()->execute($mainCommand->commit('first commit'));
+        $this->getRepository()->commit('commit1', true);
         $this->addFile('foo', null, "content line 1\ncontent line 2 changed");
-        $this->getCaller()->execute($mainCommand->add());
-        $this->getCaller()->execute($mainCommand->commit('first commit'));
+        $this->getRepository()->commit('commit2', true);
         $commit = $this->getRepository()->getCommit();
 
-        $command = $diffCommand->diff($commit);
-        $diff = new Diff($this->getCaller()->execute($command)->getOutputLines());
+        $diff = new Diff($this->getRepository(), $commit);
 
         $this->assertInstanceOf('\GitElephant\Objects\Diff\Diff', $diff);
         $this->assertArrayInterfaces($diff);

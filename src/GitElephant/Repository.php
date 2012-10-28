@@ -24,7 +24,6 @@ use GitElephant\Objects\Tree,
     GitElephant\Objects\Commit,
     GitElephant\Objects\Log,
     GitElephant\Objects\TreeishInterface;
-use GitElephant\Utilities;
 use Symfony\Component\DependencyInjection\ContainerBuilder,
     Symfony\Component\DependencyInjection\Loader\XmlFileLoader,
     Symfony\Component\Config\FileLocator;
@@ -72,6 +71,9 @@ class Repository
      *
      * @param string         $repositoryPath the path of the git repository
      * @param GitBinary|null $binary         the GitBinary instance that calls the commands
+     * @param string         $name           a repository name
+     *
+     * @throws \InvalidArgumentException
      */
     public function __construct($repositoryPath, GitBinary $binary = null, $name = null)
     {
@@ -144,6 +146,7 @@ class Repository
      */
     public function commit($message, $stageAll = false, $ref = null)
     {
+        $currentBranch = null;
         if ($ref != null) {
             $currentBranch = $this->getMainBranch();
             $this->checkout($ref);
@@ -287,10 +290,7 @@ class Repository
         $this->caller->execute($this->container->get('command.tag')->lists());
         foreach ($this->caller->getOutputLines() as $tagString) {
             if ($tagString != '') {
-                $tag = new TreeTag($tagString);
-                $outputLines = $this->caller->execute($this->container->get('command.rev_list')->getTagCommit($tag))->getOutputLines();
-                $tag->setSha($outputLines[0]);
-                $tags[] = $tag;
+                $tags[] = new TreeTag($this, trim($tagString));
             }
         }
         return $tags;
@@ -306,7 +306,7 @@ class Repository
     public function getTag($name)
     {
         foreach ($this->getTags() as $treeTag) {
-            if ($treeTag->getName() == $name) {
+            if ($name === $treeTag->getName()) {
                 return $treeTag;
             }
         }
@@ -414,7 +414,7 @@ class Repository
     }
 
     /**
-     * Get a Diff object for a commit with its parent
+     * Get a Diff object for a commit with its parent, by default the diff is between the current head and its parent
      *
      * @param \GitElephant\Objects\Commit|string      $commit1 A TreeishInterface instance
      * @param \GitElephant\Objects\Commit|string|null $commit2 A TreeishInterface instance
@@ -422,25 +422,9 @@ class Repository
      *
      * @return Objects\Diff\Diff
      */
-    public function getDiff($commit1, $commit2 = null, $path = null)
+    public function getDiff($commit1 = null, $commit2 = null, $path = null)
     {
-        if (is_string($commit1)) {
-            $commit1 = $this->getCommit($commit1);
-        }
-        if ($commit2 === null) {
-            if ($commit1->isRoot()) {
-                $command = $this->container->get('command.diff_tree')->rootDiff($commit1);
-            } else {
-                $command = $this->container->get('command.diff')->diff($commit1);
-            }
-        } else {
-            if (is_string($commit2)) {
-                $commit2 = $this->getCommit($commit2);
-            }
-            $command = $this->container->get('command.diff')->diff($commit1, $commit2, $path);
-        }
-        $outputLines = $this->caller->execute($command)->getOutputLines();
-        return new Diff($outputLines);
+        return new Diff($this, $commit1, $commit2, $path);
     }
 
     /**

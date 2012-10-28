@@ -80,6 +80,21 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     private $blob;
 
     /**
+     * static method to generate standalone log
+     *
+     * @param \GitElephant\Repository $repository  repo
+     * @param array                   $outputLines output lines from command.log
+     *
+     * @return \GitElephant\Objects\Log
+     */
+    static public function createFromOutputLines(Repository $repository, $outputLines)
+    {
+        $tree = new self($repository);
+        $tree->parseOutputLines($outputLines);
+        return $tree;
+    }
+
+    /**
      * Some path examples:
      *    empty string for root
      *    folder1/folder2

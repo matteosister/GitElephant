@@ -15,6 +15,7 @@
 namespace GitElephant\Objects;
 
 use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 
 /**
@@ -25,6 +26,11 @@ use GitElephant\Objects\TreeishInterface;
 
 class TreeTag implements TreeishInterface
 {
+    /**
+     * @var \GitElephant\Repository
+     */
+    private $repository;
+
     /**
      * tag name
      *
@@ -47,14 +53,71 @@ class TreeTag implements TreeishInterface
     private $sha;
 
     /**
+     * static generator to generate a single commit from output of command.show service
+     *
+     * @param \GitElephant\Repository $repository  repository
+     * @param array                   $outputLines output lines
+     * @param $name
+     *
+     * @return Commit
+     */
+    static function createFromOutputLines(Repository $repository, $outputLines, $name)
+    {
+        $tag = new self($repository, $name);
+        $tag->parseOutputLines($outputLines);
+        return $tag;
+    }
+
+    /**
      * Class constructor
      *
      * @param string $line a single tag line from the git binary
      */
-    public function __construct($line)
+    public function __construct(Repository $repository, $name)
     {
-        $this->name    = trim($line);
+        $this->repository = $repository;
+        $this->name    = $name;
         $this->fullRef = 'refs/tags/' . $this->name;
+        $this->createFromCommand();
+    }
+
+    /**
+     * get the commit properties from command
+     *
+     * @see ShowCommand::commitInfo
+     */
+    private function createFromCommand()
+    {
+        $command = $this->getRepository()->getContainer()->get('command.tag')->lists();
+        $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+        $this->parseOutputLines($outputLines);
+    }
+
+    /**
+     * parse the output of a git command showing a commit
+     *
+     * @param array $outputLines output lines
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return void
+     */
+    private function parseOutputLines($outputLines)
+    {
+        $found = false;
+        foreach ($outputLines as $tagString) {
+            if ($tagString != '') {
+                if ($this->name === trim($tagString)) {
+                    $lines = $this->getCaller()->execute($this->getRepository()->getContainer()->get('command.rev_list')->getTagCommit($this))->getOutputLines();
+                    $this->setSha($lines[0]);
+                    $found = true;
+                    break;
+                }
+            }
+        }
+        if (!$found) {
+            throw new \InvalidArgumentException(sprintf('the tag %s doesn\'t exists', $this->name));
+        }
     }
 
     /**
@@ -65,6 +128,34 @@ class TreeTag implements TreeishInterface
     public function __toString()
     {
         return $this->getSha();
+    }
+
+    /**
+     * @return \GitElephant\Command\Caller
+     */
+    private function getCaller()
+    {
+        return $this->getRepository()->getCaller();
+    }
+
+    /**
+     * Repository setter
+     *
+     * @param \GitElephant\Repository $repository the repository variable
+     */
+    public function setRepository($repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Repository getter
+     *
+     * @return \GitElephant\Repository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 
     /**
