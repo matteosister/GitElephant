@@ -136,7 +136,8 @@ $log = $repo->getLog();
 $log = $repo->getLog('master', null, 5);
 $log = $repo->getLog('v0.1', null, 5, 10);
 // or directly create a log object
-$log = new Log($repo
+$log = new Log($repo);
+$log = new Log($repo, 'v0.1', null, 5, 10);
 
 // countable
 $log->count();
@@ -198,6 +199,8 @@ a tree representation of the repository, at a given point in history.
 $tree = $repo->getTree(); // retrieve the actual *HEAD* tree
 $tree = $repo->getTree($repo->getCommit('1ac370d')); // retrieve a tree for a given commit
 $tree = $repo->getTree('master', 'lib/vendor'); // retrieve a tree for a given path
+// generate a tree
+$tree = new Tree($repo);
 ```
 
 The Tree class implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
@@ -248,6 +251,10 @@ $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'),
 $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'), $treeObject);
 // alternatively you could directly use the sha of the commit
 $diff = $repo->getDiff('1ac370d', '8fb7281');
+// manually generate a Diff object
+$diff = new Diff($repo); // defaults to the last commit
+// or as explained before
+$diff = new Diff($repo, '1ac370d', '8fb7281');
 ```
 
 The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
