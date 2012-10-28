@@ -18,7 +18,6 @@
         "symfony/process": "2.1.*@stable"
     },
     "require-dev": {
-        "behat/behat": "2.4@stable",
         "phpunit/phpunit": "@stable"
     },
     "minimum-stability": "dev",

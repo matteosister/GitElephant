@@ -58,35 +58,6 @@ $ pear install cypresslab/GitElephant-alpha
 
 On [Cypresslab pear channel homepage](http://pear.cypresslab.net/) you can find other useful information
 
-Testing
--------
-
-The library is fully tested with PHPUnit for unit tests, and Behat for BDD. To run tests you need these (awesome) libraries installed on your system.
-
-Go to the base library folder and run the test suites
-
-``` bash
-$ phpunit # phpunit test suite
-$ behat # behat test suite
-```
-
-If you want to run the test suite you should have all the dependencies loaded.
-
-From the root of the library you have to do
-
-``` bash
-$ wget -nc http://getcomposer.org/composer.phar
-$ php composer.phar install
-```
-
-this will fetch all the needed dependencies inside the vendor dir
-
-Code style
-----------
-
-* GitElephant follows the [Symfony2 Coding Standard](https://github.com/opensky/Symfony2-coding-standard)
-* I'm using [gitflow](https://github.com/nvie/gitflow)
-
 How to use
 ----------
 
@@ -296,11 +267,19 @@ foreach ($diffObject as $diffChunk) {
 }
 ```
 
-This is just an example of what the Diff class can do. Run the diff behat test suite for other nice things
+Testing
+-------
+
+The library is fully tested with PHPUnit.
+
+Go to the base library folder and install the dev dependencies with composer, and then run the phpunitt test suite
 
 ``` bash
-$ behat features/diff.feature
+$ php composer.phar --dev install
+$ ./vendor/bin/phpunit # phpunit test suite
 ```
+
+If you want to run the test suite you should have all the dependencies loaded.
 
 Symfony2
 --------
@@ -318,6 +297,12 @@ Dependencies
 
 - [PHPUnit](https://github.com/sebastianbergmann/phpunit)
 
+Code style
+----------
+
+* GitElephant follows the [Symfony2 Coding Standard](https://github.com/opensky/Symfony2-coding-standard)
+* I'm using [gitflow](https://github.com/nvie/gitflow)
+
 Want to contribute?
 -------------------
 
@@ -326,7 +311,7 @@ Want to contribute?
 Just remember:
 
 * Symfony2 coding standard
-* test everything you develop with phpunit AND behat.
+* test everything you develop with phpunit
 * if you don't use gitflow, just remember to develop on a branch or on develop and send a pull request on the develop branch. **Please do not send pull requests on the master branch**.
 
 Thanks

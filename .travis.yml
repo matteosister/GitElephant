@@ -12,6 +12,5 @@ before_script:
   - php composer.phar --dev install
 
 script:
-  - vendor/bin/behat
   - vendor/bin/phpunit
   
