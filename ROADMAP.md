@@ -11,6 +11,7 @@ todo
 * find a way to populate object props from the sha inside the objects
 * inject the caller and the command to the objects to populate props
 * use sha (default to HEAD) whenever it's possible inside constructors
+* remove the dependency-injection and config dependency
 
 1.0.0
 * git blame
