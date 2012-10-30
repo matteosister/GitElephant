@@ -13,10 +13,12 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\TestCase;
-use GitElephant\Objects\Commit;
-use GitElephant\Command\ShowCommand;
-use GitElephant\Command\MainCommand;
+use GitElephant\TestCase,
+    GitElephant\Objects\Commit,
+    GitElephant\Command\ShowCommand,
+    GitElephant\Command\MainCommand,
+    GitElephant\Command\CommandContainer;
+
 
 
 /**
@@ -82,12 +84,7 @@ class CommitTest extends TestCase
             "    first commit"
         );
 
-        $mockContainer = $this->getMockContainer();
-        $this->addCommandToMockContainer($mockContainer, 'command.show');
         $mockRepo = $this->getMockRepository();
-        $mockRepo->expects($this->any())
-            ->method('getContainer')
-            ->will($this->returnValue($mockContainer));
         $this->addOutputToMockRepo($mockRepo, $outputLines);
 
         $commit = new Commit($mockRepo);
@@ -105,12 +102,7 @@ class CommitTest extends TestCase
             "    first commit"
         );
 
-        $mockContainer = $this->getMockContainer();
-        $this->addCommandToMockContainer($mockContainer, 'command.show');
         $mockRepo = $this->getMockRepository();
-        $mockRepo->expects($this->any())
-            ->method('getContainer')
-            ->will($this->returnValue($mockContainer));
         $this->addOutputToMockRepo($mockRepo, $outputLines);
 
         $commit = new Commit($mockRepo);
@@ -135,12 +127,7 @@ class CommitTest extends TestCase
             "    First commit"
         );
 
-        $mockContainer = $this->getMockContainer();
-        $this->addCommandToMockContainer($mockContainer, 'command.show');
         $mockRepo = $this->getMockRepository();
-        $mockRepo->expects($this->any())
-            ->method('getContainer')
-            ->will($this->returnValue($mockContainer));
         $this->addOutputToMockRepo($mockRepo, $outputLines);
 
         $commit = new Commit($mockRepo);

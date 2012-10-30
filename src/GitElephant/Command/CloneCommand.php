@@ -29,6 +29,14 @@ class CloneCommand extends BaseCommand
     const GIT_CLONE_COMMAND = 'clone';
 
     /**
+     * @return CloneCommand
+     */
+    static public function getInstance()
+    {
+        return new self();
+    }
+
+    /**
      * Command to clone a repository
      *
      * @param string $url repository url
