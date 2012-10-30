@@ -57,13 +57,6 @@ class Repository
     private $caller;
 
     /**
-     * The Dependency Injection container
-     *
-     * @var \Symfony\Component\DependencyInjection\ContainerBuilder
-     */
-    private $container;
-
-    /**
      * A general repository name
      *
      * @var string $name the repository name
@@ -501,26 +494,6 @@ class Repository
     public function setName($name)
     {
         $this->name = $name;
-    }
-
-    /**
-     * Container setter
-     *
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container the container variable
-     */
-    public function setContainer($container)
-    {
-        $this->container = $container;
-    }
-
-    /**
-     * Container getter
-     *
-     * @return \Symfony\Component\DependencyInjection\ContainerBuilder
-     */
-    public function getContainer()
-    {
-        return $this->container;
     }
 
     /**
