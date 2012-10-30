@@ -15,11 +15,12 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\GitAuthor;
-use GitElephant\Objects\TreeishInterface;
-use GitElephant\Objects\Commit\Message;
-use GitElephant\Repository;
-use GitElephant\Command\CallerInterface;
+use GitElephant\Objects\GitAuthor,
+    GitElephant\Objects\TreeishInterface,
+    GitElephant\Objects\Commit\Message,
+    GitElephant\Repository,
+    GitElephant\Command\ShowCommand,
+    GitElephant\Command\RevListCommand;
 
 /**
  * The Commit object represent a commit
@@ -131,7 +132,7 @@ class Commit implements TreeishInterface, \Countable
      */
     private function createFromCommand()
     {
-        $command = $this->getRepository()->getContainer()->get('command.show')->showCommit($this->ref);
+        $command = ShowCommand::getInstance()->showCommit($this->ref);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
@@ -141,7 +142,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public function count()
     {
-        $command = $this->getRepository()->getContainer()->get('command.rev_list')->commitPath($this);
+        $command = RevListCommand::getInstance()->commitPath($this);
         return count($this->getCaller()->execute($command)->getOutputLines(true));
     }
 

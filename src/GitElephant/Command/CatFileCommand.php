@@ -32,6 +32,14 @@ class CatFileCommand extends BaseCommand
     const GIT_CAT_FILE = 'cat-file';
 
     /**
+     * @return CatFileCommand
+     */
+    static public function getInstance()
+    {
+        return new self();
+    }
+
+    /**
      * command to show content of a TreeObject at a given Treeish point
      *
      * @param \GitElephant\Objects\TreeObject              $object  a TreeObject instance

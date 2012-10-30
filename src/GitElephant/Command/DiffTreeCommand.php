@@ -30,6 +30,14 @@ class DiffTreeCommand extends BaseCommand
     const DIFF_TREE_COMMAND = 'diff-tree';
 
     /**
+     * @return DiffTreeCommand
+     */
+    static public function getInstance()
+    {
+        return new self();
+    }
+
+    /**
      * get a diff of a root commit with the empty repository
      *
      * @param \GitElephant\Objects\Commit $commit the root commit object

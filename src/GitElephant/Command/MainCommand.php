@@ -36,6 +36,14 @@ class MainCommand extends BaseCommand
     const GIT_REMOVE   = 'rm';
 
     /**
+     * @return MainCommand
+     */
+    static public function getInstance()
+    {
+        return new self();
+    }
+
+    /**
      * Init the repository
      *
      * @return Main

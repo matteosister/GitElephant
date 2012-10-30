@@ -28,6 +28,14 @@ class BranchCommand extends BaseCommand
     const BRANCH_COMMAND = 'branch';
 
     /**
+     * @return BranchCommand
+     */
+    static public function getInstance()
+    {
+        return new self();
+    }
+
+    /**
      * Create a new branch
      *
      * @param string      $name       The new branch name

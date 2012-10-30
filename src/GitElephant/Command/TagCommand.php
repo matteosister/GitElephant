@@ -29,6 +29,14 @@ class TagCommand extends BaseCommand
     const TAG_COMMAND = 'tag';
 
     /**
+     * @return TagCommand
+     */
+    static public function getInstance()
+    {
+        return new self();
+    }
+
+    /**
      * Create a new tag
      *
      * @param string      $name       The new tag name

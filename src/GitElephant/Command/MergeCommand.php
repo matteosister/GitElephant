@@ -28,6 +28,14 @@ class MergeCommand extends BaseCommand
     const MERGE_COMMAND = 'merge';
 
     /**
+     * @return MergeCommand
+     */
+    static public function getInstance()
+    {
+        return new self();
+    }
+
+    /**
      * Generate a merge command
      *
      * @param \GitElephant\Objects\TreeBranch $with the branch to merge

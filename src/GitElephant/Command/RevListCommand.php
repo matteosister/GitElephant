@@ -29,6 +29,14 @@ class RevListCommand extends BaseCommand
     const GIT_REVLIST = 'rev-list';
 
     /**
+     * @return RevListCommand
+     */
+    static public function getInstance()
+    {
+        return new self();
+    }
+
+    /**
      * get tag commit command via rev-list
      *
      * @param \GitElephant\Objects\TreeTag $tag a tag instance

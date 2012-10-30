@@ -110,7 +110,6 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $mock
             ->expects($this->any())
             ->method('execute')
-            ->with($this->equalTo($command))
             ->will($this->returnValue($mock));
         $mock
             ->expects($this->any())
@@ -121,15 +120,15 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
     protected function getMockContainer()
     {
-        return $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+        return $this->getMock('GitElephant\Command\CommandContainer');
     }
 
-    protected function addCommandToMockContainer(\PHPUnit_Framework_MockObject_MockObject $container, $commandService)
+    protected function addCommandToMockContainer(\PHPUnit_Framework_MockObject_MockObject $container, $commandName)
     {
         $container
             ->expects($this->any())
             ->method('get')
-            ->with($this->equalTo($commandService))
+            ->with($this->equalTo($commandName))
             ->will($this->returnValue($this->getMockCommand()));
     }
 

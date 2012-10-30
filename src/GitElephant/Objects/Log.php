@@ -15,8 +15,9 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\GitAuthor;
-use GitElephant\Repository;
+use GitElephant\Objects\GitAuthor,
+    GitElephant\Repository,
+    GitElephant\Command\LogCommand;
 
 /**
  * Git log abstraction object
@@ -82,7 +83,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      */
     private function createFromCommand($ref, $path, $limit, $offset)
     {
-        $command = $this->getRepository()->getContainer()->get('command.log')->showLog($ref, $path, $limit, $offset);
+        $command = LogCommand::getInstance()->showLog($ref, $path, $limit, $offset);
         $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }

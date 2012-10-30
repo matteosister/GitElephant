@@ -14,9 +14,11 @@
 
 namespace GitElephant\Objects\Diff;
 
-use GitElephant\Objects\Diff\DiffObject;
-use GitElephant\Utilities;
-use GitElephant\Repository;
+use GitElephant\Objects\Diff\DiffObject,
+    GitElephant\Utilities,
+    GitElephant\Repository,
+    GitElephant\Command\DiffTreeCommand,
+    GitElephant\Command\DiffCommand;
 
 /**
  * Represent a collection of diffs between two trees
@@ -85,15 +87,15 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
         }
         if ($commit2 === null) {
             if ($commit1->isRoot()) {
-                $command = $this->getRepository()->getContainer()->get('command.diff_tree')->rootDiff($commit1);
+                $command = DiffTreeCommand::getInstance()->rootDiff($commit1);
             } else {
-                $command = $this->getRepository()->getContainer()->get('command.diff')->diff($commit1);
+                $command = DiffCommand::getInstance()->diff($commit1);
             }
         } else {
             if (is_string($commit2)) {
                 $commit2 = $this->getRepository()->getCommit($commit2);
             }
-            $command = $this->getRepository()->getContainer()->get('command.diff')->diff($commit1, $commit2, $path);
+            $command = DiffCommand::getInstance()->diff($commit1, $commit2, $path);
         }
         $outputLines = $this->getCaller()->execute($command)->getOutputLines();
         $this->parseOutputLines($outputLines);
