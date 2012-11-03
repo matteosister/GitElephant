@@ -48,28 +48,34 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     private $diffObjects;
 
     /**
-     * static generator to generate a single commit from output of command.diff or command.diff service
+     * static generator to generate a Diff object
      *
-     * @param \GitElephant\Repository $repository  repository
-     * @param array                   $outputLines output lines
+     * @param \GitElephant\Repository                 $repository repository
+     * @param null|string|\GitElephant\Objects\Commit $commit1    first commit
+     * @param null|string|\GitElephant\Objects\Commit $commit2    second commit
+     * @param null|string                             $path       path to consider
      *
      * @return Diff
      */
-    static function createFromOutputLines(Repository $repository, $outputLines)
+    static function create(Repository $repository, $commit1 = null, $commit2 = null, $path = null)
     {
         $commit = new self($repository);
-        $commit->parseOutputLines($outputLines);
+        $commit->createFromCommand($commit1, $commit2, $path);
         return $commit;
     }
 
     /**
      * Class constructor
+     * bare Diff object
+     *
+     * @param \GitElephant\Repository $repository
+     * @param null $diffObjects
      */
-    public function __construct(Repository $repository, $commit1 = null, $commit2 = null, $path = null)
+    public function __construct(Repository $repository, $diffObjects = null)
     {
         $this->position = 0;
         $this->repository = $repository;
-        $this->createFromCommand($commit1, $commit2, $path);
+        $this->diffObjects = $diffObjects;
     }
 
     /**

@@ -417,7 +417,7 @@ class Repository
      */
     public function getDiff($commit1 = null, $commit2 = null, $path = null)
     {
-        return new Diff($this, $commit1, $commit2, $path);
+        return Diff::create($this, $commit1, $commit2, $path);
     }
 
     /**

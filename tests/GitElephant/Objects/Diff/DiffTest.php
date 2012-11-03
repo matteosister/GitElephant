@@ -52,7 +52,7 @@ class DiffTest extends TestCase
         $this->getRepository()->commit('commit2', true);
         $commit = $this->getRepository()->getCommit();
 
-        $diff = new Diff($this->getRepository(), $commit);
+        $diff = Diff::create($this->getRepository(), $commit);
 
         $this->assertInstanceOf('\GitElephant\Objects\Diff\Diff', $diff);
         $this->assertArrayInterfaces($diff);
