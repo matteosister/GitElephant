@@ -289,8 +289,6 @@ There is a [GitElephantBundle](https://github.com/matteosister/GitElephantBundle
 Dependencies
 ------------
 
-- [Symfony Config](https://github.com/symfony/Config)
-- [Symfony DependencyInjection](https://github.com/symfony/DependencyInjection)
 - [Symfony Process](https://github.com/symfony/Process)
 
 *for tests*
