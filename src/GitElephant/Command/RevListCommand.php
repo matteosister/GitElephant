@@ -52,10 +52,11 @@ class RevListCommand extends BaseCommand
      *
      * @return string
      */
-    public function commitPath(Commit $commit)
+    public function commitPath(Commit $commit, $max = 1000)
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_REVLIST);
+        $this->addCommandArgument(sprintf('--max-count=%s', $max));
         $this->addCommandSubject($commit->getSha());
         return $this->getCommand();
     }
