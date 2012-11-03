@@ -289,7 +289,7 @@ There is a [GitElephantBundle](https://github.com/matteosister/GitElephantBundle
 Dependencies
 ------------
 
-- [Symfony Process](https://github.com/symfony/Process)
+- [symfony/process](https://packagist.org/packages/symfony/process)
 
 *for tests*
 
