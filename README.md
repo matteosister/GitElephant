@@ -223,9 +223,9 @@ $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'),
 // alternatively you could directly use the sha of the commit
 $diff = $repo->getDiff('1ac370d', '8fb7281');
 // manually generate a Diff object
-$diff = new Diff($repo); // defaults to the last commit
+$diff = Diff::create($repo); // defaults to the last commit
 // or as explained before
-$diff = new Diff($repo, '1ac370d', '8fb7281');
+$diff = Diff::create($repo, '1ac370d', '8fb7281');
 ```
 
 The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
