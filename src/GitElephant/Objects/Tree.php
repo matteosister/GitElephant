@@ -15,12 +15,10 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\BaseCommand;
-use GitElephant\Command\Caller;
-use GitElephant\Objects\TreeObject;
-use GitElephant\GitBinary;
-use GitElephant\Utilities;
-use GitElephant\Repository;
+use GitElephant\Command\Caller,
+    GitElephant\Objects\TreeObject,
+    GitElephant\Repository,
+    GitElephant\Command\LsTreeCommand;
 
 
 /**
@@ -129,7 +127,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      */
     private function createFromCommand()
     {
-        $command = $this->getRepository()->getContainer()->get('command.ls_tree')->tree($this->ref);
+        $command = LsTreeCommand::getInstance()->tree($this->ref);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }

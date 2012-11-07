@@ -28,6 +28,14 @@ class ShowCommand extends BaseCommand
     const GIT_SHOW = 'show';
 
     /**
+     * @return ShowCommand
+     */
+    static public function getInstance()
+    {
+        return new self();
+    }
+
+    /**
      * build the show command
      *
      * @param string|\GitElephant\Objects\Commit $ref the reference for the show command

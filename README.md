@@ -26,7 +26,7 @@ To install GitElephant with composer you simply need to create a *composer.json*
 ``` json
 {
     "require": {
-        "cypresslab/gitelephant": "0.8.*"
+        "cypresslab/gitelephant": "0.9.*"
     }
 }
 ```
@@ -289,9 +289,7 @@ There is a [GitElephantBundle](https://github.com/matteosister/GitElephantBundle
 Dependencies
 ------------
 
-- [Symfony Config](https://github.com/symfony/Config)
-- [Symfony DependencyInjection](https://github.com/symfony/DependencyInjection)
-- [Symfony Process](https://github.com/symfony/Process)
+- [symfony/process](https://packagist.org/packages/symfony/process)
 
 *for tests*
 

@@ -14,8 +14,10 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\TreeishInterface;
-use GitElephant\Repository;
+use GitElephant\Objects\TreeishInterface,
+    GitElephant\Repository,
+    GitElephant\Command\TagCommand,
+    GitElephant\Command\RevListCommand;
 
 
 /**
@@ -88,7 +90,7 @@ class TreeTag implements TreeishInterface
      */
     private function createFromCommand()
     {
-        $command = $this->getRepository()->getContainer()->get('command.tag')->lists();
+        $command = TagCommand::getInstance()->lists();
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
@@ -108,7 +110,7 @@ class TreeTag implements TreeishInterface
         foreach ($outputLines as $tagString) {
             if ($tagString != '') {
                 if ($this->name === trim($tagString)) {
-                    $lines = $this->getCaller()->execute($this->getRepository()->getContainer()->get('command.rev_list')->getTagCommit($this))->getOutputLines();
+                    $lines = $this->getCaller()->execute(RevListCommand::getInstance()->getTagCommit($this))->getOutputLines();
                     $this->setSha($lines[0]);
                     $found = true;
                     break;
