@@ -31,6 +31,7 @@ use GitElephant\Objects\Tree,
     GitElephant\Command\LogCommand,
     GitElephant\Command\CloneCommand,
     GitElephant\Command\CatFileCommand;
+use GitElephant\Command\LsTreeCommand;
 
 /**
  * Repository
@@ -397,12 +398,16 @@ class Repository
      * Tree Object is Countable, Iterable and has ArrayAccess for easy manipulation
      *
      * @param string|TreeishInterface $ref  the treeish to check
-     * @param string|TreeObject       $path the physical path to the tree relative to the repository root
+     * @param string|TreeObject       $path TreeObject or null for root
      *
      * @return Objects\Tree
      */
-    public function getTree($ref = 'HEAD', $path = '')
+    public function getTree($ref = 'HEAD', $path = null)
     {
+        if (is_string($path) && '' !== $path) {
+            $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(true);
+            $path = TreeObject::createFromOutputLine($outputLines[0]);
+        }
         return new Tree($this, $ref, $path);
     }
 

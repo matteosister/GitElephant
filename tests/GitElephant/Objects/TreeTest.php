@@ -63,10 +63,8 @@ class TreeTest extends TestCase
         $this->assertInstanceOf('Countable', $tree);
         $this->assertCount(3, $tree);
         $treeObjChild = $tree[0];
-        var_dump($treeObjChild);
         $this->assertEquals(TreeObject::TYPE_TREE, $treeObjChild->getType());
         $tree = $this->repository->getTree('HEAD', $treeObjChild);
-        var_dump($tree);
         $this->assertCount(1, $tree);
     }
 }

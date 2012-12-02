@@ -100,7 +100,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *
      * @param \GitElephant\Repository $repository the repository
      * @param string                  $ref        a treeish reference
-     * @param string|TreeObject       $path       the (physical) path of the repository relative to the root or TreeObject instance
+     * @param string|TreeObject       $treeObject TreeObject instance
      *
      * @throws \InvalidArgumentException
      */
@@ -109,12 +109,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         $this->position   = 0;
         $this->repository = $repository;
         $this->ref = $ref;
-
-        if (is_string($path) || $path instanceof TreeObject) {
-            $this->path = $path;
-        } else {
-            throw new \InvalidArgumentException('the path for a Tree instance should be a string or a TreeObject instance');
-        }
+        $this->path = $path;
         $this->createFromCommand();
     }
 
@@ -126,7 +121,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     private function createFromCommand()
     {
         $command = LsTreeCommand::getInstance()->tree($this->ref, $this->path);
-        $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+        $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }
 
@@ -215,6 +210,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
                 }
             }
         }
+
         return $bc;
     }
 
@@ -231,21 +227,14 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         if (count($this->children) > 0) {
             return;
         }
-        foreach ($outputLines as $line) {
-            if ($line != '') {
-                $slices = $this->getLineSlices($line);
-                if ($slices['fullPath'] == $this->path) {
-                    $pos = strrpos($slices['fullPath'], '/');
-                    if ($pos === false) {
-                        $name       = $this->path;
-                        $this->path = '';
-                    } else {
-                        $path       = $this->path;
-                        $this->path = substr($path, 0, $pos);
-                        $name       = substr($path, $pos + 1);
-                    }
-                    $this->blob = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $slices['fullPath']);
-                }
+        // root, no blob
+        if ($this->isRoot()) {
+            return;
+        }
+        if (1 === count($outputLines)) {
+            $treeObject = TreeObject::createFromOutputLine($outputLines[0]);
+            if ($treeObject->getSha() === $this->path->getSha()) {
+                $this->blob = $treeObject;
             }
         }
     }
@@ -264,8 +253,10 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         if ($a->getType() == $b->getType()) {
             $names = array($a->getName(), $b->getName());
             sort($names);
+
             return ($a->getName() == $names[0]) ? -1 : 1;
         }
+
         return $a->getType() == TreeObject::TYPE_TREE && $b->getType() == TreeObject::TYPE_BLOB ? -1 : 1;
     }
 
@@ -281,68 +272,33 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         if ($line == '') {
             return;
         }
-        $slices = $this->getLineSlices($line);
+        $slices = TreeObject::getLineSlices($line);
         if ($this->isRoot()) {
             // if is root check for first children
             $pattern     = '/(\w+)\/(.*)/';
             $replacement = '$1';
         } else {
             // filter by the children of the path
-            if (!preg_match(sprintf('/^%s\/(\w*)/', preg_quote($this->path, '/')), $slices['fullPath'])) {
+            $actualPath = is_string($this->path) ? $this->path : $this->path->getFullPath();
+            if (!preg_match(sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/')), $slices['fullPath'])) {
                 return;
             }
-            $pattern     = sprintf('/^%s\/(\w*)/', preg_quote($this->path, '/'));
+            $pattern     = sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/'));
             $replacement = '$1';
         }
         $name = preg_replace($pattern, $replacement, $slices['fullPath']);
         if (strpos($name, '/') !== false) {
             return;
         }
-
         if (!in_array($name, $this->pathChildren)) {
-            //$path = preg_replace('/(.*)(\/'.$name.')$/', '$1', $slices['fullPath']);
-            $path                 = rtrim($slices['fullPath'], $name);
+            $path                 = rtrim(rtrim($slices['fullPath'], $name), '/');
             $treeObject           = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
             $this->children[]     = $treeObject;
             $this->pathChildren[] = $name;
         }
     }
 
-    /**
-     * Take a line and actually turn in slices
-     *
-     * @param string $line a single line output from the git binary
-     *
-     * @return array
-     */
-    private function getLineSlices($line)
-    {
-        preg_match('/^(\d+) (\w+) ([a-z0-9]+) +(\d+|-)\t(.*)$/', $line, $matches);
-        $permissions = $matches[1];
-        $type        = null;
-        switch ($matches[2]) {
-            case TreeObject::TYPE_TREE:
-                $type = TreeObject::TYPE_TREE;
-                break;
-            case TreeObject::TYPE_BLOB:
-                $type = TreeObject::TYPE_BLOB;
-                break;
-            case TreeObject::TYPE_LINK:
-                $type = TreeObject::TYPE_LINK;
-                break;
-        }
-        $sha      = $matches[3];
-        $size     = $matches[4];
-        $fullPath = $matches[5];
 
-        return array(
-            'permissions' => $permissions,
-            'type'        => $type,
-            'sha'         => $sha,
-            'size'        => $size,
-            'fullPath'    => $fullPath
-        );
-    }
 
     /**
      * Repository setter

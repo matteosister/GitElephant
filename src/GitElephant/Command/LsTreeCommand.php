@@ -61,10 +61,24 @@ class LsTreeCommand extends BaseCommand
         return $this->getCommand();
     }
 
-    public function tree($ref = 'HEAD', $path = '')
+    /**
+     * tree of a given path
+     *
+     * @param string            $ref  reference
+     * @param string\TreeObject $path path
+     *
+     * @return string
+     */
+    public function tree($ref = 'HEAD', $path = null)
     {
         if ($path instanceof TreeObject) {
-            $path = $path->getFullPath().DIRECTORY_SEPARATOR;
+            if (null === $path) {
+                $subjectPath = '';
+            } else {
+                $subjectPath = $path->getFullPath() . ($path->isTree() ? '/' : '');
+            }
+        } else {
+            $subjectPath = $path;
         }
         $what = $ref;
         if ($ref instanceof TreeishInterface) {
@@ -72,10 +86,8 @@ class LsTreeCommand extends BaseCommand
         }
         $this->clearAll();
         $this->addCommandName(self::LS_TREE_COMMAND);
-        // show trees
-        $this->addCommandArgument('-t');
         $this->addCommandArgument('-l');
-        $subject = $what . ' -- ' . $path;
+        $subject = $what . ' -- ' . $subjectPath;
         $this->addCommandSubject($subject);
 
         return $this->getCommand();
