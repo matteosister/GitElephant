@@ -56,7 +56,7 @@ class LsTreeCommandTest extends TestCase
      */
     public function testTree()
     {
-        $this->assertEquals("ls-tree '-t' '-l' HEAD", $this->lsTreeCommand->tree(), 'ls-tree command test');
+        $this->assertEquals("ls-tree '-l' HEAD --", $this->lsTreeCommand->tree(), 'ls-tree command test');
     }
 
     /**
