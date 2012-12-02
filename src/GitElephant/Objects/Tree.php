@@ -110,9 +110,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         $this->repository = $repository;
         $this->ref = $ref;
 
-        if ($path instanceof TreeObject) {
-            $this->path = $path->getPath();
-        } else if (is_string($path)) {
+        if (is_string($path) || $path instanceof TreeObject) {
             $this->path = $path;
         } else {
             throw new \InvalidArgumentException('the path for a Tree instance should be a string or a TreeObject instance');
@@ -127,7 +125,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      */
     private function createFromCommand()
     {
-        $command = LsTreeCommand::getInstance()->tree($this->ref);
+        $command = LsTreeCommand::getInstance()->tree($this->ref, $this->path);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
