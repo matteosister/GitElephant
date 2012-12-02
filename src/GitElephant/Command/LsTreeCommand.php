@@ -16,6 +16,7 @@ namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
 use GitElephant\Objects\TreeishInterface;
+use GitElephant\Objects\TreeObject;
 
 
 /**
@@ -23,7 +24,6 @@ use GitElephant\Objects\TreeishInterface;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class LsTreeCommand extends BaseCommand
 {
     const LS_TREE_COMMAND = 'ls-tree';
@@ -43,15 +43,13 @@ class LsTreeCommand extends BaseCommand
      *
      * @return string
      */
-    public function tree($ref = 'HEAD')
+    public function fullTree($ref = 'HEAD')
     {
         $what = $ref;
         if ($ref instanceof TreeishInterface) {
             $what = $ref->getSha();
         }
-
         $this->clearAll();
-
         $this->addCommandName(self::LS_TREE_COMMAND);
         // recurse
         $this->addCommandArgument('-r');
@@ -59,6 +57,39 @@ class LsTreeCommand extends BaseCommand
         $this->addCommandArgument('-t');
         $this->addCommandArgument('-l');
         $this->addCommandSubject($what);
+
+        return $this->getCommand();
+    }
+
+    /**
+     * tree of a given path
+     *
+     * @param string            $ref  reference
+     * @param string\TreeObject $path path
+     *
+     * @return string
+     */
+    public function tree($ref = 'HEAD', $path = null)
+    {
+        if ($path instanceof TreeObject) {
+            if (null === $path) {
+                $subjectPath = '';
+            } else {
+                $subjectPath = $path->getFullPath() . ($path->isTree() ? '/' : '');
+            }
+        } else {
+            $subjectPath = $path;
+        }
+        $what = $ref;
+        if ($ref instanceof TreeishInterface) {
+            $what = $ref->getSha();
+        }
+        $this->clearAll();
+        $this->addCommandName(self::LS_TREE_COMMAND);
+        $this->addCommandArgument('-l');
+        $subject = $what . ' -- ' . $subjectPath;
+        $this->addCommandSubject($subject);
+
         return $this->getCommand();
     }
 
