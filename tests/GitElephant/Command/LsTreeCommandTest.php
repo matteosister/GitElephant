@@ -40,13 +40,23 @@ class LsTreeCommandTest extends TestCase
     }
 
     /**
+     * fullTree test
+     *
+     * @covers \GitElephant\Command\LsTreeCommand::tree
+     */
+    public function testFullTree()
+    {
+        $this->assertEquals("ls-tree '-r' '-t' '-l' HEAD", $this->lsTreeCommand->fullTree(), 'ls-tree command test');
+    }
+
+    /**
      * tree test
      *
      * @covers \GitElephant\Command\LsTreeCommand::tree
      */
     public function testTree()
     {
-        $this->assertEquals("ls-tree '-r' '-t' '-l' HEAD", $this->lsTreeCommand->tree(), 'ls-tree command test');
+        $this->assertEquals("ls-tree '-l' HEAD --", $this->lsTreeCommand->tree(), 'ls-tree command test');
     }
 
     /**

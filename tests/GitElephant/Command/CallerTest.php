@@ -74,7 +74,7 @@ class CallerTest extends TestCase
         }
         $this->getRepository()->commit('first commit', true);
         $command = new LsTreeCommand();
-        $outputLines = $caller->execute($command->tree($this->getRepository()->getMainBranch()))->getOutputLines();
+        $outputLines = $caller->execute($command->fullTree($this->getRepository()->getMainBranch()))->getOutputLines();
         $this->assertTrue(is_array($outputLines));
         $this->assertEquals(range(0, count($outputLines) - 1), array_keys($outputLines));
     }

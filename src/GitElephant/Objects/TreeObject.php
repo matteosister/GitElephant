@@ -21,6 +21,9 @@ namespace GitElephant\Objects;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
+use GitElephant\Command\LsTreeCommand;
+use GitElephant\Repository;
+
 class TreeObject
 {
     const TYPE_BLOB = 'blob';
@@ -70,6 +73,66 @@ class TreeObject
     private $path;
 
     /**
+     * create a TreeObject from a single outputLine of the git ls-tree command
+     *
+     * @param string $outputLine output from ls-tree command
+     *
+     * @see LsTreeCommand::tree
+     * @return TreeObject
+     */
+    public static function createFromOutputLine($outputLine)
+    {
+        $slices = static::getLineSlices($outputLine);
+        $fullPath = $slices['fullPath'];
+        if (false === $pos = mb_strrpos($fullPath, '/')) {
+            // repository root
+            $path = '';
+            $name = $fullPath;
+        } else {
+            $path = substr($fullPath, 0, $pos);
+            $name = substr($fullPath, $pos + 1);
+        }
+
+        return new self($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
+    }
+
+    /**
+     * Take a line and turn it in slices
+     *
+     * @param string $line a single line output from the git binary
+     *
+     * @return array
+     */
+    public static function getLineSlices($line)
+    {
+        preg_match('/^(\d+) (\w+) ([a-z0-9]+) +(\d+|-)\t(.*)$/', $line, $matches);
+        $permissions = $matches[1];
+        $type        = null;
+        switch ($matches[2]) {
+            case TreeObject::TYPE_TREE:
+                $type = TreeObject::TYPE_TREE;
+                break;
+            case TreeObject::TYPE_BLOB:
+                $type = TreeObject::TYPE_BLOB;
+                break;
+            case TreeObject::TYPE_LINK:
+                $type = TreeObject::TYPE_LINK;
+                break;
+        }
+        $sha      = $matches[3];
+        $size     = $matches[4];
+        $fullPath = $matches[5];
+
+        return array(
+            'permissions' => $permissions,
+            'type'        => $type,
+            'sha'         => $sha,
+            'size'        => $size,
+            'fullPath'    => $fullPath
+        );
+    }
+
+    /**
      * Class constructor
      *
      * @param string $permissions node permissions
@@ -96,7 +159,7 @@ class TreeObject
      */
     public function __toString()
     {
-        return $this->name;
+        return (string) $this->name;
     }
 
     /**
@@ -153,7 +216,7 @@ class TreeObject
      */
     public function getFullPath()
     {
-        return $this->path.$this->name;
+        return rtrim('' == $this->path ? $this->name : $this->path.'/'.$this->name, '/');
     }
 
     /**
