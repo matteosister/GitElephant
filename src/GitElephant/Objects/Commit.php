@@ -205,7 +205,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public function __toString()
     {
-        return $this->getSha();
+        return $this->sha;
     }
 
     /**
