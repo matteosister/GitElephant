@@ -304,6 +304,7 @@ class Repository
                 return $treeTag;
             }
         }
+
         return null;
     }
 
@@ -335,6 +336,7 @@ class Repository
     public function getCommit($ref = 'HEAD')
     {
         $commit = new Commit($this, $ref);
+
         return $commit;
     }
 
@@ -348,6 +350,7 @@ class Repository
     public function countCommits($start = 'HEAD')
     {
         $commit = new Commit($this, $start);
+
         return $commit->count();
     }
 
@@ -361,7 +364,7 @@ class Repository
      *
      * @return \GitElephant\Objects\Log
      */
-    public function getLog($ref = 'HEAD', $path = null, $limit = 15, $offset = null)
+    public function getLog($ref = 'HEAD', $path = null, $limit = 10, $offset = null)
     {
         return new Log($this, $ref, $path, $limit, $offset);
     }
@@ -379,6 +382,7 @@ class Repository
     public function getTreeObjectLog(TreeObject $obj, $branch = null, $limit = 1, $offset = null)
     {
         $command = LogCommand::getInstance()->showObjectLog($obj, $branch, $limit, $offset);
+
         return Log::createFromOutputLines($this, $this->caller->execute($command)->getOutputLines());
     }
 

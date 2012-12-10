@@ -89,6 +89,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     {
         $tree = new self($repository);
         $tree->parseOutputLines($outputLines);
+
         return $tree;
     }
 
@@ -100,9 +101,10 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *
      * @param \GitElephant\Repository $repository the repository
      * @param string                  $ref        a treeish reference
-     * @param string|TreeObject       $treeObject TreeObject instance
+     * @param string                  $path       path
      *
-     * @throws \InvalidArgumentException
+     * @internal param \GitElephant\Objects\TreeObject|string $treeObject TreeObject instance
+     *
      */
     public function __construct(Repository $repository, $ref = 'HEAD', $path = '')
     {
@@ -219,6 +221,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      * to tell if it's a blob
      *
      * @param array $outputLines output lines
+     *
      * @return mixed
      */
     private function scanPathsForBlob($outputLines)
@@ -298,7 +301,60 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         }
     }
 
+    /**
+     * get the last commit message for this tree
+     *
+     * @param string $ref
+     *
+     * @return Commit\Message
+     */
+    public function getLastCommitMessage($ref = 'master')
+    {
+        return $this->getLastCommit($ref)->getMessage();
+    }
 
+    /**
+     * get author of the last commit
+     *
+     * @param string $ref
+     *
+     * @return GitAuthor
+     */
+    public function getLastCommitAuthor($ref = 'master')
+    {
+        return $this->getLastCommit($ref)->getAuthor();
+    }
+
+    /**
+     * get the last commit for a given treeish, for the actual tree
+     *
+     * @param string $ref
+     *
+     * @return Commit
+     */
+    public function getLastCommit($ref = 'master')
+    {
+        if ($this->isRoot()) {
+            return $this->getRepository()->getCommit($ref);
+        }
+        $log = $this->repository->getTreeObjectLog($this->getTreeObject(), $ref);
+
+        return $log[0];
+    }
+
+    /**
+     * get the tree object for this tree
+     *
+     * @return null
+     */
+    public function getTreeObject()
+    {
+        if ($this->isRoot()) {
+            return null;
+        } else {
+            return $this->getPath();
+        }
+    }
 
     /**
      * Repository setter
@@ -338,6 +394,16 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Get Ref
+     *
+     * @return string
+     */
+    public function getRef()
+    {
+        return $this->ref;
     }
 
     /**
