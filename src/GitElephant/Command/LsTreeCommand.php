@@ -65,18 +65,14 @@ class LsTreeCommand extends BaseCommand
      * tree of a given path
      *
      * @param string            $ref  reference
-     * @param string\TreeObject $path path
+     * @param string|TreeObject $path path
      *
      * @return string
      */
     public function tree($ref = 'HEAD', $path = null)
     {
         if ($path instanceof TreeObject) {
-            if (null === $path) {
-                $subjectPath = '';
-            } else {
-                $subjectPath = $path->getFullPath() . ($path->isTree() ? '/' : '');
-            }
+            $subjectPath = $path->getFullPath() . ($path->isTree() ? '/' : '');
         } else {
             $subjectPath = $path;
         }

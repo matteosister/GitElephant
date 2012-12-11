@@ -19,6 +19,7 @@ use GitElephant\Command\Caller,
     GitElephant\Objects\TreeObject,
     GitElephant\Repository,
     GitElephant\Command\LsTreeCommand;
+use GitElephant\Command\CatFileCommand;
 
 
 /**
@@ -184,6 +185,23 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
+     * the current tree path is a binary file
+     *
+     * @return bool
+     */
+    public function isBinary()
+    {
+        return $this->isRoot() ? false : TreeObject::TYPE_BLOB === $this->path->getType();
+    }
+
+    public function getBinaryData()
+    {
+        $cmd = CatFileCommand::getInstance()->content($this->path, $this->ref);
+
+        return $this->getCaller()->execute($cmd)->getOutput();
+    }
+
+    /**
      * Return an array like this
      *   0 => array(
      *      'path' => the path to the current element
@@ -276,28 +294,32 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
             return;
         }
         $slices = TreeObject::getLineSlices($line);
-        if ($this->isRoot()) {
-            // if is root check for first children
-            $pattern     = '/(\w+)\/(.*)/';
-            $replacement = '$1';
+        if ($this->isBlob()) {
+            $this->pathChildren[] = $this->blob->getName();
         } else {
-            // filter by the children of the path
-            $actualPath = is_string($this->path) ? $this->path : $this->path->getFullPath();
-            if (!preg_match(sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/')), $slices['fullPath'])) {
+            if ($this->isRoot()) {
+                // if is root check for first children
+                $pattern     = '/(\w+)\/(.*)/';
+                $replacement = '$1';
+            } else {
+                // filter by the children of the path
+                $actualPath = is_string($this->path) ? $this->path : $this->path->getFullPath();
+                if (!preg_match(sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/')), $slices['fullPath'])) {
+                    return;
+                }
+                $pattern     = sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/'));
+                $replacement = '$1';
+            }
+            $name = preg_replace($pattern, $replacement, $slices['fullPath']);
+            if (strpos($name, '/') !== false) {
                 return;
             }
-            $pattern     = sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/'));
-            $replacement = '$1';
-        }
-        $name = preg_replace($pattern, $replacement, $slices['fullPath']);
-        if (strpos($name, '/') !== false) {
-            return;
-        }
-        if (!in_array($name, $this->pathChildren)) {
-            $path                 = rtrim(rtrim($slices['fullPath'], $name), '/');
-            $treeObject           = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
-            $this->children[]     = $treeObject;
-            $this->pathChildren[] = $name;
+            if (!in_array($name, $this->pathChildren)) {
+                $path                 = rtrim(rtrim($slices['fullPath'], $name), '/');
+                $treeObject           = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
+                $this->children[]     = $treeObject;
+                $this->pathChildren[] = $name;
+            }
         }
     }
 
