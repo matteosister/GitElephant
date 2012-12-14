@@ -54,6 +54,7 @@ class TagCommand extends BaseCommand
         }
         $subject = $startPoint == null ? $name : $name . ' ' . $startPoint;
         $this->addCommandSubject($subject);
+
         return $this->getCommand();
     }
 
@@ -66,6 +67,7 @@ class TagCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
+
         return $this->getCommand();
     }
 
@@ -88,6 +90,7 @@ class TagCommand extends BaseCommand
         $this->addCommandName(self::TAG_COMMAND);
         $this->addCommandArgument('-d');
         $this->addCommandSubject($name);
+
         return $this->getCommand();
     }
 }
