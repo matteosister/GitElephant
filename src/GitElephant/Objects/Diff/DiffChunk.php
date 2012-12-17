@@ -211,6 +211,16 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
+     * Get Lines
+     *
+     * @return array
+     */
+    public function getLines()
+    {
+        return $this->lines;
+    }
+
+    /**
      * ArrayAccess interface
      *
      * @param int $offset offset
