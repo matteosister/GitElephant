@@ -23,7 +23,6 @@ use GitElephant\Command\BaseCommand;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class CloneCommand extends BaseCommand
 {
     const GIT_CLONE_COMMAND = 'clone';
@@ -48,6 +47,7 @@ class CloneCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(static::GIT_CLONE_COMMAND);
         $this->addCommandSubject($url.' .');
+
         return $this->getCommand();
     }
 }

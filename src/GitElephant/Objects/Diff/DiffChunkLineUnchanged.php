@@ -41,14 +41,17 @@ class DiffChunkLineUnchanged extends DiffChunkLine
     /**
      * Class constructor
      *
-     * @param int    $number  line number
-     * @param string $content line content
+     * @param int    $originNumber      original line number
+     * @param int    $destinationNumber destination line number
+     * @param string $content           line content
+     *
+     * @internal param int $number line number
      */
     public function __construct($originNumber, $destinationNumber, $content)
     {
         $this->setOriginNumber($originNumber);
         $this->setDestNumber($destinationNumber);
-        $this->setContent(trim($content));
+        $this->setContent($content);
         $this->setType(self::UNCHANGED);
     }
 

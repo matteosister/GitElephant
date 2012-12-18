@@ -205,7 +205,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public function __toString()
     {
-        return $this->getSha();
+        return $this->sha;
     }
 
     /**
@@ -279,11 +279,13 @@ class Commit implements TreeishInterface, \Countable
     /**
      * sha getter
      *
+     * @param bool $short short version
+     *
      * @return mixed
      */
-    public function getSha()
+    public function getSha($short = false)
     {
-        return $this->sha;
+        return $short ? substr($this->sha, 0, 7) : $this->sha;
     }
 
     /**

@@ -36,4 +36,14 @@ class DiffChunkLineDeleted extends DiffChunkLineChanged
         $this->setContent($content);
         $this->setType(self::DELETED);
     }
+
+    /**
+     * Get destination line number
+     *
+     * @return int
+     */
+    public function getDestNumber()
+    {
+        return '';
+    }
 }

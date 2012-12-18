@@ -19,6 +19,7 @@ use GitElephant\Command\Caller,
     GitElephant\Objects\TreeObject,
     GitElephant\Repository,
     GitElephant\Command\LsTreeCommand;
+use GitElephant\Command\CatFileCommand;
 
 
 /**
@@ -89,6 +90,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     {
         $tree = new self($repository);
         $tree->parseOutputLines($outputLines);
+
         return $tree;
     }
 
@@ -100,9 +102,10 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *
      * @param \GitElephant\Repository $repository the repository
      * @param string                  $ref        a treeish reference
-     * @param string|TreeObject       $treeObject TreeObject instance
+     * @param string                  $path       path
      *
-     * @throws \InvalidArgumentException
+     * @internal param \GitElephant\Objects\TreeObject|string $treeObject TreeObject instance
+     *
      */
     public function __construct(Repository $repository, $ref = 'HEAD', $path = '')
     {
@@ -182,6 +185,23 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
+     * the current tree path is a binary file
+     *
+     * @return bool
+     */
+    public function isBinary()
+    {
+        return $this->isRoot() ? false : TreeObject::TYPE_BLOB === $this->path->getType();
+    }
+
+    public function getBinaryData()
+    {
+        $cmd = CatFileCommand::getInstance()->content($this->path, $this->ref);
+
+        return $this->getCaller()->execute($cmd)->getOutput();
+    }
+
+    /**
      * Return an array like this
      *   0 => array(
      *      'path' => the path to the current element
@@ -219,6 +239,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      * to tell if it's a blob
      *
      * @param array $outputLines output lines
+     *
      * @return mixed
      */
     private function scanPathsForBlob($outputLines)
@@ -273,32 +294,89 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
             return;
         }
         $slices = TreeObject::getLineSlices($line);
-        if ($this->isRoot()) {
-            // if is root check for first children
-            $pattern     = '/(\w+)\/(.*)/';
-            $replacement = '$1';
+        if ($this->isBlob()) {
+            $this->pathChildren[] = $this->blob->getName();
         } else {
-            // filter by the children of the path
-            $actualPath = is_string($this->path) ? $this->path : $this->path->getFullPath();
-            if (!preg_match(sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/')), $slices['fullPath'])) {
+            if ($this->isRoot()) {
+                // if is root check for first children
+                $pattern     = '/(\w+)\/(.*)/';
+                $replacement = '$1';
+            } else {
+                // filter by the children of the path
+                $actualPath = is_string($this->path) ? $this->path : $this->path->getFullPath();
+                if (!preg_match(sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/')), $slices['fullPath'])) {
+                    return;
+                }
+                $pattern     = sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/'));
+                $replacement = '$1';
+            }
+            $name = preg_replace($pattern, $replacement, $slices['fullPath']);
+            if (strpos($name, '/') !== false) {
                 return;
             }
-            $pattern     = sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/'));
-            $replacement = '$1';
-        }
-        $name = preg_replace($pattern, $replacement, $slices['fullPath']);
-        if (strpos($name, '/') !== false) {
-            return;
-        }
-        if (!in_array($name, $this->pathChildren)) {
-            $path                 = rtrim(rtrim($slices['fullPath'], $name), '/');
-            $treeObject           = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
-            $this->children[]     = $treeObject;
-            $this->pathChildren[] = $name;
+            if (!in_array($name, $this->pathChildren)) {
+                $path                 = rtrim(rtrim($slices['fullPath'], $name), '/');
+                $treeObject           = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
+                $this->children[]     = $treeObject;
+                $this->pathChildren[] = $name;
+            }
         }
     }
 
+    /**
+     * get the last commit message for this tree
+     *
+     * @param string $ref
+     *
+     * @return Commit\Message
+     */
+    public function getLastCommitMessage($ref = 'master')
+    {
+        return $this->getLastCommit($ref)->getMessage();
+    }
 
+    /**
+     * get author of the last commit
+     *
+     * @param string $ref
+     *
+     * @return GitAuthor
+     */
+    public function getLastCommitAuthor($ref = 'master')
+    {
+        return $this->getLastCommit($ref)->getAuthor();
+    }
+
+    /**
+     * get the last commit for a given treeish, for the actual tree
+     *
+     * @param string $ref
+     *
+     * @return Commit
+     */
+    public function getLastCommit($ref = 'master')
+    {
+        if ($this->isRoot()) {
+            return $this->getRepository()->getCommit($ref);
+        }
+        $log = $this->repository->getTreeObjectLog($this->getTreeObject(), $ref);
+
+        return $log[0];
+    }
+
+    /**
+     * get the tree object for this tree
+     *
+     * @return null
+     */
+    public function getTreeObject()
+    {
+        if ($this->isRoot()) {
+            return null;
+        } else {
+            return $this->getPath();
+        }
+    }
 
     /**
      * Repository setter
@@ -338,6 +416,16 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     public function getPath()
     {
         return $this->path;
+    }
+
+    /**
+     * Get Ref
+     *
+     * @return string
+     */
+    public function getRef()
+    {
+        return $this->ref;
     }
 
     /**

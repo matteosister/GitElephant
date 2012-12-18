@@ -122,9 +122,9 @@ class Repository
     /**
      * Remove a file/directory
      *
-     * @param string|TreeObject $path the path to remove
-     * @param bool              $recursive
-     * @param bool              $force
+     * @param string|TreeObject $path      the path to remove
+     * @param bool              $recursive recurse
+     * @param bool              $force     force
      */
     public function remove($path, $recursive = false, $force = false)
     {
@@ -162,6 +162,7 @@ class Repository
     public function getStatus()
     {
         $this->caller->execute(MainCommand::getInstance()->status());
+
         return array_map('trim', $this->caller->getOutputLines());
     }
 
@@ -202,6 +203,7 @@ class Repository
             }
         }
         usort($branches, array($this, 'sortBranches'));
+
         return $branches;
     }
 
@@ -219,6 +221,7 @@ class Repository
             }
         );
         sort($filtered);
+
         return $filtered[0];
     }
 
@@ -236,6 +239,7 @@ class Repository
                 return $treeBranch;
             }
         }
+
         return null;
     }
 
@@ -287,6 +291,7 @@ class Repository
                 $tags[] = new TreeTag($this, trim($tagString));
             }
         }
+
         return $tags;
     }
 
@@ -304,6 +309,7 @@ class Repository
                 return $treeTag;
             }
         }
+
         return null;
     }
 
@@ -316,13 +322,18 @@ class Repository
      */
     public function getBranchOrTag($name)
     {
-        if ($branch = $this->getBranch($name)) {
-            return $branch;
-        } else if ($tag = $this->getTag($name)) {
-            return $tag;
-        } else {
-            return null;
+        $branchFinderOutput = $this->caller->execute(BranchCommand::getInstance()->singleInfo($name))->getOutputLines(true);
+        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance()->lists())->getOutputLines(true);
+        if (count($branchFinderOutput) > 0) {
+            return new TreeBranch($branchFinderOutput[0]);
         }
+        foreach ($tagFinderOutput as $line) {
+            if ($line === $name) {
+                return new TreeTag($this, $name);
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -335,6 +346,7 @@ class Repository
     public function getCommit($ref = 'HEAD')
     {
         $commit = new Commit($this, $ref);
+
         return $commit;
     }
 
@@ -348,6 +360,7 @@ class Repository
     public function countCommits($start = 'HEAD')
     {
         $commit = new Commit($this, $start);
+
         return $commit->count();
     }
 
@@ -361,7 +374,7 @@ class Repository
      *
      * @return \GitElephant\Objects\Log
      */
-    public function getLog($ref = 'HEAD', $path = null, $limit = 15, $offset = null)
+    public function getLog($ref = 'HEAD', $path = null, $limit = 10, $offset = null)
     {
         return new Log($this, $ref, $path, $limit, $offset);
     }
@@ -379,6 +392,7 @@ class Repository
     public function getTreeObjectLog(TreeObject $obj, $branch = null, $limit = 1, $offset = null)
     {
         $command = LogCommand::getInstance()->showObjectLog($obj, $branch, $limit, $offset);
+
         return Log::createFromOutputLines($this, $this->caller->execute($command)->getOutputLines());
     }
 
@@ -408,6 +422,7 @@ class Repository
             $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(true);
             $path = TreeObject::createFromOutputLine($outputLines[0]);
         }
+
         return new Tree($this, $ref, $path);
     }
 
@@ -428,7 +443,7 @@ class Repository
     /**
      * Clone a repository
      *
-     * @param string $url the repository url (i.e. git://github.com/matteosister/GitElephant.git or matteo@192.168.1.12:~/git/GitElephant.git)
+     * @param string $url the repository url (i.e. git://github.com/matteosister/GitElephant.git)
      */
     public function cloneFrom($url)
     {
@@ -468,6 +483,7 @@ class Repository
     public function outputContent(TreeObject $obj, $treeish)
     {
         $command = CatFileCommand::getInstance()->content($obj, $treeish);
+
         return $this->caller->execute($command)->getOutputLines();
     }
 

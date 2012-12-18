@@ -49,6 +49,7 @@ class BranchCommand extends BaseCommand
         $this->addCommandName(self::BRANCH_COMMAND);
         $subject = $startPoint == null ? $name : $name . ' ' . $startPoint;
         $this->addCommandSubject($subject);
+
         return $this->getCommand();
     }
 
@@ -64,6 +65,27 @@ class BranchCommand extends BaseCommand
         $this->addCommandArgument('-v');
         $this->addCommandArgument('--no-color');
         $this->addCommandArgument('--no-abbrev');
+
+        return $this->getCommand();
+    }
+
+    /**
+     * get info about a single branch
+     *
+     * @param string $name The branch name
+     *
+     * @return string
+     */
+    public function singleInfo($name)
+    {
+        $this->clearAll();
+        $this->addCommandName(self::BRANCH_COMMAND);
+        $this->addCommandArgument('-v');
+        $this->addCommandArgument('--list');
+        $this->addCommandArgument('--no-color');
+        $this->addCommandArgument('--no-abbrev');
+        $this->addCommandSubject($name);
+
         return $this->getCommand();
     }
 
@@ -80,6 +102,7 @@ class BranchCommand extends BaseCommand
         $this->addCommandName(self::BRANCH_COMMAND);
         $this->addCommandArgument('-d');
         $this->addCommandSubject($name);
+
         return $this->getCommand();
     }
 }

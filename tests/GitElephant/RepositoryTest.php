@@ -391,7 +391,7 @@ class RepositoryTest extends TestCase
 
         $log = $this->getRepository()->getLog();
         $this->assertInstanceOf('GitElephant\Objects\Log', $this->getRepository()->getLog());
-        $this->assertEquals(15, $log->count());
+        $this->assertGreaterThan(0, $log->count());
     }
 
     /**

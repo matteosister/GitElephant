@@ -52,7 +52,7 @@ class DiffCommand extends BaseCommand
         $this->addCommandArgument('--full-index');
         $this->addCommandArgument('--no-color');
         // no whitespaces
-        $this->addCommandArgument('-w');
+        //$this->addCommandArgument('-w');
         // detect renames
         $this->addCommandArgument('-M');
         $this->addCommandArgument('--dst-prefix=DST/');
@@ -75,6 +75,7 @@ class DiffCommand extends BaseCommand
         }
 
         $this->addCommandSubject($subject);
+
         return $this->getCommand();
     }
 }
