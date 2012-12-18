@@ -105,11 +105,11 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
         $new = $this->destStartLine;
         foreach ($lines as $line) {
             if (preg_match('/^\+(.*)/', $line)) {
-                $this->lines[] = new DiffChunkLineAdded($new++, preg_replace('/\+(.*)/', '$1', $line));
+                $this->lines[] = new DiffChunkLineAdded($new++, preg_replace('/\+(.*)/', ' $1', $line));
                 $destUnchanged++;
             } else {
                 if (preg_match('/^-(.*)/', $line)) {
-                    $this->lines[] = new DiffChunkLineDeleted($deleted++, preg_replace('/-(.*)/', '$1', $line));
+                    $this->lines[] = new DiffChunkLineDeleted($deleted++, preg_replace('/-(.*)/', ' $1', $line));
                     $originUnchanged++;
                 } else {
                     if (preg_match('/^ (.*)/', $line) || $line == '') {
