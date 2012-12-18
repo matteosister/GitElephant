@@ -36,4 +36,14 @@ class DiffChunkLineAdded extends DiffChunkLineChanged
         $this->setContent($content);
         $this->setType(self::ADDED);
     }
+
+    /**
+     * Get destination line number
+     *
+     * @return int
+     */
+    public function getOriginNumber()
+    {
+        return '';
+    }
 }
