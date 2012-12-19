@@ -194,11 +194,16 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         return $this->isRoot() ? false : TreeObject::TYPE_BLOB === $this->path->getType();
     }
 
+    /**
+     * get binary data
+     *
+     * @return string
+     */
     public function getBinaryData()
     {
         $cmd = CatFileCommand::getInstance()->content($this->path, $this->ref);
 
-        return $this->getCaller()->execute($cmd)->getOutput();
+        return $this->getCaller()->execute($cmd)->getRawOutput();
     }
 
     /**

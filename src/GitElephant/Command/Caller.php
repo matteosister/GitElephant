@@ -49,6 +49,13 @@ class Caller implements CallerInterface
     private $outputLines = array();
 
     /**
+     * raw output
+     *
+     * @var string
+     */
+    private $rawOutput;
+
+    /**
      * Class constructor
      *
      * @param \GitElephant\GitBinary $binary         the binary
@@ -93,7 +100,7 @@ class Caller implements CallerInterface
         if (!$process->isSuccessful()) {
             throw new \RuntimeException($process->getErrorOutput());
         }
-
+        $this->rawOutput = $process->getOutput();
         // rtrim values
         $values = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
         $this->outputLines = $values;
@@ -104,7 +111,7 @@ class Caller implements CallerInterface
     /**
      * filter an array of output lines and remove the empty ones.
      *
-     * @param $var the array value
+     * @param string $var the array value
      *
      * @return bool
      */
@@ -139,8 +146,20 @@ class Caller implements CallerInterface
                     $output[] = $line;
                 }
             }
+
             return $output;
         }
+
         return $this->outputLines;
+    }
+
+    /**
+     * Get RawOutput
+     *
+     * @return string
+     */
+    public function getRawOutput()
+    {
+        return $this->rawOutput;
     }
 }
