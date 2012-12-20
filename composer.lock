@@ -1,5 +1,5 @@
 {
-    "hash": "5447d2f8d5b7a22ed30cac9b9ba0efde",
+    "hash": "d48301d6d12e3d097d2a8f6f0e77d64c",
     "packages": [
         {
             "name": "symfony/process",
@@ -26,7 +26,7 @@
                     "dev-master": "2.1-dev"
                 }
             },
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Process": ""
