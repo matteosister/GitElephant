@@ -14,6 +14,9 @@
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
+use GitElephant\GitBinary;
+use GitElephant\Command\Caller;
+use GitElephant\Repository;
 
 /**
  * TreeTest
@@ -66,5 +69,18 @@ class TreeTest extends TestCase
         $this->assertEquals(TreeObject::TYPE_TREE, $treeObjChild->getType());
         $tree = $this->repository->getTree('HEAD', $treeObjChild);
         $this->assertCount(1, $tree);
+    }
+
+    public function testSubmodule()
+    {
+        $tempDir = realpath(sys_get_temp_dir()).'gitelephant_'.md5(uniqid(rand(),1));
+        $tempName = tempnam($tempDir, 'gitelephant');
+        $path = $tempName;
+        unlink($path);
+        mkdir($path);
+        $binary = new GitBinary();
+        $caller = new Caller($binary, $path);
+        $repository = new Repository($path);
+        
     }
 }

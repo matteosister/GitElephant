@@ -32,6 +32,7 @@ use GitElephant\Objects\Tree,
     GitElephant\Command\CloneCommand,
     GitElephant\Command\CatFileCommand;
 use GitElephant\Command\LsTreeCommand;
+use GitElephant\Command\SubmoduleCommand;
 
 /**
  * Repository
@@ -275,6 +276,17 @@ class Repository
     public function deleteTag($tag)
     {
         $this->caller->execute(TagCommand::getInstance()->delete($tag));
+    }
+
+    /**
+     * add a git submodule to the repository
+     *
+     * @param string $gitUrl git url of the submodule
+     * @param string $path   path to register the submodule to
+     */
+    public function addSubmodule($gitUrl, $path)
+    {
+        $this->caller->execute(SubmoduleCommand::getInstance()->add($gitUrl, $path));
     }
 
     /**
