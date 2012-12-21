@@ -33,6 +33,7 @@ use GitElephant\Objects\Tree,
     GitElephant\Command\CatFileCommand;
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\SubmoduleCommand;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Repository
@@ -85,6 +86,31 @@ class Repository
         $this->path   = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
         $this->name = $name;
+    }
+
+    /**
+     * create a repository from a remote git url, or a local filesystem
+     * and save it in a temp folder
+     *
+     * @param string|Repository $git            the git remote url, or the filesystem path
+     * @param null              $repositoryPath path
+     * @param GitBinary         $binary         binary
+     * @param null              $name           repository name
+     *
+     * @return Repository
+     */
+    public static function createFromRemote($git, $repositoryPath = null, GitBinary $binary = null, $name = null)
+    {
+        if (null === $repositoryPath) {
+            $tempDir = realpath(sys_get_temp_dir());
+            $repositoryPath = sprintf('%s/%s', $tempDir, sha1(uniqid()));
+            $fs = new Filesystem();
+            $fs->mkdir($repositoryPath);
+        }
+        $repository = new Repository($repositoryPath, $binary, $name);
+        $repository->cloneFrom($git);
+
+        return $repository;
     }
 
     /**
@@ -284,7 +310,7 @@ class Repository
      * @param string $gitUrl git url of the submodule
      * @param string $path   path to register the submodule to
      */
-    public function addSubmodule($gitUrl, $path)
+    public function addSubmodule($gitUrl, $path = null)
     {
         $this->caller->execute(SubmoduleCommand::getInstance()->add($gitUrl, $path));
     }
@@ -460,6 +486,19 @@ class Repository
     public function cloneFrom($url)
     {
         $this->caller->execute(CloneCommand::getInstance()->cloneUrl($url));
+    }
+
+    /**
+     * get the humanish name of the repository
+     *
+     * @return string
+     */
+    public function getHumanishName()
+    {
+        $name = substr($this->getPath(), strrpos($this->getPath(), '/'));
+        $name = str_replace('.git', '.', $name);
+        $name = str_replace('.bundle', '.', $name);
+        return $name;
     }
 
     /**

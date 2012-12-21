@@ -44,12 +44,14 @@ class SubmoduleCommand extends BaseCommand
      *
      * @return string
      */
-    public function add($gitUrl, $path)
+    public function add($gitUrl, $path = null)
     {
         $this->clearAll();
-        $this->addCommandName(sprintf('%s %s'), self::SUBMODULE_COMMAND, self::SUBMODULE_ADD_COMMAND);
+        $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_ADD_COMMAND));
         $this->addCommandArgument($gitUrl);
-        $this->addCommandSubject($path);
+        if (null !== $path) {
+            $this->addCommandSubject($path);
+        }
 
         return $this->getCommand();
     }

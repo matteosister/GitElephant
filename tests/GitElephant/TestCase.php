@@ -49,6 +49,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
         if ($this->repository == null) {
             $this->initRepository();
         }
+
         return $this->repository;
     }
 
@@ -60,16 +61,19 @@ class TestCase extends \PHPUnit_Framework_TestCase
         if ($this->caller == null) {
             $this->initRepository();
         }
+
         return $this->caller;
     }
 
     /**
+     * @param null|string $name the folder name
+     *
      * @return void
      */
     protected function initRepository()
     {
         if ($this->repository == null) {
-            $tempDir = realpath(sys_get_temp_dir()).'gitelephant_'.md5(uniqid(rand(),1));
+            $tempDir = realpath(sys_get_temp_dir()).'gitelephant_'.md5(uniqid(rand(), 1));
             $tempName = tempnam($tempDir, 'gitelephant');
             $this->path = $tempName;
             unlink($this->path);
@@ -81,8 +85,10 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param string $name
-     * @param string|null $folder
+     * @param string      $name    file name
+     * @param string|null $folder  folder name
+     * @param null        $content content
+     *
      * @return void
      */
     protected function addFile($name, $folder = null, $content = null)
@@ -91,13 +97,14 @@ class TestCase extends \PHPUnit_Framework_TestCase
                 $this->path.DIRECTORY_SEPARATOR.$name :
                 $this->path.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name;
         $handle = fopen($filename, 'w');
-        $file_content = $content == null ? 'test content' : $content;
-        fwrite($handle, $file_content);
+        $fileContent = $content == null ? 'test content' : $content;
+        fwrite($handle, $fileContent);
         fclose($handle);
     }
 
     /**
-     * @param string $name
+     * @param string $name name
+     *
      * @return void
      */
     protected function addFolder($name)
@@ -105,7 +112,16 @@ class TestCase extends \PHPUnit_Framework_TestCase
         mkdir($this->path.DIRECTORY_SEPARATOR.$name);
     }
 
-    protected function getMockCaller($command, $output) {
+    /**
+     * mock the caller
+     *
+     * @param string $command command
+     * @param string $output  output
+     *
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    protected function getMockCaller($command, $output)
+    {
         $mock = $this->getMock('GitElephant\Command\CallerInterface');
         $mock
             ->expects($this->any())
@@ -115,6 +131,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('getOutputLines')
             ->will($this->returnValue($output));
+
         return $mock;
     }
 

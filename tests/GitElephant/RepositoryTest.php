@@ -535,4 +535,17 @@ class RepositoryTest extends TestCase
         $this->getRepository()->checkout('master');
         $this->assertEquals(2, $this->getRepository()->countCommits());
     }
+
+    /**
+     * testHumanishName
+     */
+    public function testHumanishName()
+    {
+        $this->assertEquals('pippo', $r->getHumanishName());
+    }
+
+    public function testCreateFromRemote()
+    {
+        $r = Repository::createFromRemote('git://github.com/twitter/bootstrap.git');
+    }
 }
