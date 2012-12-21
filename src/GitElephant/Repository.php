@@ -498,6 +498,7 @@ class Repository
         $name = substr($this->getPath(), strrpos($this->getPath(), '/'));
         $name = str_replace('.git', '.', $name);
         $name = str_replace('.bundle', '.', $name);
+
         return $name;
     }
 

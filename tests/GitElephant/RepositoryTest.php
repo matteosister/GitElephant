@@ -541,7 +541,7 @@ class RepositoryTest extends TestCase
      */
     public function testHumanishName()
     {
-        $this->assertEquals('pippo', $r->getHumanishName());
+        $this->assertEquals('pippo', $this->getRepository()->getHumanishName());
     }
 
     public function testCreateFromRemote()
