@@ -482,10 +482,11 @@ class Repository
      * Clone a repository
      *
      * @param string $url the repository url (i.e. git://github.com/matteosister/GitElephant.git)
+     * @param null   $to  where to clone the repo
      */
-    public function cloneFrom($url)
+    public function cloneFrom($url, $to = null)
     {
-        $this->caller->execute(CloneCommand::getInstance()->cloneUrl($url));
+        $this->caller->execute(CloneCommand::getInstance()->cloneUrl($url, $to));
     }
 
     /**

@@ -461,7 +461,7 @@ class RepositoryTest extends TestCase
     public function testCloneFrom()
     {
         $this->initRepository();
-        $this->getRepository()->cloneFrom('git://github.com/matteosister/GitElephant.git');
+        $this->getRepository()->cloneFrom('git://github.com/matteosister/GitElephant.git', '.');
         $commit = $this->getRepository()->getCommit();
         $this->assertFalse($commit->isRoot());
     }
@@ -543,5 +543,14 @@ class RepositoryTest extends TestCase
     {
         $this->initRepository('test-dir');
         $this->assertEquals('test-dir', $this->getRepository()->getHumanishName());
+    }
+
+    /**
+     * testCreateFromRemote
+     */
+    public function testCreateFromRemote()
+    {
+        $repo = Repository::createFromRemote('git://github.com/documentcloud/backbone.git');
+        $this->assertInstanceOf('GitElephant\Repository', $repo);
     }
 }

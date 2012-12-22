@@ -39,14 +39,16 @@ class CloneCommand extends BaseCommand
      * Command to clone a repository
      *
      * @param string $url repository url
+     * @param string $to  where to clone the repo
      *
      * @return string command
      */
-    public function cloneUrl($url)
+    public function cloneUrl($url, $to = null)
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_CLONE_COMMAND);
-        $this->addCommandSubject($url.' .');
+        $subject = $url.(null !== $to ? ' '.$to : '');
+        $this->addCommandSubject($subject);
 
         return $this->getCommand();
     }
