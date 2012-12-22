@@ -100,4 +100,18 @@ class TreeTest extends TestCase
         $submodule = $tree[1];
         $this->assertEquals(TreeObject::TYPE_LINK, $submodule->getType());
     }
+
+    /**
+     * testIsRoot
+     */
+    public function testIsRoot()
+    {
+        $this->initRepository();
+        $this->getRepository()->init();
+        $this->addFolder('test');
+        $this->addFile('test/1');
+        $this->getRepository()->commit('test', true);
+        $this->assertTrue($this->getRepository()->getTree()->isRoot());
+        $this->assertFalse($this->getRepository()->getTree('master', 'test')->isRoot());
+    }
 }
