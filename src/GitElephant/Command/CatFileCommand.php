@@ -60,6 +60,7 @@ class CatFileCommand extends BaseCommand
         // pretty format
         $this->addCommandArgument('-p');
         $this->addCommandSubject($sha . ':' . $object->getFullPath());
+
         return $this->getCommand();
     }
 
@@ -78,6 +79,7 @@ class CatFileCommand extends BaseCommand
         // pretty format
         $this->addCommandArgument('-p');
         $this->addCommandSubject($treeish->getSha() . ':' . $object->getFullPath());
+
         return $this->getCommand();
     }
 
@@ -96,6 +98,7 @@ class CatFileCommand extends BaseCommand
         // pretty format
         $this->addCommandArgument('-p');
         $this->addCommandSubject($treeish->getSha() . ':' . $object->getFullPath());
+
         return $this->getCommand();
     }
 

@@ -58,6 +58,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     {
         $log = new self($repository);
         $log->parseOutputLines($outputLines);
+
         return $log;
     }
 
@@ -79,6 +80,11 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     /**
      * get the commit properties from command
      *
+     * @param string $ref    treeish reference
+     * @param string $path   path
+     * @param int    $limit  limit
+     * @param string $offset offset
+     *
      * @see ShowCommand::commitInfo
      */
     private function createFromCommand($ref, $path, $limit, $offset)
@@ -93,7 +99,9 @@ class Log implements \ArrayAccess, \Countable, \Iterator
         $commitLines = null;
         $this->commits = array();
         foreach ($outputLines as $line) {
-            if ($line == '') continue;
+            if ('' == $line) {
+                continue;
+            }
             if (preg_match('/^commit (\w+)$/', $line) > 0) {
                 if (null !== $commitLines) {
                     $this->commits[] = Commit::createFromOutputLines($this->repository, $commitLines);

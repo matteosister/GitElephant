@@ -59,21 +59,25 @@ class TreeTag implements TreeishInterface
      *
      * @param \GitElephant\Repository $repository  repository
      * @param array                   $outputLines output lines
-     * @param $name
+     * @param string                  $name        name
      *
      * @return Commit
      */
-    static function createFromOutputLines(Repository $repository, $outputLines, $name)
+    public static function createFromOutputLines(Repository $repository, $outputLines, $name)
     {
         $tag = new self($repository, $name);
         $tag->parseOutputLines($outputLines);
+
         return $tag;
     }
 
     /**
      * Class constructor
      *
-     * @param string $line a single tag line from the git binary
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       name
+     *
+     * @internal param string $line a single tag line from the git binary
      */
     public function __construct(Repository $repository, $name)
     {

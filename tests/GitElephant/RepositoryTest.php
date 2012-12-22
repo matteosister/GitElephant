@@ -535,4 +535,13 @@ class RepositoryTest extends TestCase
         $this->getRepository()->checkout('master');
         $this->assertEquals(2, $this->getRepository()->countCommits());
     }
+
+    /**
+     * testHumanishName
+     */
+    public function testHumanishName()
+    {
+        $this->initRepository('test-dir');
+        $this->assertEquals('test-dir', $this->getRepository()->getHumanishName());
+    }
 }

@@ -51,11 +51,11 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     private $position;
 
     /**
-     * the tree path
+     * the tree subject
      *
-     * @var string
+     * @var TreeObject
      */
-    private $path;
+    private $subject;
 
     /**
      * tree children
@@ -102,17 +102,17 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *
      * @param \GitElephant\Repository $repository the repository
      * @param string                  $ref        a treeish reference
-     * @param string                  $path       path
+     * @param TreeObject              $subject    the subject
      *
      * @internal param \GitElephant\Objects\TreeObject|string $treeObject TreeObject instance
      *
      */
-    public function __construct(Repository $repository, $ref = 'HEAD', $path = '')
+    public function __construct(Repository $repository, $ref = 'HEAD', $subject = null)
     {
         $this->position   = 0;
         $this->repository = $repository;
         $this->ref = $ref;
-        $this->path = $path;
+        $this->subject = $subject;
         $this->createFromCommand();
     }
 
@@ -123,7 +123,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      */
     private function createFromCommand()
     {
-        $command = LsTreeCommand::getInstance()->tree($this->ref, $this->path);
+        $command = LsTreeCommand::getInstance()->tree($this->ref, $this->subject);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }
@@ -157,11 +157,11 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      */
     public function getParent()
     {
-        if (strrpos($this->path, '/') === false) {
+        if ($this->isRoot()) {
             return null;
-        } else {
-            return substr($this->path, 0, strrpos($this->path, '/'));
         }
+
+        return substr($this->subject->getFullPath(), 0, strrpos($this->subject->getFullPath(), '/'));
     }
 
     /**
@@ -171,7 +171,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      */
     public function isRoot()
     {
-        return $this->path == '';
+        return null === $this->subject;
     }
 
     /**
@@ -191,14 +191,19 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      */
     public function isBinary()
     {
-        return $this->isRoot() ? false : TreeObject::TYPE_BLOB === $this->path->getType();
+        return $this->isRoot() ? false : TreeObject::TYPE_BLOB === $this->subject->getType();
     }
 
+    /**
+     * get binary data
+     *
+     * @return string
+     */
     public function getBinaryData()
     {
-        $cmd = CatFileCommand::getInstance()->content($this->path, $this->ref);
+        $cmd = CatFileCommand::getInstance()->content($this->subject, $this->ref);
 
-        return $this->getCaller()->execute($cmd)->getOutput();
+        return $this->getCaller()->execute($cmd)->getRawOutput();
     }
 
     /**
@@ -216,7 +221,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     {
         $bc = array();
         if (!$this->isRoot()) {
-            $arrayNames = explode('/', $this->path);
+            $arrayNames = explode('/', $this->subject->getFullPath());
             $pathString = '';
             foreach ($arrayNames as $i => $name) {
                 if ($this->isBlob() && $name == $this->blob->getName()) {
@@ -254,7 +259,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         }
         if (1 === count($outputLines)) {
             $treeObject = TreeObject::createFromOutputLine($outputLines[0]);
-            if ($treeObject->getSha() === $this->path->getSha()) {
+            if ($treeObject->getSha() === $this->subject->getSha()) {
                 $this->blob = $treeObject;
             }
         }
@@ -303,7 +308,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
                 $replacement = '$1';
             } else {
                 // filter by the children of the path
-                $actualPath = is_string($this->path) ? $this->path : $this->path->getFullPath();
+                $actualPath = $this->subject->getFullPath();
                 if (!preg_match(sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/')), $slices['fullPath'])) {
                     return;
                 }
@@ -409,13 +414,13 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
-     * Path getter
+     * Get Subject
      *
-     * @return null
+     * @return \GitElephant\Objects\TreeObject
      */
-    public function getPath()
+    public function getSubject()
     {
-        return $this->path;
+        return $this->subject;
     }
 
     /**

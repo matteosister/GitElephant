@@ -32,6 +32,8 @@ use GitElephant\Objects\Tree,
     GitElephant\Command\CloneCommand,
     GitElephant\Command\CatFileCommand;
 use GitElephant\Command\LsTreeCommand;
+use GitElephant\Command\SubmoduleCommand;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Repository
@@ -84,6 +86,32 @@ class Repository
         $this->path   = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
         $this->name = $name;
+    }
+
+    /**
+     * create a repository from a remote git url, or a local filesystem
+     * and save it in a temp folder
+     *
+     * @param string|Repository $git            the git remote url, or the filesystem path
+     * @param null              $repositoryPath path
+     * @param GitBinary         $binary         binary
+     * @param null              $name           repository name
+     *
+     * @return Repository
+     */
+    public static function createFromRemote($git, $repositoryPath = null, GitBinary $binary = null, $name = null)
+    {
+        if (null === $repositoryPath) {
+            $tempDir = realpath(sys_get_temp_dir());
+            $repositoryPath = sprintf('%s%s%s', $tempDir, DIRECTORY_SEPARATOR, sha1(uniqid()));
+            var_dump($repositoryPath);
+            $fs = new Filesystem();
+            $fs->mkdir($repositoryPath);
+        }
+        $repository = new Repository($repositoryPath, $binary, $name);
+        $repository->cloneFrom($git);
+
+        return $repository;
     }
 
     /**
@@ -278,6 +306,17 @@ class Repository
     }
 
     /**
+     * add a git submodule to the repository
+     *
+     * @param string $gitUrl git url of the submodule
+     * @param string $path   path to register the submodule to
+     */
+    public function addSubmodule($gitUrl, $path = null)
+    {
+        $this->caller->execute(SubmoduleCommand::getInstance()->add($gitUrl, $path));
+    }
+
+    /**
      * Gets an array of TreeTag objects
      *
      * @return array An array of TreeTag objects
@@ -448,6 +487,20 @@ class Repository
     public function cloneFrom($url)
     {
         $this->caller->execute(CloneCommand::getInstance()->cloneUrl($url));
+    }
+
+    /**
+     * get the humanish name of the repository
+     *
+     * @return string
+     */
+    public function getHumanishName()
+    {
+        $name = substr($this->getPath(), strrpos($this->getPath(), '/') + 1);
+        $name = str_replace('.git', '.', $name);
+        $name = str_replace('.bundle', '.', $name);
+
+        return $name;
     }
 
     /**
