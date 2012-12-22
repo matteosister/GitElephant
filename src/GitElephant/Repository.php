@@ -104,7 +104,6 @@ class Repository
         if (null === $repositoryPath) {
             $tempDir = realpath(sys_get_temp_dir());
             $repositoryPath = sprintf('%s%s%s', $tempDir, DIRECTORY_SEPARATOR, sha1(uniqid()));
-            var_dump($repositoryPath);
             $fs = new Filesystem();
             $fs->mkdir($repositoryPath);
         }
