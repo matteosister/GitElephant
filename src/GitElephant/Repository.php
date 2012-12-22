@@ -103,7 +103,8 @@ class Repository
     {
         if (null === $repositoryPath) {
             $tempDir = realpath(sys_get_temp_dir());
-            $repositoryPath = sprintf('%s/%s', $tempDir, sha1(uniqid()));
+            $repositoryPath = sprintf('%s%s%s', $tempDir, DIRECTORY_SEPARATOR, sha1(uniqid()));
+            var_dump($repositoryPath);
             $fs = new Filesystem();
             $fs->mkdir($repositoryPath);
         }
@@ -495,7 +496,7 @@ class Repository
      */
     public function getHumanishName()
     {
-        $name = substr($this->getPath(), strrpos($this->getPath(), '/'));
+        $name = substr($this->getPath(), strrpos($this->getPath(), '/') + 1);
         $name = str_replace('.git', '.', $name);
         $name = str_replace('.bundle', '.', $name);
 

@@ -18,6 +18,7 @@ use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Commit;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Filesystem\Filesystem;
 
 class TestCase extends \PHPUnit_Framework_TestCase
 {
@@ -70,18 +71,23 @@ class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function initRepository()
+    protected function initRepository($name = null)
     {
-        if ($this->repository == null) {
-            $tempDir = realpath(sys_get_temp_dir()).'gitelephant_'.md5(uniqid(rand(), 1));
-            $tempName = tempnam($tempDir, 'gitelephant');
-            $this->path = $tempName;
-            unlink($this->path);
-            mkdir($this->path);
-            $binary = new GitBinary();
-            $this->caller = new Caller($binary, $this->path);
-            $this->repository = new Repository($this->path);
-        }
+        $tempDir = realpath(sys_get_temp_dir());
+        $tempName = null === $name ? tempnam($tempDir, 'gitelephant') : $tempDir.DIRECTORY_SEPARATOR.$name;
+        $this->path = $tempName;
+        @unlink($this->path);
+        $fs = new Filesystem();
+        $fs->mkdir($this->path);
+        $binary = new GitBinary();
+        $this->caller = new Caller($binary, $this->path);
+        $this->repository = new Repository($this->path);
+    }
+
+    protected function tearDown()
+    {
+        $fs = new Filesystem();
+        $fs->remove($this->path);
     }
 
     /**

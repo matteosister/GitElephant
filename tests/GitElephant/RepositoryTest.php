@@ -541,11 +541,7 @@ class RepositoryTest extends TestCase
      */
     public function testHumanishName()
     {
-        $this->assertEquals('pippo', $this->getRepository()->getHumanishName());
-    }
-
-    public function testCreateFromRemote()
-    {
-        $r = Repository::createFromRemote('git://github.com/twitter/bootstrap.git');
+        $this->initRepository('test-dir');
+        $this->assertEquals('test-dir', $this->getRepository()->getHumanishName());
     }
 }
