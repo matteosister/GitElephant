@@ -36,9 +36,6 @@ class CloneCommandTest extends TestCase
     public function setUp()
     {
         $this->initRepository();
-//        $this->getRepository()->init();
-//        $this->addFile('foo');
-//        $this->getRepository()->commit('first commit', true);
         $this->cloneCommand = new CloneCommand();
     }
 
@@ -48,6 +45,6 @@ class CloneCommandTest extends TestCase
     public function testClone()
     {
         $command = $this->cloneCommand->cloneUrl('git://github.com/matteosister/GitElephant.git');
-        $this->assertEquals('clone git://github.com/matteosister/GitElephant.git .', $command);
+        $this->assertEquals('clone git://github.com/matteosister/GitElephant.git', $command);
     }
 }

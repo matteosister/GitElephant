@@ -104,7 +104,6 @@ class Repository
         if (null === $repositoryPath) {
             $tempDir = realpath(sys_get_temp_dir());
             $repositoryPath = sprintf('%s%s%s', $tempDir, DIRECTORY_SEPARATOR, sha1(uniqid()));
-            var_dump($repositoryPath);
             $fs = new Filesystem();
             $fs->mkdir($repositoryPath);
         }
@@ -483,10 +482,11 @@ class Repository
      * Clone a repository
      *
      * @param string $url the repository url (i.e. git://github.com/matteosister/GitElephant.git)
+     * @param null   $to  where to clone the repo
      */
-    public function cloneFrom($url)
+    public function cloneFrom($url, $to = null)
     {
-        $this->caller->execute(CloneCommand::getInstance()->cloneUrl($url));
+        $this->caller->execute(CloneCommand::getInstance()->cloneUrl($url, $to));
     }
 
     /**
