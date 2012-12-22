@@ -14,6 +14,9 @@
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
+use GitElephant\GitBinary;
+use GitElephant\Command\Caller;
+use GitElephant\Repository;
 
 /**
  * TreeTest
@@ -25,6 +28,9 @@ use GitElephant\TestCase;
 
 class TreeTest extends TestCase
 {
+    /**
+     * setUp
+     */
     public function setUp()
     {
         $this->initRepository();
@@ -38,6 +44,9 @@ class TreeTest extends TestCase
         $this->getRepository()->commit('first', true);
     }
 
+    /**
+     * testConstructor
+     */
     public function testConstructor()
     {
         $tree = $this->repository->getTree('HEAD');
@@ -54,6 +63,9 @@ class TreeTest extends TestCase
         $this->assertEquals(TreeObject::TYPE_BLOB, $treeObj2->getType());
     }
 
+    /**
+     * testWithPath
+     */
     public function testWithPath()
     {
         $tree = $this->repository->getTree('HEAD');
@@ -66,5 +78,26 @@ class TreeTest extends TestCase
         $this->assertEquals(TreeObject::TYPE_TREE, $treeObjChild->getType());
         $tree = $this->repository->getTree('HEAD', $treeObjChild);
         $this->assertCount(1, $tree);
+    }
+
+    /**
+     * testSubmodule
+     */
+    public function testSubmodule()
+    {
+        $tempDir = realpath(sys_get_temp_dir()).'gitelephant_'.md5(uniqid(rand(), 1));
+        $tempName = tempnam($tempDir, 'gitelephant');
+        $path = $tempName;
+        unlink($path);
+        mkdir($path);
+        $repository = new Repository($path);
+        $repository->init();
+        $repository->addSubmodule($this->repository->getPath());
+        $repository->commit('test', true);
+        $tree = $repository->getTree();
+        $this->assertContains('.gitmodules', $tree);
+        $this->assertContains($this->repository->getHumanishName(), $tree);
+        $submodule = $tree[1];
+        $this->assertEquals(TreeObject::TYPE_LINK, $submodule->getType());
     }
 }

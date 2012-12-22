@@ -24,11 +24,15 @@ namespace GitElephant\Objects;
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Repository;
 
+/**
+ * A TreeObject instance represents a node in the git tree repository
+ * It could be a file or a folder, as well as a submodule (a "link" talking the git language")
+ */
 class TreeObject
 {
     const TYPE_BLOB = 'blob';
     const TYPE_TREE = 'tree';
-    const TYPE_LINK = 'link';
+    const TYPE_LINK = 'commit';
 
     /**
      * permissions
