@@ -1,5 +1,5 @@
 {
-    "hash": "65fa73a8a3da49aead8e030041bef780",
+    "hash": "5bc8133a6b6e723feea5ba9de9f6bcba",
     "packages": [
         {
             "name": "symfony/filesystem",
@@ -46,35 +46,31 @@
         },
         {
             "name": "symfony/process",
-            "version": "v2.1.4",
+            "version": "v2.1.6",
             "target-dir": "Symfony/Component/Process",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Process",
-                "reference": "v2.1.4"
+                "reference": "v2.1.6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/symfony/Process/archive/v2.1.4.zip",
-                "reference": "v2.1.4",
+                "url": "https://github.com/symfony/Process/archive/v2.1.6.zip",
+                "reference": "v2.1.6",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
-            "time": "2012-11-19 20:53:52",
+            "time": "2012-12-19 13:27:19",
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1-dev"
-                }
-            },
             "installation-source": "source",
             "autoload": {
                 "psr-0": {
                     "Symfony\\Component\\Process": ""
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -99,6 +95,7 @@
     "minimum-stability": "dev",
     "stability-flags": {
         "symfony/process": 0,
+        "symfony/filesystem": 0,
         "phpunit/phpunit": 0
     }
 }
