@@ -42,6 +42,7 @@ class DiffTreeCommand extends BaseCommand
      *
      * @param \GitElephant\Objects\Commit $commit the root commit object
      *
+     * @throws \InvalidArgumentException
      * @return string
      */
     public function rootDiff(Commit $commit)
@@ -56,6 +57,7 @@ class DiffTreeCommand extends BaseCommand
         $this->addCommandArgument('--dst-prefix=DST/');
         $this->addCommandArgument('--src-prefix=SRC/');
         $this->addCommandSubject($commit);
+
         return $this->getCommand();
     }
 }

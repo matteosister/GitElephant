@@ -51,6 +51,7 @@ class ShowCommand extends BaseCommand
         $this->addCommandArgument('--pretty=raw');
         $this->addCommandArgument('--no-color');
         $this->addCommandSubject($ref);
+
         return $this->getCommand();
     }
 }

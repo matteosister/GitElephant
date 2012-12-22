@@ -57,10 +57,11 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      *
      * @return Diff
      */
-    static function create(Repository $repository, $commit1 = null, $commit2 = null, $path = null)
+    public static function create(Repository $repository, $commit1 = null, $commit2 = null, $path = null)
     {
         $commit = new self($repository);
         $commit->createFromCommand($commit1, $commit2, $path);
+
         return $commit;
     }
 
@@ -68,8 +69,8 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      * Class constructor
      * bare Diff object
      *
-     * @param \GitElephant\Repository $repository
-     * @param null $diffObjects
+     * @param \GitElephant\Repository $repository  repository instance
+     * @param null                    $diffObjects diff objects
      */
     public function __construct(Repository $repository, $diffObjects = null)
     {
@@ -80,6 +81,10 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * get the commit properties from command
+     *
+     * @param null $commit1 commit 1
+     * @param null $commit2 commit 2
+     * @param null $path    path
      *
      * @see ShowCommand::commitInfo
      */

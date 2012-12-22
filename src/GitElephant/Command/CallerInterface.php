@@ -9,6 +9,9 @@
 
 namespace GitElephant\Command;
 
+/**
+ * interface for the git command caller
+ */
 interface CallerInterface
 {
     /**
@@ -24,6 +27,8 @@ interface CallerInterface
 
     /**
      * after calling execute this method should return the output
+     *
+     * @param bool $stripBlankLines strips the blank lines
      *
      * @return array
      */

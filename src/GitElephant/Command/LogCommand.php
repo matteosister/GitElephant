@@ -17,6 +17,7 @@ namespace GitElephant\Command;
 use GitElephant\Command\BaseCommand;
 use GitElephant\Objects\TreeObject;
 use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\TreeishInterface;
 
 /**
  * Log command generator
@@ -89,7 +90,7 @@ class LogCommand extends BaseCommand
             $this->addCommandArgument('--skip=' . $offset);
         }
 
-        if ($ref instanceof \GitElephant\Objects\TreeishInterface) {
+        if ($ref instanceof TreeishInterface) {
             $ref = $ref->getSha();
         }
 
@@ -98,6 +99,7 @@ class LogCommand extends BaseCommand
         }
 
         $this->addCommandSubject($ref);
+
         return $this->getCommand();
     }
 }

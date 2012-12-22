@@ -52,6 +52,7 @@ class MainCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_INIT);
+
         return $this->getCommand();
     }
 
@@ -64,6 +65,7 @@ class MainCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_STATUS);
+
         return $this->getCommand();
     }
 
@@ -79,6 +81,7 @@ class MainCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(self::GIT_ADD);
         $this->addCommandSubject($what);
+
         return $this->getCommand();
     }
 
@@ -104,6 +107,7 @@ class MainCommand extends BaseCommand
 
         $this->addCommandArgument('-m');
         $this->addCommandSubject(sprintf("'%s'", $message));
+
         return $this->getCommand();
     }
 
@@ -126,6 +130,7 @@ class MainCommand extends BaseCommand
         $this->addCommandName(self::GIT_CHECKOUT);
         $this->addCommandArgument('-q');
         $this->addCommandSubject($what);
+
         return $this->getCommand();
     }
 
@@ -134,6 +139,9 @@ class MainCommand extends BaseCommand
      *
      * @param string|TreeObject $from source path
      * @param string|TreeObject $to   destination path
+     *
+     * @throws \InvalidArgumentException
+     * @return string
      */
     public function move($from, $to)
     {
@@ -151,15 +159,19 @@ class MainCommand extends BaseCommand
 
         $this->addCommandName(self::GIT_MOVE);
         $this->addCommandSubject($from . ' ' . $to);
+
         return $this->getCommand();
     }
 
     /**
      * Remove a file/directory
      *
-     * @param string|TreeObject $path the path to remove
-     * @param bool              $recursive
-     * @param bool              $force
+     * @param string|TreeObject $path      the path to remove
+     * @param bool              $recursive recurse
+     * @param bool              $force     force
+     *
+     * @throws \InvalidArgumentException
+     * @return string
      */
     public function remove($path, $recursive, $force)
     {
@@ -181,13 +193,15 @@ class MainCommand extends BaseCommand
         }
 
         $this->addCommandSubject($path);
+
         return $this->getCommand();
     }
 
     /**
      * Validates a path
      *
-     * @param  string $path
+     * @param string $path path
+     *
      * @return bool
      */
     protected function validatePath($path)

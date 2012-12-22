@@ -104,10 +104,11 @@ class Commit implements TreeishInterface, \Countable
      *
      * @return Commit
      */
-    static function createFromOutputLines(Repository $repository, $outputLines)
+    public static function createFromOutputLines(Repository $repository, $outputLines)
     {
         $commit = new self($repository);
         $commit->parseOutputLines($outputLines);
+
         return $commit;
     }
 
@@ -143,6 +144,7 @@ class Commit implements TreeishInterface, \Countable
     public function count()
     {
         $command = RevListCommand::getInstance()->commitPath($this);
+
         return count($this->getCaller()->execute($command)->getOutputLines(true));
     }
 

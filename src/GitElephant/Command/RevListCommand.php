@@ -23,7 +23,6 @@ use GitElephant\Command\BaseCommand,
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class RevListCommand extends BaseCommand
 {
     const GIT_REVLIST = 'rev-list';
@@ -50,13 +49,15 @@ class RevListCommand extends BaseCommand
         // only the last commit
         $this->addCommandArgument('-n1');
         $this->addCommandSubject($tag->getFullRef());
+
         return $this->getCommand();
     }
 
     /**
      * get the commits path to the passed commit. Useful to count commits in a repo
      *
-     * @param \GitElephant\Objects\Commit $commit
+     * @param \GitElephant\Objects\Commit $commit commit instance
+     * @param int                         $max    max count
      *
      * @return string
      */
@@ -66,6 +67,7 @@ class RevListCommand extends BaseCommand
         $this->addCommandName(static::GIT_REVLIST);
         $this->addCommandArgument(sprintf('--max-count=%s', $max));
         $this->addCommandSubject($commit->getSha());
+
         return $this->getCommand();
     }
 }

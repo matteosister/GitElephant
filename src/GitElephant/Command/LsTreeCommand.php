@@ -105,6 +105,7 @@ class LsTreeCommand extends BaseCommand
 
         $this->addCommandName(self::LS_TREE_COMMAND);
         $this->addCommandSubject($ref);
+
         return $this->getCommand();
     }
 }
