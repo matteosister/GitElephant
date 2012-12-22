@@ -32,7 +32,7 @@ class TreeObject
 {
     const TYPE_BLOB = 'blob';
     const TYPE_TREE = 'tree';
-    const TYPE_LINK = 'link';
+    const TYPE_LINK = 'commit';
 
     /**
      * permissions

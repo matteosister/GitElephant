@@ -94,7 +94,10 @@ class TreeTest extends TestCase
         $repository->init();
         $repository->addSubmodule($this->repository->getPath());
         $repository->commit('test', true);
-        $this->assertContains('.gitmodules', $repository->getTree());
-        //$this->assertContains(str_replace($this->repository->getHumanishName()), $repository->getTree());
+        $tree = $repository->getTree();
+        $this->assertContains('.gitmodules', $tree);
+        $this->assertContains($this->repository->getHumanishName(), $tree);
+        $submodule = $tree[1];
+        $this->assertEquals(TreeObject::TYPE_LINK, $submodule->getType());
     }
 }
