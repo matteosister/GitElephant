@@ -372,14 +372,14 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     /**
      * get the tree object for this tree
      *
-     * @return null
+     * @return null|TreeObject
      */
     public function getTreeObject()
     {
         if ($this->isRoot()) {
             return null;
         } else {
-            return $this->getPath();
+            return $this->getSubject();
         }
     }
 
