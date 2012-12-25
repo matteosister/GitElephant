@@ -114,4 +114,18 @@ class TreeTest extends TestCase
         $this->assertTrue($this->getRepository()->getTree()->isRoot());
         $this->assertFalse($this->getRepository()->getTree('master', 'test')->isRoot());
     }
+
+    /**
+     * testGetTreeObject
+     */
+    public function testGetTreeObject()
+    {
+        $tree = $this->getRepository()->getTree();
+        $this->assertNull($tree->getTreeObject());
+        $tree = $this->getRepository()->getTree('HEAD', 'test');
+        $this->assertNotNull($tree->getTreeObject());
+        $this->assertEquals(TreeObject::TYPE_TREE, $tree->getTreeObject()->getType());
+        $tree = $this->getRepository()->getTree('HEAD', 'test/1');
+        $this->assertEquals(TreeObject::TYPE_BLOB, $tree->getTreeObject()->getType());
+    }
 }

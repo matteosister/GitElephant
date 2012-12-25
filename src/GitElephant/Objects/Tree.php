@@ -372,7 +372,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     /**
      * get the tree object for this tree
      *
-     * @return null
+     * @return null|TreeObject
      */
     public function getTreeObject()
     {
