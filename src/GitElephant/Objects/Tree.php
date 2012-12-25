@@ -379,7 +379,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         if ($this->isRoot()) {
             return null;
         } else {
-            return $this->getPath();
+            return $this->getSubject();
         }
     }
 
