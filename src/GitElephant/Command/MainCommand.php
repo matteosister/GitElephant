@@ -192,7 +192,7 @@ class MainCommand extends BaseCommand
             $this->addCommandArgument('-f');
         }
 
-        $this->addCommandSubject($path);
+        $this->addCommandSubject($this->escapePath($path));
 
         return $this->getCommand();
     }

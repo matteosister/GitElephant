@@ -83,7 +83,7 @@ class LsTreeCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(self::LS_TREE_COMMAND);
         $this->addCommandArgument('-l');
-        $subject = $what . ' -- ' . $subjectPath;
+        $subject = $what . ' -- ' . $this->escapePath($subjectPath);
         $this->addCommandSubject($subject);
 
         return $this->getCommand();

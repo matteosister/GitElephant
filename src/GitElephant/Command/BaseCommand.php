@@ -88,6 +88,18 @@ class BaseCommand
     }
 
     /**
+     * escape path (for spaces)
+     *
+     * @param string $path path
+     *
+     * @return mixed
+     */
+    protected function escapePath($path)
+    {
+        return str_replace(' ', '\ ', $path);
+    }
+
+    /**
      * Get the current command
      *
      * @return string

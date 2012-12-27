@@ -95,7 +95,7 @@ class LogCommand extends BaseCommand
         }
 
         if (null !== $path && !empty($path)) {
-            $ref .= ' -- ' . $path;
+            $ref .= ' -- ' . $this->escapePath($path);
         }
 
         $this->addCommandSubject($ref);
