@@ -47,8 +47,10 @@ class BranchCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
-        $subject = $startPoint == null ? $name : $name . ' ' . $startPoint;
-        $this->addCommandSubject($subject);
+        $this->addCommandSubject($name);
+        if (null !== $startPoint) {
+            $this->addCommandSubject2($startPoint);
+        }
 
         return $this->getCommand();
     }

@@ -67,11 +67,7 @@ class DiffCommand extends BaseCommand
         }
 
         if ($path != null) {
-            if (is_string($path)) {
-                $subject .= ' -- ' . $this->escapePath($path);
-            } else {
-                $subject .= ' -- ' . $this->escapePath($path->getPath());
-            }
+            $this->addPath(is_string($path) ? $path : $path->getPath());
         }
 
         $this->addCommandSubject($subject);

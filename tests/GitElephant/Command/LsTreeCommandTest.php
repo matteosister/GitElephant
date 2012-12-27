@@ -46,7 +46,7 @@ class LsTreeCommandTest extends TestCase
      */
     public function testFullTree()
     {
-        $this->assertEquals("ls-tree '-r' '-t' '-l' HEAD", $this->lsTreeCommand->fullTree(), 'ls-tree command test');
+        $this->assertEquals("ls-tree '-r' '-t' '-l' 'HEAD'", $this->lsTreeCommand->fullTree(), 'ls-tree command test');
     }
 
     /**
@@ -56,7 +56,7 @@ class LsTreeCommandTest extends TestCase
      */
     public function testTree()
     {
-        $this->assertEquals("ls-tree '-l' HEAD --", $this->lsTreeCommand->tree(), 'ls-tree command test');
+        $this->assertEquals("ls-tree '-l' 'HEAD'", $this->lsTreeCommand->tree(), 'ls-tree command test');
     }
 
     /**
@@ -66,6 +66,6 @@ class LsTreeCommandTest extends TestCase
      */
     public function testListAll()
     {
-        $this->assertEquals("ls-tree HEAD", $this->lsTreeCommand->listAll(), 'ls-tree command test');
+        $this->assertEquals("ls-tree 'HEAD'", $this->lsTreeCommand->listAll(), 'ls-tree command test');
     }
 }

@@ -47,8 +47,10 @@ class CloneCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_CLONE_COMMAND);
-        $subject = $url.(null !== $to ? ' '.$to : '');
-        $this->addCommandSubject($subject);
+        $this->addCommandSubject($url);
+        if (null !== $to) {
+            $this->addCommandSubject2($to);
+        }
 
         return $this->getCommand();
     }

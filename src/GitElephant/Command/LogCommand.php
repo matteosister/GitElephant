@@ -49,7 +49,7 @@ class LogCommand extends BaseCommand
      */
     public function showObjectLog(TreeObject $obj, $branch = null, $limit = null, $offset = null)
     {
-        $subject = '';
+        $subject = null;
         if (null !== $branch) {
             if ($branch instanceof TreeBranch) {
                 $subject .= $branch->getName();
@@ -95,7 +95,7 @@ class LogCommand extends BaseCommand
         }
 
         if (null !== $path && !empty($path)) {
-            $ref .= ' -- ' . $this->escapePath($path);
+            $this->addPath($path);
         }
 
         $this->addCommandSubject($ref);
