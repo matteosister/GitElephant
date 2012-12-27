@@ -44,7 +44,7 @@ class BranchCommandTest extends TestCase
     public function testCreate()
     {
         $branch = new BranchCommand();
-        $this->assertEquals($branch->create('test'), "branch test", 'create branch command');
+        $this->assertEquals("branch 'test'", $branch->create('test'), 'create branch command');
         $this->assertEquals(1, count($this->getRepository()->getBranches()), 'one branch in initiated git repo');
         $this->getCaller()->execute($branch->create('test'));
         $this->assertEquals(2, count($this->getRepository()->getBranches()), 'two branches after add branch command');
@@ -71,7 +71,7 @@ class BranchCommandTest extends TestCase
     public function testDelete()
     {
         $branch = new BranchCommand();
-        $this->assertEquals($branch->delete('test-branch'), "branch '-d' test-branch", 'list branch command');
+        $this->assertEquals("branch '-d' 'test-branch'", $branch->delete('test-branch'), 'list branch command');
         $this->getCaller()->execute($branch->create('test'));
         $this->getCaller()->execute($branch->delete('test'));
         $this->assertEquals(1, count($this->getRepository()->getBranches()), 'two branches after add branch command');

@@ -91,6 +91,7 @@ class MainCommand extends BaseCommand
      * @param string $message   the commit message
      * @param bool   $commitAll commit all changes
      *
+     * @throws \InvalidArgumentException
      * @return string
      */
     public function commit($message, $commitAll = false)
@@ -106,7 +107,7 @@ class MainCommand extends BaseCommand
         }
 
         $this->addCommandArgument('-m');
-        $this->addCommandSubject(sprintf("'%s'", $message));
+        $this->addCommandSubject($message);
 
         return $this->getCommand();
     }
@@ -158,7 +159,8 @@ class MainCommand extends BaseCommand
         }
 
         $this->addCommandName(self::GIT_MOVE);
-        $this->addCommandSubject($from . ' ' . $to);
+        $this->addCommandSubject($from);
+        $this->addCommandSubject2($to);
 
         return $this->getCommand();
     }
@@ -192,7 +194,7 @@ class MainCommand extends BaseCommand
             $this->addCommandArgument('-f');
         }
 
-        $this->addCommandSubject($path);
+        $this->addPath($path);
 
         return $this->getCommand();
     }

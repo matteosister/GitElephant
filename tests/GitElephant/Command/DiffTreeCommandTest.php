@@ -50,7 +50,7 @@ class DiffTreeCommandTest extends TestCase
         $commit = $this->getRepository()->getCommit();
         $command = $this->diffTreeCommand->rootDiff($commit);
         $this->assertEquals(
-            sprintf("diff-tree '--cc' '--root' '--dst-prefix=DST/' '--src-prefix=SRC/' %s", $commit),
+            sprintf("diff-tree '--cc' '--root' '--dst-prefix=DST/' '--src-prefix=SRC/' '%s'", $commit),
             $command
         );
     }

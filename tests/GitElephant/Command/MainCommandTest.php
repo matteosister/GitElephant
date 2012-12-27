@@ -61,8 +61,8 @@ class MainCommandTest extends TestCase
      */
     public function testAdd()
     {
-        $this->assertEquals(MainCommand::GIT_ADD.' .', $this->mainCommand->add());
-        $this->assertEquals(MainCommand::GIT_ADD.' foo', $this->mainCommand->add('foo'));
+        $this->assertEquals(MainCommand::GIT_ADD." '.'", $this->mainCommand->add());
+        $this->assertEquals(MainCommand::GIT_ADD." 'foo'", $this->mainCommand->add('foo'));
     }
 
     /**
@@ -78,6 +78,6 @@ class MainCommandTest extends TestCase
      */
     public function testCheckout()
     {
-        $this->assertEquals(MainCommand::GIT_CHECKOUT." '-q' master", $this->mainCommand->checkout('master'));
+        $this->assertEquals(MainCommand::GIT_CHECKOUT." '-q' 'master'", $this->mainCommand->checkout('master'));
     }
 }

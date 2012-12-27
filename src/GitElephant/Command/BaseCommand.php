@@ -48,6 +48,20 @@ class BaseCommand
     private $commandSubject;
 
     /**
+     * the command second subject (i.e. for branch)
+     *
+     * @var string
+     */
+    private $commandSubject2;
+
+    /**
+     * the path
+     *
+     * @var string
+     */
+    private $path;
+
+    /**
      * Clear all previuos variables
      */
     public function clearAll()
@@ -55,6 +69,8 @@ class BaseCommand
         $this->commandName      = null;
         $this->commandArguments = null;
         $this->commandSubject   = null;
+        $this->commandSubject2  = null;
+        $this->path             = null;
     }
 
     /**
@@ -88,6 +104,38 @@ class BaseCommand
     }
 
     /**
+     * Add a second command subject
+     *
+     * @param string $commandSubject2 the second command subject
+     */
+    protected function addCommandSubject2($commandSubject2)
+    {
+        $this->commandSubject2 = $commandSubject2;
+    }
+
+    /**
+     * Add a path to the git command
+     *
+     * @param string $path path
+     */
+    protected function addPath($path)
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * escape path (for spaces)
+     *
+     * @param string $path path
+     *
+     * @return mixed
+     */
+    protected function escapePath($path)
+    {
+        return str_replace(' ', '\ ', $path);
+    }
+
+    /**
      * Get the current command
      *
      * @return string
@@ -105,8 +153,14 @@ class BaseCommand
             $command .= implode(' ', array_map('escapeshellarg', $this->commandArguments));
             $command .= ' ';
         }
-        if ($this->commandSubject != null) {
-            $command .= $this->commandSubject;
+        if (null !== $this->commandSubject) {
+            $command .= escapeshellarg($this->commandSubject);
+        }
+        if (null !== $this->commandSubject2) {
+            $command .= ' '.escapeshellarg($this->commandSubject2);
+        }
+        if (null !== $this->path) {
+            $command .= sprintf(' -- %s', escapeshellarg($this->path));
         }
 
         return trim($command);
