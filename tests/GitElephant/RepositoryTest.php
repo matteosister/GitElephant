@@ -550,7 +550,9 @@ class RepositoryTest extends TestCase
      */
     public function testCreateFromRemote()
     {
-        $repo = Repository::createFromRemote('git://github.com/documentcloud/backbone.git');
+        $repo = Repository::createFromRemote('git://github.com/matteosister/GitElephant.git');
         $this->assertInstanceOf('GitElephant\Repository', $repo);
+        $this->assertCount(2, $repo->getBranches());
+
     }
 }

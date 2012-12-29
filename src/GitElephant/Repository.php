@@ -108,7 +108,8 @@ class Repository
             $fs->mkdir($repositoryPath);
         }
         $repository = new Repository($repositoryPath, $binary, $name);
-        $repository->cloneFrom($git);
+        $repository->cloneFrom($git, $repositoryPath);
+        $repository->checkoutAllRemoteBranches();
 
         return $repository;
     }
@@ -268,6 +269,29 @@ class Repository
         }
 
         return null;
+    }
+
+    /**
+     * Checkout all branches from the remote and make them local
+     *
+     * @return void
+     */
+    public function checkoutAllRemoteBranches()
+    {
+        $actualBranches = $this->getBranches();
+        $allBranches = array();
+        $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists(true))->getOutputLines(true);
+        foreach ($outputLines as $branchLine) {
+            $allBranches[] = new TreeBranch($branchLine);
+        }
+        $realBranches = array_filter($allBranches, function(TreeBranch $branch) use ($actualBranches) {
+            return !in_array($branch, $actualBranches)
+                && preg_match('/^remotes(.+)$/', $branch->getName())
+                && !preg_match('/^(.+)(HEAD|master)$/', $branch->getName());
+        });
+        foreach ($realBranches as $realBranch) {
+            $this->checkout($realBranch);
+        }
     }
 
     /**

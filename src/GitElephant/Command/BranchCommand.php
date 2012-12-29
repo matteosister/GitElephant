@@ -58,15 +58,20 @@ class BranchCommand extends BaseCommand
     /**
      * Lists branches
      *
+     * @param bool $all lists all remotes
+     *
      * @return string the command
      */
-    public function lists()
+    public function lists($all = false)
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
         $this->addCommandArgument('-v');
         $this->addCommandArgument('--no-color');
         $this->addCommandArgument('--no-abbrev');
+        if ($all) {
+            $this->addCommandArgument('-a');
+        }
 
         return $this->getCommand();
     }
