@@ -14,6 +14,7 @@
 namespace GitElephant;
 
 use GitElephant\Command\MainCommand;
+use GitElephant\Objects\TreeBranch;
 use GitElephant\Objects\TreeObject;
 
 /**
@@ -553,6 +554,11 @@ class RepositoryTest extends TestCase
         $repo = Repository::createFromRemote('git://github.com/matteosister/GitElephant.git');
         $this->assertInstanceOf('GitElephant\Repository', $repo);
         $this->assertCount(2, $repo->getBranches());
-
+        $branches = $repo->getBranches();
+        $branchesName = array_map(function(TreeBranch $b) {
+            return $b->getName();
+        }, $branches);
+        $this->assertContains('master', $branchesName);
+        $this->assertContains('develop', $branchesName);
     }
 }

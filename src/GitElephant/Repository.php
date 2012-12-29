@@ -274,9 +274,11 @@ class Repository
     /**
      * Checkout all branches from the remote and make them local
      *
+     * @param string $remote remote to fetch from
+     *
      * @return void
      */
-    public function checkoutAllRemoteBranches()
+    public function checkoutAllRemoteBranches($remote = 'origin')
     {
         $actualBranches = $this->getBranches();
         $allBranches = array();
@@ -290,7 +292,7 @@ class Repository
                 && !preg_match('/^(.+)(HEAD|master)$/', $branch->getName());
         });
         foreach ($realBranches as $realBranch) {
-            $this->checkout($realBranch);
+            $this->checkout(str_replace(sprintf('remotes/%s/', $remote), '', $realBranch->getName()));
         }
     }
 
