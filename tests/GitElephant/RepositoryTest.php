@@ -168,6 +168,9 @@ class RepositoryTest extends TestCase
         $this->assertInstanceOf('GitElephant\Objects\TreeBranch', $this->getRepository()->getMainBranch(), 'main branch should be an instance of TreeBranch');
         $this->assertTrue($this->getRepository()->getMainBranch()->getCurrent(), 'getCurrent on main branch should be true');
         $this->assertEquals('master', $this->getRepository()->getMainBranch()->getName(), 'main branch should be named "master"');
+        $this->assertEquals(array('master'), $this->getRepository()->getBranches(true));
+        $this->getRepository()->createBranch('develop');
+        $this->assertEquals(array('master', 'develop'), $this->getRepository()->getBranches(true));
     }
 
     /**

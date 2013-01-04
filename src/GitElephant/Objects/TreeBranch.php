@@ -15,7 +15,9 @@
 
 namespace GitElephant\Objects;
 
+use GitElephant\Command\BranchCommand;
 use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 
 /**
@@ -26,6 +28,11 @@ use GitElephant\Objects\TreeishInterface;
 
 class TreeBranch implements TreeishInterface
 {
+    /**
+     * @var \GitElephant\Repository
+     */
+    private $repository;
+
     /**
      * current checked out branch
      *
@@ -62,26 +69,83 @@ class TreeBranch implements TreeishInterface
     private $fullRef;
 
     /**
+     * static generator to generate a single commit from output of command.show service
+     *
+     * @param \GitElephant\Repository $repository repository
+     * @param string                  $outputLine output line
+     *
+     * @return TreeBranch
+     */
+    public static function createFromOutputLine(Repository $repository, $outputLine)
+    {
+        $matches = static::getMatches($outputLine);
+        $branch = new self($repository, $matches[1]);
+        $branch->parseOutputLine($outputLine);
+
+        return $branch;
+    }
+
+    /**
      * Class constructor
      *
-     * @param null|string $branchString a branch line output from the git binary
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       branch name
      */
-    public function __construct($branchString = null)
+    public function __construct(Repository $repository, $name)
     {
-        $branchString = trim($branchString);
-        if (preg_match('/^\*\ (.*)/', $branchString)) {
-            $this->current = true;
-            $branchString  = preg_replace('/^\*\ /', '', $branchString);
-        }
+        $this->repository = $repository;
+        $this->name = trim($name);
+        $this->fullRef = 'refs/heads/'.$name;
+        $this->createFromCommand();
+    }
 
-        $firstBlank   = strpos($branchString, ' ');
-        $this->name    = trim(substr($branchString, 0, $firstBlank));
-        $this->fullRef = 'refs/heads/' . $this->name;
-        $branchString  = substr($branchString, $firstBlank);
-        $branchString  = preg_replace('/^\ +/', '', $branchString);
-        $firstBlank   = strpos($branchString, ' ');
-        $this->sha     = trim(substr($branchString, 0, $firstBlank));
-        $this->comment = trim(substr($branchString, $firstBlank));
+    /**
+     * get the branch properties from command
+     *
+     * @throws \InvalidArgumentException
+     */
+    private function createFromCommand()
+    {
+        $command = BranchCommand::getInstance()->singleInfo($this->name, true);
+        $outputLines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
+        if (0 == count($outputLines)) {
+            throw new \InvalidArgumentException(sprintf('The %s branch doesn\'t exists', $this->name));
+        }
+        $this->parseOutputLine(trim($outputLines[0]));
+    }
+
+    /**
+     * parse an output line from the BranchCommand::singleInfo command
+     *
+     * @param string $branchString an output line for a branch
+     */
+    public function parseOutputLine($branchString)
+    {
+        if (preg_match('/^\* (.*)/', $branchString, $matches)) {
+            $this->current = true;
+            $branchString = substr($branchString, 2);
+        } else {
+            $branchString = trim($branchString);
+        }
+        $matches = static::getMatches($branchString);
+        $this->name = $matches[1];
+        $this->sha = $matches[2];
+        $this->comment = $matches[3];
+    }
+
+    /**
+     * get the matches from an output line
+     *
+     * @param string $branchString branch line output
+     *
+     * @return array
+     */
+    public static function getMatches($branchString)
+    {
+        $matches = array();
+        preg_match('/^\*?\ *?(\S+)\ +(\S{40})\ +(.+)$/', trim($branchString), $matches);
+
+        return array_map('trim', $matches);
     }
 
     /**

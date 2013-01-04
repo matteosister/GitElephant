@@ -60,7 +60,9 @@ class BranchCommandTest extends TestCase
     public function testLists()
     {
         $branch = new BranchCommand();
-        $this->assertEquals($branch->lists(), "branch '-v' '--no-color' '--no-abbrev'", 'list branch command');
+        $this->assertEquals($branch->lists(), "branch '-v' '--no-color' '--no-abbrev'");
+        $this->assertEquals($branch->lists(true), "branch '-v' '--no-color' '--no-abbrev' '-a'");
+        $this->assertEquals($branch->lists(false, true), "branch '--no-color' '--no-abbrev'");
     }
 
     /**

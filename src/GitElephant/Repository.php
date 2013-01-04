@@ -219,18 +219,28 @@ class Repository
     /**
      * An array of TreeBranch objects
      *
+     * @param bool $namesOnly return an array of branch names as a string
+     * @param bool $all       lists also remote branches
+     *
      * @return array
      */
-    public function getBranches()
+    public function getBranches($namesOnly = false, $all = false)
     {
         $branches = array();
-        $this->caller->execute(BranchCommand::getInstance()->lists());
-        foreach ($this->caller->getOutputLines() as $branchString) {
-            if ($branchString != '') {
-                $branches[] = new TreeBranch($branchString);
+        if ($namesOnly) {
+            $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all, true))->getOutputLines(true);
+            $branches = array_map(function($v) {
+                return ltrim($v, '* ');
+            }, $outputLines);
+            $sortMethod = 'sortBranchesByName';
+        } else {
+            $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all))->getOutputLines(true);
+            foreach ($outputLines as $branchLine) {
+                $branches[] = TreeBranch::createFromOutputLine($this, $branchLine);
             }
+            $sortMethod = 'sortBranches';
         }
-        usort($branches, array($this, 'sortBranches'));
+        usort($branches, array($this, $sortMethod));
 
         return $branches;
     }
@@ -242,12 +252,9 @@ class Repository
      */
     public function getMainBranch()
     {
-        $filtered = array_filter(
-            $this->getBranches(), function(TreeBranch $branch)
-            {
-                return $branch->getCurrent();
-            }
-        );
+        $filtered = array_filter($this->getBranches(), function(TreeBranch $branch) {
+            return $branch->getCurrent();
+        });
         sort($filtered);
 
         return $filtered[0];
@@ -280,19 +287,16 @@ class Repository
      */
     public function checkoutAllRemoteBranches($remote = 'origin')
     {
-        $actualBranches = $this->getBranches();
         $allBranches = array();
-        $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists(true))->getOutputLines(true);
-        foreach ($outputLines as $branchLine) {
-            $allBranches[] = new TreeBranch($branchLine);
-        }
-        $realBranches = array_filter($allBranches, function(TreeBranch $branch) use ($actualBranches) {
+        $actualBranches = $this->getBranches(true, false);
+        $allBranches = $this->getBranches(true, true);
+        $realBranches = array_filter($allBranches, function($branch) use ($actualBranches) {
             return !in_array($branch, $actualBranches)
-                && preg_match('/^remotes(.+)$/', $branch->getName())
-                && !preg_match('/^(.+)(HEAD|master)$/', $branch->getName());
+                && preg_match('/^remotes(.+)$/', $branch)
+                && !preg_match('/^(.+)(HEAD|master)$/', $branch);
         });
         foreach ($realBranches as $realBranch) {
-            $this->checkout(str_replace(sprintf('remotes/%s/', $remote), '', $realBranch->getName()));
+            $this->checkout(str_replace(sprintf('remotes/%s/', $remote), '', $realBranch));
         }
     }
 
@@ -386,11 +390,10 @@ class Repository
      */
     public function getBranchOrTag($name)
     {
-        $branchFinderOutput = $this->caller->execute(BranchCommand::getInstance()->singleInfo($name))->getOutputLines(true);
-        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance()->lists())->getOutputLines(true);
-        if (count($branchFinderOutput) > 0) {
-            return new TreeBranch($branchFinderOutput[0]);
+        if (in_array($name, $this->getBranches(true))) {
+            return new TreeBranch($this, $name);
         }
+        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance()->lists())->getOutputLines(true);
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
                 return new TreeTag($this, $name);
@@ -543,6 +546,27 @@ class Repository
             return -1;
         } else {
             if ($b->getName() == 'master') {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+
+    /**
+     * Order the branches list by name
+     *
+     * @param Objects\TreeBranch $a first branch
+     * @param Objects\TreeBranch $b second branch
+     *
+     * @return int
+     */
+    private function sortBranchesByName($a, $b)
+    {
+        if ($a == 'master') {
+            return -1;
+        } else {
+            if ($b == 'master') {
                 return 1;
             } else {
                 return 0;
