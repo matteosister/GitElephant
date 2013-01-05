@@ -14,6 +14,7 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\FetchCommand;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree,
@@ -287,7 +288,7 @@ class Repository
      */
     public function checkoutAllRemoteBranches($remote = 'origin')
     {
-        $allBranches = array();
+        $actualBranch = $this->getMainBranch();
         $actualBranches = $this->getBranches(true, false);
         $allBranches = $this->getBranches(true, true);
         $realBranches = array_filter($allBranches, function($branch) use ($actualBranches) {
@@ -298,6 +299,26 @@ class Repository
         foreach ($realBranches as $realBranch) {
             $this->checkout(str_replace(sprintf('remotes/%s/', $remote), '', $realBranch));
         }
+        $this->checkout($actualBranch);
+    }
+
+    /**
+     * Update all branches from the remote
+     *
+     * @param string $remote remote to fetch from
+     *
+     * @return void
+     */
+    public function updateAllBranches($remote = 'origin')
+    {
+        $this->caller->execute(FetchCommand::getInstance()->fetch($remote));
+        $branches = $this->getBranches();
+        $actualBranch = $this->getMainBranch();
+        foreach ($branches as $branch) {
+            $this->checkout($branch);
+            $branch->update($remote);
+        }
+        $this->checkout($actualBranch);
     }
 
     /**

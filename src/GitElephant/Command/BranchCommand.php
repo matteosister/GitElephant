@@ -82,13 +82,14 @@ class BranchCommand extends BaseCommand
     /**
      * get info about a single branch
      *
-     * @param string $name   The branch name
-     * @param bool   $all    lists all remotes
-     * @param bool   $simple list only branch names
+     * @param string $name    The branch name
+     * @param bool   $all     lists all remotes
+     * @param bool   $simple  list only branch names
+     * @param bool   $verbose verbose, show also the upstream branch
      *
      * @return string
      */
-    public function singleInfo($name, $all = false, $simple = false)
+    public function singleInfo($name, $all = false, $simple = false, $verbose = false)
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -100,6 +101,9 @@ class BranchCommand extends BaseCommand
         $this->addCommandArgument('--no-abbrev');
         if ($all) {
             $this->addCommandArgument('-a');
+        }
+        if ($verbose) {
+            $this->addCommandArgument('-vv');
         }
         $this->addCommandSubject($name);
 

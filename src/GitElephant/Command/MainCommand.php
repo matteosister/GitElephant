@@ -124,7 +124,9 @@ class MainCommand extends BaseCommand
         $this->clearAll();
 
         $what = $ref;
-        if ($ref instanceof TreeishInterface) {
+        if ($ref instanceof TreeBranch) {
+            $what = $ref->getName();
+        } else if ($ref instanceof TreeishInterface) {
             $what = $ref->getSha();
         }
 

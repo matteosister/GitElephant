@@ -16,6 +16,7 @@
 namespace GitElephant\Objects;
 
 use GitElephant\Command\BranchCommand;
+use GitElephant\Command\MergeCommand;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Repository;
 
@@ -138,12 +139,16 @@ class TreeBranch implements TreeishInterface
      *
      * @param string $branchString branch line output
      *
+     * @throws \InvalidArgumentException
      * @return array
      */
     public static function getMatches($branchString)
     {
         $matches = array();
         preg_match('/^\*?\ *?(\S+)\ +(\S{40})\ +(.+)$/', trim($branchString), $matches);
+        if (!count($matches)) {
+            throw new \InvalidArgumentException(sprintf('the branch string is not valid: %s', $branchString));
+        }
 
         return array_map('trim', $matches);
     }
@@ -156,6 +161,39 @@ class TreeBranch implements TreeishInterface
     public function __toString()
     {
         return $this->getSha();
+    }
+
+    /**
+     * update a branch with its upstream
+     *
+     * @param string $remote remote
+     */
+    public function update($remote = 'origin')
+    {
+        if (null !== $upstream = $this->getUpstream()) {
+            $this->repository->getCaller()->execute(MergeCommand::getInstance()->updateWithUpstream($upstream));
+        }
+    }
+
+    /**
+     * get the branch upstream (if any)
+     *
+     * @return null
+     * @throws \InvalidArgumentException
+     */
+    public function getUpstream()
+    {
+        $outputLines = $this->repository->getCaller()->execute(BranchCommand::getInstance()->singleInfo($this->getName(), false, false, true))->getOutputLines(true);
+        if (0 == count($outputLines)) {
+            throw new \InvalidArgumentException(sprintf('The %s branch doesn\'t exists', $this->name));
+        }
+        $line = $outputLines[0];
+        $matches = array();
+        if (preg_match('/^.+ .{40} \[(.+)\] .*?/', $line, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
     }
 
     /**

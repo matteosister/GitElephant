@@ -45,9 +45,25 @@ class MergeCommand extends BaseCommand
     public function merge(TreeBranch $with)
     {
         $this->clearAll();
-
         $this->addCommandName(static::MERGE_COMMAND);
         $this->addCommandSubject($with->getFullRef());
+
+        return $this->getCommand();
+    }
+
+    /**
+     * update a branch with its upstream
+     *
+     * @param string $upstream upstream (@see TreeBranch::getUpstream)
+     *
+     * @internal param string $remote remote
+     * @return string
+     */
+    public function updateWithUpstream($upstream)
+    {
+        $this->clearAll();
+        $this->addCommandName(static::MERGE_COMMAND);
+        $this->addCommandSubject($upstream);
 
         return $this->getCommand();
     }
