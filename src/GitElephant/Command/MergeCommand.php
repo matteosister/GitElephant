@@ -14,8 +14,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand,
-    GitElephant\Objects\TreeBranch;
+use GitElephant\Command\BaseCommand;
+use GitElephant\Objects\TreeBranch;
 
 /**
  * Merge command generator

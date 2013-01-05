@@ -13,7 +13,6 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\MainCommand;
 use GitElephant\Objects\TreeBranch;
 use GitElephant\Objects\TreeObject;
 
