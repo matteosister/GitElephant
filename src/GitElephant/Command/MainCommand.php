@@ -15,7 +15,6 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
-use GitElephant\GitBinary;
 use GitElephant\Objects\TreeBranch;
 use GitElephant\Objects\TreeishInterface;
 
