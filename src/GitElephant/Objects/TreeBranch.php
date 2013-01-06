@@ -189,7 +189,7 @@ class TreeBranch implements TreeishInterface
         }
         $line = $outputLines[0];
         $matches = array();
-        if (preg_match('/^.+ .{40} \[(.+)\] .*?/', $line, $matches)) {
+        if (preg_match('/^.+\s[0-9,a-z]{40}\s\[([^:]+)(:.*)?\]\s.*?/', $line, $matches)) {
             return $matches[1];
         }
 

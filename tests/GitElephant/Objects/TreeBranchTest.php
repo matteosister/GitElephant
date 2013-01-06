@@ -75,4 +75,21 @@ class TreeBranchTest extends TestCase
         $this->assertEquals('test commit', $b->getComment());
         $this->assertFalse($b->getCurrent());
     }
+
+    /**
+     * testGetUpstream
+     */
+    public function testGetUpstream()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->getRepository()->commit('test commit', true);
+        $branch = new TreeBranch($this->getRepository(), 'master');
+        $mockCaller = $this->getMockCaller(null, array('* master a664686e47fb8fb2ffa3e512bdbd380face4e577 [origin/master: dietro 122] Merge pull request #8732 from amatsuda/readme_call_yield'));
+        $this->getRepository()->setCaller($mockCaller);
+        $this->assertEquals('origin/master', $branch->getUpstream());
+        $mockCaller = $this->getMockCaller(null, array(' develop a664686e47fb8fb2ffa3e512bdbd380face4e577 [origin/develop] Merge pull request #8732 from amatsuda/readme_call_yield'));
+        $this->getRepository()->setCaller($mockCaller);
+        $this->assertEquals('origin/develop', $branch->getUpstream());
+    }
 }
