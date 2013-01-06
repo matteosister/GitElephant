@@ -15,7 +15,10 @@
 
 namespace GitElephant\Objects;
 
+use GitElephant\Command\BranchCommand;
+use GitElephant\Command\MergeCommand;
 use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 
 /**
@@ -26,6 +29,11 @@ use GitElephant\Objects\TreeishInterface;
 
 class TreeBranch implements TreeishInterface
 {
+    /**
+     * @var \GitElephant\Repository
+     */
+    private $repository;
+
     /**
      * current checked out branch
      *
@@ -62,26 +70,87 @@ class TreeBranch implements TreeishInterface
     private $fullRef;
 
     /**
+     * static generator to generate a single commit from output of command.show service
+     *
+     * @param \GitElephant\Repository $repository repository
+     * @param string                  $outputLine output line
+     *
+     * @return TreeBranch
+     */
+    public static function createFromOutputLine(Repository $repository, $outputLine)
+    {
+        $matches = static::getMatches($outputLine);
+        $branch = new self($repository, $matches[1]);
+        $branch->parseOutputLine($outputLine);
+
+        return $branch;
+    }
+
+    /**
      * Class constructor
      *
-     * @param null|string $branchString a branch line output from the git binary
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       branch name
      */
-    public function __construct($branchString = null)
+    public function __construct(Repository $repository, $name)
     {
-        $branchString = trim($branchString);
-        if (preg_match('/^\*\ (.*)/', $branchString)) {
+        $this->repository = $repository;
+        $this->name = trim($name);
+        $this->fullRef = 'refs/heads/'.$name;
+        $this->createFromCommand();
+    }
+
+    /**
+     * get the branch properties from command
+     *
+     * @throws \InvalidArgumentException
+     */
+    private function createFromCommand()
+    {
+        $command = BranchCommand::getInstance()->singleInfo($this->name, true);
+        $outputLines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
+        if (0 == count($outputLines)) {
+            throw new \InvalidArgumentException(sprintf('The %s branch doesn\'t exists', $this->name));
+        }
+        $this->parseOutputLine(trim($outputLines[0]));
+    }
+
+    /**
+     * parse an output line from the BranchCommand::singleInfo command
+     *
+     * @param string $branchString an output line for a branch
+     */
+    public function parseOutputLine($branchString)
+    {
+        if (preg_match('/^\* (.*)/', $branchString, $matches)) {
             $this->current = true;
-            $branchString  = preg_replace('/^\*\ /', '', $branchString);
+            $branchString = substr($branchString, 2);
+        } else {
+            $branchString = trim($branchString);
+        }
+        $matches = static::getMatches($branchString);
+        $this->name = $matches[1];
+        $this->sha = $matches[2];
+        $this->comment = $matches[3];
+    }
+
+    /**
+     * get the matches from an output line
+     *
+     * @param string $branchString branch line output
+     *
+     * @throws \InvalidArgumentException
+     * @return array
+     */
+    public static function getMatches($branchString)
+    {
+        $matches = array();
+        preg_match('/^\*?\ *?(\S+)\ +(\S{40})\ +(.+)$/', trim($branchString), $matches);
+        if (!count($matches)) {
+            throw new \InvalidArgumentException(sprintf('the branch string is not valid: %s', $branchString));
         }
 
-        $firstBlank   = strpos($branchString, ' ');
-        $this->name    = trim(substr($branchString, 0, $firstBlank));
-        $this->fullRef = 'refs/heads/' . $this->name;
-        $branchString  = substr($branchString, $firstBlank);
-        $branchString  = preg_replace('/^\ +/', '', $branchString);
-        $firstBlank   = strpos($branchString, ' ');
-        $this->sha     = trim(substr($branchString, 0, $firstBlank));
-        $this->comment = trim(substr($branchString, $firstBlank));
+        return array_map('trim', $matches);
     }
 
     /**
@@ -92,6 +161,39 @@ class TreeBranch implements TreeishInterface
     public function __toString()
     {
         return $this->getSha();
+    }
+
+    /**
+     * update a branch with its upstream
+     *
+     * @param string $remote remote
+     */
+    public function update($remote = 'origin')
+    {
+        if (null !== $upstream = $this->getUpstream()) {
+            $this->repository->getCaller()->execute(MergeCommand::getInstance()->updateWithUpstream($upstream));
+        }
+    }
+
+    /**
+     * get the branch upstream (if any)
+     *
+     * @return null
+     * @throws \InvalidArgumentException
+     */
+    public function getUpstream()
+    {
+        $outputLines = $this->repository->getCaller()->execute(BranchCommand::getInstance()->singleInfo($this->getName(), false, false, true))->getOutputLines(true);
+        if (0 == count($outputLines)) {
+            throw new \InvalidArgumentException(sprintf('The %s branch doesn\'t exists', $this->name));
+        }
+        $line = $outputLines[0];
+        $matches = array();
+        if (preg_match('/^.+ .{40} \[(.+)\] .*?/', $line, $matches)) {
+            return $matches[1];
+        }
+
+        return null;
     }
 
     /**

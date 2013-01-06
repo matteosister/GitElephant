@@ -58,15 +58,23 @@ class BranchCommand extends BaseCommand
     /**
      * Lists branches
      *
+     * @param bool $all    lists all remotes
+     * @param bool $simple list only branch names
+     *
      * @return string the command
      */
-    public function lists()
+    public function lists($all = false, $simple = false)
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
-        $this->addCommandArgument('-v');
+        if (!$simple) {
+            $this->addCommandArgument('-v');
+        }
         $this->addCommandArgument('--no-color');
         $this->addCommandArgument('--no-abbrev');
+        if ($all) {
+            $this->addCommandArgument('-a');
+        }
 
         return $this->getCommand();
     }
@@ -74,18 +82,29 @@ class BranchCommand extends BaseCommand
     /**
      * get info about a single branch
      *
-     * @param string $name The branch name
+     * @param string $name    The branch name
+     * @param bool   $all     lists all remotes
+     * @param bool   $simple  list only branch names
+     * @param bool   $verbose verbose, show also the upstream branch
      *
      * @return string
      */
-    public function singleInfo($name)
+    public function singleInfo($name, $all = false, $simple = false, $verbose = false)
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
-        $this->addCommandArgument('-v');
+        if (!$simple) {
+            $this->addCommandArgument('-v');
+        }
         $this->addCommandArgument('--list');
         $this->addCommandArgument('--no-color');
         $this->addCommandArgument('--no-abbrev');
+        if ($all) {
+            $this->addCommandArgument('-a');
+        }
+        if ($verbose) {
+            $this->addCommandArgument('-vv');
+        }
         $this->addCommandSubject($name);
 
         return $this->getCommand();

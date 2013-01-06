@@ -24,7 +24,6 @@ use GitElephant\Objects\TreeishInterface;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class LogCommand extends BaseCommand
 {
     const GIT_LOG = 'log';

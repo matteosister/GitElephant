@@ -1,8 +1,13 @@
-<?php
-/**
- * User: matteo
- * Date: 27/10/12
- * Time: 0.44
+<?php 
+/*
+ * This file is part of the GitElephant package.
+ *
+ * (c) Matteo Giachino <matteog@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @package GitElephant
  *
  * Just for fun...
  */

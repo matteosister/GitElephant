@@ -12,5 +12,8 @@ before_script:
   - php composer.phar --dev install
 
 script:
-  - vendor/bin/phpunit
+  - vendor/bin/phpunit --coverage-clover "clover"
+
+after_success:
+  - curl -sL https://bit.ly/artifact-uploader | php
   
