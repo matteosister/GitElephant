@@ -294,7 +294,7 @@ class Repository
         $realBranches = array_filter($allBranches, function($branch) use ($actualBranches) {
             return !in_array($branch, $actualBranches)
                 && preg_match('/^remotes(.+)$/', $branch)
-                && !preg_match('/^(.+)(HEAD|master)$/', $branch);
+                && !preg_match('/^(.+)(HEAD)(.*?)$/', $branch);
         });
         foreach ($realBranches as $realBranch) {
             $this->checkout(str_replace(sprintf('remotes/%s/', $remote), '', $realBranch));
