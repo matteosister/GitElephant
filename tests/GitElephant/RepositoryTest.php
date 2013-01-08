@@ -563,16 +563,4 @@ class RepositoryTest extends TestCase
         $this->assertContains('master', $branchesName);
         $this->assertContains('develop', $branchesName);
     }
-
-    /**
-     * updateAllBranches
-     */
-    public function testUpdateAllBranches()
-    {
-        $repo = Repository::createFromRemote('git://github.com/matteosister/GitElephant.git');
-        $this->assertEquals('master', $repo->getMainBranch()->getName());
-        $this->assertCount(2, $repo->getBranches(true));
-        $repo->updateAllBranches();
-        $this->assertEquals('master', $repo->getMainBranch()->getName());
-    }
 }

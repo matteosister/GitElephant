@@ -303,25 +303,6 @@ class Repository
     }
 
     /**
-     * Update all branches from the remote
-     *
-     * @param string $remote remote to fetch from
-     *
-     * @return void
-     */
-    public function updateAllBranches($remote = 'origin')
-    {
-        $this->caller->execute(FetchCommand::getInstance()->fetch($remote));
-        $branches = $this->getBranches();
-        $actualBranch = $this->getMainBranch();
-        foreach ($branches as $branch) {
-            $this->checkout($branch);
-            $branch->update($remote);
-        }
-        $this->checkout($actualBranch);
-    }
-
-    /**
      * Merge a Branch in the current checked out branch
      *
      * @param Objects\TreeBranch $branch The branch to merge in the current checked out branch
