@@ -12,7 +12,8 @@ todo
 * inject the caller and the command to the objects to populate props DONE
 * use sha (default to HEAD) whenever it's possible inside constructors DONE
 * remove the dependency-injection and config dependency DONE
-* rewrite the tree implementation to not use recursion on every request
+* rewrite the tree implementation to not use recursion on every request DONE
+* git pull
 
 1.0.0
 * git blame
