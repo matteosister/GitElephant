@@ -577,19 +577,33 @@ class Repository
     }
 
     /**
-     * output a node content
+     * output a node content as an array of lines
      *
      * @param \GitElephant\Objects\TreeObject              $obj     The TreeObject of type BLOB
      * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
-     * @return string
-     * @throws \InvalidArgumentException
+     * @return array
      */
     public function outputContent(TreeObject $obj, $treeish)
     {
         $command = CatFileCommand::getInstance()->content($obj, $treeish);
 
         return $this->caller->execute($command)->getOutputLines();
+    }
+
+    /**
+     * output a node raw content
+     *
+     * @param \GitElephant\Objects\TreeObject              $obj     The TreeObject of type BLOB
+     * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
+     *
+     * @return string
+     */
+    public function outputRawContent(TreeObject $obj, $treeish)
+    {
+        $command = CatFileCommand::getInstance()->content($obj, $treeish);
+
+        return $this->caller->execute($command)->getRawOutput();
     }
 
     /**
