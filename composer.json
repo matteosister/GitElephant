@@ -13,13 +13,12 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "symfony/process": "2.1.*@stable",
-        "symfony/filesystem": "2.1.*@stable"
+        "symfony/process": "2.1.*",
+        "symfony/filesystem": "2.1.*"
     },
     "require-dev": {
         "phpunit/phpunit": "@stable"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-0": {
             "GitElephant": "src/"
