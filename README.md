@@ -4,7 +4,7 @@ GitElephant is an abstraction layer to manage your git repositories with php
 
 It's not stable yet...I created a small [todo list](https://github.com/matteosister/GitElephant/blob/develop/ROADMAP.md) for the things that I would like to implement. If you want give a hand you are more than welcome!
 
-Watch a [simple live example](http://gitelephant.cypresslab.net/GitElephant) of what you can do with GitElephant, [GitElephantBundle](https://github.com/matteosister/GitElephantBundle), Symfony2 and a git repository...
+Watch a [simple live example](http://gitelephant.cypresslab.net) of what you can do with GitElephant, Symfony2 and a git repository...
 
 [Download the demo bundle code](https://github.com/matteosister/GitElephantDemoBundle) used in the live example
 
