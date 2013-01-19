@@ -303,25 +303,6 @@ class Repository
     }
 
     /**
-     * Update all branches from the remote
-     *
-     * @param string $remote remote to fetch from
-     *
-     * @return void
-     */
-    public function updateAllBranches($remote = 'origin')
-    {
-        $this->caller->execute(FetchCommand::getInstance()->fetch($remote));
-        $branches = $this->getBranches();
-        $actualBranch = $this->getMainBranch();
-        foreach ($branches as $branch) {
-            $this->checkout($branch);
-            $branch->update($remote);
-        }
-        $this->checkout($actualBranch);
-    }
-
-    /**
      * Merge a Branch in the current checked out branch
      *
      * @param Objects\TreeBranch $branch The branch to merge in the current checked out branch
@@ -596,19 +577,33 @@ class Repository
     }
 
     /**
-     * output a node content
+     * output a node content as an array of lines
      *
      * @param \GitElephant\Objects\TreeObject              $obj     The TreeObject of type BLOB
      * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
-     * @return string
-     * @throws \InvalidArgumentException
+     * @return array
      */
     public function outputContent(TreeObject $obj, $treeish)
     {
         $command = CatFileCommand::getInstance()->content($obj, $treeish);
 
         return $this->caller->execute($command)->getOutputLines();
+    }
+
+    /**
+     * output a node raw content
+     *
+     * @param \GitElephant\Objects\TreeObject              $obj     The TreeObject of type BLOB
+     * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
+     *
+     * @return string
+     */
+    public function outputRawContent(TreeObject $obj, $treeish)
+    {
+        $command = CatFileCommand::getInstance()->content($obj, $treeish);
+
+        return $this->caller->execute($command)->getRawOutput();
     }
 
     /**

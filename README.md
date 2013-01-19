@@ -4,7 +4,7 @@ GitElephant is an abstraction layer to manage your git repositories with php
 
 It's not stable yet...I created a small [todo list](https://github.com/matteosister/GitElephant/blob/develop/ROADMAP.md) for the things that I would like to implement. If you want give a hand you are more than welcome!
 
-Watch a [simple live example](http://gitelephant.cypresslab.net/GitElephant) of what you can do with GitElephant, [GitElephantBundle](https://github.com/matteosister/GitElephantBundle), Symfony2 and a git repository...
+Watch a [simple live example](http://gitelephant.cypresslab.net) of what you can do with GitElephant, Symfony2 and a git repository...
 
 [Download the demo bundle code](https://github.com/matteosister/GitElephantDemoBundle) used in the live example
 
@@ -14,7 +14,8 @@ Requirements
 - php >= 5.3
 - *nix system with git installed
 
-I work on an ubuntu box, but the lib should work well with every unix system. I don't have a windows installation to test...if someone want to help...
+I work on an ubuntu box, but the lib should work well with every unix system.
+I don't have a windows installation to test...if someone want to help...
 
 Installation
 ------------
@@ -35,16 +36,17 @@ Then run
 
 ``` bash
 $ curl -s https://getcomposer.org/installer | php
-$ php composer.phar install
+$ composer install
 ```
 
 You have now GitElephant installed in *vendor/cypresslab/gitelephant*
 
-And an handy autoload file to include in you project in *vendor/.composer/autoload.php*
+And an handy autoload file to include in you project in *vendor/autoload.php*
 
 **pear**
 
-Add the Cypresslab channel
+*I will remove pear support soon. Please switch to composer!*
+Add the cypresslab channel
 
 ``` bash
 $ pear channel-discover pear.cypresslab.net
@@ -96,7 +98,7 @@ $commit = new Commit($repo, '1ac370d'); // head commit
 
 // count commits
 $repo->countCommits('1ac370d'); // number of commits to arrive at 1ac370d
-// commit is coutable, so, with a commit object, you can do
+// commit is countable, so, with a commit object, you can do
 $commit->count();
 // as well as
 count($commit);
@@ -147,6 +149,7 @@ $repo->checkout('master'); // checkout master
 $repo->createBranch('develop'); // create a develop branch from current checked out branch
 $repo->createBranch('develop', 'master'); // create a develop branch from master
 $repo->deleteBranch('develop'); // delete the develop branch
+$repo->checkoutAllRemoteBranches('origin'); // checkout all the branches from the remote repository
 
 // manage tags
 // create  a tag named v1.0 from master with the given tag message
@@ -190,7 +193,7 @@ A TreeObject instance is a php representation of a node in a git tree
 ``` php
 <?php
 echo $treeObject; // the name of the object (folder, file or link)
-$treeObject->getType(); // a class constanf of TreeObject::TYPE_BLOB, TreeObject::TYPE_TREE and TreeObject::TYPE_LINK
+$treeObject->getType(); // one class constant of TreeObject::TYPE_BLOB, TreeObject::TYPE_TREE and TreeObject::TYPE_LINK
 $treeObject->getSha();
 $treeObject->getSize();
 $treeObject->getName();
@@ -275,7 +278,7 @@ The library is fully tested with PHPUnit.
 Go to the base library folder and install the dev dependencies with composer, and then run the phpunitt test suite
 
 ``` bash
-$ php composer.phar --dev install
+$ composer --dev install
 $ ./vendor/bin/phpunit # phpunit test suite
 ```
 
@@ -290,6 +293,7 @@ Dependencies
 ------------
 
 - [symfony/process](https://packagist.org/packages/symfony/process)
+- [symfony/filesystem](https://packagist.org/packages/symfony/filesystem)
 
 *for tests*
 
@@ -310,7 +314,7 @@ Just remember:
 
 * Symfony2 coding standard
 * test everything you develop with phpunit
-* if you don't use gitflow, just remember to develop on a branch or on develop and send a pull request on the develop branch. **Please do not send pull requests on the master branch**.
+* if you don't use gitflow, just remember to branch from "develop" and send your PR there. **Please do not send pull requests on the master branch**.
 
 Thanks
 ------
