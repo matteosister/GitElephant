@@ -17,15 +17,15 @@ namespace GitElephant\Objects;
 
 use GitElephant\Objects\GitAuthor,
     GitElephant\Repository,
-    GitElephant\Command\LogCommand;
+    GitElephant\Command\LogRangeCommand;
 
 /**
- * Git log abstraction object
+ * Git range log abstraction object
  *
  * @author Matteo Giachino <matteog@gmail.com>
  * @author John Cartwright <jcartdev@gmail.com>
  */
-class Log implements \ArrayAccess, \Countable, \Iterator
+class LogRange implements \ArrayAccess, \Countable, \Iterator
 {
     /**
      * @var \GitElephant\Repository
@@ -71,25 +71,26 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * @param int                     $limit      limit
      * @param null                    $offset     offset
      */
-    public function __construct(Repository $repository, $ref = 'HEAD', $path = null, $limit = 15, $offset = null)
+    public function __construct(Repository $repository, $refStart, $refEnd, $path = null, $limit = 15, $offset = null)
     {
         $this->repository = $repository;
-        $this->createFromCommand($ref, $path, $limit, $offset);
+        $this->createFromCommand($refStart, $refEnd, $path, $limit, $offset);
     }
 
     /**
      * get the commit properties from command
      *
-     * @param string $ref    treeish reference
-     * @param string $path   path
-     * @param int    $limit  limit
-     * @param string $offset offset
+     * @param string $refStart  treeish reference
+     * @param string $refEnd    treeish reference
+     * @param string $path      path
+     * @param int    $limit     limit
+     * @param string $offset    offset
      *
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand($ref, $path, $limit, $offset)
+    private function createFromCommand($refStart, $refEnd, $path, $limit, $offset)
     {
-        $command = LogCommand::getInstance()->showLog($ref, $path, $limit, $offset);
+        $command = LogRangeCommand::getInstance()->showLog($refStart, $refEnd, $path, $limit, $offset);
         $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }

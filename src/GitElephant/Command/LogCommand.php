@@ -20,7 +20,7 @@ use GitElephant\Objects\TreeBranch;
 use GitElephant\Objects\TreeishInterface;
 
 /**
- * Log command generator
+ * Log range command generator
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */

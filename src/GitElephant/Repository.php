@@ -24,6 +24,7 @@ use GitElephant\Objects\TreeObject;
 use GitElephant\Objects\Diff\Diff;
 use GitElephant\Objects\Commit;
 use GitElephant\Objects\Log;
+use GitElephant\Objects\LogRange;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Command\MainCommand;
 use GitElephant\Command\BranchCommand;
@@ -446,6 +447,31 @@ class Repository
     public function getLog($ref = 'HEAD', $path = null, $limit = 10, $offset = null)
     {
         return new Log($this, $ref, $path, $limit, $offset);
+    }
+
+    /**
+     * Get a log for a range ref
+     *
+     * @param string|TreeishInterface $ref    the treeish to check
+     * @param string|TreeObject       $path   the physical path to the tree relative to the repository root
+     * @param int|null                $limit  limit to n entries
+     * @param int|null                $offset skip n entries
+     *
+     * @return \GitElephant\Objects\LogRange
+     */
+    public function getLogRange($refStart, $refEnd, $path = null, $limit = 10, $offset = null)
+    {
+        // Handle when clients provide bad start reference on branch creation
+        if (preg_match('~^[0]+$~', $refStart)) {
+            return new Log($this, $refEnd, $path, $limit, $offset);
+        }
+
+        // Handle when clients provide bad end reference on branch deletion
+        if (preg_match('~^[0]+$~', $refEnd)) {
+            $refEnd = $refStart;
+        }
+
+        return new LogRange($this, $refStart, $refEnd, $path, $limit, $offset);
     }
 
     /**
