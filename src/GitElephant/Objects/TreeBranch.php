@@ -107,12 +107,17 @@ class TreeBranch implements TreeishInterface
      */
     private function createFromCommand()
     {
-        $command = BranchCommand::getInstance()->singleInfo($this->name, true);
+        $command = BranchCommand::getInstance()->lists();
         $outputLines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
-        if (0 == count($outputLines)) {
-            throw new \InvalidArgumentException(sprintf('The %s branch doesn\'t exists', $this->name));
+        foreach ($outputLines as $outputLine) {
+            $matches = static::getMatches($outputLine);
+            if ($this->name === $matches[1]) {
+                $this->parseOutputLine($outputLine);
+
+                return;
+            }
         }
-        $this->parseOutputLine(trim($outputLines[0]));
+        throw new \InvalidArgumentException(sprintf('The %s branch doesn\'t exists', $this->name));
     }
 
     /**
