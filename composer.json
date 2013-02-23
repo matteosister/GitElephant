@@ -3,7 +3,7 @@
     "description": "An abstraction layer for git written in PHP 5.3",
     "keywords": ["git"],
     "homepage": "http://matteosister.github.com/GitElephant",
-    "version": "0.9.14",
+    "version": "0.9.15",
     "license": "LGPLv3",
     "authors": [
         {
@@ -13,8 +13,8 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "symfony/process": "2.1.*@stable",
-        "symfony/filesystem": "2.1.*@stable"
+        "symfony/process": ">=2.1,<2.3-dev",
+        "symfony/filesystem": ">=2.1,<2.3-dev"
     },
     "require-dev": {
         "phpunit/phpunit": "@stable"
