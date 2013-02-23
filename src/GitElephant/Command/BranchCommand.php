@@ -88,6 +88,7 @@ class BranchCommand extends BaseCommand
      * @param bool   $verbose verbose, show also the upstream branch
      *
      * @return string
+     * @deprecated there is a problem with the --list command, as it is available from git >= 1.7.8
      */
     public function singleInfo($name, $all = false, $simple = false, $verbose = false)
     {
