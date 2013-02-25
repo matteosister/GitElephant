@@ -20,7 +20,8 @@ use GitElephant\Objects\GitAuthor,
     GitElephant\Objects\Commit\Message,
     GitElephant\Repository,
     GitElephant\Command\ShowCommand,
-    GitElephant\Command\RevListCommand;
+    GitElephant\Command\RevListCommand,
+    GitElephant\Command\BranchCommand;
 
 /**
  * The Commit object represent a commit
@@ -136,6 +137,18 @@ class Commit implements TreeishInterface, \Countable
         $command = ShowCommand::getInstance()->showCommit($this->ref);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
+    }
+
+    /**
+     * get the branches this commit is contained in
+     *
+     * @see BranchCommand::contains
+     */
+    public function getContainedIn()
+    {
+        $command = BranchCommand::getInstance()->contains($this->getSha());
+
+        return array_map('trim', (array)$this->getCaller()->execute($command)->getOutputLines(true));
     }
 
     /**

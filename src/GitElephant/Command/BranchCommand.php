@@ -43,6 +43,24 @@ class BranchCommand extends BaseCommand
      *
      * @return string the command
      */
+    public function contains($reference)
+    {
+        $this->clearAll();
+        $this->addCommandName(self::BRANCH_COMMAND);
+        $this->addCommandArgument('--contains');
+        $this->addCommandSubject($reference);
+
+        return $this->getCommand();
+    }
+
+    /**
+     * Create a new branch
+     *
+     * @param string      $name       The new branch name
+     * @param string|null $startPoint the new branch start point.
+     *
+     * @return string the command
+     */
     public function create($name, $startPoint = null)
     {
         $this->clearAll();
