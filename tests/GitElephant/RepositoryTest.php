@@ -254,6 +254,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->createTag('0.0.3');
         sleep(1);
         $this->getRepository()->createTag('0.0.1');
+        sleep(1);
         $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.1'), $this->getRepository()->getLastTag());
         $this->getRepository()->createTag('0.0.05');
         $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.05'), $this->getRepository()->getLastTag());
