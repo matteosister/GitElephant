@@ -8,13 +8,22 @@ Watch a [simple live example](http://gitelephant.cypresslab.net) of what you can
 
 [Download the demo bundle code](https://github.com/matteosister/GitElephantDemoBundle) used in the live example
 
+How it works
+------------
+
+GitElephant mostly rely on the git binary to retrieve information about the repository, read the output and create an OOP layer to interact with
+
+Some parts are (or will be) implemented by reading directly inside the .git folder
+
+The api is completely transparent to the end user. You don't have to worry about which method is used.
+
 Requirements
 ------------
 
-- php >= 5.3
+- php >= 5.3.0
 - *nix system with git installed
 
-I work on an ubuntu box, but the lib should work well with every unix system.
+I work on linux, but the lib should work well with every unix system, as far as a git binary is available.
 I don't have a windows installation to test...if someone want to help...
 
 Installation
@@ -89,6 +98,10 @@ $repo->getBranch('master'); // return a TreeBranch instance by its name
 // tags
 $repo->getTags(); // array of TreeTag instances
 $repo->getTag('v1.0'); // a TreeTag instance by name
+TreeTag::pick($repo, 'v1.0'); // a TreeTag instance by name
+
+// last tag by date
+$repo->getLastTag();
 
 // commit
 $repo->getCommit(); // get a Commit instance of the current HEAD
@@ -296,6 +309,7 @@ Dependencies
 
 - [symfony/process](https://packagist.org/packages/symfony/process)
 - [symfony/filesystem](https://packagist.org/packages/symfony/filesystem)
+- [symfony/finder](https://packagist.org/packages/symfony/finder)
 
 *for tests*
 

@@ -88,6 +88,19 @@ class TreeTag implements TreeishInterface
     }
 
     /**
+     * factory method
+     *
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       name
+     *
+     * @return TreeTag
+     */
+    public static function pick(Repository $repository, $name)
+    {
+        return new self($repository, $name);
+    }
+
+    /**
      * get the commit properties from command
      *
      * @see ShowCommand::commitInfo
