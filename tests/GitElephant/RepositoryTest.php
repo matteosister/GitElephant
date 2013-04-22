@@ -247,14 +247,18 @@ class RepositoryTest extends TestCase
         $this->getRepository()->init();
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
-        $this->getRepository()->createTag('0.0.1');
         $this->getRepository()->createTag('0.0.2');
-        $this->assertCount(2, $this->getRepository()->getTags());
-        $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.2'), $this->getRepository()->getLastTag());
+        sleep(1);
+        $this->getRepository()->createTag('0.0.4');
+        sleep(1);
+        $this->getRepository()->createTag('0.0.3');
+        sleep(1);
+        $this->getRepository()->createTag('0.0.1');
+        $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.1'), $this->getRepository()->getLastTag());
         $this->getRepository()->createTag('0.0.05');
         $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.05'), $this->getRepository()->getLastTag());
         $this->getRepository()->deleteTag(TreeTag::pick($this->getRepository(), '0.0.05'));
-        $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.2'), $this->getRepository()->getLastTag());
+        $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.1'), $this->getRepository()->getLastTag());
     }
 
     /**
