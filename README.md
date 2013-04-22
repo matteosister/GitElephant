@@ -68,6 +68,8 @@ How to use
 
 use GitElephant\Repository;
 $repo = new Repository('/path/to/git/repository');
+// or the factory method
+$repo = Repository::open('/path/to/git/repository');
 ```
 
 the *Repository* class is the main class where you can find every method you need...

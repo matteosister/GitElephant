@@ -90,6 +90,20 @@ class Repository
     }
 
     /**
+     * Factory method
+     *
+     * @param string         $repositoryPath the path of the git repository
+     * @param GitBinary|null $binary         the GitBinary instance that calls the commands
+     * @param string         $name           a repository name
+     *
+     * @return \GitElephant\Repository
+     */
+    public static function open($repositoryPath, GitBinary $binary = null, $name = null)
+    {
+        return new self($repositoryPath, $binary, $name);
+    }
+
+    /**
      * create a repository from a remote git url, or a local filesystem
      * and save it in a temp folder
      *
