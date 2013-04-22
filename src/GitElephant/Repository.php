@@ -408,11 +408,12 @@ class Repository
         $finder = Finder::create()
             ->files()
             ->in(sprintf('%s/.git/refs/tags', $this->path))
-            ->sortByModifiedTime();
+            ->sortByChangedTime();
         if ($finder->count() == 0) {
             return null;
         }
         $files = iterator_to_array($finder->getIterator(), false);
+        $files = array_reverse($files);
         $tagName = $files[0]->getFilename();
 
         return TreeTag::pick($this, $tagName);
