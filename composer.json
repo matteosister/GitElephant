@@ -19,7 +19,7 @@
     "require-dev": {
         "phpunit/phpunit": "@stable"
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "autoload": {
         "psr-0": {
             "GitElephant": "src/"
