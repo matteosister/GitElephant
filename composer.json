@@ -3,7 +3,7 @@
     "description": "An abstraction layer for git written in PHP 5.3",
     "keywords": ["git"],
     "homepage": "http://matteosister.github.com/GitElephant",
-    "version": "0.9.16",
+    "version": "0.9.17",
     "license": "LGPLv3",
     "authors": [
         {
