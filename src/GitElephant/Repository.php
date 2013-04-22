@@ -35,6 +35,7 @@ use GitElephant\Command\CatFileCommand;
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\SubmoduleCommand;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Repository
@@ -384,7 +385,7 @@ class Repository
      *
      * @param string $name The tag name
      *
-     * @return TreeTag
+     * @return TreeTag|null
      */
     public function getTag($name)
     {
@@ -395,6 +396,26 @@ class Repository
         }
 
         return null;
+    }
+
+    /**
+     * Return the last created tag
+     *
+     * @return TreeTag|null
+     */
+    public function getLastTag()
+    {
+        $finder = Finder::create()
+            ->files()
+            ->in(sprintf('%s/.git/refs/tags', $this->path))
+            ->sortByModifiedTime();
+        if ($finder->count() == 0) {
+            return null;
+        }
+        $files = iterator_to_array($finder->getIterator(), false);
+        $tagName = $files[0]->getFilename();
+
+        return TreeTag::pick($this, $tagName);
     }
 
     /**

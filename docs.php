@@ -15,6 +15,6 @@ return new Sami\Sami($dir, array(
     'build_dir' => 'build/%version%',
     'cache_dir' => 'cache/%version%',
     'title' => 'GitElephant API',
-    'default_opened_level' => 1,
+    'default_opened_level' => 2,
     'versions' => $versions
 ));

@@ -20,5 +20,3 @@ todo
 * blobs management
 * submodules management
 
-Next
-* introduce traits and make the library php 5.4 only?

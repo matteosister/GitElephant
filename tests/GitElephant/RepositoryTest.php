@@ -15,6 +15,7 @@ namespace GitElephant;
 
 use GitElephant\Objects\TreeBranch;
 use GitElephant\Objects\TreeObject;
+use GitElephant\Objects\TreeTag;
 
 /**
  * RepositoryTest
@@ -34,13 +35,16 @@ class RepositoryTest extends TestCase
     /**
      * @covers GitElephant\Repository::__construct
      * @covers GitElephant\Repository::getPath
-     * @expectedException InvalidArgumentException
      */
     public function testConstruct()
     {
         $this->assertEquals($this->getRepository()->getPath(), $this->path);
 
+        $this->setExpectedException('InvalidArgumentException');
         $repo = new Repository('non-existent-path');
+
+        $repo = Repository::open($this->path);
+        $this->assertInstanceOf('GitElephant\Repository', $repo);
     }
 
     /**
@@ -50,7 +54,7 @@ class RepositoryTest extends TestCase
     {
         $this->getRepository()->init();
         $match = false;
-        foreach($this->getRepository()->getStatus() as $line) {
+        foreach ($this->getRepository()->getStatus() as $line) {
             if (preg_match('/nothing to commit?(.*)/', $line)) {
                 $match = true;
             }
@@ -73,7 +77,7 @@ class RepositoryTest extends TestCase
         $this->addFile('test');
         $this->getRepository()->stage();
         $match = false;
-        foreach($this->getRepository()->getStatus() as $line) {
+        foreach ($this->getRepository()->getStatus() as $line) {
             if (preg_match('/(.*)Changes to be committed(.*)/', $line)) {
                 $match = true;
             }
@@ -92,7 +96,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->stage();
         $this->getRepository()->commit('initial import');
         $match = false;
-        foreach($this->getRepository()->getStatus() as $line) {
+        foreach ($this->getRepository()->getStatus() as $line) {
             if (preg_match('/nothing to commit?(.*)/', $line)) {
                 $match = true;
             }
@@ -103,7 +107,7 @@ class RepositoryTest extends TestCase
         $this->addFile('test2');
         $this->getRepository()->commit('commit 2', true, 'develop');
         $match = false;
-        foreach($this->getRepository()->getStatus() as $line) {
+        foreach ($this->getRepository()->getStatus() as $line) {
             if (preg_match('/nothing to commit?(.*)/', $line)) {
                 $match = true;
             }
@@ -233,6 +237,24 @@ class RepositoryTest extends TestCase
         $this->getRepository()->deleteTag('test-tag');
         $this->assertEquals(0, count($this->getRepository()->getTags()));
         $this->assertNull($this->getRepository()->getTag('a-tag-that-do-not-exists'));
+    }
+
+    /**
+     * test getLastTag
+     */
+    public function testGetLastTag()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test-file');
+        $this->getRepository()->commit('test', true);
+        $this->getRepository()->createTag('0.0.1');
+        $this->getRepository()->createTag('0.0.2');
+        $this->assertCount(2, $this->getRepository()->getTags());
+        $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.2'), $this->getRepository()->getLastTag());
+        $this->getRepository()->createTag('0.0.05');
+        $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.05'), $this->getRepository()->getLastTag());
+        $this->getRepository()->deleteTag(TreeTag::pick($this->getRepository(), '0.0.05'));
+        $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.2'), $this->getRepository()->getLastTag());
     }
 
     /**
