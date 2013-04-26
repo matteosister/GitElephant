@@ -23,7 +23,6 @@ use GitElephant\Objects\GitAuthor,
  * Git log abstraction object
  *
  * @author Matteo Giachino <matteog@gmail.com>
- * @author John Cartwright <jcartdev@gmail.com>
  */
 class Log implements \ArrayAccess, \Countable, \Iterator
 {

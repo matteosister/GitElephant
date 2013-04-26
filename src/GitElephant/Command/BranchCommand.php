@@ -36,10 +36,9 @@ class BranchCommand extends BaseCommand
     }
 
     /**
-     * Create a new branch
+     * Locate branches that contain a reference
      *
-     * @param string      $name       The new branch name
-     * @param string|null $startPoint the new branch start point.
+     * @param string $reference reference
      *
      * @return string the command
      */
