@@ -10,9 +10,9 @@
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
-use GitElephant\Objects\TreeTag;
+use GitElephant\Objects\Tag;
 
-class TreeTagTest extends TestCase
+class TagTest extends TestCase
 {
     public function testTag()
     {
@@ -20,8 +20,8 @@ class TreeTagTest extends TestCase
         $this->addFile('foo');
         $this->getRepository()->commit('commit1', true);
         $this->getRepository()->createTag('test-tag');
-        $tag = new TreeTag($this->getRepository(), 'test-tag');
-        $this->assertInstanceOf('GitElephant\Objects\TreeTag', $tag);
+        $tag = new Tag($this->getRepository(), 'test-tag');
+        $this->assertInstanceOf('GitElephant\Objects\Tag', $tag);
         $this->assertEquals('test-tag', $tag->getName());
         $this->assertEquals('refs/tags/test-tag', $tag->getFullRef());
         $this->assertEquals($this->getRepository()->getCommit()->getSha(), $tag->getSha());
@@ -36,6 +36,6 @@ class TreeTagTest extends TestCase
         $this->addFile('foo');
         $this->getRepository()->commit('commit1', true);
         $this->getRepository()->createTag('test-tag');
-        $tag = new TreeTag($this->getRepository(), 'test-tag-non-existent');
+        $tag = new Tag($this->getRepository(), 'test-tag-non-existent');
     }
 }

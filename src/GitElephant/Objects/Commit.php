@@ -15,7 +15,7 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\GitAuthor,
+use GitElephant\Objects\Author,
     GitElephant\Objects\TreeishInterface,
     GitElephant\Objects\Commit\Message,
     GitElephant\Repository,
@@ -62,16 +62,16 @@ class Commit implements TreeishInterface, \Countable
     private $parents;
 
     /**
-     * the GitAuthor instance for author
+     * the Author instance for author
      *
-     * @var \GitElephant\Objects\GitAuthor
+     * @var \GitElephant\Objects\Author
      */
     private $author;
 
     /**
-     * the GitAuthor instance for committer
+     * the Author instance for committer
      *
-     * @var \GitElephant\Objects\GitAuthor
+     * @var \GitElephant\Objects\Author
      */
     private $committer;
 
@@ -168,7 +168,7 @@ class Commit implements TreeishInterface, \Countable
                 $this->parents[] = $matches[1];
             }
             if (preg_match('/^author (.*) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
-                $author = new GitAuthor();
+                $author = new Author();
                 $author->setName($matches[1]);
                 $author->setEmail($matches[2]);
                 $this->author = $author;
@@ -176,7 +176,7 @@ class Commit implements TreeishInterface, \Countable
                 $this->datetimeAuthor = $date;
             }
             if (preg_match('/^committer (.*) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
-                $committer = new GitAuthor();
+                $committer = new Author();
                 $committer->setName($matches[1]);
                 $committer->setEmail($matches[2]);
                 $this->committer = $committer;
@@ -241,7 +241,7 @@ class Commit implements TreeishInterface, \Countable
     /**
      * author getter
      *
-     * @return GitAuthor
+     * @return Author
      */
     public function getAuthor()
     {
@@ -251,7 +251,7 @@ class Commit implements TreeishInterface, \Countable
     /**
      * committer getter
      *
-     * @return GitAuthor
+     * @return Author
      */
     public function getCommitter()
     {

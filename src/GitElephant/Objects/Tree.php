@@ -79,6 +79,21 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     private $blob;
 
     /**
+     * @var array
+     */
+    private $trees;
+
+    /**
+     * @var blobs
+     */
+    private $blobs;
+
+    /**
+     * @var submodules
+     */
+    private $submodules;
+
+    /**
      * static method to generate standalone log
      *
      * @param \GitElephant\Repository $repository  repo
@@ -345,7 +360,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *
      * @param string $ref
      *
-     * @return GitAuthor
+     * @return Author
      */
     public function getLastCommitAuthor($ref = 'master')
     {

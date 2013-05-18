@@ -15,7 +15,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand,
-    GitElephant\Objects\TreeTag,
+    GitElephant\Objects\Tag,
     GitElephant\Objects\Commit;
 
 /**
@@ -38,11 +38,11 @@ class RevListCommand extends BaseCommand
     /**
      * get tag commit command via rev-list
      *
-     * @param \GitElephant\Objects\TreeTag $tag a tag instance
+     * @param \GitElephant\Objects\Tag $tag a tag instance
      *
      * @return string
      */
-    public function getTagCommit(TreeTag $tag)
+    public function getTagCommit(Tag $tag)
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_REVLIST);

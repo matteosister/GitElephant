@@ -17,8 +17,8 @@ namespace GitElephant\Command;
 use GitElephant\Command\BaseCommand,
 GitElephant\Objects\TreeObject,
 GitElephant\Objects\TreeishInterface,
-GitElephant\Objects\TreeTag,
-GitElephant\Objects\TreeBranch,
+GitElephant\Objects\Tag,
+GitElephant\Objects\Branch,
 GitElephant\Objects\Commit;
 
 /**
@@ -120,7 +120,7 @@ class CatFileCommand extends BaseCommand
             if ($ref instanceof TreeishInterface) {
                 return $ref->getFullRef();
             } else {
-                throw new \InvalidArgumentException(sprintf('ref passed to CatFileCommand should be one of string, TreeTag, TreeBranch or Commit'));
+                throw new \InvalidArgumentException(sprintf('ref passed to CatFileCommand should be one of string, Tag, Branch or Commit'));
             }
         }
     }

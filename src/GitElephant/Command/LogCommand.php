@@ -16,7 +16,7 @@ namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
 use GitElephant\Objects\TreeObject;
-use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
 
 /**
@@ -40,7 +40,7 @@ class LogCommand extends BaseCommand
      * Build an object log command
      *
      * @param \GitElephant\Objects\TreeObject             $obj    the TreeObject to get the log for
-     * @param \GitElephant\Objects\TreeBranch|string|null $branch the branch to consider
+     * @param \GitElephant\Objects\Branch|string|null $branch the branch to consider
      * @param int|null                                    $limit  limit to n entries
      * @param int|null                                    $offset skip n entries
      *
@@ -50,7 +50,7 @@ class LogCommand extends BaseCommand
     {
         $subject = null;
         if (null !== $branch) {
-            if ($branch instanceof TreeBranch) {
+            if ($branch instanceof Branch) {
                 $subject .= $branch->getName();
             } else {
                 $subject .= (string) $branch;

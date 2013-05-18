@@ -15,6 +15,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
+use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Objects\TreeObject;
 
@@ -39,7 +40,7 @@ class LsTreeCommand extends BaseCommand
     /**
      * build a ls-tree command
      *
-     * @param string|TreeBranch $ref The reference to build the tree from
+     * @param string|Branch $ref The reference to build the tree from
      *
      * @return string
      */

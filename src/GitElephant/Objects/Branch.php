@@ -27,7 +27,7 @@ use GitElephant\Repository;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class TreeBranch implements TreeishInterface
+class Branch implements TreeishInterface
 {
     /**
      * @var \GitElephant\Repository
@@ -75,7 +75,7 @@ class TreeBranch implements TreeishInterface
      * @param \GitElephant\Repository $repository repository
      * @param string                  $outputLine output line
      *
-     * @return TreeBranch
+     * @return Branch
      */
     public static function createFromOutputLine(Repository $repository, $outputLine)
     {

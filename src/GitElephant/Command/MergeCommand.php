@@ -15,7 +15,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
-use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\Branch;
 
 /**
  * Merge command generator
@@ -38,11 +38,11 @@ class MergeCommand extends BaseCommand
     /**
      * Generate a merge command
      *
-     * @param \GitElephant\Objects\TreeBranch $with the branch to merge
+     * @param \GitElephant\Objects\Branch $with the branch to merge
      * 
      * @return string
      */
-    public function merge(TreeBranch $with)
+    public function merge(Branch $with)
     {
         $this->clearAll();
         $this->addCommandName(static::MERGE_COMMAND);
@@ -54,7 +54,7 @@ class MergeCommand extends BaseCommand
     /**
      * update a branch with its upstream
      *
-     * @param string $upstream upstream (@see TreeBranch::getUpstream)
+     * @param string $upstream upstream (@see Branch::getUpstream)
      *
      * @internal param string $remote remote
      * @return string

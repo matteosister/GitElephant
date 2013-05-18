@@ -96,14 +96,14 @@ the *Repository* class is the main class where you can find every method you nee
 $repo->getStatus(); // returns an array of lines of the status message
 
 // branches
-$repo->getBranches(); // return an array of TreeBranch objects
-$repo->getMainBranch(); // return the TreeBranch instance of the current checked out branch
-$repo->getBranch('master'); // return a TreeBranch instance by its name
+$repo->getBranches(); // return an array of Branch objects
+$repo->getMainBranch(); // return the Branch instance of the current checked out branch
+$repo->getBranch('master'); // return a Branch instance by its name
 
 // tags
-$repo->getTags(); // array of TreeTag instances
-$repo->getTag('v1.0'); // a TreeTag instance by name
-TreeTag::pick($repo, 'v1.0'); // a TreeTag instance by name
+$repo->getTags(); // array of Tag instances
+$repo->getTag('v1.0'); // a Tag instance by name
+Tag::pick($repo, 'v1.0'); // a Tag instance by name
 
 // last tag by date
 $repo->getLastTag();

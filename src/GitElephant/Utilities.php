@@ -15,7 +15,7 @@
 
 namespace GitElephant;
 
-use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\Branch;
 
 
 /**

@@ -118,6 +118,11 @@ class TestCase extends \PHPUnit_Framework_TestCase
         mkdir($this->path.DIRECTORY_SEPARATOR.$name);
     }
 
+    protected function addSubmodule($url, $path)
+    {
+        $this->getRepository()->addSubmodule($url, $path);
+    }
+
     /**
      * mock the caller
      *
@@ -188,10 +193,10 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('GitElephant\Objects\Commit', $commit);
         $this->assertEquals($sha, $commit->getSha());
         $this->assertEquals($tree, $commit->getTree());
-        $this->assertInstanceOf('GitElephant\Objects\GitAuthor', $commit->getAuthor());
+        $this->assertInstanceOf('GitElephant\Objects\Author', $commit->getAuthor());
         $this->assertEquals($author, $commit->getAuthor()->getName());
         $this->assertEquals($emailAuthor, $commit->getAuthor()->getEmail());
-        $this->assertInstanceOf('GitElephant\Objects\GitAuthor', $commit->getCommitter());
+        $this->assertInstanceOf('GitElephant\Objects\Author', $commit->getCommitter());
         $this->assertEquals($committer, $commit->getCommitter()->getName());
         $this->assertEquals($emailCommitter, $commit->getCommitter()->getEmail());
         $this->assertInstanceOf('\Datetime', $commit->getDatetimeAuthor());

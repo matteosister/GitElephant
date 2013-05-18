@@ -13,9 +13,9 @@
 
 namespace GitElephant;
 
-use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeObject;
-use GitElephant\Objects\TreeTag;
+use GitElephant\Objects\Tag;
 
 /**
  * RepositoryTest
@@ -168,7 +168,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->deleteBranch('test-branch');
         $this->assertCount(1, $this->getRepository()->getBranches(), 'one branch expected');
         $mainBranch = $this->getRepository()->getMainBranch();
-        $this->assertInstanceOf('GitElephant\Objects\TreeBranch', $this->getRepository()->getMainBranch(), 'main branch should be an instance of TreeBranch');
+        $this->assertInstanceOf('GitElephant\Objects\Branch', $this->getRepository()->getMainBranch(), 'main branch should be an instance of Branch');
         $this->assertTrue($this->getRepository()->getMainBranch()->getCurrent(), 'getCurrent on main branch should be true');
         $this->assertEquals('master', $this->getRepository()->getMainBranch()->getName(), 'main branch should be named "master"');
         $this->assertEquals(array('master'), $this->getRepository()->getBranches(true));
@@ -195,7 +195,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->init();
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
-        $this->assertInstanceOf('GitElephant\Objects\TreeBranch', $this->getRepository()->getBranch('master'));
+        $this->assertInstanceOf('GitElephant\Objects\Branch', $this->getRepository()->getBranch('master'));
         $this->assertNull($this->getRepository()->getBranch('a-branch-that-do-not-exists'));
     }
 
@@ -233,7 +233,7 @@ class RepositoryTest extends TestCase
         $this->assertEquals(0, count($this->getRepository()->getTags()));
         $this->getRepository()->createTag('test-tag');
         $this->assertEquals(1, count($this->getRepository()->getTags()));
-        $this->assertInstanceOf('GitElephant\Objects\TreeTag', $this->getRepository()->getTag('test-tag'));
+        $this->assertInstanceOf('GitElephant\Objects\Tag', $this->getRepository()->getTag('test-tag'));
         $this->getRepository()->deleteTag('test-tag');
         $this->assertEquals(0, count($this->getRepository()->getTags()));
         $this->assertNull($this->getRepository()->getTag('a-tag-that-do-not-exists'));
@@ -255,11 +255,11 @@ class RepositoryTest extends TestCase
         sleep(1);
         $this->getRepository()->createTag('0.0.1');
         sleep(1);
-        $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.1'), $this->getRepository()->getLastTag());
+        $this->assertEquals(Tag::pick($this->getRepository(), '0.0.1'), $this->getRepository()->getLastTag());
         $this->getRepository()->createTag('0.0.05');
-        $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.05'), $this->getRepository()->getLastTag());
-        $this->getRepository()->deleteTag(TreeTag::pick($this->getRepository(), '0.0.05'));
-        $this->assertEquals(TreeTag::pick($this->getRepository(), '0.0.1'), $this->getRepository()->getLastTag());
+        $this->assertEquals(Tag::pick($this->getRepository(), '0.0.05'), $this->getRepository()->getLastTag());
+        $this->getRepository()->deleteTag(Tag::pick($this->getRepository(), '0.0.05'));
+        $this->assertEquals(Tag::pick($this->getRepository(), '0.0.1'), $this->getRepository()->getLastTag());
     }
 
     /**
@@ -280,8 +280,8 @@ class RepositoryTest extends TestCase
         $this->getRepository()->commit('test', true);
         $this->getRepository()->createBranch('branch2');
         $this->getRepository()->createTag('tag1');
-        $this->assertInstanceOf('\GitElephant\Objects\TreeBranch', $this->getRepository()->getBranchOrTag('branch2'));
-        $this->assertInstanceOf('\GitElephant\Objects\TreeTag', $this->getRepository()->getBranchOrTag('tag1'));
+        $this->assertInstanceOf('\GitElephant\Objects\Branch', $this->getRepository()->getBranchOrTag('branch2'));
+        $this->assertInstanceOf('\GitElephant\Objects\Tag', $this->getRepository()->getBranchOrTag('tag1'));
         $this->assertNull($this->getRepository()->getBranchOrTag('not-exists'));
     }
 
@@ -584,7 +584,7 @@ class RepositoryTest extends TestCase
         $this->assertInstanceOf('GitElephant\Repository', $repo);
         $this->assertCount(2, $repo->getBranches());
         $branches = $repo->getBranches();
-        $branchesName = array_map(function(TreeBranch $b) {
+        $branchesName = array_map(function(Branch $b) {
             return $b->getName();
         }, $branches);
         $this->assertContains('master', $branchesName);

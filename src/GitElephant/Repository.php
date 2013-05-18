@@ -18,8 +18,8 @@ use GitElephant\Command\FetchCommand;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree;
-use GitElephant\Objects\TreeBranch;
-use GitElephant\Objects\TreeTag;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\Tag;
 use GitElephant\Objects\TreeObject;
 use GitElephant\Objects\Diff\Diff;
 use GitElephant\Objects\Commit;
@@ -233,7 +233,7 @@ class Repository
     }
 
     /**
-     * An array of TreeBranch objects
+     * An array of Branch objects
      *
      * @param bool $namesOnly return an array of branch names as a string
      * @param bool $all       lists also remote branches
@@ -252,7 +252,7 @@ class Repository
         } else {
             $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all))->getOutputLines(true);
             foreach ($outputLines as $branchLine) {
-                $branches[] = TreeBranch::createFromOutputLine($this, $branchLine);
+                $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
             $sortMethod = 'sortBranches';
         }
@@ -264,11 +264,11 @@ class Repository
     /**
      * Return the actually checked out branch
      *
-     * @return Objects\TreeBranch
+     * @return Objects\Branch
      */
     public function getMainBranch()
     {
-        $filtered = array_filter($this->getBranches(), function(TreeBranch $branch) {
+        $filtered = array_filter($this->getBranches(), function(Branch $branch) {
             return $branch->getCurrent();
         });
         sort($filtered);
@@ -277,11 +277,11 @@ class Repository
     }
 
     /**
-     * Retrieve a TreeBranch object by a branch name
+     * Retrieve a Branch object by a branch name
      *
      * @param string $name The branch name
      *
-     * @return null|TreeBranch
+     * @return null|Branch
      */
     public function getBranch($name)
     {
@@ -320,9 +320,9 @@ class Repository
     /**
      * Merge a Branch in the current checked out branch
      *
-     * @param Objects\TreeBranch $branch The branch to merge in the current checked out branch
+     * @param Objects\Branch $branch The branch to merge in the current checked out branch
      */
-    public function merge(TreeBranch $branch)
+    public function merge(Branch $branch)
     {
         $this->caller->execute(MergeCommand::getInstance()->merge($branch));
     }
@@ -341,10 +341,10 @@ class Repository
     }
 
     /**
-     * Delete a tag by it's name or by passing a TreeTag object
+     * Delete a tag by it's name or by passing a Tag object
      * This function change the state of the repository on the filesystem
      *
-     * @param string|TreeTag $tag The tag name or the TreeTag object
+     * @param string|Tag $tag The tag name or the Tag object
      */
     public function deleteTag($tag)
     {
@@ -363,9 +363,9 @@ class Repository
     }
 
     /**
-     * Gets an array of TreeTag objects
+     * Gets an array of Tag objects
      *
-     * @return array An array of TreeTag objects
+     * @return array An array of Tag objects
      */
     public function getTags()
     {
@@ -373,7 +373,7 @@ class Repository
         $this->caller->execute(TagCommand::getInstance()->lists());
         foreach ($this->caller->getOutputLines() as $tagString) {
             if ($tagString != '') {
-                $tags[] = new TreeTag($this, trim($tagString));
+                $tags[] = new Tag($this, trim($tagString));
             }
         }
 
@@ -385,7 +385,7 @@ class Repository
      *
      * @param string $name The tag name
      *
-     * @return TreeTag|null
+     * @return Tag|null
      */
     public function getTag($name)
     {
@@ -401,7 +401,7 @@ class Repository
     /**
      * Return the last created tag
      *
-     * @return TreeTag|null
+     * @return Tag|null
      */
     public function getLastTag()
     {
@@ -416,7 +416,7 @@ class Repository
         $files = array_reverse($files);
         $tagName = $files[0]->getFilename();
 
-        return TreeTag::pick($this, $tagName);
+        return Tag::pick($this, $tagName);
     }
 
     /**
@@ -424,17 +424,17 @@ class Repository
      *
      * @param string $name the reference name (a tag name or a branch name)
      *
-     * @return \GitElephant\Objects\TreeTag|\GitElephant\Objects\TreeBranch|null
+     * @return \GitElephant\Objects\Tag|\GitElephant\Objects\Branch|null
      */
     public function getBranchOrTag($name)
     {
         if (in_array($name, $this->getBranches(true))) {
-            return new TreeBranch($this, $name);
+            return new Branch($this, $name);
         }
         $tagFinderOutput = $this->caller->execute(TagCommand::getInstance()->lists())->getOutputLines(true);
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
-                return new TreeTag($this, $name);
+                return new Tag($this, $name);
             }
         }
 
@@ -488,7 +488,7 @@ class Repository
      * Get a log for an object
      *
      * @param \GitElephant\Objects\TreeObject             $obj    The TreeObject instance
-     * @param null|string|\GitElephant\Objects\TreeBranch $branch The branch to read from
+     * @param null|string|\GitElephant\Objects\Branch $branch The branch to read from
      * @param int                                         $limit  Limit to n entries
      * @param int|null                                    $offset Skip n entries
      *
@@ -573,12 +573,12 @@ class Repository
     /**
      * Order the branches list
      *
-     * @param Objects\TreeBranch $a first branch
-     * @param Objects\TreeBranch $b second branch
+     * @param Objects\Branch $a first branch
+     * @param Objects\Branch $b second branch
      *
      * @return int
      */
-    private function sortBranches(TreeBranch $a, TreeBranch $b)
+    private function sortBranches(Branch $a, Branch $b)
     {
         if ($a->getName() == 'master') {
             return -1;
@@ -594,8 +594,8 @@ class Repository
     /**
      * Order the branches list by name
      *
-     * @param Objects\TreeBranch $a first branch
-     * @param Objects\TreeBranch $b second branch
+     * @param Objects\Branch $a first branch
+     * @param Objects\Branch $b second branch
      *
      * @return int
      */

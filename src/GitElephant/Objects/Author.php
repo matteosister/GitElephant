@@ -22,7 +22,7 @@ namespace GitElephant\Objects;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class GitAuthor
+class Author
 {
     /**
      * Author name
