@@ -31,7 +31,7 @@ use GitElephant\Command\CatFileCommand;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class Tree implements \ArrayAccess, \Countable, \Iterator
+class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
 {
     /**
      * @var Repository
@@ -79,21 +79,6 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     private $blob;
 
     /**
-     * @var array
-     */
-    private $trees;
-
-    /**
-     * @var blobs
-     */
-    private $blobs;
-
-    /**
-     * @var submodules
-     */
-    private $submodules;
-
-    /**
      * static method to generate standalone log
      *
      * @param \GitElephant\Repository $repository  repo
@@ -117,7 +102,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *
      * @param \GitElephant\Repository $repository the repository
      * @param string                  $ref        a treeish reference
-     * @param Object              $subject    the subject
+     * @param Object                  $subject    the subject
      *
      * @internal param \GitElephant\Objects\Object|string $treeObject Object instance
      *
@@ -216,7 +201,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      */
     public function getBinaryData()
     {
-        $cmd = CatFileCommand::getInstance()->content($this->subject, $this->ref);
+        $cmd = CatFileCommand::getInstance()->content($this->getSubject(), $this->ref);
 
         return $this->getCaller()->execute($cmd)->getRawOutput();
     }
@@ -284,8 +269,8 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      * Reorder children of the tree
      * Tree first (alphabetically) and then blobs (alphabetically)
      *
-     * @param Object $a the first object
-     * @param Object $b the second object
+     * @param \GitElephant\Objects\Object $a the first object
+     * @param \GitElephant\Objects\Object $b the second object
      *
      * @return int
      */
@@ -387,7 +372,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     /**
      * get the tree object for this tree
      *
-     * @return null|Object
+     * @return Object
      */
     public function getObject()
     {
