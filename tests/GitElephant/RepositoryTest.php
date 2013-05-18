@@ -582,7 +582,7 @@ class RepositoryTest extends TestCase
     {
         $repo = Repository::createFromRemote('git://github.com/matteosister/GitElephant.git');
         $this->assertInstanceOf('GitElephant\Repository', $repo);
-        $this->assertCount(2, $repo->getBranches());
+        $this->assertGreaterThanOrEqual(2, $repo->getBranches());
         $branches = $repo->getBranches();
         $branchesName = array_map(function(Branch $b) {
             return $b->getName();
