@@ -208,12 +208,12 @@ foreach ($tree as $treeObject) {
 }
 ```
 
-A TreeObject instance is a php representation of a node in a git tree
+A Object instance is a php representation of a node in a git tree
 
 ``` php
 <?php
 echo $treeObject; // the name of the object (folder, file or link)
-$treeObject->getType(); // one class constant of TreeObject::TYPE_BLOB, TreeObject::TYPE_TREE and TreeObject::TYPE_LINK
+$treeObject->getType(); // one class constant of Object::TYPE_BLOB, Object::TYPE_TREE and Object::TYPE_LINK
 $treeObject->getSha();
 $treeObject->getSize();
 $treeObject->getName();
@@ -241,7 +241,7 @@ $diff = $repo->getDiff($repo->getCommit());
 $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'));
 // same as before for a given path
 $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'), 'lib/vendor');
-// or even pass a TreeObject
+// or even pass a Object
 $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'), $treeObject);
 // alternatively you could directly use the sha of the commit
 $diff = $repo->getDiff('1ac370d', '8fb7281');

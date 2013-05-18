@@ -124,9 +124,9 @@ class LogTest extends TestCase
     }
 
     /**
-     * testTreeObjectLog
+     * testObjectLog
      */
-    public function testTreeObjectLog()
+    public function testObjectLog()
     {
         $tree = $this->getRepository()->getTree();
         $file = $tree[0];

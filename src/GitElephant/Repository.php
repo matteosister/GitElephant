@@ -20,7 +20,7 @@ use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\Tag;
-use GitElephant\Objects\TreeObject;
+use GitElephant\Objects\Object;
 use GitElephant\Objects\Diff\Diff;
 use GitElephant\Objects\Commit;
 use GitElephant\Objects\Log;
@@ -143,7 +143,7 @@ class Repository
     /**
      * Stage the working tree content
      *
-     * @param string|TreeObject $path the path to store
+     * @param string|Object $path the path to store
      *
      * @return void
      */
@@ -155,8 +155,8 @@ class Repository
     /**
      * Move a file/directory
      *
-     * @param string|TreeObject $from source path
-     * @param string|TreeObject $to   destination path
+     * @param string|Object $from source path
+     * @param string|Object $to   destination path
      */
     public function move($from, $to)
     {
@@ -166,7 +166,7 @@ class Repository
     /**
      * Remove a file/directory
      *
-     * @param string|TreeObject $path      the path to remove
+     * @param string|Object $path      the path to remove
      * @param bool              $recursive recurse
      * @param bool              $force     force
      */
@@ -473,7 +473,7 @@ class Repository
      * Get a log for a ref
      *
      * @param string|TreeishInterface $ref    the treeish to check
-     * @param string|TreeObject       $path   the physical path to the tree relative to the repository root
+     * @param string|Object       $path   the physical path to the tree relative to the repository root
      * @param int|null                $limit  limit to n entries
      * @param int|null                $offset skip n entries
      *
@@ -487,14 +487,14 @@ class Repository
     /**
      * Get a log for an object
      *
-     * @param \GitElephant\Objects\TreeObject             $obj    The TreeObject instance
+     * @param \GitElephant\Objects\Object             $obj    The Object instance
      * @param null|string|\GitElephant\Objects\Branch $branch The branch to read from
      * @param int                                         $limit  Limit to n entries
      * @param int|null                                    $offset Skip n entries
      *
      * @return \GitElephant\Objects\Log
      */
-    public function getTreeObjectLog(TreeObject $obj, $branch = null, $limit = 1, $offset = null)
+    public function getObjectLog(Object $obj, $branch = null, $limit = 1, $offset = null)
     {
         $command = LogCommand::getInstance()->showObjectLog($obj, $branch, $limit, $offset);
 
@@ -517,7 +517,7 @@ class Repository
      * Tree Object is Countable, Iterable and has ArrayAccess for easy manipulation
      *
      * @param string|TreeishInterface $ref  the treeish to check
-     * @param string|TreeObject       $path TreeObject or null for root
+     * @param string|Object       $path Object or null for root
      *
      * @return Objects\Tree
      */
@@ -525,7 +525,7 @@ class Repository
     {
         if (is_string($path) && '' !== $path) {
             $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(true);
-            $path = TreeObject::createFromOutputLine($outputLines[0]);
+            $path = Object::createFromOutputLine($outputLines[0]);
         }
 
         return new Tree($this, $ref, $path);
@@ -536,7 +536,7 @@ class Repository
      *
      * @param \GitElephant\Objects\Commit|string      $commit1 A TreeishInterface instance
      * @param \GitElephant\Objects\Commit|string|null $commit2 A TreeishInterface instance
-     * @param null|string|TreeObject                  $path    The path to get the diff for or a TreeObject instance
+     * @param null|string|Object                  $path    The path to get the diff for or a Object instance
      *
      * @return Objects\Diff\Diff
      */
@@ -615,12 +615,12 @@ class Repository
     /**
      * output a node content as an array of lines
      *
-     * @param \GitElephant\Objects\TreeObject              $obj     The TreeObject of type BLOB
+     * @param \GitElephant\Objects\Object              $obj     The Object of type BLOB
      * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
      * @return array
      */
-    public function outputContent(TreeObject $obj, $treeish)
+    public function outputContent(Object $obj, $treeish)
     {
         $command = CatFileCommand::getInstance()->content($obj, $treeish);
 
@@ -630,12 +630,12 @@ class Repository
     /**
      * output a node raw content
      *
-     * @param \GitElephant\Objects\TreeObject              $obj     The TreeObject of type BLOB
+     * @param \GitElephant\Objects\Object              $obj     The Object of type BLOB
      * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
      * @return string
      */
-    public function outputRawContent(TreeObject $obj, $treeish)
+    public function outputRawContent(Object $obj, $treeish)
     {
         $command = CatFileCommand::getInstance()->content($obj, $treeish);
 

@@ -15,7 +15,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand,
-GitElephant\Objects\TreeObject,
+GitElephant\Objects\Object,
 GitElephant\Objects\TreeishInterface,
 GitElephant\Objects\Tag,
 GitElephant\Objects\Branch,
@@ -40,14 +40,14 @@ class CatFileCommand extends BaseCommand
     }
 
     /**
-     * command to show content of a TreeObject at a given Treeish point
+     * command to show content of a Object at a given Treeish point
      *
-     * @param \GitElephant\Objects\TreeObject              $object  a TreeObject instance
+     * @param \GitElephant\Objects\Object              $object  a Object instance
      * @param \GitElephant\Objects\TreeishInterface|string $treeish an object with TreeishInterface interface
      *
      * @return string
      */
-    public function content(TreeObject $object, $treeish)
+    public function content(Object $object, $treeish)
     {
         if ($treeish instanceof TreeishInterface) {
             $sha = $treeish->getSha();
@@ -65,14 +65,14 @@ class CatFileCommand extends BaseCommand
     }
 
     /**
-     * command to show the type of a TreeObject at a given Treeish point
+     * command to show the type of a Object at a given Treeish point
      *
-     * @param \GitElephant\Objects\TreeObject       $object  a TreeObject instance
+     * @param \GitElephant\Objects\Object       $object  a Object instance
      * @param \GitElephant\Objects\TreeishInterface $treeish an object with TreeishInterface interface
      *
      * @return string
      */
-    public function type(TreeObject $object, TreeishInterface $treeish)
+    public function type(Object $object, TreeishInterface $treeish)
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_CAT_FILE);
@@ -84,14 +84,14 @@ class CatFileCommand extends BaseCommand
     }
 
     /**
-     * command to show size of a TreeObject at a given Treeish point
+     * command to show size of a Object at a given Treeish point
      *
-     * @param \GitElephant\Objects\TreeObject       $object  a TreeObject instance
+     * @param \GitElephant\Objects\Object       $object  a Object instance
      * @param \GitElephant\Objects\TreeishInterface $treeish an object with TreeishInterface interface
      *
      * @return string
      */
-    public function size(TreeObject $object, TreeishInterface $treeish)
+    public function size(Object $object, TreeishInterface $treeish)
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_CAT_FILE);
@@ -105,13 +105,13 @@ class CatFileCommand extends BaseCommand
     /**
      * Get a reference name
      *
-     * @param \GitElephant\Objects\TreeObject $object a TreeObject instance
+     * @param \GitElephant\Objects\Object $object a Object instance
      * @param string|TreeishInterface         $ref    could be a string (like HEAD, master etc...) or an instance of TreeishInterface
      *
      * @return \GitElephant\Command\could
      * @throws \InvalidArgumentException
      */
-    private function getReferenceName(TreeObject $object, $ref)
+    private function getReferenceName(Object $object, $ref)
     {
         $refName = '';
         if (is_string($ref)) {

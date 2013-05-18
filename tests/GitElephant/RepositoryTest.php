@@ -14,7 +14,7 @@
 namespace GitElephant;
 
 use GitElephant\Objects\Branch;
-use GitElephant\Objects\TreeObject;
+use GitElephant\Objects\Object;
 use GitElephant\Objects\Tag;
 
 /**
@@ -286,9 +286,9 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getTreeObjectLog
+     * @covers GitElephant\Repository::getObjectLog
      */
-    public function testGetTreeObjectLog()
+    public function testGetObjectLog()
     {
         $repo = $this->getRepository();
         $repo->init();
@@ -313,11 +313,11 @@ class RepositoryTest extends TestCase
         $tree = $repo->getTree();
         $obj = $tree[0];
 
-        $log = $this->getRepository()->getTreeObjectLog($obj);
+        $log = $this->getRepository()->getObjectLog($obj);
         $this->assertInstanceOf('GitElephant\Objects\Log', $log);
         $this->assertEquals(1, $log->count());
 
-        $log = $this->getRepository()->getTreeObjectLog($obj, null, null, null);
+        $log = $this->getRepository()->getObjectLog($obj, null, null, null);
         $this->assertEquals(5, $log->count());
 
         $this->assertEquals('added E.txt', $log->first()->getMessage()->toString());
@@ -327,9 +327,9 @@ class RepositoryTest extends TestCase
     /**
      * Test logs on different tree objects
      *
-     * @covers GitElephant\Repository::getTreeObjectLog
+     * @covers GitElephant\Repository::getObjectLog
      */
-    public function testGetTreeObjectLogFolders()
+    public function testGetObjectLogFolders()
     {
         $repo = $this->getRepository();
         $repo->init();
@@ -350,10 +350,10 @@ class RepositoryTest extends TestCase
 
         $tree = $repo->getTree();
 
-        /* @var $treeObj TreeObject */
+        /* @var $treeObj Object */
         foreach ($tree as $treeObj) {
             $name = $treeObj->getName();
-            $log = $repo->getTreeObjectLog($treeObj, null, null, null);
+            $log = $repo->getObjectLog($treeObj, null, null, null);
 
             $this->assertEquals(2, $log->count());
 
@@ -368,7 +368,7 @@ class RepositoryTest extends TestCase
     /**
      * Test logs on different branches
      *
-     * @covers GitElephant\Repository::getTreeObjectLog
+     * @covers GitElephant\Repository::getObjectLog
      */
     public function testGetObjectLogBranches()
     {
@@ -392,7 +392,7 @@ class RepositoryTest extends TestCase
         $repo->checkout('master');
         $tree = $repo->getTree();
         $dir = $tree[0];
-        $log = $repo->getTreeObjectLog($dir, null, null, null);
+        $log = $repo->getObjectLog($dir, null, null, null);
 
         $this->assertEquals(2, $log->count());
         $this->assertEquals('A/A2', $log->first()->getMessage()->toString());
@@ -401,7 +401,7 @@ class RepositoryTest extends TestCase
         $repo->checkout('test-branch');
         $tree = $repo->getTree();
         $dir = $tree[0];
-        $log = $repo->getTreeObjectLog($dir, null, null, null);
+        $log = $repo->getObjectLog($dir, null, null, null);
 
         $this->assertEquals(3, $log->count());
         $this->assertEquals('A/A3', $log->first()->getMessage()->toString());
@@ -457,15 +457,15 @@ class RepositoryTest extends TestCase
         $this->assertTrue($this->getRepository()->getTree($this->getRepository()->getCommit(), 'test')->isBlob());
         $this->assertCount(2, $tree, 'One file in the repository');
         $firstNode = $tree[0];
-        $this->assertInstanceOf('GitElephant\Objects\TreeObject', $firstNode, 'array access on tree should give always a node type');
+        $this->assertInstanceOf('GitElephant\Objects\Object', $firstNode, 'array access on tree should give always a node type');
         $this->assertEquals('test-folder', $firstNode->getName(), 'First repository file should be named "test"');
         $secondNode = $tree[1];
-        $this->assertInstanceOf('GitElephant\Objects\TreeObject', $secondNode, 'array access on tree should give always a node type');
-        $this->assertEquals(TreeObject::TYPE_BLOB, $secondNode->getType(), 'second node should be of type tree');
+        $this->assertInstanceOf('GitElephant\Objects\Object', $secondNode, 'array access on tree should give always a node type');
+        $this->assertEquals(Object::TYPE_BLOB, $secondNode->getType(), 'second node should be of type tree');
         $subtree = $this->getRepository()->getTree('master', 'test-folder');
         $subnode = $subtree[0];
-        $this->assertInstanceOf('GitElephant\Objects\TreeObject', $subnode, 'array access on tree should give always a node type');
-        $this->assertEquals(TreeObject::TYPE_BLOB, $subnode->getType(), 'subnode should be of type blob');
+        $this->assertInstanceOf('GitElephant\Objects\Object', $subnode, 'array access on tree should give always a node type');
+        $this->assertEquals(Object::TYPE_BLOB, $subnode->getType(), 'subnode should be of type blob');
         $this->assertEquals('test2', $subnode->getName(), 'subnode should be named "test2"');
     }
 

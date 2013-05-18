@@ -139,8 +139,8 @@ class MainCommand extends BaseCommand
     /**
      * Move a file/directory
      *
-     * @param string|TreeObject $from source path
-     * @param string|TreeObject $to   destination path
+     * @param string|Object $from source path
+     * @param string|Object $to   destination path
      *
      * @throws \InvalidArgumentException
      * @return string
@@ -169,7 +169,7 @@ class MainCommand extends BaseCommand
     /**
      * Remove a file/directory
      *
-     * @param string|TreeObject $path      the path to remove
+     * @param string|Object $path      the path to remove
      * @param bool              $recursive recurse
      * @param bool              $force     force
      *
