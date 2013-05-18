@@ -36,6 +36,7 @@ use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\SubmoduleCommand;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Repository
@@ -85,7 +86,7 @@ class Repository
         if (!is_dir($repositoryPath)) {
             throw new \InvalidArgumentException(sprintf('the path "%s" is not a repository folder', $repositoryPath));
         }
-        $this->path   = $repositoryPath;
+        $this->path = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
         $this->name = $name;
     }
@@ -167,8 +168,8 @@ class Repository
      * Remove a file/directory
      *
      * @param string|Object $path      the path to remove
-     * @param bool              $recursive recurse
-     * @param bool              $force     force
+     * @param bool          $recursive recurse
+     * @param bool          $force     force
      */
     public function remove($path, $recursive = false, $force = false)
     {
@@ -244,19 +245,46 @@ class Repository
     {
         $branches = array();
         if ($namesOnly) {
-            $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all, true))->getOutputLines(true);
-            $branches = array_map(function($v) {
-                return ltrim($v, '* ');
-            }, $outputLines);
-            $sortMethod = 'sortBranchesByName';
+            $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all, true))->getOutputLines(
+                true
+            );
+            $branches = array_map(
+                function ($v) {
+                    return ltrim($v, '* ');
+                },
+                $outputLines
+            );
+            $sorter = function ($a, $b)
+            {
+                if ($a == 'master') {
+                    return -1;
+                } else {
+                    if ($b == 'master') {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            };
         } else {
             $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all))->getOutputLines(true);
             foreach ($outputLines as $branchLine) {
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
-            $sortMethod = 'sortBranches';
+            $sorter = function (Branch $a, Branch $b)
+            {
+                if ($a->getName() == 'master') {
+                    return -1;
+                } else {
+                    if ($b->getName() == 'master') {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            };
         }
-        usort($branches, array($this, $sortMethod));
+        usort($branches, $sorter);
 
         return $branches;
     }
@@ -268,9 +296,12 @@ class Repository
      */
     public function getMainBranch()
     {
-        $filtered = array_filter($this->getBranches(), function(Branch $branch) {
-            return $branch->getCurrent();
-        });
+        $filtered = array_filter(
+            $this->getBranches(),
+            function (Branch $branch) {
+                return $branch->getCurrent();
+            }
+        );
         sort($filtered);
 
         return $filtered[0];
@@ -285,9 +316,10 @@ class Repository
      */
     public function getBranch($name)
     {
-        foreach ($this->getBranches() as $treeBranch) {
-            if ($treeBranch->getName() == $name) {
-                return $treeBranch;
+        foreach ($this->getBranches() as $branch) {
+            /** @var $branch Branch */
+            if ($branch->getName() == $name) {
+                return $branch;
             }
         }
 
@@ -306,11 +338,14 @@ class Repository
         $actualBranch = $this->getMainBranch();
         $actualBranches = $this->getBranches(true, false);
         $allBranches = $this->getBranches(true, true);
-        $realBranches = array_filter($allBranches, function($branch) use ($actualBranches) {
-            return !in_array($branch, $actualBranches)
+        $realBranches = array_filter(
+            $allBranches,
+            function ($branch) use ($actualBranches) {
+                return !in_array($branch, $actualBranches)
                 && preg_match('/^remotes(.+)$/', $branch)
                 && !preg_match('/^(.+)(HEAD)(.*?)$/', $branch);
-        });
+            }
+        );
         foreach ($realBranches as $realBranch) {
             $this->checkout(str_replace(sprintf('remotes/%s/', $remote), '', $realBranch));
         }
@@ -389,9 +424,10 @@ class Repository
      */
     public function getTag($name)
     {
-        foreach ($this->getTags() as $treeTag) {
-            if ($name === $treeTag->getName()) {
-                return $treeTag;
+        foreach ($this->getTags() as $tag) {
+            /** @var $tag Tag */
+            if ($name === $tag->getName()) {
+                return $tag;
             }
         }
 
@@ -406,15 +442,19 @@ class Repository
     public function getLastTag()
     {
         $finder = Finder::create()
-            ->files()
-            ->in(sprintf('%s/.git/refs/tags', $this->path))
-            ->sortByChangedTime();
+                  ->files()
+                  ->in(sprintf('%s/.git/refs/tags', $this->path))
+                  ->sortByChangedTime();
         if ($finder->count() == 0) {
             return null;
         }
         $files = iterator_to_array($finder->getIterator(), false);
         $files = array_reverse($files);
-        $tagName = $files[0]->getFilename();
+        /**
+         * @var $firstFile SplFileInfo
+         */
+        $firstFile = $files[0];
+        $tagName = $firstFile->getFilename();
 
         return Tag::pick($this, $tagName);
     }
@@ -473,7 +513,7 @@ class Repository
      * Get a log for a ref
      *
      * @param string|TreeishInterface $ref    the treeish to check
-     * @param string|Object       $path   the physical path to the tree relative to the repository root
+     * @param string|Object           $path   the physical path to the tree relative to the repository root
      * @param int|null                $limit  limit to n entries
      * @param int|null                $offset skip n entries
      *
@@ -489,8 +529,8 @@ class Repository
      *
      * @param \GitElephant\Objects\Object             $obj    The Object instance
      * @param null|string|\GitElephant\Objects\Branch $branch The branch to read from
-     * @param int                                         $limit  Limit to n entries
-     * @param int|null                                    $offset Skip n entries
+     * @param int                                     $limit  Limit to n entries
+     * @param int|null                                $offset Skip n entries
      *
      * @return \GitElephant\Objects\Log
      */
@@ -517,14 +557,16 @@ class Repository
      * Tree Object is Countable, Iterable and has ArrayAccess for easy manipulation
      *
      * @param string|TreeishInterface $ref  the treeish to check
-     * @param string|Object       $path Object or null for root
+     * @param string|Object           $path Object or null for root
      *
      * @return Objects\Tree
      */
     public function getTree($ref = 'HEAD', $path = null)
     {
         if (is_string($path) && '' !== $path) {
-            $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(true);
+            $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(
+                true
+            );
             $path = Object::createFromOutputLine($outputLines[0]);
         }
 
@@ -536,7 +578,7 @@ class Repository
      *
      * @param \GitElephant\Objects\Commit|string      $commit1 A TreeishInterface instance
      * @param \GitElephant\Objects\Commit|string|null $commit2 A TreeishInterface instance
-     * @param null|string|Object                  $path    The path to get the diff for or a Object instance
+     * @param null|string|Object                      $path    The path to get the diff for or a Object instance
      *
      * @return Objects\Diff\Diff
      */
@@ -571,51 +613,9 @@ class Repository
     }
 
     /**
-     * Order the branches list
-     *
-     * @param Objects\Branch $a first branch
-     * @param Objects\Branch $b second branch
-     *
-     * @return int
-     */
-    private function sortBranches(Branch $a, Branch $b)
-    {
-        if ($a->getName() == 'master') {
-            return -1;
-        } else {
-            if ($b->getName() == 'master') {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-    }
-
-    /**
-     * Order the branches list by name
-     *
-     * @param Objects\Branch $a first branch
-     * @param Objects\Branch $b second branch
-     *
-     * @return int
-     */
-    private function sortBranchesByName($a, $b)
-    {
-        if ($a == 'master') {
-            return -1;
-        } else {
-            if ($b == 'master') {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-    }
-
-    /**
      * output a node content as an array of lines
      *
-     * @param \GitElephant\Objects\Object              $obj     The Object of type BLOB
+     * @param \GitElephant\Objects\Object                  $obj     The Object of type BLOB
      * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
      * @return array
@@ -630,7 +630,7 @@ class Repository
     /**
      * output a node raw content
      *
-     * @param \GitElephant\Objects\Object              $obj     The Object of type BLOB
+     * @param \GitElephant\Objects\Object                  $obj     The Object of type BLOB
      * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
      * @return string
