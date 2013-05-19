@@ -1,4 +1,8 @@
-# GitElephant ![Travis build status](https://secure.travis-ci.org/matteosister/GitElephant.png)#
+# GitElephant
+
+develop branch: [![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=develop)](https://travis-ci.org/matteosister/GitElephant)
+
+master branch: [![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=master)](https://travis-ci.org/matteosister/GitElephant)
 
 GitElephant is an abstraction layer to manage your git repositories with php
 
