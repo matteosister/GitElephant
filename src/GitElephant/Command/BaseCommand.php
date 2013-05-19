@@ -116,7 +116,7 @@ class BaseCommand
     /**
      * Add a path to the git command
      *
-     * @param string $path path
+     * @param string $path   path
      */
     protected function addPath($path)
     {

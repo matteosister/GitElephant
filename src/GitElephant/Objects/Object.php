@@ -25,10 +25,10 @@ use GitElephant\Command\LsTreeCommand;
 use GitElephant\Repository;
 
 /**
- * A TreeObject instance represents a node in the git tree repository
+ * A Object instance represents a node in the git tree repository
  * It could be a file or a folder, as well as a submodule (a "link" talking the git language")
  */
-class TreeObject
+class Object
 {
     const TYPE_BLOB = 'blob';
     const TYPE_TREE = 'tree';
@@ -77,12 +77,12 @@ class TreeObject
     private $path;
 
     /**
-     * create a TreeObject from a single outputLine of the git ls-tree command
+     * create a Object from a single outputLine of the git ls-tree command
      *
      * @param string $outputLine output from ls-tree command
      *
      * @see LsTreeCommand::tree
-     * @return TreeObject
+     * @return Object
      */
     public static function createFromOutputLine($outputLine)
     {
@@ -113,14 +113,14 @@ class TreeObject
         $permissions = $matches[1];
         $type        = null;
         switch ($matches[2]) {
-            case TreeObject::TYPE_TREE:
-                $type = TreeObject::TYPE_TREE;
+            case Object::TYPE_TREE:
+                $type = Object::TYPE_TREE;
                 break;
-            case TreeObject::TYPE_BLOB:
-                $type = TreeObject::TYPE_BLOB;
+            case Object::TYPE_BLOB:
+                $type = Object::TYPE_BLOB;
                 break;
-            case TreeObject::TYPE_LINK:
-                $type = TreeObject::TYPE_LINK;
+            case Object::TYPE_LINK:
+                $type = Object::TYPE_LINK;
                 break;
         }
         $sha      = $matches[3];

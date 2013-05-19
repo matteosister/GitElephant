@@ -52,8 +52,8 @@ class CommitTest extends TestCase
         $showCommand = new ShowCommand();
         $this->commit = new Commit($this->getRepository());
         $this->assertInstanceOf('\GitElephant\Objects\Commit', $this->commit);
-        $this->assertInstanceOf('\GitElephant\Objects\GitAuthor', $this->commit->getAuthor());
-        $this->assertInstanceOf('\GitElephant\Objects\GitAuthor', $this->commit->getCommitter());
+        $this->assertInstanceOf('\GitElephant\Objects\Author', $this->commit->getAuthor());
+        $this->assertInstanceOf('\GitElephant\Objects\Author', $this->commit->getCommitter());
         $this->assertInstanceOf('\Datetime', $this->commit->getDatetimeAuthor());
         $this->assertInstanceOf('\Datetime', $this->commit->getDatetimeCommitter());
         $this->assertInstanceOf('\GitElephant\Objects\Commit\Message', $this->commit->getMessage());

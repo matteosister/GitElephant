@@ -26,7 +26,7 @@ use GitElephant\Objects\TreeishInterface,
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class TreeTag implements TreeishInterface
+class Tag implements TreeishInterface
 {
     /**
      * @var \GitElephant\Repository
@@ -93,7 +93,7 @@ class TreeTag implements TreeishInterface
      * @param \GitElephant\Repository $repository repository instance
      * @param string                  $name       name
      *
-     * @return TreeTag
+     * @return Tag
      */
     public static function pick(Repository $repository, $name)
     {

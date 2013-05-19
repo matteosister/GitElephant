@@ -15,7 +15,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
-use GitElephant\Objects\TreeTag;
+use GitElephant\Objects\Tag;
 
 
 /**
@@ -74,7 +74,7 @@ class TagCommand extends BaseCommand
     /**
      * Delete a tag
      *
-     * @param string|TreeTag $tag The name of tag, or the TreeTag instance to delete
+     * @param string|Tag $tag The name of tag, or the Tag instance to delete
      *
      * @return string the command
      */
@@ -83,7 +83,7 @@ class TagCommand extends BaseCommand
         $this->clearAll();
 
         $name = $tag;
-        if ($tag instanceof TreeTag) {
+        if ($tag instanceof Tag) {
             $name = $tag->getName();
         }
 

@@ -18,9 +18,9 @@ use GitElephant\Command\FetchCommand;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree;
-use GitElephant\Objects\TreeBranch;
-use GitElephant\Objects\TreeTag;
-use GitElephant\Objects\TreeObject;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\Tag;
+use GitElephant\Objects\Object;
 use GitElephant\Objects\Diff\Diff;
 use GitElephant\Objects\Commit;
 use GitElephant\Objects\Log;
@@ -36,6 +36,7 @@ use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\SubmoduleCommand;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Repository
@@ -85,7 +86,7 @@ class Repository
         if (!is_dir($repositoryPath)) {
             throw new \InvalidArgumentException(sprintf('the path "%s" is not a repository folder', $repositoryPath));
         }
-        $this->path   = $repositoryPath;
+        $this->path = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
         $this->name = $name;
     }
@@ -143,7 +144,7 @@ class Repository
     /**
      * Stage the working tree content
      *
-     * @param string|TreeObject $path the path to store
+     * @param string|Object $path the path to store
      *
      * @return void
      */
@@ -155,8 +156,8 @@ class Repository
     /**
      * Move a file/directory
      *
-     * @param string|TreeObject $from source path
-     * @param string|TreeObject $to   destination path
+     * @param string|Object $from source path
+     * @param string|Object $to   destination path
      */
     public function move($from, $to)
     {
@@ -166,9 +167,9 @@ class Repository
     /**
      * Remove a file/directory
      *
-     * @param string|TreeObject $path      the path to remove
-     * @param bool              $recursive recurse
-     * @param bool              $force     force
+     * @param string|Object $path      the path to remove
+     * @param bool          $recursive recurse
+     * @param bool          $force     force
      */
     public function remove($path, $recursive = false, $force = false)
     {
@@ -233,7 +234,7 @@ class Repository
     }
 
     /**
-     * An array of TreeBranch objects
+     * An array of Branch objects
      *
      * @param bool $namesOnly return an array of branch names as a string
      * @param bool $all       lists also remote branches
@@ -244,19 +245,46 @@ class Repository
     {
         $branches = array();
         if ($namesOnly) {
-            $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all, true))->getOutputLines(true);
-            $branches = array_map(function($v) {
-                return ltrim($v, '* ');
-            }, $outputLines);
-            $sortMethod = 'sortBranchesByName';
+            $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all, true))->getOutputLines(
+                true
+            );
+            $branches = array_map(
+                function ($v) {
+                    return ltrim($v, '* ');
+                },
+                $outputLines
+            );
+            $sorter = function ($a, $b)
+            {
+                if ($a == 'master') {
+                    return -1;
+                } else {
+                    if ($b == 'master') {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            };
         } else {
             $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all))->getOutputLines(true);
             foreach ($outputLines as $branchLine) {
-                $branches[] = TreeBranch::createFromOutputLine($this, $branchLine);
+                $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
-            $sortMethod = 'sortBranches';
+            $sorter = function (Branch $a, Branch $b)
+            {
+                if ($a->getName() == 'master') {
+                    return -1;
+                } else {
+                    if ($b->getName() == 'master') {
+                        return 1;
+                    } else {
+                        return 0;
+                    }
+                }
+            };
         }
-        usort($branches, array($this, $sortMethod));
+        usort($branches, $sorter);
 
         return $branches;
     }
@@ -264,30 +292,34 @@ class Repository
     /**
      * Return the actually checked out branch
      *
-     * @return Objects\TreeBranch
+     * @return Objects\Branch
      */
     public function getMainBranch()
     {
-        $filtered = array_filter($this->getBranches(), function(TreeBranch $branch) {
-            return $branch->getCurrent();
-        });
+        $filtered = array_filter(
+            $this->getBranches(),
+            function (Branch $branch) {
+                return $branch->getCurrent();
+            }
+        );
         sort($filtered);
 
         return $filtered[0];
     }
 
     /**
-     * Retrieve a TreeBranch object by a branch name
+     * Retrieve a Branch object by a branch name
      *
      * @param string $name The branch name
      *
-     * @return null|TreeBranch
+     * @return null|Branch
      */
     public function getBranch($name)
     {
-        foreach ($this->getBranches() as $treeBranch) {
-            if ($treeBranch->getName() == $name) {
-                return $treeBranch;
+        foreach ($this->getBranches() as $branch) {
+            /** @var $branch Branch */
+            if ($branch->getName() == $name) {
+                return $branch;
             }
         }
 
@@ -306,11 +338,14 @@ class Repository
         $actualBranch = $this->getMainBranch();
         $actualBranches = $this->getBranches(true, false);
         $allBranches = $this->getBranches(true, true);
-        $realBranches = array_filter($allBranches, function($branch) use ($actualBranches) {
-            return !in_array($branch, $actualBranches)
+        $realBranches = array_filter(
+            $allBranches,
+            function ($branch) use ($actualBranches) {
+                return !in_array($branch, $actualBranches)
                 && preg_match('/^remotes(.+)$/', $branch)
                 && !preg_match('/^(.+)(HEAD)(.*?)$/', $branch);
-        });
+            }
+        );
         foreach ($realBranches as $realBranch) {
             $this->checkout(str_replace(sprintf('remotes/%s/', $remote), '', $realBranch));
         }
@@ -320,9 +355,9 @@ class Repository
     /**
      * Merge a Branch in the current checked out branch
      *
-     * @param Objects\TreeBranch $branch The branch to merge in the current checked out branch
+     * @param Objects\Branch $branch The branch to merge in the current checked out branch
      */
-    public function merge(TreeBranch $branch)
+    public function merge(Branch $branch)
     {
         $this->caller->execute(MergeCommand::getInstance()->merge($branch));
     }
@@ -341,10 +376,10 @@ class Repository
     }
 
     /**
-     * Delete a tag by it's name or by passing a TreeTag object
+     * Delete a tag by it's name or by passing a Tag object
      * This function change the state of the repository on the filesystem
      *
-     * @param string|TreeTag $tag The tag name or the TreeTag object
+     * @param string|Tag $tag The tag name or the Tag object
      */
     public function deleteTag($tag)
     {
@@ -363,9 +398,9 @@ class Repository
     }
 
     /**
-     * Gets an array of TreeTag objects
+     * Gets an array of Tag objects
      *
-     * @return array An array of TreeTag objects
+     * @return array An array of Tag objects
      */
     public function getTags()
     {
@@ -373,7 +408,7 @@ class Repository
         $this->caller->execute(TagCommand::getInstance()->lists());
         foreach ($this->caller->getOutputLines() as $tagString) {
             if ($tagString != '') {
-                $tags[] = new TreeTag($this, trim($tagString));
+                $tags[] = new Tag($this, trim($tagString));
             }
         }
 
@@ -385,13 +420,14 @@ class Repository
      *
      * @param string $name The tag name
      *
-     * @return TreeTag|null
+     * @return Tag|null
      */
     public function getTag($name)
     {
-        foreach ($this->getTags() as $treeTag) {
-            if ($name === $treeTag->getName()) {
-                return $treeTag;
+        foreach ($this->getTags() as $tag) {
+            /** @var $tag Tag */
+            if ($name === $tag->getName()) {
+                return $tag;
             }
         }
 
@@ -401,22 +437,26 @@ class Repository
     /**
      * Return the last created tag
      *
-     * @return TreeTag|null
+     * @return Tag|null
      */
     public function getLastTag()
     {
         $finder = Finder::create()
-            ->files()
-            ->in(sprintf('%s/.git/refs/tags', $this->path))
-            ->sortByChangedTime();
+                  ->files()
+                  ->in(sprintf('%s/.git/refs/tags', $this->path))
+                  ->sortByChangedTime();
         if ($finder->count() == 0) {
             return null;
         }
         $files = iterator_to_array($finder->getIterator(), false);
         $files = array_reverse($files);
-        $tagName = $files[0]->getFilename();
+        /**
+         * @var $firstFile SplFileInfo
+         */
+        $firstFile = $files[0];
+        $tagName = $firstFile->getFilename();
 
-        return TreeTag::pick($this, $tagName);
+        return Tag::pick($this, $tagName);
     }
 
     /**
@@ -424,17 +464,17 @@ class Repository
      *
      * @param string $name the reference name (a tag name or a branch name)
      *
-     * @return \GitElephant\Objects\TreeTag|\GitElephant\Objects\TreeBranch|null
+     * @return \GitElephant\Objects\Tag|\GitElephant\Objects\Branch|null
      */
     public function getBranchOrTag($name)
     {
         if (in_array($name, $this->getBranches(true))) {
-            return new TreeBranch($this, $name);
+            return new Branch($this, $name);
         }
         $tagFinderOutput = $this->caller->execute(TagCommand::getInstance()->lists())->getOutputLines(true);
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
-                return new TreeTag($this, $name);
+                return new Tag($this, $name);
             }
         }
 
@@ -473,7 +513,7 @@ class Repository
      * Get a log for a ref
      *
      * @param string|TreeishInterface $ref    the treeish to check
-     * @param string|TreeObject       $path   the physical path to the tree relative to the repository root
+     * @param string|Object           $path   the physical path to the tree relative to the repository root
      * @param int|null                $limit  limit to n entries
      * @param int|null                $offset skip n entries
      *
@@ -487,14 +527,14 @@ class Repository
     /**
      * Get a log for an object
      *
-     * @param \GitElephant\Objects\TreeObject             $obj    The TreeObject instance
-     * @param null|string|\GitElephant\Objects\TreeBranch $branch The branch to read from
-     * @param int                                         $limit  Limit to n entries
-     * @param int|null                                    $offset Skip n entries
+     * @param \GitElephant\Objects\Object             $obj    The Object instance
+     * @param null|string|\GitElephant\Objects\Branch $branch The branch to read from
+     * @param int                                     $limit  Limit to n entries
+     * @param int|null                                $offset Skip n entries
      *
      * @return \GitElephant\Objects\Log
      */
-    public function getTreeObjectLog(TreeObject $obj, $branch = null, $limit = 1, $offset = null)
+    public function getObjectLog(Object $obj, $branch = null, $limit = 1, $offset = null)
     {
         $command = LogCommand::getInstance()->showObjectLog($obj, $branch, $limit, $offset);
 
@@ -517,15 +557,17 @@ class Repository
      * Tree Object is Countable, Iterable and has ArrayAccess for easy manipulation
      *
      * @param string|TreeishInterface $ref  the treeish to check
-     * @param string|TreeObject       $path TreeObject or null for root
+     * @param string|Object           $path Object or null for root
      *
      * @return Objects\Tree
      */
     public function getTree($ref = 'HEAD', $path = null)
     {
         if (is_string($path) && '' !== $path) {
-            $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(true);
-            $path = TreeObject::createFromOutputLine($outputLines[0]);
+            $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(
+                true
+            );
+            $path = Object::createFromOutputLine($outputLines[0]);
         }
 
         return new Tree($this, $ref, $path);
@@ -536,7 +578,7 @@ class Repository
      *
      * @param \GitElephant\Objects\Commit|string      $commit1 A TreeishInterface instance
      * @param \GitElephant\Objects\Commit|string|null $commit2 A TreeishInterface instance
-     * @param null|string|TreeObject                  $path    The path to get the diff for or a TreeObject instance
+     * @param null|string|Object                      $path    The path to get the diff for or a Object instance
      *
      * @return Objects\Diff\Diff
      */
@@ -571,56 +613,14 @@ class Repository
     }
 
     /**
-     * Order the branches list
-     *
-     * @param Objects\TreeBranch $a first branch
-     * @param Objects\TreeBranch $b second branch
-     *
-     * @return int
-     */
-    private function sortBranches(TreeBranch $a, TreeBranch $b)
-    {
-        if ($a->getName() == 'master') {
-            return -1;
-        } else {
-            if ($b->getName() == 'master') {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-    }
-
-    /**
-     * Order the branches list by name
-     *
-     * @param Objects\TreeBranch $a first branch
-     * @param Objects\TreeBranch $b second branch
-     *
-     * @return int
-     */
-    private function sortBranchesByName($a, $b)
-    {
-        if ($a == 'master') {
-            return -1;
-        } else {
-            if ($b == 'master') {
-                return 1;
-            } else {
-                return 0;
-            }
-        }
-    }
-
-    /**
      * output a node content as an array of lines
      *
-     * @param \GitElephant\Objects\TreeObject              $obj     The TreeObject of type BLOB
+     * @param \GitElephant\Objects\Object                  $obj     The Object of type BLOB
      * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
      * @return array
      */
-    public function outputContent(TreeObject $obj, $treeish)
+    public function outputContent(Object $obj, $treeish)
     {
         $command = CatFileCommand::getInstance()->content($obj, $treeish);
 
@@ -630,12 +630,12 @@ class Repository
     /**
      * output a node raw content
      *
-     * @param \GitElephant\Objects\TreeObject              $obj     The TreeObject of type BLOB
+     * @param \GitElephant\Objects\Object                  $obj     The Object of type BLOB
      * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
      * @return string
      */
-    public function outputRawContent(TreeObject $obj, $treeish)
+    public function outputRawContent(Object $obj, $treeish)
     {
         $command = CatFileCommand::getInstance()->content($obj, $treeish);
 

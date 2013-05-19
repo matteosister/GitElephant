@@ -15,7 +15,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
-use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
 
 /**
@@ -114,7 +114,7 @@ class MainCommand extends BaseCommand
     /**
      * Checkout a treeish reference
      *
-     * @param string|TreeBranch $ref the reference to checkout
+     * @param string|Branch $ref the reference to checkout
      *
      * @return string
      */
@@ -123,7 +123,7 @@ class MainCommand extends BaseCommand
         $this->clearAll();
 
         $what = $ref;
-        if ($ref instanceof TreeBranch) {
+        if ($ref instanceof Branch) {
             $what = $ref->getName();
         } else if ($ref instanceof TreeishInterface) {
             $what = $ref->getSha();
@@ -139,8 +139,8 @@ class MainCommand extends BaseCommand
     /**
      * Move a file/directory
      *
-     * @param string|TreeObject $from source path
-     * @param string|TreeObject $to   destination path
+     * @param string|Object $from source path
+     * @param string|Object $to   destination path
      *
      * @throws \InvalidArgumentException
      * @return string
@@ -169,7 +169,7 @@ class MainCommand extends BaseCommand
     /**
      * Remove a file/directory
      *
-     * @param string|TreeObject $path      the path to remove
+     * @param string|Object $path      the path to remove
      * @param bool              $recursive recurse
      * @param bool              $force     force
      *

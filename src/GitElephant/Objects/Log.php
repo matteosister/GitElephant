@@ -15,7 +15,7 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\GitAuthor,
+use GitElephant\Objects\Author,
     GitElephant\Repository,
     GitElephant\Command\LogCommand;
 

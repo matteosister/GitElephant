@@ -50,7 +50,7 @@ class SubmoduleCommand extends BaseCommand
         $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_ADD_COMMAND));
         $this->addCommandArgument($gitUrl);
         if (null !== $path) {
-            $this->addPath($path);
+            $this->addCommandSubject($path);
         }
 
         return $this->getCommand();
