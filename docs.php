@@ -6,10 +6,10 @@ use Sami\Version\GitVersionCollection;
 $dir = __DIR__.'/src';
 
 $versions = GitVersionCollection::create($dir);
+$versions->add('master', 'master branch');
 foreach (Repository::open('.')->getTags() as $tag) {
     $versions->addFromTags($tag->getName());
 }
-$versions->add('master', 'master branch');
 
 return new Sami\Sami($dir, array(
     'build_dir' => 'build/%version%',
