@@ -15,10 +15,10 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\Caller,
-    GitElephant\Objects\Object,
-    GitElephant\Repository,
-    GitElephant\Command\LsTreeCommand;
+use GitElephant\Command\Caller;
+use GitElephant\Objects\Object;
+use GitElephant\Repository;
+use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\CatFileCommand;
 
 
@@ -95,6 +95,18 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
+     * get the commit properties from command
+     *
+     * @see LsTreeCommand::tree
+     */
+    private function createFromCommand()
+    {
+        $command = LsTreeCommand::getInstance()->tree($this->ref, $this->subject);
+        $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines(true);
+        $this->parseOutputLines($outputLines);
+    }
+
+    /**
      * Some path examples:
      *    empty string for root
      *    folder1/folder2
@@ -114,18 +126,6 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
         $this->ref = $ref;
         $this->subject = $subject;
         $this->createFromCommand();
-    }
-
-    /**
-     * get the commit properties from command
-     *
-     * @see LsTreeCommand::tree
-     */
-    private function createFromCommand()
-    {
-        $command = LsTreeCommand::getInstance()->tree($this->ref, $this->subject);
-        $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines(true);
-        $this->parseOutputLines($outputLines);
     }
 
     /**
