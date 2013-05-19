@@ -152,7 +152,6 @@ class RepositoryTest extends TestCase
 
     /**
      * @covers GitElephant\Repository::getBranches
-     * @covers GitElephant\Repository::sortBranches
      */
     public function testGetBranches()
     {
