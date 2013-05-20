@@ -33,16 +33,16 @@ tools:
   php_analyzer:
     filter:
       paths: [src/*, tests/*]
-      config:
-        checkstyle: ~
-        verify_php_doc_comments: ~
-        doc_comment_fixes: ~
+    config:
+      checkstyle: ~
+      verify_php_doc_comments: ~
+      doc_comment_fixes: ~
 
-      path_configs:
-        tests:
-          paths: [tests/*]
-          checkstyle: false
-          verify_php_doc_comments: false
-          doc_comment_fixes: false
+    path_configs:
+      tests:
+        paths: [tests/*]
+        checkstyle: false
+        verify_php_doc_comments: false
+        doc_comment_fixes: false
 
   sensiolabs_security_checker: true
