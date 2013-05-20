@@ -487,6 +487,11 @@ class RepositoryTest extends TestCase
         $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $diff = $this->getRepository()->getDiff($shaHead));
     }
 
+    /**
+     * testCloneFrom
+     *
+     * @group online
+     */
     public function testCloneFrom()
     {
         $this->initRepository();
@@ -495,6 +500,9 @@ class RepositoryTest extends TestCase
         $this->assertFalse($commit->isRoot());
     }
 
+    /**
+     * testOutputContent
+     */
     public function testOutputContent()
     {
         $this->initRepository();
@@ -507,6 +515,9 @@ class RepositoryTest extends TestCase
         $this->assertEquals(array('file content'), $this->getRepository()->outputContent($treeObject, $branch));
     }
 
+    /**
+     * testSortBranches
+     */
     public function testSortBranches()
     {
         $this->initRepository();
@@ -517,13 +528,16 @@ class RepositoryTest extends TestCase
         $this->getRepository()->createBranch('branch2');
         $this->getRepository()->createBranch('branch3');
         $this->getRepository()->createBranch('branch4');
-        $array_names = array();
-        foreach($this->getRepository()->getBranches() as $branch) {
-            $array_names[] = $branch->getName();
+        $arrayNames = array();
+        foreach ($this->getRepository()->getBranches() as $branch) {
+            $arrayNames[] = $branch->getName();
         }
-        $this->assertEquals(array('master', 'branch4', 'branch3', 'branch2', 'branch1'), $array_names);
+        $this->assertEquals(array('master', 'branch4', 'branch3', 'branch2', 'branch1'), $arrayNames);
     }
 
+    /**
+     * testMove
+     */
     public function testMove()
     {
         $this->getRepository()->init();
@@ -576,6 +590,8 @@ class RepositoryTest extends TestCase
 
     /**
      * testCreateFromRemote
+     *
+     * @group online
      */
     public function testCreateFromRemote()
     {

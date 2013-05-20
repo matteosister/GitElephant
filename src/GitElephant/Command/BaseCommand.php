@@ -14,8 +14,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\Caller;
-
 /**
  * BaseCommand
  *
@@ -116,7 +114,7 @@ class BaseCommand
     /**
      * Add a path to the git command
      *
-     * @param string $path   path
+     * @param string $path path
      */
     protected function addPath($path)
     {
@@ -124,27 +122,15 @@ class BaseCommand
     }
 
     /**
-     * escape path (for spaces)
-     *
-     * @param string $path path
-     *
-     * @return mixed
-     */
-    protected function escapePath($path)
-    {
-        return str_replace(' ', '\ ', $path);
-    }
-
-    /**
      * Get the current command
      *
      * @return string
-     * @throws \InvalidParameterException
+     * @throws \RuntimeException
      */
     public function getCommand()
     {
         if ($this->commandName == null) {
-            throw new \InvalidParameterException("You should pass a commandName to execute a command");
+            throw new \RuntimeException("You should pass a commandName to execute a command");
         }
 
         $command = $this->commandName;

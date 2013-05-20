@@ -406,7 +406,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
     /**
      * Blob getter
      *
-     * @return Object
+     * @return \GitElephant\Objects\Object
      */
     public function getBlob()
     {

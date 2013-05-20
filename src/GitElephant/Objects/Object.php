@@ -28,7 +28,7 @@ use GitElephant\Repository;
  * A Object instance represents a node in the git tree repository
  * It could be a file or a folder, as well as a submodule (a "link" talking the git language")
  */
-class Object
+class Object implements TreeishInterface
 {
     const TYPE_BLOB = 'blob';
     const TYPE_TREE = 'tree';

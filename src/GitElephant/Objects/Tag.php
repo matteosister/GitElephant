@@ -26,7 +26,7 @@ use GitElephant\Objects\TreeishInterface,
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class Tag implements TreeishInterface
+class Tag extends Object
 {
     /**
      * @var \GitElephant\Repository
