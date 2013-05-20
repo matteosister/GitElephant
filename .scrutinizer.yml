@@ -1,0 +1,48 @@
+before_commands:
+  - composer install
+
+tools:
+  php_code_coverage:
+    enabled: true
+    filter:
+      paths: [ src/ ]
+
+  php_code_sniffer:
+    enabled: true
+    filter:
+      paths: [ src/ ]
+    config:
+      # Built-in standards: PEAR, PHPCS, PSR1, PSR2, Squiz, Zend
+      standard: PSR2
+
+  php_cpd:
+    enabled: true
+    filter:
+      paths: [ src/ ]
+
+  php_cs_fixer:
+    enabled: true
+    filter:
+      paths: [ src/ ]
+
+  php_mess_detector:
+    enabled: true
+    filter:
+      paths: [ src/ ]
+
+  php_analyzer:
+    filter:
+      paths: [src/*, tests/*]
+      config:
+        checkstyle: ~
+        verify_php_doc_comments: ~
+        doc_comment_fixes: ~
+
+      path_configs:
+        tests:
+          paths: [tests/*]
+          checkstyle: false
+          verify_php_doc_comments: false
+          doc_comment_fixes: false
+
+  sensiolabs_security_checker: true
