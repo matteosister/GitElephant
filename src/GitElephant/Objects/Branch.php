@@ -27,7 +27,7 @@ use GitElephant\Repository;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class Branch implements TreeishInterface
+class Branch extends Object implements TreeishInterface
 {
     /**
      * @var \GitElephant\Repository

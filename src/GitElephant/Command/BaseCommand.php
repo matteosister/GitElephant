@@ -148,6 +148,7 @@ class BaseCommand
         if (null !== $this->path) {
             $command .= sprintf(' -- %s', escapeshellarg($this->path));
         }
+        $command = preg_replace('/\\s{2,}/', ' ', $command);
 
         return trim($command);
     }
