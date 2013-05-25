@@ -14,10 +14,9 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\TreeishInterface,
-    GitElephant\Repository,
-    GitElephant\Command\TagCommand,
-    GitElephant\Command\RevListCommand;
+use GitElephant\Repository;
+use GitElephant\Command\TagCommand;
+use GitElephant\Command\RevListCommand;
 
 
 /**

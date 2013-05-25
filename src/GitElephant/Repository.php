@@ -567,7 +567,7 @@ class Repository
             $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(
                 true
             );
-            $path = Object::createFromOutputLine($outputLines[0]);
+            $path = Object::createFromOutputLine($this, $outputLines[0]);
         }
 
         return new Tree($this, $ref, $path);

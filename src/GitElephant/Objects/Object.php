@@ -79,12 +79,13 @@ class Object implements TreeishInterface
     /**
      * create a Object from a single outputLine of the git ls-tree command
      *
-     * @param string $outputLine output from ls-tree command
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $outputLine output from ls-tree command
      *
      * @see LsTreeCommand::tree
      * @return Object
      */
-    public static function createFromOutputLine($outputLine)
+    public static function createFromOutputLine(Repository $repository, $outputLine)
     {
         $slices = static::getLineSlices($outputLine);
         $fullPath = $slices['fullPath'];

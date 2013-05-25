@@ -170,8 +170,8 @@ class MainCommand extends BaseCommand
      * Remove a file/directory
      *
      * @param string|Object $path      the path to remove
-     * @param bool              $recursive recurse
-     * @param bool              $force     force
+     * @param bool          $recursive recurse
+     * @param bool          $force     force
      *
      * @throws \InvalidArgumentException
      * @return string

@@ -54,7 +54,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      *
      * @return \GitElephant\Objects\Log
      */
-    static public function createFromOutputLines(Repository $repository, $outputLines)
+    public static function createFromOutputLines(Repository $repository, $outputLines)
     {
         $log = new self($repository);
         $log->parseOutputLines($outputLines);

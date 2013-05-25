@@ -65,7 +65,7 @@ class LsTreeCommand extends BaseCommand
     /**
      * tree of a given path
      *
-     * @param string            $ref  reference
+     * @param string        $ref  reference
      * @param string|Object $path path
      *
      * @return string
