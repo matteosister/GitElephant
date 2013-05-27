@@ -27,6 +27,9 @@ use GitElephant\Objects\Tag;
 
 class RepositoryTest extends TestCase
 {
+    /**
+     * setUp
+     */
     public function setUp()
     {
         $this->initRepository();
@@ -54,7 +57,7 @@ class RepositoryTest extends TestCase
     {
         $this->getRepository()->init();
         $match = false;
-        foreach ($this->getRepository()->getStatus() as $line) {
+        foreach ($this->getRepository()->getStatusOutput() as $line) {
             if (preg_match('/nothing to commit?(.*)/', $line)) {
                 $match = true;
             }
@@ -62,6 +65,9 @@ class RepositoryTest extends TestCase
         $this->assertTrue($match, 'init problem, git status on an empty repo should give nothing to commit');
     }
 
+    /**
+     * testName
+     */
     public function testName()
     {
         $this->getRepository()->setName('test-repo');
@@ -77,7 +83,7 @@ class RepositoryTest extends TestCase
         $this->addFile('test');
         $this->getRepository()->stage();
         $match = false;
-        foreach ($this->getRepository()->getStatus() as $line) {
+        foreach ($this->getRepository()->getStatusOutput() as $line) {
             if (preg_match('/(.*)Changes to be committed(.*)/', $line)) {
                 $match = true;
             }
@@ -87,7 +93,7 @@ class RepositoryTest extends TestCase
 
     /**
      * @covers GitElephant\Repository::commit
-     * @covers GitElephant\Repository::getStatus
+     * @covers GitElephant\Repository::getStatusOutput
      */
     public function testCommit()
     {
@@ -96,7 +102,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->stage();
         $this->getRepository()->commit('initial import');
         $match = false;
-        foreach ($this->getRepository()->getStatus() as $line) {
+        foreach ($this->getRepository()->getStatusOutput() as $line) {
             if (preg_match('/nothing to commit?(.*)/', $line)) {
                 $match = true;
             }
@@ -107,7 +113,7 @@ class RepositoryTest extends TestCase
         $this->addFile('test2');
         $this->getRepository()->commit('commit 2', true, 'develop');
         $match = false;
-        foreach ($this->getRepository()->getStatus() as $line) {
+        foreach ($this->getRepository()->getStatusOutput() as $line) {
             if (preg_match('/nothing to commit?(.*)/', $line)) {
                 $match = true;
             }
@@ -116,12 +122,15 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @expectedException RuntimeException
-     * @covers GitElephant\Repository::getStatus
+     * @covers GitElephant\Repository::getStatusOutput
      */
     public function testGetStatus()
     {
-        $this->assertStringStartsWith('fatal: Not a git repository', $this->getRepository()->getStatus(), 'get status should return "fatal: Not a git repository"');
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->getRepository()->commit('test commit', true);
+        $output = $this->getRepository()->getStatusOutput();
+        $this->assertStringEndsWith('master', $output[0]);
     }
 
     /**
@@ -544,22 +553,28 @@ class RepositoryTest extends TestCase
         $this->addFile('foo');
         $this->getRepository()->commit('commit 1', true);
         $this->getRepository()->move('foo', 'bar');
-        $status = $this->getRepository()->getStatus();
+        $status = $this->getRepository()->getStatusOutput();
 
         $this->assertRegExp('/(.*):    foo -> bar/', $status[4]);
     }
 
+    /**
+     * testRemove
+     */
     public function testRemove()
     {
         $this->getRepository()->init();
         $this->addFile('foo');
         $this->getRepository()->commit('commit 1', true);
         $this->getRepository()->remove('foo');
-        $status = $this->getRepository()->getStatus();
+        $status = $this->getRepository()->getStatusOutput();
 
         $this->assertRegExp('/(.*):    foo/', $status[4]);
     }
 
+    /**
+     * testCountCommits
+     */
     public function testCountCommits()
     {
         $this->getRepository()->init();
@@ -592,6 +607,8 @@ class RepositoryTest extends TestCase
      * testCreateFromRemote
      *
      * @group online
+     *
+     * @return null
      */
     public function testCreateFromRemote()
     {

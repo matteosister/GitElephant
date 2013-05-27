@@ -97,7 +97,7 @@ the *Repository* class is the main class where you can find every method you nee
 ``` php
 <?php
 // get the current status
-$repo->getStatus(); // returns an array of lines of the status message
+$repo->getStatusOutput(); // returns an array of lines of the status message
 
 // branches
 $repo->getBranches(); // return an array of Branch objects

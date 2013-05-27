@@ -98,7 +98,7 @@ class Caller implements CallerInterface
         $process->setTimeout(15000);
         $process->run();
         if (!$process->isSuccessful()) {
-            throw new \RuntimeException($process->getErrorOutput());
+            throw new \RuntimeException($process->getOutput());
         }
         $this->rawOutput = $process->getOutput();
         // rtrim values

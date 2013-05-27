@@ -74,5 +74,19 @@ class BranchTest extends TestCase
         $this->assertEquals('develop', $b->getName());
         $this->assertEquals('test commit', $b->getComment());
         $this->assertFalse($b->getCurrent());
+        $this->setExpectedException('InvalidArgumentException');
+        $this->fail(Branch::checkout($this->getRepository(), 'non-existent'));
+    }
+
+    /**
+     * __toString
+     */
+    public function testToString()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->getRepository()->commit('test commit', true);
+        $b = Branch::checkout($this->getRepository(), 'master');
+        $this->assertEquals($this->getRepository()->getLog()->last()->getSha(), $b->__toString());
     }
 }

@@ -19,4 +19,6 @@ todo
 * git blame
 * blobs management
 * submodules management
+* remotes
+* better status handling with --porcelain
 

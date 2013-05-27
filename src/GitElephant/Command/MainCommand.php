@@ -58,12 +58,17 @@ class MainCommand extends BaseCommand
     /**
      * Get the repository status
      *
+     * @param bool $porcelain
+     *
      * @return string
      */
-    public function status()
+    public function status($porcelain = false)
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_STATUS);
+        if ($porcelain) {
+            $this->addCommandArgument('--porcelain');
+        }
 
         return $this->getCommand();
     }

@@ -202,9 +202,21 @@ class Repository
     /**
      * Get the repository status
      *
-     * @return array output lines
+     * @return array
      */
     public function getStatus()
+    {
+        $this->caller->execute(MainCommand::getInstance()->status(true));
+
+        return array_map('trim', $this->caller->getOutputLines());
+    }
+
+    /**
+     * Get the repository status as a string
+     *
+     * @return array
+     */
+    public function getStatusOutput()
     {
         $this->caller->execute(MainCommand::getInstance()->status());
 

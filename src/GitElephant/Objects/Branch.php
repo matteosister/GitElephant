@@ -101,6 +101,17 @@ class Branch extends Object implements TreeishInterface
     }
 
     /**
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       branch name
+     *
+     * @return Branch
+     */
+    public static function checkout(Repository $repository, $name)
+    {
+        return new self($repository, $name);
+    }
+
+    /**
      * get the branch properties from command
      *
      * @throws \InvalidArgumentException
