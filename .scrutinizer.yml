@@ -2,10 +2,10 @@ before_commands:
   - composer install
 
 tools:
-#  php_code_coverage:
-#    enabled: true
-#    filter:
-#      paths: [ src/ ]
+  php_code_coverage:
+    enabled: true
+    filter:
+      paths: [ src/ ]
 
   php_code_sniffer:
     enabled: true
@@ -30,6 +30,6 @@ tools:
     filter:
       paths: [ src/ ]
 
-  php_analyzer: true
-#
-#  sensiolabs_security_checker: true
+#  php_analyzer: true
+
+  sensiolabs_security_checker: true

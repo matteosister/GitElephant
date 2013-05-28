@@ -34,6 +34,7 @@ use GitElephant\Command\CloneCommand;
 use GitElephant\Command\CatFileCommand;
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\SubmoduleCommand;
+use GitElephant\Status\Status;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -202,13 +203,11 @@ class Repository
     /**
      * Get the repository status
      *
-     * @return array
+     * @return Status
      */
     public function getStatus()
     {
-        $this->caller->execute(MainCommand::getInstance()->status(true));
-
-        return array_map('trim', $this->caller->getOutputLines());
+        return Status::get($this);
     }
 
     /**
