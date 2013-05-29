@@ -61,7 +61,7 @@ class Status
     private function parseOutputLines($lines)
     {
         foreach ($lines as $line) {
-            preg_match('/([MADRCU\?])?([MADRCU\?])?\ "?(\S+)"? ?( -> )?(\S+)?/', $line, $matches);
+            preg_match('/([MADRCU\? ])?([MADRCU\? ])?\ "?(\S+)"? ?( -> )?(\S+)?/', $line, $matches);
             $x = $matches[1];
             $y = $matches[2];
             $file = $matches[3];
@@ -82,14 +82,36 @@ class Status
     }
 
     /**
-     * added files
+     * untracked files
      *
-     * @return array
+     * @return StatusFileCollection
      */
     public function untracked()
     {
-        return array_filter($this->files, function(StatusFile $statusFile) {
-            return StatusFile::UNTRACKED === $statusFile->getType();
-        });
+        return $this->filterByType(StatusFile::UNTRACKED);
+    }
+
+    /**
+     * added files
+     *
+     * @return StatusFileCollection
+     */
+    public function added()
+    {
+        return $this->filterByType(StatusFile::ADDED);
+    }
+
+    /**
+     * filter files by type
+     *
+     * @param string $type
+     *
+     * @return StatusFileCollection
+     */
+    private function filterByType($type)
+    {
+        return StatusFileCollection::create(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
+            return $type === $statusFile->getType();
+        }));
     }
 }

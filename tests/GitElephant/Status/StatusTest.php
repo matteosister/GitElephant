@@ -29,10 +29,22 @@ class StatusTest extends TestCase
     /**
      * status test
      */
-    public function testAdded()
+    public function testUntracked()
     {
         $this->addFile('test');
         $s = $this->repository->getStatus();
         $this->assertCount(1, $s->untracked());
+        $this->assertEquals('untracked', $s->untracked()->first()->getDescription());
+    }
+
+    /**
+     * added
+     */
+    public function testAdded()
+    {
+        $this->addFile('test');
+        $this->repository->stage();
+        $s = $this->repository->getStatus();
+        $this->assertCount(1, $s->added());
     }
 }
