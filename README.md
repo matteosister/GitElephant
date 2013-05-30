@@ -4,6 +4,8 @@ develop branch: [![Build Status](https://travis-ci.org/matteosister/GitElephant.
 
 master branch: [![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=master)](https://travis-ci.org/matteosister/GitElephant)
 
+[![Stable Version](http://poser.pagodabox.com/cypresslab/gitelephant/stable.png)](https://packagist.org/packages/cypresslab/gitelephant)
+
 GitElephant is an abstraction layer to manage your git repositories with php
 
 It's not stable yet...I created a small [todo list](https://github.com/matteosister/GitElephant/blob/develop/ROADMAP.md) for the things that I would like to implement. If you want give a hand you are more than welcome!
