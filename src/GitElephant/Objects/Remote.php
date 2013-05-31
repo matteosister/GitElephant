@@ -83,6 +83,19 @@ class Remote
     }
 
     /**
+     * Static constructor
+     *
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       remote name
+     *
+     * @return \GitElephant\Objects\Remote
+     */
+    public static function create(Repository $repository, $name = null)
+    {
+        return new self($repository, $name);
+    }
+
+    /**
      * get output lines from git-remote --verbose
      * 
      * @param RemoteCommand $remoteCmd Optionally provide RemoteCommand object

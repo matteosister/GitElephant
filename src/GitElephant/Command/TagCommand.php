@@ -50,10 +50,15 @@ class TagCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
         if ($message != null) {
-            $this->addCommandArgument(sprintf('-m %s', $message));
+            $this->addCommandArgument('-m');
+            $this->addCommandArgument($message);
         }
-        $subject = $startPoint == null ? $name : $name . ' ' . $startPoint;
-        $this->addCommandSubject($subject);
+        if (null !== $startPoint) {
+            $this->addCommandArgument($name);
+            $this->addCommandSubject($startPoint);
+        } else {
+            $this->addCommandSubject($name);
+        }
 
         return $this->getCommand();
     }

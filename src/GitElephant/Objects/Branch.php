@@ -17,6 +17,7 @@ namespace GitElephant\Objects;
 
 use GitElephant\Command\BranchCommand;
 use GitElephant\Command\MergeCommand;
+use GitElephant\Exception\InvalidBranchNameException;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Repository;
 
@@ -68,6 +69,22 @@ class Branch extends Object implements TreeishInterface
      * @var string
      */
     private $fullRef;
+
+    /**
+     * Creates a new branch on the repository and returns it
+     *
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       branch name
+     * @param string                  $startPoint branch to start from
+     *
+     * @return \GitElephant\Objects\Branch
+     */
+    public static function create(Repository $repository, $name, $startPoint = null)
+    {
+        $repository->getCaller()->execute(BranchCommand::getInstance()->create($name, $startPoint));
+
+        return $repository->getBranch($name);
+    }
 
     /**
      * static generator to generate a single commit from output of command.show service
@@ -128,7 +145,7 @@ class Branch extends Object implements TreeishInterface
                 return;
             }
         }
-        throw new \InvalidArgumentException(sprintf('The %s branch doesn\'t exists', $this->name));
+        throw new InvalidBranchNameException(sprintf('The %s branch doesn\'t exists', $this->name));
     }
 
     /**

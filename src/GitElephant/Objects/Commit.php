@@ -15,6 +15,7 @@
 
 namespace GitElephant\Objects;
 
+use GitElephant\Command\MainCommand;
 use GitElephant\Objects\Author,
     GitElephant\Objects\TreeishInterface,
     GitElephant\Objects\Commit\Message,
@@ -95,6 +96,20 @@ class Commit implements TreeishInterface, \Countable
      * @var \Datetime
      */
     private $datetimeCommitter;
+
+    /**
+     * @param Repository $repository repository instance
+     * @param string     $message    commit message
+     * @param bool       $stageAll   automatically stage the dirty working tree. Alternatively call stage() on the repo
+     *
+     * @return Commit
+     */
+    public static function create(Repository $repository, $message, $stageAll = false)
+    {
+        $repository->getCaller()->execute(MainCommand::getInstance()->commit($message, $stageAll));
+
+        return $repository->getCommit();
+    }
 
     /**
      * static generator to generate a single commit from output of command.show service

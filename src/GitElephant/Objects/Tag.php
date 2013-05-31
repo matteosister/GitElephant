@@ -14,9 +14,11 @@
 
 namespace GitElephant\Objects;
 
+use GitElephant\Command\CatFileCommand;
 use GitElephant\Repository;
 use GitElephant\Command\TagCommand;
 use GitElephant\Command\RevListCommand;
+use Symfony\Component\Filesystem\Filesystem;
 
 
 /**
@@ -52,6 +54,23 @@ class Tag extends Object
      * @var string
      */
     private $sha;
+
+    /**
+     * Creates a new tag on the repository and returns it
+     *
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       branch name
+     * @param string                  $startPoint branch to start from
+     * @param string                  $message    tag message
+     *
+     * @return \GitElephant\Objects\Branch
+     */
+    public static function create(Repository $repository, $name, $startPoint = null, $message = null)
+    {
+        $repository->getCaller()->execute(TagCommand::getInstance()->create($name, $startPoint, $message));
+
+        return $repository->getTag($name);
+    }
 
     /**
      * static generator to generate a single commit from output of command.show service

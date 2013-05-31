@@ -74,7 +74,7 @@ class BranchTest extends TestCase
         $this->assertEquals('develop', $b->getName());
         $this->assertEquals('test commit', $b->getComment());
         $this->assertFalse($b->getCurrent());
-        $this->setExpectedException('InvalidArgumentException');
+        $this->setExpectedException('GitElephant\Exception\InvalidBranchNameException');
         $this->fail(Branch::checkout($this->getRepository(), 'non-existent'));
     }
 
@@ -88,5 +88,20 @@ class BranchTest extends TestCase
         $this->getRepository()->commit('test commit', true);
         $b = Branch::checkout($this->getRepository(), 'master');
         $this->assertEquals($this->getRepository()->getLog()->last()->getSha(), $b->__toString());
+    }
+
+    /**
+     * testCreate
+     */
+    public function testCreate()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->repository->commit('test', true);
+        $this->assertCount(1, $this->repository->getBranches(true));
+        Branch::create($this->repository, 'test-branch');
+        $this->assertCount(2, $this->repository->getBranches(true));
+        Branch::create($this->repository, 'test-branch2', 'test-branch');
+        $this->assertCount(3, $this->repository->getBranches(true));
     }
 }

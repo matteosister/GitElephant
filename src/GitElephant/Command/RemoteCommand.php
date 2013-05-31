@@ -53,8 +53,8 @@ class RemoteCommand extends BaseCommand
      * in practice you will likely pass a SubCommandCommand object. This
      * class provide "convenience" methods that do this for you.
      * 
-     * @param \GitElephant\SubCommandCommand $subcommand A subcommand object
-     * @param array                          $options    Options for the main git-remote command
+     * @param \GitElephant\Command\SubCommandCommand $subcommand A subcommand object
+     * @param array                                  $options    Options for the main git-remote command
      * 
      * @return string Command string to pass to caller
      */
@@ -121,9 +121,9 @@ class RemoteCommand extends BaseCommand
     /**
      * git-remote add [options] <name> <url>
      * 
-     * @param unknown $name    remote name
-     * @param unknown $url     URL of remote
-     * @param unknown $options options for the add subcommand
+     * @param string $name    remote name
+     * @param string $url     URL of remote
+     * @param array  $options options for the add subcommand
      * 
      * @return string
      */

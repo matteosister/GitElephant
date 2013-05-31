@@ -15,8 +15,11 @@
 namespace GitElephant;
 
 use GitElephant\Command\FetchCommand;
+use GitElephant\Command\RemoteCommand;
+use GitElephant\Exception\InvalidBranchNameException;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
+use GitElephant\Objects\Remote;
 use GitElephant\Objects\Tree;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\Tag;
@@ -230,7 +233,7 @@ class Repository
      */
     public function createBranch($name, $startPoint = null)
     {
-        $this->caller->execute(BranchCommand::getInstance()->create($name, $startPoint));
+        Branch::create($this, $name, $startPoint);
     }
 
     /**
@@ -327,11 +330,9 @@ class Repository
      */
     public function getBranch($name)
     {
-        foreach ($this->getBranches() as $branch) {
-            /** @var $branch Branch */
-            if ($branch->getName() == $name) {
-                return $branch;
-            }
+        try {
+            return Branch::checkout($this, $name);
+        } catch (InvalidBranchNameException $e) {
         }
 
         return null;
@@ -383,7 +384,7 @@ class Repository
      */
     public function createTag($name, $startPoint = null, $message = null)
     {
-        $this->caller->execute(TagCommand::getInstance()->create($name, $startPoint, $message));
+        Tag::create($this, $name, $startPoint, $message);
     }
 
     /**
@@ -411,7 +412,7 @@ class Repository
     /**
      * Gets an array of Tag objects
      *
-     * @return array An array of Tag objects
+     * @return array
      */
     public function getTags()
     {
@@ -556,7 +557,7 @@ class Repository
      * Checkout a branch
      * This function change the state of the repository on the filesystem
      *
-     * @param string|TreeishInterface $ref the ref to checkout
+     * @param string|TreeishInterface $ref the reference to checkout
      */
     public function checkout($ref)
     {
@@ -607,6 +608,39 @@ class Repository
     public function cloneFrom($url, $to = null)
     {
         $this->caller->execute(CloneCommand::getInstance()->cloneUrl($url, $to));
+    }
+
+    /**
+     * @param string $name remote name
+     * @param string $url  remote url
+     */
+    public function addRemote($name, $url)
+    {
+        $this->caller->execute(RemoteCommand::getInstance()->add($name, $url));
+    }
+
+    /**
+     * @param string $name remote name
+     *
+     * @return \GitElephant\Objects\Remote
+     */
+    public function getRemote($name)
+    {
+        return Remote::create($this, $name);
+    }
+
+    /**
+     * gets a list of remote objects
+     *
+     * @return array
+     */
+    public function getRemotes()
+    {
+        $remoteNames = $this->caller->execute(RemoteCommand::getInstance()->show())->getOutputLines(true);
+
+        return array_map(function($name) {
+            return $this->getRemote($name);
+        }, $remoteNames);
     }
 
     /**

@@ -62,4 +62,21 @@ class CatFileCommand extends BaseCommand
 
         return $this->getCommand();
     }
+
+    /**
+     * output an object content given it's sha
+     *
+     * @param string $sha
+     *
+     * @return string
+     */
+    public function contentBySha($sha)
+    {
+        $this->clearAll();
+        $this->addCommandName(static::GIT_CAT_FILE);
+        $this->addCommandArgument('-p');
+        $this->addCommandSubject($sha);
+
+        return $this->getCommand();
+    }
 }

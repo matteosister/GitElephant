@@ -19,6 +19,8 @@ todo
 * git blame
 * blobs management
 * submodules management
-* remotes
+* remotes DONE
 * better status handling with --porcelain
+* tag messages and signed tags
+* named exceptions
 

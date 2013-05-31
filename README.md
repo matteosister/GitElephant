@@ -129,6 +129,10 @@ $commit->count();
 // as well as
 count($commit);
 
+// remotes (thanks to @davidneimeyer)
+$repo->getRemote('origin'); // a Remote object
+$repo->getRemotes(); // array of Remote objects
+
 // Log contains a collection of commit objects
 // syntax: getLog(<tree-ish>, path = null, limit = 15, offset = null)
 $log = $repo->getLog();
@@ -166,6 +170,9 @@ $repo->stage(); // stage all
 // commit
 $repo->commit('my first commit');
 $repo->commit('my first commit', true); // commit and stage every pending changes in the working tree
+
+// remotes
+$repo->addRemote('awesome', 'git://github.com/matteosister/GitElephant.git');
 
 // checkout
 $repo->checkout($this->getCommit('v1.0')); // checkout a tag

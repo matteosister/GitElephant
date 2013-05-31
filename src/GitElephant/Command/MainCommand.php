@@ -92,13 +92,13 @@ class MainCommand extends BaseCommand
     /**
      * Commit
      *
-     * @param string $message   the commit message
-     * @param bool   $commitAll commit all changes
+     * @param string $message  the commit message
+     * @param bool   $stageAll commit all changes
      *
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function commit($message, $commitAll = false)
+    public function commit($message, $stageAll = false)
     {
         $this->clearAll();
         if (trim($message) == '' || $message == null) {
@@ -106,7 +106,7 @@ class MainCommand extends BaseCommand
         }
         $this->addCommandName(self::GIT_COMMIT);
 
-        if ($commitAll) {
+        if ($stageAll) {
             $this->addCommandArgument('-a');
         }
 

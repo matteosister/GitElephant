@@ -622,4 +622,16 @@ class RepositoryTest extends TestCase
         $this->assertContains('master', $branchesName);
         $this->assertContains('develop', $branchesName);
     }
+
+    /**
+     * testAddRemote
+     */
+    public function testRemote()
+    {
+        $this->repository->init();
+        $this->repository->addRemote('github', 'git@github.com:matteosister/GitElephant.git');
+        $this->assertInstanceOf('GitElephant\Objects\Remote', $this->repository->getRemote('github'));
+        $this->repository->addRemote('github2', 'git@github.com:matteosister/GitElephant.git');
+        $this->assertCount(2, $this->repository->getRemotes());
+    }
 }

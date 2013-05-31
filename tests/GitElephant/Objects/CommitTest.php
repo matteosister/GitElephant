@@ -116,6 +116,9 @@ class CommitTest extends TestCase
         );
     }
 
+    /**
+     * testCommitDate
+     */
     public function testCommitDate()
     {
         $outputLines = array(
@@ -141,6 +144,9 @@ class CommitTest extends TestCase
         );
     }
 
+    /**
+     * testCreateFromOutputLines
+     */
     public function testCreateFromOutputLines()
     {
         $outputLines = array(
@@ -161,5 +167,17 @@ class CommitTest extends TestCase
             '1326214000', '1326214100',
             'Initial commit'
         );
+    }
+
+    /**
+     * testCreate
+     */
+    public function testCreate()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->repository->stage();
+        $commit = Commit::create($this->repository, 'first commit', true);
+        $this->assertEquals($commit, $this->repository->getCommit());
     }
 }
