@@ -67,9 +67,9 @@ class AddSubCommand extends SubCommandCommand
     /**
      * build add sub command
      *
-     * @param unknown $name    remote name
-     * @param unknown $url     URL of remote
-     * @param unknown $options options for the add subcommand
+     * @param string $name    remote name
+     * @param string $url     URL of remote
+     * @param array  $options options for the add subcommand
      *
      * @return string
      */

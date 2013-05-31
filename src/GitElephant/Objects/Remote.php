@@ -59,6 +59,11 @@ class Remote
     private $remoteHEAD = null;
 
     /**
+     * @var array
+     */
+    private $branches;
+
+    /**
      * Class constructor
      *
      * @param \GitElephant\Repository $repository repository instance
@@ -149,7 +154,9 @@ class Remote
     /**
      * parse details from remote show
      *
-     * @param string $remoteDetails Output lines for a remote show
+     * @param array|string $remoteDetails Output lines for a remote show
+     *
+     * @throws \UnexpectedValueException
      */
     public function parseOutputLines(Array $remoteDetails)
     {
@@ -222,7 +229,7 @@ class Remote
         $configuredRefs['localBranches'] = (isset($configuredRefs['localBranches'])) ? $this->parseLocalPullBranches($configuredRefs['localBranches']) : array();
         $configuredRefs['localRefs'] = (isset($configuredRefs['localRefs'])) ? $this->parseLocalPushRefs($configuredRefs['localRefs']) : array();
         $aggBranches = array();
-        foreach ($configuredRefs as $grouping => $branches) {
+        foreach ($configuredRefs as $branches) {
             foreach ($branches as $branchName => $data) {
                 if (!isset($aggBranches[$branchName])) {
                     $aggBranches[$branchName] = array();
@@ -317,7 +324,7 @@ class Remote
     {
         $matches = array();
         $pattern = '/^\*\s+remote\s+(.*)$/';
-        $result = preg_match($pattern, trim($line), $matches);
+        preg_match($pattern, trim($line), $matches);
         if (!isset($matches[1])) {
             return '';
         }
@@ -436,7 +443,7 @@ class Remote
 
     /**
      * get structured representation of branches
-     * 
+     *
      * @return array
      */
     public function getBranches()
@@ -446,7 +453,7 @@ class Remote
 
     /**
      * set structured representation of branches
-     * 
+     *
      * @param array $branches
      */
     public function setBranches(Array $branches)
