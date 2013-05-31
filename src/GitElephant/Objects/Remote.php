@@ -90,7 +90,7 @@ class Remote
      *
      * @return \GitElephant\Objects\Remote
      */
-    public static function create(Repository $repository, $name = null)
+    public static function pick(Repository $repository, $name = null)
     {
         return new self($repository, $name);
     }

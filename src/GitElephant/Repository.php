@@ -626,7 +626,7 @@ class Repository
      */
     public function getRemote($name)
     {
-        return Remote::create($this, $name);
+        return Remote::pick($this, $name);
     }
 
     /**
@@ -639,7 +639,7 @@ class Repository
         $remoteNames = $this->caller->execute(RemoteCommand::getInstance()->show())->getOutputLines(true);
 
         return array_map(function($name) {
-            return $this->getRemote($name);
+            return Remote::pick($this, $name);
         }, $remoteNames);
     }
 
