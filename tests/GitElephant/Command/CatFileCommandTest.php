@@ -35,9 +35,7 @@ class CatFileCommandTest extends TestCase
         $this->addFile('test', null, 'test content');
         $this->addFolder('test-folder');
         $this->addFile('test2', 'test-folder', 'test content 2');
-        //$this->addSubmodule('git@github.com:matteosister/GitElephant.git', 'git-elephant');
         $this->getRepository()->commit('first commit', true);
-        //var_dump($this->getRepository()->getTree());
     }
 
     /**
