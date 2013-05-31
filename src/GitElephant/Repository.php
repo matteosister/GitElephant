@@ -637,10 +637,12 @@ class Repository
     public function getRemotes()
     {
         $remoteNames = $this->caller->execute(RemoteCommand::getInstance()->show())->getOutputLines(true);
+        $remotes = array();
+        foreach ($remoteNames as $remoteName) {
+            $remotes[] = $this->getRemote($remoteName);
+        }
 
-        return array_map(function($name) {
-            return Remote::pick($this, $name);
-        }, $remoteNames);
+        return $remotes;
     }
 
     /**
