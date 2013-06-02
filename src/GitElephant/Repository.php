@@ -17,6 +17,7 @@ namespace GitElephant;
 use GitElephant\Command\FetchCommand;
 use GitElephant\Command\RemoteCommand;
 use GitElephant\Exception\InvalidBranchNameException;
+use GitElephant\Exception\InvalidRepositoryPathException;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Remote;
@@ -88,6 +89,7 @@ class Repository
             $binary = new GitBinary();
         }
         if (!is_dir($repositoryPath)) {
+            throw new InvalidRepositoryPathException($repositoryPath);
             throw new \InvalidArgumentException(sprintf('the path "%s" is not a repository folder', $repositoryPath));
         }
         $this->path = $repositoryPath;

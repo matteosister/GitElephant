@@ -16,11 +16,13 @@ todo
 * git pull
 
 1.0.0
-* git blame
-* blobs management
-* submodules management
 * remotes DONE
 * better status handling with --porcelain
 * tag messages and signed tags
 * named exceptions
+
+next
+* git blame
+* blobs management
+* submodules management
 
