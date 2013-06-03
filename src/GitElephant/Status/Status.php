@@ -52,6 +52,76 @@ class Status
     }
 
     /**
+     * all files
+     *
+     * @return StatusFileCollection
+     */
+    public function all()
+    {
+        return StatusFileCollection::create($this->files);
+    }
+
+    /**
+     * untracked files
+     *
+     * @return StatusFileCollection
+     */
+    public function untracked()
+    {
+        //return $this->filterByType(StatusFile::UNTRACKED);
+    }
+
+    /**
+     * modified files
+     *
+     * @return StatusFileCollection
+     */
+    public function modified()
+    {
+        //return $this->filterByType(StatusFile::MODIFIED);
+    }
+
+    /**
+     * added files
+     *
+     * @return StatusFileCollection
+     */
+    public function added()
+    {
+        //return $this->filterByType(StatusFile::ADDED);
+    }
+
+    /**
+     * deleted files
+     *
+     * @return StatusFileCollection
+     */
+    public function deleted()
+    {
+        //return $this->filterByType(StatusFile::DELETED);
+    }
+
+    /**
+     * renamed files
+     *
+     * @return StatusFileCollection
+     */
+    public function renamed()
+    {
+        //return $this->filterByType(StatusFile::RENAMED);
+    }
+
+    /**
+     * copied files
+     *
+     * @return StatusFileCollection
+     */
+    public function copied()
+    {
+        //return $this->filterByType(StatusFile::COPIED);
+    }
+
+    /**
      * create objects from command output
      * https://www.kernel.org/pub/software/scm/git/docs/git-status.html in the output section
      *
@@ -82,36 +152,38 @@ class Status
     }
 
     /**
-     * untracked files
-     *
-     * @return StatusFileCollection
-     */
-    public function untracked()
-    {
-        return $this->filterByType(StatusFile::UNTRACKED);
-    }
-
-    /**
-     * added files
-     *
-     * @return StatusFileCollection
-     */
-    public function added()
-    {
-        return $this->filterByType(StatusFile::ADDED);
-    }
-
-    /**
-     * filter files by type
+     * filter files by index status
      *
      * @param string $type
      *
      * @return StatusFileCollection
      */
-    private function filterByType($type)
+    private function filterByIndexType($type)
     {
+        if (!$this->files) {
+            return StatusFileCollection::create(array());
+        }
+
         return StatusFileCollection::create(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
-            return $type === $statusFile->getType();
+            return $type === $statusFile->getIndexStatus();
+        }));
+    }
+
+    /**
+     * filter files by working tree status
+     *
+     * @param string $type
+     *
+     * @return StatusFileCollection
+     */
+    private function filterByWorkingTreeType($type)
+    {
+        if (!$this->files) {
+            return StatusFileCollection::create(array());
+        }
+
+        return StatusFileCollection::create(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
+            return $type === $statusFile->getWorkingTreeStatus();
         }));
     }
 }

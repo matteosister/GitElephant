@@ -79,9 +79,9 @@ class TestCase extends \PHPUnit_Framework_TestCase
         @unlink($this->path);
         $fs = new Filesystem();
         $fs->mkdir($this->path);
-        $binary = new GitBinary();
-        $this->caller = new Caller($binary, $this->path);
-        $this->repository = new Repository($this->path);
+        $this->caller = new Caller(new GitBinary(), $this->path);
+        $this->repository = Repository::open($this->path);
+        $this->assertInstanceOf('GitElephant\Repository', $this->repository);
     }
 
     protected function tearDown()
@@ -104,8 +104,31 @@ class TestCase extends \PHPUnit_Framework_TestCase
                 $this->path.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name;
         $handle = fopen($filename, 'w');
         $fileContent = $content == null ? 'test content' : $content;
-        fwrite($handle, $fileContent);
+        $this->assertTrue(false !== fwrite($handle, $fileContent), sprintf('unable to write the file %s', $name));
         fclose($handle);
+    }
+
+    /**
+     * remove file from repo
+     *
+     * @param string $name
+     */
+    protected function removeFile($name)
+    {
+        $filename = $this->path.DIRECTORY_SEPARATOR.$name;
+        $this->assertTrue(unlink($filename));
+    }
+
+    /**
+     * update a file in the repository
+     *
+     * @param string $name    file name
+     * @param string $content content
+     */
+    protected function updateFile($name, $content)
+    {
+        $filename = $this->path.DIRECTORY_SEPARATOR.$name;
+        $this->assertTrue(false !== file_put_contents($filename, $content));
     }
 
     /**

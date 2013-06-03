@@ -71,26 +71,6 @@ class StatusFile
     }
 
     /**
-     * Get X
-     *
-     * @return string
-     */
-    public function getX()
-    {
-        return $this->x;
-    }
-
-    /**
-     * Get Y
-     *
-     * @return string
-     */
-    public function getY()
-    {
-        return $this->y;
-    }
-
-    /**
      * Get Name
      *
      * @return string
@@ -101,24 +81,23 @@ class StatusFile
     }
 
     /**
-     * Get Type
+     * Get the status of the index
      *
      * @return string
      */
-    public function getType()
+    public function getIndexStatus()
     {
-        if (null === $this->type) {
-            switch ($this->x) {
-                case self::UNTRACKED:
-                    $this->type = self::UNTRACKED;
-                    break;
-                case self::ADDED:
-                    $this->type = self::ADDED;
-                    break;
-            }
-        }
+        return $this->x;
+    }
 
-        return $this->type;
+    /**
+     * Get the status of the working tree
+     *
+     * @return string
+     */
+    public function getWorkingTreeStatus()
+    {
+        return $this->y;
     }
 
     /**

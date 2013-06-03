@@ -22,8 +22,7 @@ class StatusTest extends TestCase
      */
     public function setUp()
     {
-        $this->initRepository();
-        $this->repository->init();
+        $this->getRepository()->init();
     }
 
     /**
@@ -31,6 +30,7 @@ class StatusTest extends TestCase
      */
     public function testUntracked()
     {
+        $this->markTestSkipped('working');
         $this->addFile('test');
         $s = $this->repository->getStatus();
         $this->assertCount(1, $s->untracked());
@@ -38,13 +38,55 @@ class StatusTest extends TestCase
     }
 
     /**
+     * modified
+     */
+    public function testModified()
+    {
+        $this->markTestSkipped('working');
+        $this->addFile('test', null, 'test');
+        $this->repository->stage();
+        $this->updateFile('test', 'test content');
+        $s = $this->repository->getStatus();
+        $this->assertCount(1, $s->modified());
+    }
+
+    /**
      * added
      */
     public function testAdded()
     {
+        $this->markTestSkipped('working');
         $this->addFile('test');
         $this->repository->stage();
         $s = $this->repository->getStatus();
         $this->assertCount(1, $s->added());
+    }
+
+    /**
+     * deleted
+     */
+    public function testDeleted()
+    {
+        $this->markTestSkipped('working');
+        $this->addFile('test');
+        $this->repository->commit('test message', true);
+    }
+
+    /**
+     * renamed
+     */
+    public function testRenamed()
+    {
+        $this->markTestSkipped('working');
+        $this->addFile('test');
+    }
+
+    /**
+     * copied
+     */
+    public function testCopied()
+    {
+        $this->markTestSkipped('working');
+        $this->addFile('test');
     }
 }
