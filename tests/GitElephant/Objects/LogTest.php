@@ -43,7 +43,18 @@ class LogTest extends TestCase
     public function testLogCountable()
     {
         $log = $this->getRepository()->getLog();
-        //$this->assertEquals($log->count(), count($log));
+        $this->assertEquals($log->count(), count($log));
+    }
+
+    /**
+     * parents created by log
+     */
+    public function testParents()
+    {
+        $log = $this->getRepository()->getLog();
+        $lastCommit = $this->repository->getCommit();
+        $lastLogCommit = $log[0];
+        $this->assertEquals($lastCommit->getParents(), $lastLogCommit->getParents());
     }
 
     /**
