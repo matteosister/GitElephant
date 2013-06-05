@@ -18,6 +18,7 @@ namespace GitElephant\Objects;
 use GitElephant\Objects\Author,
     GitElephant\Repository,
     GitElephant\Command\LogCommand;
+use GitElephant\Utilities;
 
 /**
  * Git log abstraction object
@@ -90,7 +91,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     private function createFromCommand($ref, $path, $limit, $offset)
     {
         $command = LogCommand::getInstance()->showLog($ref, $path, $limit, $offset);
-        $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+        $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }
 
@@ -98,20 +99,9 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     {
         $commitLines = null;
         $this->commits = array();
-        foreach ($outputLines as $line) {
-            if ('' == $line) {
-                continue;
-            }
-            if (preg_match('/^commit (\w+)$/', $line) > 0) {
-                if (null !== $commitLines) {
-                    $this->commits[] = Commit::createFromOutputLines($this->repository, $commitLines);
-                }
-                $commitLines = array();
-            }
-            $commitLines[] = $line;
-        }
-        if (null !== $commitLines && count($commitLines) > 0) {
-            $this->commits[] = Commit::createFromOutputLines($this->repository, $commitLines);
+        $commits = Utilities::pregSplitFlatArray($outputLines, '/^commit (\w+)$/');
+        foreach ($commits as $commitOutputLines) {
+            $this->commits[] = Commit::createFromOutputLines($this->repository, $commitOutputLines);
         }
     }
 

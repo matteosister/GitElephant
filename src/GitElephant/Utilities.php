@@ -72,6 +72,32 @@ class Utilities
     }
 
     /**
+     * @param array  $array  a flat array
+     * @param string $regexp a regular expression
+     *
+     * @return array
+     */
+    static public function pregSplitFlatArray($array, $regexp)
+    {
+        $index = 0;
+        $slices = array();
+        $slice = array();
+        foreach ($array as $val) {
+            if (preg_match($regexp, $val) && !empty($slice)) {
+                $slices[$index] = $slice;
+                ++$index;
+                $slice = array();
+            }
+            $slice[] = $val;
+        }
+        if (!empty($slice)) {
+            $slices[$index] = $slice;
+        }
+
+        return $slices;
+    }
+
+    /**
      * Tell if an array is associative
      *
      * @param array $arr an array

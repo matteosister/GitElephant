@@ -504,7 +504,7 @@ class Repository
      */
     public function getCommit($ref = 'HEAD')
     {
-        $commit = new Commit($this, $ref);
+        $commit = Commit::pick($this, $ref);
 
         return $commit;
     }
@@ -518,7 +518,7 @@ class Repository
      */
     public function countCommits($start = 'HEAD')
     {
-        $commit = new Commit($this, $start);
+        $commit = Commit::pick($this);
 
         return $commit->count();
     }
