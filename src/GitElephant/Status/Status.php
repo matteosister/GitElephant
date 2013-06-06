@@ -10,6 +10,9 @@ namespace GitElephant\Status;
 
 use GitElephant\Command\MainCommand;
 use GitElephant\Repository;
+use PhpOption\None;
+use PhpOption\Option;
+use PhpOption\Some;
 
 /**
  * Class Status
@@ -68,7 +71,7 @@ class Status
      */
     public function untracked()
     {
-        //return $this->filterByType(StatusFile::UNTRACKED);
+        return $this->filterByType(StatusFile::UNTRACKED);
     }
 
     /**
@@ -78,7 +81,7 @@ class Status
      */
     public function modified()
     {
-        //return $this->filterByType(StatusFile::MODIFIED);
+        return $this->filterByType(StatusFile::MODIFIED);
     }
 
     /**
@@ -88,7 +91,7 @@ class Status
      */
     public function added()
     {
-        //return $this->filterByType(StatusFile::ADDED);
+        return $this->filterByType(StatusFile::ADDED);
     }
 
     /**
@@ -98,7 +101,7 @@ class Status
      */
     public function deleted()
     {
-        //return $this->filterByType(StatusFile::DELETED);
+        return $this->filterByType(StatusFile::DELETED);
     }
 
     /**
@@ -108,7 +111,7 @@ class Status
      */
     public function renamed()
     {
-        //return $this->filterByType(StatusFile::RENAMED);
+        return $this->filterByType(StatusFile::RENAMED);
     }
 
     /**
@@ -132,10 +135,11 @@ class Status
     {
         foreach ($lines as $line) {
             preg_match('/([MADRCU\? ])?([MADRCU\? ])?\ "?(\S+)"? ?( -> )?(\S+)?/', $line, $matches);
-            $x = $matches[1];
-            $y = $matches[2];
-            $file = $matches[3];
-            $this->files[] = StatusFile::create($x, $y, $file);
+            $x = isset($matches[1]) ? $matches[1] : null;
+            $y = isset($matches[2]) ? $matches[2] : null;
+            $file = isset($matches[3]) ? $matches[3] : null;
+            $renamedFile = isset($matches[4]) ? $matches[4] : null;
+            $this->files[] = StatusFile::create($x, $y, $file, $renamedFile);
         }
     }
 
@@ -184,6 +188,24 @@ class Status
 
         return StatusFileCollection::create(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
             return $type === $statusFile->getWorkingTreeStatus();
+        }));
+    }
+
+    /**
+     * filter files status in working tree and in index status
+     *
+     * @param string $type
+     *
+     * @return StatusFileCollection
+     */
+    private function filterByType($type)
+    {
+        if (!$this->files) {
+            return StatusFileCollection::create();
+        }
+
+        return StatusFileCollection::create(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
+            return $type === $statusFile->getWorkingTreeStatus() || $type === $statusFile->getIndexStatus();
         }));
     }
 }

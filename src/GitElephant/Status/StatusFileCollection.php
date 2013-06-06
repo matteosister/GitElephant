@@ -23,7 +23,7 @@ class StatusFileCollection implements \Countable
      *
      * @param array $files
      */
-    private function __construct($files)
+    private function __construct($files = array())
     {
         $this->files = $files;
     }
@@ -33,7 +33,7 @@ class StatusFileCollection implements \Countable
      *
      * @return StatusFileCollection
      */
-    public static function create($files)
+    public static function create($files = array())
     {
         return new self($files);
     }

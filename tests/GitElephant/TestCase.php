@@ -13,6 +13,7 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\MvCommand;
 use GitElephant\Repository;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
@@ -132,13 +133,34 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * rename a file in the repository
+     *
+     * @param string $originName file name
+     * @param string $targetName new file name
+     * @param bool   $gitMv      use git mv, otherwise uses php rename function (with the Filesystem component)
+     */
+    protected function renameFile($originName, $targetName, $gitMv = true)
+    {
+        if ($gitMv) {
+            $this->getRepository()->getCaller()->execute(MvCommand::getInstance()->rename($originName, $targetName));
+
+            return;
+        }
+        $origin = $this->path.DIRECTORY_SEPARATOR.$originName;
+        $target = $this->path.DIRECTORY_SEPARATOR.$targetName;
+        $fs = new Filesystem();
+        $fs->rename($origin, $target);
+    }
+
+    /**
      * @param string $name name
      *
      * @return void
      */
     protected function addFolder($name)
     {
-        mkdir($this->path.DIRECTORY_SEPARATOR.$name);
+        $fs = new Filesystem();
+        $fs->mkdir($this->path.DIRECTORY_SEPARATOR.$name);
     }
 
     protected function addSubmodule($url, $path)

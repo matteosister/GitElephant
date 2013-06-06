@@ -30,11 +30,11 @@ class StatusTest extends TestCase
      */
     public function testUntracked()
     {
-        $this->markTestSkipped('working');
         $this->addFile('test');
         $s = $this->repository->getStatus();
         $this->assertCount(1, $s->untracked());
         $this->assertEquals('untracked', $s->untracked()->first()->getDescription());
+        $this->assertFalse($s->untracked()->first()->isRenamed());
     }
 
     /**
@@ -42,12 +42,12 @@ class StatusTest extends TestCase
      */
     public function testModified()
     {
-        $this->markTestSkipped('working');
         $this->addFile('test', null, 'test');
         $this->repository->stage();
         $this->updateFile('test', 'test content');
         $s = $this->repository->getStatus();
         $this->assertCount(1, $s->modified());
+        $this->assertFalse($s->modified()->first()->isRenamed());
     }
 
     /**
@@ -55,11 +55,11 @@ class StatusTest extends TestCase
      */
     public function testAdded()
     {
-        $this->markTestSkipped('working');
         $this->addFile('test');
         $this->repository->stage();
         $s = $this->repository->getStatus();
         $this->assertCount(1, $s->added());
+        $this->assertFalse($s->added()->first()->isRenamed());
     }
 
     /**
@@ -67,9 +67,12 @@ class StatusTest extends TestCase
      */
     public function testDeleted()
     {
-        $this->markTestSkipped('working');
         $this->addFile('test');
         $this->repository->commit('test message', true);
+        $this->removeFile('test');
+        $s = $this->repository->getStatus();
+        $this->assertCount(1, $s->deleted());
+        $this->assertFalse($s->deleted()->first()->isRenamed());
     }
 
     /**
@@ -77,8 +80,12 @@ class StatusTest extends TestCase
      */
     public function testRenamed()
     {
-        $this->markTestSkipped('working');
-        $this->addFile('test');
+        $this->addFile('test', null, 'test content');
+        $this->repository->commit('test message', true);
+        $this->renameFile('test', 'test2');
+        $s = $this->repository->getStatus();
+        $this->assertCount(1, $s->renamed());
+        $this->assertTrue($s->renamed()->first()->isRenamed());
     }
 
     /**

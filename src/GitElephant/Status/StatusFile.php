@@ -44,30 +44,46 @@ class StatusFile
     /**
      * @var string
      */
+    private $renamed;
+
+    /**
+     * @var string
+     */
     private $type;
 
     /**
-     * @param string $x    X section of the status --porcelain output
-     * @param string $y    Y section of the status --porcelain output
-     * @param string $name file name
+     * @param string $x       X section of the status --porcelain output
+     * @param string $y       Y section of the status --porcelain output
+     * @param string $name    file name
+     * @param string $renamed new file name (if renamed)
      */
-    private function __construct($x, $y, $name)
+    private function __construct($x, $y, $name, $renamed)
     {
         $this->x = $x;
         $this->y = $y;
         $this->name = $name;
+        $this->renamed = $renamed;
     }
 
     /**
-     * @param string $x    X section of the status --porcelain output
-     * @param string $y    Y section of the status --porcelain output
-     * @param string $name file name
+     * @param string $x       X section of the status --porcelain output
+     * @param string $y       Y section of the status --porcelain output
+     * @param string $name    file name
+     * @param string $renamed new file name (if renamed)
      *
      * @return StatusFile
      */
-    public static function create($x, $y, $name)
+    public static function create($x, $y, $name, $renamed)
     {
-        return new self($x, $y, $name);
+        return new self($x, $y, $name, $renamed);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isRenamed()
+    {
+        return $this->renamed !== null;
     }
 
     /**

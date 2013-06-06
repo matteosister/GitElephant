@@ -215,6 +215,16 @@ class Object implements TreeishInterface
     }
 
     /**
+     * whether the node is a blob
+     *
+     * @return bool
+     */
+    public function isBlob()
+    {
+        return self::TYPE_BLOB == $this->getType();
+    }
+
+    /**
      * Full path getter
      *
      * @return string
