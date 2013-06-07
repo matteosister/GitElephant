@@ -121,7 +121,7 @@ class Status
      */
     public function copied()
     {
-        //return $this->filterByType(StatusFile::COPIED);
+        return $this->filterByType(StatusFile::COPIED);
     }
 
     /**

@@ -87,13 +87,4 @@ class StatusTest extends TestCase
         $this->assertCount(1, $s->renamed());
         $this->assertTrue($s->renamed()->first()->isRenamed());
     }
-
-    /**
-     * copied
-     */
-    public function testCopied()
-    {
-        $this->markTestSkipped('working');
-        $this->addFile('test');
-    }
 }

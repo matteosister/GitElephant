@@ -126,14 +126,14 @@ class StatusFile
         $status = $this->x.$this->y;
         $matching = array(
             '/ [MD]/' => 'not updated',
-            '/M[ MD]/' => 'updated in index',
-            '/A[ MD]/' => 'added to index',
-            '/D[ M]/' => 'deleted from index',
-            '/R[ MD]/' => 'renamed in index',
-            '/C[ MD]/' => 'copied in index',
+            '/M[MD]/' => 'updated in index',
+            '/A[MD]/' => 'added to index',
+            '/D[M]/' => 'deleted from index',
+            '/R[MD]/' => 'renamed in index',
+            '/C[MD]/' => 'copied in index',
             '/[MARC] /' => 'index and work tree matches',
-            '/[ MARC]M/' => 'work tree changed since index',
-            '/[ MARC]D/' => 'deleted in work tree',
+            '/[MARC]M/' => 'work tree changed since index',
+            '/[MARC]D/' => 'deleted in work tree',
             '/DD/' => 'unmerged, both deleted',
             '/AU/' => 'unmerged, added by us',
             '/UD/' => 'unmerged, deleted by them',
@@ -141,12 +141,12 @@ class StatusFile
             '/DU/' => 'unmerged, deleted by us',
             '/AA/' => 'unmerged, both added',
             '/UU/' => 'unmerged, both modified',
-            '/??/' => 'untracked',
+            '/\?\?/' => 'untracked',
             '/!!/' => 'ignored',
         );
         $out = array();
         foreach ($matching as $pattern => $label) {
-            if (preg_match(preg_quote($pattern), $status)) {
+            if (preg_match($pattern, $status)) {
                 $out[] = $label;
             }
         }
