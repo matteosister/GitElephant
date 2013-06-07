@@ -15,6 +15,7 @@
 
 namespace GitElephant\Objects;
 
+use GitElephant\Command\MainCommand;
 use GitElephant\Objects\Author,
     GitElephant\Objects\TreeishInterface,
     GitElephant\Objects\Commit\Message,
@@ -97,6 +98,34 @@ class Commit implements TreeishInterface, \Countable
     private $datetimeCommitter;
 
     /**
+     * @param Repository $repository repository instance
+     * @param string     $message    commit message
+     * @param bool       $stageAll   automatically stage the dirty working tree. Alternatively call stage() on the repo
+     *
+     * @return Commit
+     */
+    public static function create(Repository $repository, $message, $stageAll = false)
+    {
+        $repository->getCaller()->execute(MainCommand::getInstance()->commit($message, $stageAll));
+
+        return $repository->getCommit();
+    }
+
+    /**
+     * @param Repository              $repository repository
+     * @param TreeishInterface|string $treeish    treeish
+     *
+     * @return Commit
+     */
+    public static function pick(Repository $repository, $treeish = null)
+    {
+        $commit = new self($repository, $treeish);
+        $commit->createFromCommand();
+
+        return $commit;
+    }
+
+    /**
      * static generator to generate a single commit from output of command.show service
      *
      * @param \GitElephant\Repository $repository  repository
@@ -118,12 +147,11 @@ class Commit implements TreeishInterface, \Countable
      * @param \GitElephant\Repository $repository the repository
      * @param string                  $treeish    a treeish reference
      */
-    public function __construct(Repository $repository, $treeish = 'HEAD')
+    private function __construct(Repository $repository, $treeish = 'HEAD')
     {
         $this->repository = $repository;
         $this->ref = $treeish;
         $this->parents = array();
-        $this->createFromCommand();
     }
 
     /**

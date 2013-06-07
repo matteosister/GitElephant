@@ -41,8 +41,8 @@ class LogCommand extends BaseCommand
      *
      * @param \GitElephant\Objects\Object             $obj    the Object to get the log for
      * @param \GitElephant\Objects\Branch|string|null $branch the branch to consider
-     * @param int|null                                    $limit  limit to n entries
-     * @param int|null                                    $offset skip n entries
+     * @param int|null                                $limit  limit to n entries
+     * @param int|null                                $offset skip n entries
      *
      * @return string
      */

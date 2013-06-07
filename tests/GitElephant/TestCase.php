@@ -13,6 +13,7 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\MvCommand;
 use GitElephant\Repository;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
@@ -79,9 +80,9 @@ class TestCase extends \PHPUnit_Framework_TestCase
         @unlink($this->path);
         $fs = new Filesystem();
         $fs->mkdir($this->path);
-        $binary = new GitBinary();
-        $this->caller = new Caller($binary, $this->path);
-        $this->repository = new Repository($this->path);
+        $this->caller = new Caller(new GitBinary(), $this->path);
+        $this->repository = Repository::open($this->path);
+        $this->assertInstanceOf('GitElephant\Repository', $this->repository);
     }
 
     protected function tearDown()
@@ -104,8 +105,51 @@ class TestCase extends \PHPUnit_Framework_TestCase
                 $this->path.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name;
         $handle = fopen($filename, 'w');
         $fileContent = $content == null ? 'test content' : $content;
-        fwrite($handle, $fileContent);
+        $this->assertTrue(false !== fwrite($handle, $fileContent), sprintf('unable to write the file %s', $name));
         fclose($handle);
+    }
+
+    /**
+     * remove file from repo
+     *
+     * @param string $name
+     */
+    protected function removeFile($name)
+    {
+        $filename = $this->path.DIRECTORY_SEPARATOR.$name;
+        $this->assertTrue(unlink($filename));
+    }
+
+    /**
+     * update a file in the repository
+     *
+     * @param string $name    file name
+     * @param string $content content
+     */
+    protected function updateFile($name, $content)
+    {
+        $filename = $this->path.DIRECTORY_SEPARATOR.$name;
+        $this->assertTrue(false !== file_put_contents($filename, $content));
+    }
+
+    /**
+     * rename a file in the repository
+     *
+     * @param string $originName file name
+     * @param string $targetName new file name
+     * @param bool   $gitMv      use git mv, otherwise uses php rename function (with the Filesystem component)
+     */
+    protected function renameFile($originName, $targetName, $gitMv = true)
+    {
+        if ($gitMv) {
+            $this->getRepository()->getCaller()->execute(MvCommand::getInstance()->rename($originName, $targetName));
+
+            return;
+        }
+        $origin = $this->path.DIRECTORY_SEPARATOR.$originName;
+        $target = $this->path.DIRECTORY_SEPARATOR.$targetName;
+        $fs = new Filesystem();
+        $fs->rename($origin, $target);
     }
 
     /**
@@ -115,7 +159,8 @@ class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function addFolder($name)
     {
-        mkdir($this->path.DIRECTORY_SEPARATOR.$name);
+        $fs = new Filesystem();
+        $fs->mkdir($this->path.DIRECTORY_SEPARATOR.$name);
     }
 
     protected function addSubmodule($url, $path)

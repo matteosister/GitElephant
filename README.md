@@ -4,6 +4,8 @@ develop branch: [![Build Status](https://travis-ci.org/matteosister/GitElephant.
 
 master branch: [![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=master)](https://travis-ci.org/matteosister/GitElephant)
 
+[![Stable Version](https://poser.pugx.org/cypresslab/gitelephant/version.png)](https://packagist.org/packages/cypresslab/gitelephant)
+
 GitElephant is an abstraction layer to manage your git repositories with php
 
 It's not stable yet...I created a small [todo list](https://github.com/matteosister/GitElephant/blob/develop/ROADMAP.md) for the things that I would like to implement. If you want give a hand you are more than welcome!
@@ -97,7 +99,7 @@ the *Repository* class is the main class where you can find every method you nee
 ``` php
 <?php
 // get the current status
-$repo->getStatus(); // returns an array of lines of the status message
+$repo->getStatusOutput(); // returns an array of lines of the status message
 
 // branches
 $repo->getBranches(); // return an array of Branch objects
@@ -126,6 +128,10 @@ $repo->countCommits('1ac370d'); // number of commits to arrive at 1ac370d
 $commit->count();
 // as well as
 count($commit);
+
+// remotes (thanks to @davidneimeyer)
+$repo->getRemote('origin'); // a Remote object
+$repo->getRemotes(); // array of Remote objects
 
 // Log contains a collection of commit objects
 // syntax: getLog(<tree-ish>, path = null, limit = 15, offset = null)
@@ -164,6 +170,9 @@ $repo->stage(); // stage all
 // commit
 $repo->commit('my first commit');
 $repo->commit('my first commit', true); // commit and stage every pending changes in the working tree
+
+// remotes
+$repo->addRemote('awesome', 'git://github.com/matteosister/GitElephant.git');
 
 // checkout
 $repo->checkout($this->getCommit('v1.0')); // checkout a tag

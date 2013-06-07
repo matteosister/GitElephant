@@ -15,8 +15,12 @@
 namespace GitElephant;
 
 use GitElephant\Command\FetchCommand;
+use GitElephant\Command\RemoteCommand;
+use GitElephant\Exception\InvalidBranchNameException;
+use GitElephant\Exception\InvalidRepositoryPathException;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
+use GitElephant\Objects\Remote;
 use GitElephant\Objects\Tree;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\Tag;
@@ -34,6 +38,7 @@ use GitElephant\Command\CloneCommand;
 use GitElephant\Command\CatFileCommand;
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\SubmoduleCommand;
+use GitElephant\Status\Status;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -84,6 +89,7 @@ class Repository
             $binary = new GitBinary();
         }
         if (!is_dir($repositoryPath)) {
+            throw new InvalidRepositoryPathException($repositoryPath);
             throw new \InvalidArgumentException(sprintf('the path "%s" is not a repository folder', $repositoryPath));
         }
         $this->path = $repositoryPath;
@@ -202,9 +208,19 @@ class Repository
     /**
      * Get the repository status
      *
-     * @return array output lines
+     * @return Status
      */
     public function getStatus()
+    {
+        return Status::get($this);
+    }
+
+    /**
+     * Get the repository status as a string
+     *
+     * @return array
+     */
+    public function getStatusOutput()
     {
         $this->caller->execute(MainCommand::getInstance()->status());
 
@@ -219,7 +235,7 @@ class Repository
      */
     public function createBranch($name, $startPoint = null)
     {
-        $this->caller->execute(BranchCommand::getInstance()->create($name, $startPoint));
+        Branch::create($this, $name, $startPoint);
     }
 
     /**
@@ -316,11 +332,9 @@ class Repository
      */
     public function getBranch($name)
     {
-        foreach ($this->getBranches() as $branch) {
-            /** @var $branch Branch */
-            if ($branch->getName() == $name) {
-                return $branch;
-            }
+        try {
+            return Branch::checkout($this, $name);
+        } catch (InvalidBranchNameException $e) {
         }
 
         return null;
@@ -372,7 +386,7 @@ class Repository
      */
     public function createTag($name, $startPoint = null, $message = null)
     {
-        $this->caller->execute(TagCommand::getInstance()->create($name, $startPoint, $message));
+        Tag::create($this, $name, $startPoint, $message);
     }
 
     /**
@@ -400,7 +414,7 @@ class Repository
     /**
      * Gets an array of Tag objects
      *
-     * @return array An array of Tag objects
+     * @return array
      */
     public function getTags()
     {
@@ -490,7 +504,7 @@ class Repository
      */
     public function getCommit($ref = 'HEAD')
     {
-        $commit = new Commit($this, $ref);
+        $commit = Commit::pick($this, $ref);
 
         return $commit;
     }
@@ -504,7 +518,7 @@ class Repository
      */
     public function countCommits($start = 'HEAD')
     {
-        $commit = new Commit($this, $start);
+        $commit = Commit::pick($this);
 
         return $commit->count();
     }
@@ -545,7 +559,7 @@ class Repository
      * Checkout a branch
      * This function change the state of the repository on the filesystem
      *
-     * @param string|TreeishInterface $ref the ref to checkout
+     * @param string|TreeishInterface $ref the reference to checkout
      */
     public function checkout($ref)
     {
@@ -564,10 +578,8 @@ class Repository
     public function getTree($ref = 'HEAD', $path = null)
     {
         if (is_string($path) && '' !== $path) {
-            $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(
-                true
-            );
-            $path = Object::createFromOutputLine($outputLines[0]);
+            $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(true);
+            $path = Object::createFromOutputLine($this, $outputLines[0]);
         }
 
         return new Tree($this, $ref, $path);
@@ -596,6 +608,41 @@ class Repository
     public function cloneFrom($url, $to = null)
     {
         $this->caller->execute(CloneCommand::getInstance()->cloneUrl($url, $to));
+    }
+
+    /**
+     * @param string $name remote name
+     * @param string $url  remote url
+     */
+    public function addRemote($name, $url)
+    {
+        $this->caller->execute(RemoteCommand::getInstance()->add($name, $url));
+    }
+
+    /**
+     * @param string $name remote name
+     *
+     * @return \GitElephant\Objects\Remote
+     */
+    public function getRemote($name)
+    {
+        return Remote::pick($this, $name);
+    }
+
+    /**
+     * gets a list of remote objects
+     *
+     * @return array
+     */
+    public function getRemotes()
+    {
+        $remoteNames = $this->caller->execute(RemoteCommand::getInstance()->show())->getOutputLines(true);
+        $remotes = array();
+        foreach ($remoteNames as $remoteName) {
+            $remotes[] = $this->getRemote($remoteName);
+        }
+
+        return $remotes;
     }
 
     /**

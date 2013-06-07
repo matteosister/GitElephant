@@ -258,7 +258,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
             return;
         }
         if (1 === count($outputLines)) {
-            $treeObject = Object::createFromOutputLine($outputLines[0]);
+            $treeObject = Object::createFromOutputLine($this->repository, $outputLines[0]);
             if ($treeObject->getSha() === $this->subject->getSha()) {
                 $this->blob = $treeObject;
             }
@@ -406,7 +406,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
     /**
      * Blob getter
      *
-     * @return Object
+     * @return \GitElephant\Objects\Object
      */
     public function getBlob()
     {

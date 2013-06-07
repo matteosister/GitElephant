@@ -14,10 +14,11 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\TreeishInterface,
-    GitElephant\Repository,
-    GitElephant\Command\TagCommand,
-    GitElephant\Command\RevListCommand;
+use GitElephant\Command\CatFileCommand;
+use GitElephant\Repository;
+use GitElephant\Command\TagCommand;
+use GitElephant\Command\RevListCommand;
+use Symfony\Component\Filesystem\Filesystem;
 
 
 /**
@@ -26,7 +27,7 @@ use GitElephant\Objects\TreeishInterface,
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class Tag implements TreeishInterface
+class Tag extends Object
 {
     /**
      * @var \GitElephant\Repository
@@ -53,6 +54,23 @@ class Tag implements TreeishInterface
      * @var string
      */
     private $sha;
+
+    /**
+     * Creates a new tag on the repository and returns it
+     *
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       branch name
+     * @param string                  $startPoint branch to start from
+     * @param string                  $message    tag message
+     *
+     * @return \GitElephant\Objects\Branch
+     */
+    public static function create(Repository $repository, $name, $startPoint = null, $message = null)
+    {
+        $repository->getCaller()->execute(TagCommand::getInstance()->create($name, $startPoint, $message));
+
+        return $repository->getTag($name);
+    }
 
     /**
      * static generator to generate a single commit from output of command.show service

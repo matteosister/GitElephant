@@ -35,9 +35,7 @@ class CatFileCommandTest extends TestCase
         $this->addFile('test', null, 'test content');
         $this->addFolder('test-folder');
         $this->addFile('test2', 'test-folder', 'test content 2');
-        //$this->addSubmodule('git@github.com:matteosister/GitElephant.git', 'git-elephant');
         $this->getRepository()->commit('first commit', true);
-        //var_dump($this->getRepository()->getTree());
     }
 
     /**
@@ -46,6 +44,12 @@ class CatFileCommandTest extends TestCase
     public function testContent()
     {
         $cfc = new CatFileCommand();
-        $tree = $this->getRepository()->getTree();
+        $master = $this->getRepository()->getBranch('master');
+        $tree = $this->getRepository()->getTree('HEAD', 'test-folder/test2');
+        $this->assertEquals(sprintf("cat-file '-p' '%s:test-folder/test2'", $master->getSha()), $cfc->content($tree->getBlob(), $master));
+        $this->getRepository()->createTag('test-tag');
+        $tag = $this->getRepository()->getTag('test-tag');
+        $this->assertEquals(sprintf("cat-file '-p' '%s:test-folder/test2'", $tag->getSha()), $cfc->content($tree->getBlob(), $tag));
+        $this->assertEquals(sprintf("cat-file '-p' '%s:test-folder/test2'", $tag->getSha()), $cfc->content($tree->getBlob(), $tag->getSha()));
     }
 }

@@ -29,7 +29,6 @@ class LogTest extends TestCase
      */
     public function setUp()
     {
-        $this->initRepository();
         $this->getRepository()->init();
 
         for ($i = 0; $i < 10; $i++) {
@@ -45,6 +44,17 @@ class LogTest extends TestCase
     {
         $log = $this->getRepository()->getLog();
         $this->assertEquals($log->count(), count($log));
+    }
+
+    /**
+     * parents created by log
+     */
+    public function testParents()
+    {
+        $log = $this->getRepository()->getLog();
+        $lastCommit = $this->repository->getCommit();
+        $lastLogCommit = $log[0];
+        $this->assertEquals($lastCommit->getParents(), $lastLogCommit->getParents());
     }
 
     /**

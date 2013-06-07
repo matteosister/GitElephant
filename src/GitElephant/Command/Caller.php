@@ -109,18 +109,6 @@ class Caller implements CallerInterface
     }
 
     /**
-     * filter an array of output lines and remove the empty ones.
-     *
-     * @param string $var the array value
-     *
-     * @return bool
-     */
-    private function clearBlankLines($var)
-    {
-        return $var !== '';
-    }
-
-    /**
      * returns the raw output of the last executed command
      *
      * @return string

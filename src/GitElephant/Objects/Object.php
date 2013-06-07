@@ -28,7 +28,7 @@ use GitElephant\Repository;
  * A Object instance represents a node in the git tree repository
  * It could be a file or a folder, as well as a submodule (a "link" talking the git language")
  */
-class Object
+class Object implements TreeishInterface
 {
     const TYPE_BLOB = 'blob';
     const TYPE_TREE = 'tree';
@@ -79,12 +79,13 @@ class Object
     /**
      * create a Object from a single outputLine of the git ls-tree command
      *
-     * @param string $outputLine output from ls-tree command
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $outputLine output from ls-tree command
      *
      * @see LsTreeCommand::tree
      * @return Object
      */
-    public static function createFromOutputLine($outputLine)
+    public static function createFromOutputLine(Repository $repository, $outputLine)
     {
         $slices = static::getLineSlices($outputLine);
         $fullPath = $slices['fullPath'];
@@ -211,6 +212,16 @@ class Object
     public function isLink()
     {
         return self::TYPE_LINK == $this->getType();
+    }
+
+    /**
+     * whether the node is a blob
+     *
+     * @return bool
+     */
+    public function isBlob()
+    {
+        return self::TYPE_BLOB == $this->getType();
     }
 
     /**

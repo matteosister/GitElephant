@@ -50,6 +50,7 @@ class BranchCommandTest extends TestCase
         $this->assertEquals(2, count($this->getRepository()->getBranches()), 'two branches after add branch command');
         $this->getCaller()->execute($branch->create('test2'));
         $this->assertEquals(3, count($this->getRepository()->getBranches()), 'three branches after add branch command');
+        $this->assertEquals("branch 'test' 'master'", $branch->create('test', 'master'));
     }
 
     /**
@@ -63,6 +64,18 @@ class BranchCommandTest extends TestCase
         $this->assertEquals($branch->lists(), "branch '-v' '--no-color' '--no-abbrev'");
         $this->assertEquals($branch->lists(true), "branch '-v' '--no-color' '--no-abbrev' '-a'");
         $this->assertEquals($branch->lists(false, true), "branch '--no-color' '--no-abbrev'");
+    }
+
+    /**
+     * testSingleInfo
+     */
+    public function testSingleInfo()
+    {
+        $bc = new BranchCommand();
+        $this->assertEquals("branch '-v' '--list' '--no-color' '--no-abbrev' 'master'", $bc->singleInfo('master'));
+        $this->assertEquals("branch '-v' '--list' '--no-color' '--no-abbrev' '-a' 'master'", $bc->singleInfo('master', true));
+        $this->assertEquals("branch '-v' '--list' '--no-color' '--no-abbrev' '-a' '-vv' 'master'", $bc->singleInfo('master', true, false, true));
+        $this->assertEquals("branch '--list' '--no-color' '--no-abbrev' '-a' '-vv' 'master'", $bc->singleInfo('master', true, true, true));
     }
 
     /**

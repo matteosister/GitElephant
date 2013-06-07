@@ -58,12 +58,17 @@ class MainCommand extends BaseCommand
     /**
      * Get the repository status
      *
+     * @param bool $porcelain
+     *
      * @return string
      */
-    public function status()
+    public function status($porcelain = false)
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_STATUS);
+        if ($porcelain) {
+            $this->addCommandArgument('--porcelain');
+        }
 
         return $this->getCommand();
     }
@@ -87,13 +92,13 @@ class MainCommand extends BaseCommand
     /**
      * Commit
      *
-     * @param string $message   the commit message
-     * @param bool   $commitAll commit all changes
+     * @param string $message  the commit message
+     * @param bool   $stageAll commit all changes
      *
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function commit($message, $commitAll = false)
+    public function commit($message, $stageAll = false)
     {
         $this->clearAll();
         if (trim($message) == '' || $message == null) {
@@ -101,7 +106,7 @@ class MainCommand extends BaseCommand
         }
         $this->addCommandName(self::GIT_COMMIT);
 
-        if ($commitAll) {
+        if ($stageAll) {
             $this->addCommandArgument('-a');
         }
 
@@ -170,8 +175,8 @@ class MainCommand extends BaseCommand
      * Remove a file/directory
      *
      * @param string|Object $path      the path to remove
-     * @param bool              $recursive recurse
-     * @param bool              $force     force
+     * @param bool          $recursive recurse
+     * @param bool          $force     force
      *
      * @throws \InvalidArgumentException
      * @return string
