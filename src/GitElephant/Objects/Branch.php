@@ -83,7 +83,7 @@ class Branch extends Object implements TreeishInterface
     {
         $repository->getCaller()->execute(BranchCommand::getInstance()->create($name, $startPoint));
 
-        return $repository->getBranch($name);
+        return new self($repository, $name);
     }
 
     /**
@@ -104,6 +104,22 @@ class Branch extends Object implements TreeishInterface
     }
 
     /**
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string|Treeish          $name       branch name
+     * @param bool                    $create     like checkout -b, create a branch and check it out
+     *
+     * @return Branch
+     */
+    public static function checkout(Repository $repository, $name, $create = false)
+    {
+        if ($create) {
+            return self::create($repository, $name);
+        }
+
+        return new self($repository, $name);
+    }
+
+    /**
      * Class constructor
      *
      * @param \GitElephant\Repository $repository repository instance
@@ -115,17 +131,6 @@ class Branch extends Object implements TreeishInterface
         $this->name = trim($name);
         $this->fullRef = 'refs/heads/'.$name;
         $this->createFromCommand();
-    }
-
-    /**
-     * @param \GitElephant\Repository $repository repository instance
-     * @param string                  $name       branch name
-     *
-     * @return Branch
-     */
-    public static function checkout(Repository $repository, $name)
-    {
-        return new self($repository, $name);
     }
 
     /**

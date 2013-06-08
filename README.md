@@ -105,6 +105,9 @@ $repo->getStatusOutput(); // returns an array of lines of the status message
 $repo->getBranches(); // return an array of Branch objects
 $repo->getMainBranch(); // return the Branch instance of the current checked out branch
 $repo->getBranch('master'); // return a Branch instance by its name
+$develop = Branch::checkout($repo, 'develop');
+$develop = Branch::checkout($repo, 'develop', true); // create and checkout
+
 
 // tags
 $repo->getTags(); // array of Tag instances

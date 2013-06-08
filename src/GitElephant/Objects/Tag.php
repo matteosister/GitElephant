@@ -111,11 +111,19 @@ class Tag extends Object
      * @param \GitElephant\Repository $repository repository instance
      * @param string                  $name       name
      *
-     * @return Tag
+     * @return \GitElephant\Objects\Tag
      */
     public static function pick(Repository $repository, $name)
     {
         return new self($repository, $name);
+    }
+
+    /**
+     * deletes the tag
+     */
+    public function delete()
+    {
+        $this->repository->getCaller()->execute(TagCommand::getInstance()->delete($this));
     }
 
     /**
