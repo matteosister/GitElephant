@@ -17,7 +17,8 @@ todo
 
 1.0.0
 * remotes DONE
-* better status handling with --porcelain
+* better status handling with --porcelain DONE
+* CommitCollection instead of countable
 * tag messages and signed tags
 * named exceptions
 
