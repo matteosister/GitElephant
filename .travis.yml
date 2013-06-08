@@ -1,3 +1,5 @@
+secure: "nJsRdCK/Qi50fwrAt67mu+GBzWrw+h+6G0lyzyTHXOWuUtK8fuO9fDWlsEOO\nOshiX1KYDysYDud/6WRdkMOP1cU5DH2dZgMVNMXaMFG+zPGMjHD361/k9qt0\ngnFXBrwl8vKg9/Xx0soBRmMaID8Iuib8NLIxTNPZfYW1So/5Vgo="
+
 language: php
 
 php:
@@ -19,6 +21,8 @@ before_script:
   - php composer.phar --dev install
   - git config --global user.email "test@travis-ci.org"
   - git config --global user.name "Travis"
+  - mkdir ~/.composer
+  - echo '{ "config": { "github-oauth": { "github.com": "<%= ENV['KEY'] %>" } } }' > ~/.composer/config.json
 
 script:
   - vendor/bin/phpunit --coverage-clover "clover"
