@@ -32,6 +32,13 @@ class BaseCommand
     private $commandName;
 
     /**
+     * an array of config options
+     *
+     * @var array
+     */
+    private $configs;
+
+    /**
      * the command arguments
      *
      * @var array
@@ -89,6 +96,28 @@ class BaseCommand
     protected function getCommandName()
     {
         return $this->commandName;
+    }
+
+    /**
+     * Set Configs
+     *
+     * @param array $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
+     */
+    public function addConfigs($configs)
+    {
+        foreach ($configs as $config => $value) {
+            $this->configs[$config] = $value;
+        }
+    }
+
+    /**
+     * Get Configs
+     *
+     * @return array
+     */
+    public function getConfigs()
+    {
+        return $this->configs;
     }
 
     /**
@@ -185,8 +214,15 @@ class BaseCommand
         if ($this->commandName == null) {
             throw new \RuntimeException("You should pass a commandName to execute a command");
         }
-
-        $command = $this->commandName;
+        $command = '';
+        if (count($this->configs)) {
+            foreach ($this->configs as $config => $value) {
+                $command .= escapeshellarg('-c');
+                $command .= sprintf(' %s=%s', escapeshellarg($config), escapeshellarg($value));
+            }
+            $command .= ' ';
+        }
+        $command .= $this->commandName;
         $command .= ' ';
         if (count($this->commandArguments) > 0) {
             $command .= implode(' ', array_map('escapeshellarg', $this->commandArguments));

@@ -53,7 +53,7 @@ class MainCommandTest extends TestCase
      */
     public function testStatus()
     {
-        $this->assertEquals(MainCommand::GIT_STATUS, $this->mainCommand->status());
+        $this->assertEquals("'-c' 'color.status'='false' ".MainCommand::GIT_STATUS, $this->mainCommand->status());
     }
 
     /**
