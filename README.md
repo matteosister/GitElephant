@@ -105,6 +105,9 @@ $repo->getStatusOutput(); // returns an array of lines of the status message
 $repo->getBranches(); // return an array of Branch objects
 $repo->getMainBranch(); // return the Branch instance of the current checked out branch
 $repo->getBranch('master'); // return a Branch instance by its name
+$develop = Branch::checkout($repo, 'develop');
+$develop = Branch::checkout($repo, 'develop', true); // create and checkout
+
 
 // tags
 $repo->getTags(); // array of Tag instances
@@ -192,6 +195,28 @@ $repo->createTag('v1.0', null, 'my first release!');
 // create a tag from a Commit object
 $repo->createTag($repo->getCommit());
 ```
+
+Status
+------
+
+**new in alpha4** If you build a GitElephant\Status\Status class, you will get a nice api for getting the actual state of the working tree and staging area.
+
+``` php
+$status = $repo->getStatus();
+$status = GitElephant\Status\Status::get($repo); // it's the same...
+
+$status->all(); // A PhpCollection of StatusFile objects
+$status->untracked();
+$status->modified();
+$status->added();
+$status->deleted();
+$status->renamed();
+$status->copied();
+```
+
+all this methods returns a [PhpCollection](https://github.com/schmittjoh/php-collection) of StatusFile objects
+
+a StatusFile instance has all the information about the tree node changes. File names (and new file names for renamed objects), index and working tree status, and also a "git style" description like: *added to index* or *deleted in work tree*
 
 A versioned tree of files
 -------------------------
@@ -328,6 +353,7 @@ Dependencies
 - [symfony/process](https://packagist.org/packages/symfony/process)
 - [symfony/filesystem](https://packagist.org/packages/symfony/filesystem)
 - [symfony/finder](https://packagist.org/packages/symfony/finder)
+- [phpcollection/phpcollection](https://github.com/schmittjoh/php-collection)
 
 *for tests*
 

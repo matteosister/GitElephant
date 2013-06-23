@@ -68,6 +68,8 @@ class MainCommand extends BaseCommand
         $this->addCommandName(self::GIT_STATUS);
         if ($porcelain) {
             $this->addCommandArgument('--porcelain');
+        } else {
+            $this->addConfigs(array('color.status' => 'false'));
         }
 
         return $this->getCommand();

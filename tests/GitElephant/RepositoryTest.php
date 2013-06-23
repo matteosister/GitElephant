@@ -131,6 +131,9 @@ class RepositoryTest extends TestCase
         $this->getRepository()->commit('test commit', true);
         $output = $this->getRepository()->getStatusOutput();
         $this->assertStringEndsWith('master', $output[0]);
+        $this->addFile('file2');
+        $output = $this->getRepository()->getStatusOutput();
+        $this->assertStringEndsWith('file2', $output[4]);
     }
 
     /**

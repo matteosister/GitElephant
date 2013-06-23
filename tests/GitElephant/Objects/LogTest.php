@@ -55,6 +55,20 @@ class LogTest extends TestCase
         $lastCommit = $this->repository->getCommit();
         $lastLogCommit = $log[0];
         $this->assertEquals($lastCommit->getParents(), $lastLogCommit->getParents());
+        Branch::create($this->repository, 'new-branch');
+        $this->getRepository()->checkout('new-branch');
+        $this->addFile('another file');
+        $this->repository->commit('another commit', true);
+        $lastCommitOtherBranch = $this->getRepository()->getCommit();
+        $this->getRepository()->checkout('master');
+        $this->addFile('another file on master');
+        $this->getRepository()->commit('new commit on master', true);
+        $lastCommitOnMaster = $this->getRepository()->getCommit();
+        $this->getRepository()->merge($this->getRepository()->getBranch('new-branch'));
+        $log = $this->getRepository()->getLog();
+        $lastLogCommit = $log[0];
+        $this->assertContains($lastCommitOnMaster->getSha(), $lastLogCommit->getParents());
+        $this->assertContains($lastCommitOtherBranch->getSha(), $lastLogCommit->getParents());
     }
 
     /**

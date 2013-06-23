@@ -14,7 +14,6 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\FetchCommand;
 use GitElephant\Command\RemoteCommand;
 use GitElephant\Exception\InvalidBranchNameException;
 use GitElephant\Exception\InvalidRepositoryPathException;
@@ -81,7 +80,7 @@ class Repository
      * @param GitBinary|null $binary         the GitBinary instance that calls the commands
      * @param string         $name           a repository name
      *
-     * @throws \InvalidArgumentException
+     * @throws Exception\InvalidRepositoryPathException
      */
     public function __construct($repositoryPath, GitBinary $binary = null, $name = null)
     {
@@ -90,7 +89,6 @@ class Repository
         }
         if (!is_dir($repositoryPath)) {
             throw new InvalidRepositoryPathException($repositoryPath);
-            throw new \InvalidArgumentException(sprintf('the path "%s" is not a repository folder', $repositoryPath));
         }
         $this->path = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
@@ -140,11 +138,13 @@ class Repository
     /**
      * Init the repository
      *
-     * @return void
+     * @return Repository
      */
     public function init()
     {
         $this->caller->execute(MainCommand::getInstance()->init());
+
+        return $this;
     }
 
     /**
@@ -152,11 +152,13 @@ class Repository
      *
      * @param string|Object $path the path to store
      *
-     * @return void
+     * @return Repository
      */
     public function stage($path = '.')
     {
         $this->caller->execute(MainCommand::getInstance()->add($path));
+
+        return $this;
     }
 
     /**
@@ -164,10 +166,14 @@ class Repository
      *
      * @param string|Object $from source path
      * @param string|Object $to   destination path
+     *
+     * @return Repository
      */
     public function move($from, $to)
     {
         $this->caller->execute(MainCommand::getInstance()->move($from, $to));
+
+        return $this;
     }
 
     /**
@@ -176,10 +182,14 @@ class Repository
      * @param string|Object $path      the path to remove
      * @param bool          $recursive recurse
      * @param bool          $force     force
+     *
+     * @return Repository
      */
     public function remove($path, $recursive = false, $force = false)
     {
         $this->caller->execute(MainCommand::getInstance()->remove($path, $recursive, $force));
+
+        return $this;
     }
 
     /**
@@ -188,6 +198,8 @@ class Repository
      * @param string      $message  the commit message
      * @param bool        $stageAll whether to stage on not everything before commit
      * @param string|null $ref      the reference to commit to (checkout -> commit -> checkout previous)
+     *
+     * @return Repository
      */
     public function commit($message, $stageAll = false, $ref = null)
     {
@@ -203,6 +215,8 @@ class Repository
         if ($ref != null) {
             $this->checkout($currentBranch);
         }
+
+        return $this;
     }
 
     /**
@@ -232,10 +246,14 @@ class Repository
      *
      * @param string $name       the new branch name
      * @param null   $startPoint the reference to create the branch from
+     *
+     * @return Repository
      */
     public function createBranch($name, $startPoint = null)
     {
         Branch::create($this, $name, $startPoint);
+
+        return $this;
     }
 
     /**
@@ -243,10 +261,14 @@ class Repository
      * This function change the state of the repository on the filesystem
      *
      * @param string $name The branch to delete
+     *
+     * @return Repository
      */
     public function deleteBranch($name)
     {
         $this->caller->execute(BranchCommand::getInstance()->delete($name));
+
+        return $this;
     }
 
     /**
@@ -345,7 +367,7 @@ class Repository
      *
      * @param string $remote remote to fetch from
      *
-     * @return void
+     * @return Repository
      */
     public function checkoutAllRemoteBranches($remote = 'origin')
     {
@@ -364,16 +386,22 @@ class Repository
             $this->checkout(str_replace(sprintf('remotes/%s/', $remote), '', $realBranch));
         }
         $this->checkout($actualBranch);
+
+        return $this;
     }
 
     /**
      * Merge a Branch in the current checked out branch
      *
      * @param Objects\Branch $branch The branch to merge in the current checked out branch
+     *
+     * @return Repository
      */
     public function merge(Branch $branch)
     {
         $this->caller->execute(MergeCommand::getInstance()->merge($branch));
+
+        return $this;
     }
 
     /**
@@ -383,10 +411,14 @@ class Repository
      * @param string $name       The new tag name
      * @param null   $startPoint The reference to create the tag from
      * @param null   $message    the tag message
+     *
+     * @return Repository
      */
     public function createTag($name, $startPoint = null, $message = null)
     {
         Tag::create($this, $name, $startPoint, $message);
+
+        return $this;
     }
 
     /**
@@ -394,10 +426,18 @@ class Repository
      * This function change the state of the repository on the filesystem
      *
      * @param string|Tag $tag The tag name or the Tag object
+     *
+     * @return Repository
      */
     public function deleteTag($tag)
     {
-        $this->caller->execute(TagCommand::getInstance()->delete($tag));
+        if ($tag instanceof Tag) {
+            $tag->delete();
+        } else {
+            Tag::pick($this, $tag)->delete();
+        }
+
+        return $this;
     }
 
     /**
@@ -405,10 +445,14 @@ class Repository
      *
      * @param string $gitUrl git url of the submodule
      * @param string $path   path to register the submodule to
+     *
+     * @return Repository
      */
     public function addSubmodule($gitUrl, $path = null)
     {
         $this->caller->execute(SubmoduleCommand::getInstance()->add($gitUrl, $path));
+
+        return $this;
     }
 
     /**
@@ -518,7 +562,7 @@ class Repository
      */
     public function countCommits($start = 'HEAD')
     {
-        $commit = Commit::pick($this);
+        $commit = Commit::pick($this, $start);
 
         return $commit->count();
     }
@@ -560,10 +604,14 @@ class Repository
      * This function change the state of the repository on the filesystem
      *
      * @param string|TreeishInterface $ref the reference to checkout
+     *
+     * @return Repository
      */
     public function checkout($ref)
     {
         $this->caller->execute(MainCommand::getInstance()->checkout($ref));
+
+        return $this;
     }
 
     /**
@@ -604,19 +652,27 @@ class Repository
      *
      * @param string $url the repository url (i.e. git://github.com/matteosister/GitElephant.git)
      * @param null   $to  where to clone the repo
+     *
+     * @return Repository
      */
     public function cloneFrom($url, $to = null)
     {
         $this->caller->execute(CloneCommand::getInstance()->cloneUrl($url, $to));
+
+        return $this;
     }
 
     /**
      * @param string $name remote name
      * @param string $url  remote url
+     *
+     * @return Repository
      */
     public function addRemote($name, $url)
     {
         $this->caller->execute(RemoteCommand::getInstance()->add($name, $url));
+
+        return $this;
     }
 
     /**

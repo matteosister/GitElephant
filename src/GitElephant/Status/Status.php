@@ -10,6 +10,7 @@ namespace GitElephant\Status;
 
 use GitElephant\Command\MainCommand;
 use GitElephant\Repository;
+use PhpCollection\Sequence;
 use PhpOption\None;
 use PhpOption\Option;
 use PhpOption\Some;
@@ -57,17 +58,17 @@ class Status
     /**
      * all files
      *
-     * @return StatusFileCollection
+     * @return Sequence
      */
     public function all()
     {
-        return StatusFileCollection::create($this->files);
+        return new Sequence($this->files);
     }
 
     /**
      * untracked files
      *
-     * @return StatusFileCollection
+     * @return Sequence
      */
     public function untracked()
     {
@@ -77,7 +78,7 @@ class Status
     /**
      * modified files
      *
-     * @return StatusFileCollection
+     * @return Sequence
      */
     public function modified()
     {
@@ -87,7 +88,7 @@ class Status
     /**
      * added files
      *
-     * @return StatusFileCollection
+     * @return Sequence
      */
     public function added()
     {
@@ -97,7 +98,7 @@ class Status
     /**
      * deleted files
      *
-     * @return StatusFileCollection
+     * @return Sequence
      */
     public function deleted()
     {
@@ -107,7 +108,7 @@ class Status
     /**
      * renamed files
      *
-     * @return StatusFileCollection
+     * @return Sequence
      */
     public function renamed()
     {
@@ -117,7 +118,7 @@ class Status
     /**
      * copied files
      *
-     * @return StatusFileCollection
+     * @return Sequence
      */
     public function copied()
     {
@@ -160,15 +161,15 @@ class Status
      *
      * @param string $type
      *
-     * @return StatusFileCollection
+     * @return Sequence
      */
     private function filterByIndexType($type)
     {
         if (!$this->files) {
-            return StatusFileCollection::create(array());
+            return new Sequence();
         }
 
-        return StatusFileCollection::create(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
+        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
             return $type === $statusFile->getIndexStatus();
         }));
     }
@@ -178,15 +179,15 @@ class Status
      *
      * @param string $type
      *
-     * @return StatusFileCollection
+     * @return Sequence
      */
     private function filterByWorkingTreeType($type)
     {
         if (!$this->files) {
-            return StatusFileCollection::create(array());
+            return new Sequence();
         }
 
-        return StatusFileCollection::create(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
+        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
             return $type === $statusFile->getWorkingTreeStatus();
         }));
     }
@@ -196,15 +197,15 @@ class Status
      *
      * @param string $type
      *
-     * @return StatusFileCollection
+     * @return Sequence
      */
     private function filterByType($type)
     {
         if (!$this->files) {
-            return StatusFileCollection::create();
+            return new Sequence();
         }
 
-        return StatusFileCollection::create(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
+        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
             return $type === $statusFile->getWorkingTreeStatus() || $type === $statusFile->getIndexStatus();
         }));
     }
