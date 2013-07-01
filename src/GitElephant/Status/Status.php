@@ -22,8 +22,14 @@ use PhpOption\Some;
  */
 class Status
 {
+    /**
+     * @var \GitElephant\Repository
+     */
     private $repository;
 
+    /**
+     * @var array
+     */
     private $files;
 
     /**
@@ -31,6 +37,7 @@ class Status
      */
     private function __construct(Repository $repository)
     {
+        $this->files = array();
         $this->repository = $repository;
         $this->createFromCommand();
     }
