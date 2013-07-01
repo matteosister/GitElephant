@@ -52,6 +52,11 @@ class StatusFile
     private $type;
 
     /**
+     * @var string
+     */
+    private $description;
+
+    /**
      * @param string $x       X section of the status --porcelain output
      * @param string $y       Y section of the status --porcelain output
      * @param string $name    file name
@@ -63,6 +68,7 @@ class StatusFile
         $this->y = $y;
         $this->name = $name;
         $this->renamed = $renamed;
+        $this->calculateDescription();
     }
 
     /**
@@ -121,7 +127,7 @@ class StatusFile
      *
      * @return string
      */
-    public function getDescription()
+    public function calculateDescription()
     {
         $status = $this->x.$this->y;
         $matching = array(
@@ -151,6 +157,46 @@ class StatusFile
             }
         }
 
-        return implode(', ', $out);
+        $this->description = implode(', ', $out);
+    }
+
+    /**
+     * Set Description
+     *
+     * @param string $description the description variable
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * Get Description
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set Type
+     *
+     * @param string $type the type variable
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    /**
+     * Get Type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
     }
 }
