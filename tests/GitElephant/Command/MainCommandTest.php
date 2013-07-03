@@ -66,6 +66,14 @@ class MainCommandTest extends TestCase
     }
 
     /**
+     * unstage test
+     */
+    public function testUnstage()
+    {
+        $this->assertEquals(MainCommand::GIT_CHECKOUT." -- 'foo'", $this->mainCommand->unstage('foo'));
+    }
+
+    /**
      * commit test
      */
     public function testCommit()

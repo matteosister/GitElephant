@@ -92,6 +92,23 @@ class RepositoryTest extends TestCase
     }
 
     /**
+     * @covers GitElephant\Repository::unstage
+     */
+    public function testUnstage()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->assertCount(1, $this->getRepository()->getStatus()->untracked());
+        $this->assertCount(0, $this->getRepository()->getStatus()->added());
+        $this->getRepository()->stage('test');
+        $this->assertCount(0, $this->getRepository()->getStatus()->untracked());
+        $this->assertCount(1, $this->getRepository()->getStatus()->added());
+        $this->getRepository()->unstage('test');
+        $this->assertCount(1, $this->getRepository()->getStatus()->untracked());
+        $this->assertCount(0, $this->getRepository()->getStatus()->added());
+    }
+
+    /**
      * @covers GitElephant\Repository::commit
      * @covers GitElephant\Repository::getStatusOutput
      */

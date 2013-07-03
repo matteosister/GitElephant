@@ -162,6 +162,20 @@ class Repository
     }
 
     /**
+     * Unstage a tree content
+     *
+     * @param string|Object $path the path to unstage
+     *
+     * @return Repository
+     */
+    public function unstage($path)
+    {
+        $this->caller->execute(MainCommand::getInstance()->unstage($path));
+
+        return $this;
+    }
+
+    /**
      * Move a file/directory
      *
      * @param string|Object $from source path

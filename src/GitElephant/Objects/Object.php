@@ -98,7 +98,7 @@ class Object implements TreeishInterface
             $name = substr($fullPath, $pos + 1);
         }
 
-        return new self($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
+        return new self($repository, $slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
     }
 
     /**
@@ -140,14 +140,15 @@ class Object implements TreeishInterface
     /**
      * Class constructor
      *
-     * @param string $permissions node permissions
-     * @param string $type        node type
-     * @param string $sha         node sha
-     * @param string $size        node size in bytes
-     * @param string $name        node name
-     * @param string $path        node path
+     * @param \GitElephant\Repository $repository  repository instance
+     * @param string                  $permissions node permissions
+     * @param string                  $type        node type
+     * @param string                  $sha         node sha
+     * @param string                  $size        node size in bytes
+     * @param string                  $name        node name
+     * @param string                  $path        node path
      */
-    public function __construct($permissions, $type, $sha, $size, $name, $path)
+    public function __construct(Repository $repository, $permissions, $type, $sha, $size, $name, $path)
     {
         $this->permissions = $permissions;
         $this->type        = $type;

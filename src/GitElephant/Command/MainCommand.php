@@ -33,6 +33,7 @@ class MainCommand extends BaseCommand
     const GIT_CHECKOUT = 'checkout';
     const GIT_MOVE     = 'mv';
     const GIT_REMOVE   = 'rm';
+    const GIT_RESET    = 'reset';
 
     /**
      * @return MainCommand
@@ -76,7 +77,7 @@ class MainCommand extends BaseCommand
     }
 
     /**
-     * Add a node to the repository
+     * Add a node to the stage
      *
      * @param string $what what should be added to the repository
      *
@@ -87,6 +88,23 @@ class MainCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(self::GIT_ADD);
         $this->addCommandSubject($what);
+
+        return $this->getCommand();
+    }
+
+    /**
+     * Remove a node from the stage and put in the working tree
+     *
+     * @param string $what what should be removed from the stage
+     *
+     * @return string
+     */
+    public function unstage($what)
+    {
+        $this->clearAll();
+        $this->addCommandName(self::GIT_RESET);
+        $this->addCommandArgument('HEAD');
+        $this->addPath($what);
 
         return $this->getCommand();
     }
