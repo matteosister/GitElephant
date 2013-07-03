@@ -70,7 +70,7 @@ class MainCommandTest extends TestCase
      */
     public function testUnstage()
     {
-        $this->assertEquals(MainCommand::GIT_CHECKOUT." -- 'foo'", $this->mainCommand->unstage('foo'));
+        $this->assertEquals(MainCommand::GIT_RESET." 'HEAD' -- 'foo'", $this->mainCommand->unstage('foo'));
     }
 
     /**
