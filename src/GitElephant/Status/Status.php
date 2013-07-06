@@ -30,7 +30,7 @@ class Status
     /**
      * @var array
      */
-    private $files;
+    protected $files;
 
     /**
      * @param Repository $repository
@@ -45,11 +45,11 @@ class Status
     /**
      * @param Repository $repository
      *
-     * @return Status
+     * @return \GitElephant\Status\Status
      */
     public static function get(Repository $repository)
     {
-        return new self($repository);
+        return new static($repository);
     }
 
     /**
@@ -164,49 +164,13 @@ class Status
     }
 
     /**
-     * filter files by index status
-     *
-     * @param string $type
-     *
-     * @return Sequence
-     */
-    private function filterByIndexType($type)
-    {
-        if (!$this->files) {
-            return new Sequence();
-        }
-
-        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
-            return $type === $statusFile->getIndexStatus();
-        }));
-    }
-
-    /**
-     * filter files by working tree status
-     *
-     * @param string $type
-     *
-     * @return Sequence
-     */
-    private function filterByWorkingTreeType($type)
-    {
-        if (!$this->files) {
-            return new Sequence();
-        }
-
-        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
-            return $type === $statusFile->getWorkingTreeStatus();
-        }));
-    }
-
-    /**
      * filter files status in working tree and in index status
      *
      * @param string $type
      *
      * @return Sequence
      */
-    private function filterByType($type)
+    protected function filterByType($type)
     {
         if (!$this->files) {
             return new Sequence();

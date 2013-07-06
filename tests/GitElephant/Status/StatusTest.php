@@ -110,6 +110,44 @@ class StatusTest extends TestCase
     }
 
     /**
+     * testWorkingTreeStatus
+     */
+    public function testWorkingTreeStatus()
+    {
+        $this->addFile('test', null, 'test content');
+        $wt = $this->repository->getWorkingTreeStatus();
+        $this->assertCount(1, $wt->untracked());
+        $this->repository->stage('test');
+        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $this->assertCount(0, $wt->untracked());
+        $this->assertCount(1, $index->added());
+        $this->repository->unstage('test');
+        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $this->assertCount(1, $wt->untracked());
+        $this->assertCount(0, $index->added());
+        $this->repository->commit('test-commit', true);
+        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $this->assertCount(0, $wt->all());
+        $this->assertCount(0, $index->all());
+        $this->addFile('test', null, 'new content');
+        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $this->assertCount(1, $wt->modified());
+        $this->assertCount(0, $index->modified());
+        $this->repository->stage('test');
+        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $this->assertCount(0, $wt->modified());
+        $this->assertCount(1, $index->modified());
+        $this->removeFile('test');
+        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $this->assertCount(1, $wt->deleted());
+        $this->assertCount(1, $index->modified());
+        $this->repository->unstage('test');
+        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $this->assertCount(1, $wt->deleted());
+        $this->assertCount(0, $index->all());
+    }
+
+    /**
      * @param mixed $subject
      */
     private function assertInterfaces($subject)

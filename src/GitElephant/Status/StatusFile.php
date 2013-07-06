@@ -64,8 +64,8 @@ class StatusFile
      */
     private function __construct($x, $y, $name, $renamed)
     {
-        $this->x = $x;
-        $this->y = $y;
+        $this->x = ' ' === $x ? null : $x;
+        $this->y = ' ' === $y ? null : $y;
         $this->name = $name;
         $this->renamed = $renamed;
         $this->calculateDescription();

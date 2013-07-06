@@ -38,6 +38,8 @@ use GitElephant\Command\CatFileCommand;
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\SubmoduleCommand;
 use GitElephant\Status\Status;
+use GitElephant\Status\StatusIndex;
+use GitElephant\Status\StatusWorkingTree;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -241,6 +243,22 @@ class Repository
     public function getStatus()
     {
         return Status::get($this);
+    }
+
+    /**
+     * @return StatusWorkingTree
+     */
+    public function getWorkingTreeStatus()
+    {
+        return StatusWorkingTree::get($this);
+    }
+
+    /**
+     * @return StatusIndex
+     */
+    public function getIndexStatus()
+    {
+        return StatusIndex::get($this);
     }
 
     /**
