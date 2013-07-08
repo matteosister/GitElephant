@@ -26,6 +26,17 @@ class StatusTest extends TestCase
     }
 
     /**
+     * testStatusIndexWithoutUntracked
+     */
+    public function testStatusIndexWithoutUntracked()
+    {
+        $this->addFile('test');
+        $s = $this->repository->getIndexStatus();
+        $this->assertCount(0, $s->all());
+        $this->assertCount(0, $s->untracked());
+    }
+
+    /**
      * status test
      */
     public function testUntracked()

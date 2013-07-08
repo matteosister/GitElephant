@@ -34,7 +34,7 @@ class StatusIndex extends Status
     public function all()
     {
         return new Sequence(array_filter($this->files, function(StatusFile $statusFile) {
-            return $statusFile->getIndexStatus();
+            return $statusFile->getIndexStatus() && '?' !== $statusFile->getIndexStatus();
         }));
     }
 
