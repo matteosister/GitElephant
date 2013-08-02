@@ -1,16 +1,4 @@
 <?php
-/**
- * This file is part of the GitElephant package.
- *
- * (c) Matteo Giachino <matteog@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @package GitElephant\Objects
- *
- * Just for fun...
- */
 
 namespace GitElephant\Command;
 
@@ -27,7 +15,6 @@ use GitElephant\Command\Remote\ShowSubCommand;
  * @package GitElephant\Objects
  * @author  David Neimeyer <davidneimeyer@gmail.com>
  */
-
 class RemoteCommand extends BaseCommand
 {
     const GIT_REMOTE = 'remote';

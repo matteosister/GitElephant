@@ -1,34 +1,20 @@
 <?php
 
-/**
- * This file is part of the GitElephant package.
- *
- * (c) Matteo Giachino <matteog@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @package GitElephant\Objects
- *
- * Just for fun...
- */
-
 namespace GitElephant\Objects;
 
 use GitElephant\Command\MainCommand;
-use GitElephant\Objects\Author,
-    GitElephant\Objects\TreeishInterface,
-    GitElephant\Objects\Commit\Message,
-    GitElephant\Repository,
-    GitElephant\Command\ShowCommand,
-    GitElephant\Command\RevListCommand;
+use GitElephant\Objects\Author;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Objects\Commit\Message;
+use GitElephant\Repository;
+use GitElephant\Command\ShowCommand;
+use GitElephant\Command\RevListCommand;
 
 /**
  * The Commit object represent a commit
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class Commit implements TreeishInterface, \Countable
 {
     /**

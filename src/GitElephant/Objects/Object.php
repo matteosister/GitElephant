@@ -1,32 +1,15 @@
 <?php
-/**
- * This file is part of the GitElephant package.
- *
- * (c) Matteo Giachino <matteog@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @package GitElephant\Objects
- *
- * Just for fun...
- */
 
 namespace GitElephant\Objects;
-
-
-/**
- * An object representing a node in the tree
- *
- * @author Matteo Giachino <matteog@gmail.com>
- */
 
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Repository;
 
 /**
  * A Object instance represents a node in the git tree repository
- * It could be a file or a folder, as well as a submodule (a "link" talking the git language")
+ * It could be a file or a folder, as well as a submodule (a "link" in the git language)
+ *
+ * @author Matteo Giachino <matteog@gmail.com>
  */
 class Object implements TreeishInterface
 {

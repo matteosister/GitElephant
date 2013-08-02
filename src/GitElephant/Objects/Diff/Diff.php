@@ -1,31 +1,18 @@
 <?php
-/**
- * This file is part of the GitElephant package.
- *
- * (c) Matteo Giachino <matteog@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @package GitElephant\Objects\Diff
- *
- * Just for fun...
- */
 
 namespace GitElephant\Objects\Diff;
 
-use GitElephant\Objects\Diff\DiffObject,
-    GitElephant\Utilities,
-    GitElephant\Repository,
-    GitElephant\Command\DiffTreeCommand,
-    GitElephant\Command\DiffCommand;
+use GitElephant\Objects\Diff\DiffObject;
+use GitElephant\Utilities;
+use GitElephant\Repository;
+use GitElephant\Command\DiffTreeCommand;
+use GitElephant\Command\DiffCommand;
 
 /**
  * Represent a collection of diffs between two trees
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class Diff implements \ArrayAccess, \Countable, \Iterator
 {
     /**

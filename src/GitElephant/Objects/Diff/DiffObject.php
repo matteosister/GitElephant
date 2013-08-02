@@ -1,29 +1,15 @@
 <?php
-/**
- * This file is part of the GitElephant package.
- *
- * (c) Matteo Giachino <matteog@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @package GitElephant\Objects\Diff
- *
- * Just for fun...
- */
 
 namespace GitElephant\Objects\Diff;
 
 use GitElephant\Utilities;
 use GitElephant\Objects\Diff\DiffChunk;
 
-
 /**
  * Represent a diff for a single object in the repository
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class DiffObject implements \ArrayAccess, \Countable, \Iterator
 {
     const MODE_INDEX        = 'index';

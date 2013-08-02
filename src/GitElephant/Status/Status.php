@@ -1,16 +1,11 @@
 <?php
-/**
- * User: matteo
- * Date: 28/05/13
- * Time: 21.34
- * Just for fun...
- */
 
 namespace GitElephant\Status;
 
 use GitElephant\Command\MainCommand;
 use GitElephant\Repository;
 use PhpCollection\Sequence;
+
 /**
  * Class Status
  *

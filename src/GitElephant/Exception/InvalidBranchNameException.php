@@ -1,11 +1,4 @@
 <?php
-/**
- * User: matteo
- * Date: 01/06/13
- * Time: 0.00
- * Just for fun...
- */
-
 
 namespace GitElephant\Exception;
 

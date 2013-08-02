@@ -1,11 +1,4 @@
 <?php
-/**
- * User: matteo
- * Date: 06/07/13
- * Time: 22.19
- * Just for fun...
- */
-
 
 namespace GitElephant\Status;
 

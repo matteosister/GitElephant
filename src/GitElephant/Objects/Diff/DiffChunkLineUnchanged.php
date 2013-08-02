@@ -14,14 +14,11 @@
 
 namespace GitElephant\Objects\Diff;
 
-use GitElephant\Objects\Diff\DiffChunkLine;
-
 /**
  * DiffChunkLine unchanged
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class DiffChunkLineUnchanged extends DiffChunkLine
 {
     /**
