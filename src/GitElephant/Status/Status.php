@@ -11,10 +11,6 @@ namespace GitElephant\Status;
 use GitElephant\Command\MainCommand;
 use GitElephant\Repository;
 use PhpCollection\Sequence;
-use PhpOption\None;
-use PhpOption\Option;
-use PhpOption\Some;
-
 /**
  * Class Status
  *

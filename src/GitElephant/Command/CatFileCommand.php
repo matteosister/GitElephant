@@ -14,12 +14,9 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand,
-GitElephant\Objects\Object,
-GitElephant\Objects\TreeishInterface,
-GitElephant\Objects\Tag,
-GitElephant\Objects\Branch,
-GitElephant\Objects\Commit;
+use GitElephant\Command\BaseCommand;
+use GitElephant\Objects\Object;
+use GitElephant\Objects\TreeishInterface;
 
 /**
  * cat-file command generator

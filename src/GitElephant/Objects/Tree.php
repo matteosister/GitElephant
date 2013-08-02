@@ -15,12 +15,10 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\Caller;
 use GitElephant\Objects\Object;
 use GitElephant\Repository;
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\CatFileCommand;
-
 
 /**
  * An abstraction of a git tree

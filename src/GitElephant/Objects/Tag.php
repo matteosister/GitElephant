@@ -14,11 +14,9 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\CatFileCommand;
 use GitElephant\Repository;
 use GitElephant\Command\TagCommand;
 use GitElephant\Command\RevListCommand;
-use Symfony\Component\Filesystem\Filesystem;
 
 
 /**

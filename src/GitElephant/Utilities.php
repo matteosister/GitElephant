@@ -15,9 +15,6 @@
 
 namespace GitElephant;
 
-use GitElephant\Objects\Branch;
-
-
 /**
  * Utilities class
  *

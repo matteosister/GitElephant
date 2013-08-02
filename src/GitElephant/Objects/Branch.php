@@ -16,7 +16,6 @@
 namespace GitElephant\Objects;
 
 use GitElephant\Command\BranchCommand;
-use GitElephant\Command\MergeCommand;
 use GitElephant\Exception\InvalidBranchNameException;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Repository;
