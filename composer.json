@@ -16,7 +16,7 @@
         "symfony/process": ">=2.1,<2.4-dev",
         "symfony/filesystem": ">=2.1,<2.4-dev",
         "symfony/finder": ">=2.1,<2.4-dev",
-        "phpcollection/phpcollection": "@stable"
+        "phpcollection/phpcollection": "~0.3"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",
