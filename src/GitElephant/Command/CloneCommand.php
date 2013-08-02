@@ -17,9 +17,7 @@ namespace GitElephant\Command;
 use GitElephant\Command\BaseCommand;
 
 /**
- * CloneCommand
- *
- * @todo   : description
+ * CloneCommand generator
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
