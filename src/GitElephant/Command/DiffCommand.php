@@ -20,7 +20,6 @@
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
-use GitElephant\Objects\Commit;
 use GitElephant\Objects\TreeishInterface;
 
 /**

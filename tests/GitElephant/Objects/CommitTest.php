@@ -19,8 +19,6 @@ use GitElephant\TestCase,
     GitElephant\Command\MainCommand,
     GitElephant\Command\CommandContainer;
 
-
-
 /**
  * CommitTest
  *

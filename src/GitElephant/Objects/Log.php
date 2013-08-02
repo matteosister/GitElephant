@@ -99,7 +99,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
 
     private function parseOutputLines($outputLines)
     {
-        $commitLines = null;
         $this->commits = array();
         $commits = Utilities::pregSplitFlatArray($outputLines, '/^commit (\w+)$/');
         foreach ($commits as $commitOutputLines) {

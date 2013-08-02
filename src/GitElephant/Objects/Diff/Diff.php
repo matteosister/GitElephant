@@ -92,7 +92,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      *
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand($commit1 = null, $commit2 = null, $path = null)
+    public function createFromCommand($commit1 = null, $commit2 = null, $path = null)
     {
         if (null === $commit1) {
             $commit1 = $this->getRepository()->getCommit();

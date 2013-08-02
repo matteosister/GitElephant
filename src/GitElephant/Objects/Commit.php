@@ -162,7 +162,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand()
+    public function createFromCommand()
     {
         $command = ShowCommand::getInstance()->showCommit($this->ref);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
