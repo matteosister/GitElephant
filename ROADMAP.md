@@ -20,7 +20,8 @@ todo
 * better status handling with --porcelain DONE
 * CommitCollection instead of countable
 * tag messages and signed tags
-* named exceptions
+* named exceptions DONE
+* unstage DONE
 
 next
 * git blame

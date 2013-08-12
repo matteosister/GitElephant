@@ -1,32 +1,32 @@
 <?php
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Objects
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Objects;
-
-
-/**
- * An object representing a node in the tree
- *
- * @author Matteo Giachino <matteog@gmail.com>
- */
 
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Repository;
 
 /**
  * A Object instance represents a node in the git tree repository
- * It could be a file or a folder, as well as a submodule (a "link" talking the git language")
+ * It could be a file or a folder, as well as a submodule (a "link" in the git language)
+ *
+ * @author Matteo Giachino <matteog@gmail.com>
  */
 class Object implements TreeishInterface
 {
@@ -98,7 +98,7 @@ class Object implements TreeishInterface
             $name = substr($fullPath, $pos + 1);
         }
 
-        return new self($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
+        return new self($repository, $slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
     }
 
     /**
@@ -140,14 +140,15 @@ class Object implements TreeishInterface
     /**
      * Class constructor
      *
-     * @param string $permissions node permissions
-     * @param string $type        node type
-     * @param string $sha         node sha
-     * @param string $size        node size in bytes
-     * @param string $name        node name
-     * @param string $path        node path
+     * @param \GitElephant\Repository $repository  repository instance
+     * @param string                  $permissions node permissions
+     * @param string                  $type        node type
+     * @param string                  $sha         node sha
+     * @param string                  $size        node size in bytes
+     * @param string                  $name        node name
+     * @param string                  $path        node path
      */
-    public function __construct($permissions, $type, $sha, $size, $name, $path)
+    public function __construct(Repository $repository, $permissions, $type, $sha, $size, $name, $path)
     {
         $this->permissions = $permissions;
         $this->type        = $type;

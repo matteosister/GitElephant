@@ -1,34 +1,37 @@
 <?php
-
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Objects
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Objects;
 
 use GitElephant\Command\MainCommand;
-use GitElephant\Objects\Author,
-    GitElephant\Objects\TreeishInterface,
-    GitElephant\Objects\Commit\Message,
-    GitElephant\Repository,
-    GitElephant\Command\ShowCommand,
-    GitElephant\Command\RevListCommand;
+use GitElephant\Objects\Author;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Objects\Commit\Message;
+use GitElephant\Repository;
+use GitElephant\Command\ShowCommand;
+use GitElephant\Command\RevListCommand;
 
 /**
  * The Commit object represent a commit
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class Commit implements TreeishInterface, \Countable
 {
     /**
@@ -159,7 +162,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand()
+    public function createFromCommand()
     {
         $command = ShowCommand::getInstance()->showCommit($this->ref);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();

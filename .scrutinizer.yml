@@ -17,8 +17,6 @@ tools:
 
   php_cpd:
     enabled: true
-    filter:
-      paths: [ src/ ]
 
   php_cs_fixer:
     enabled: true
@@ -30,6 +28,6 @@ tools:
     filter:
       paths: [ src/ ]
 
-#  php_analyzer: true
+  php_analyzer: true
 
   sensiolabs_security_checker: true

@@ -21,6 +21,11 @@ use GitElephant\Objects\Commit;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * Class TestCase
+ *
+ * @package GitElephant
+ */
 class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**

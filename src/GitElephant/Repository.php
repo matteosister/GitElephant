@@ -1,15 +1,20 @@
 <?php
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant;
@@ -38,6 +43,8 @@ use GitElephant\Command\CatFileCommand;
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\SubmoduleCommand;
 use GitElephant\Status\Status;
+use GitElephant\Status\StatusIndex;
+use GitElephant\Status\StatusWorkingTree;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -49,7 +56,6 @@ use Symfony\Component\Finder\SplFileInfo;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class Repository
 {
     /**
@@ -162,6 +168,20 @@ class Repository
     }
 
     /**
+     * Unstage a tree content
+     *
+     * @param string|Object $path the path to unstage
+     *
+     * @return Repository
+     */
+    public function unstage($path)
+    {
+        $this->caller->execute(MainCommand::getInstance()->unstage($path));
+
+        return $this;
+    }
+
+    /**
      * Move a file/directory
      *
      * @param string|Object $from source path
@@ -227,6 +247,22 @@ class Repository
     public function getStatus()
     {
         return Status::get($this);
+    }
+
+    /**
+     * @return StatusWorkingTree
+     */
+    public function getWorkingTreeStatus()
+    {
+        return StatusWorkingTree::get($this);
+    }
+
+    /**
+     * @return StatusIndex
+     */
+    public function getIndexStatus()
+    {
+        return StatusIndex::get($this);
     }
 
     /**

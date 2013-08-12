@@ -1,9 +1,20 @@
 <?php
 /**
- * User: matteo
- * Date: 28/05/13
- * Time: 21.34
- * Just for fun...
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Status;
@@ -11,9 +22,6 @@ namespace GitElephant\Status;
 use GitElephant\Command\MainCommand;
 use GitElephant\Repository;
 use PhpCollection\Sequence;
-use PhpOption\None;
-use PhpOption\Option;
-use PhpOption\Some;
 
 /**
  * Class Status
@@ -22,15 +30,22 @@ use PhpOption\Some;
  */
 class Status
 {
+    /**
+     * @var \GitElephant\Repository
+     */
     private $repository;
 
-    private $files;
+    /**
+     * @var array
+     */
+    protected $files;
 
     /**
      * @param Repository $repository
      */
     private function __construct(Repository $repository)
     {
+        $this->files = array();
         $this->repository = $repository;
         $this->createFromCommand();
     }
@@ -38,11 +53,11 @@ class Status
     /**
      * @param Repository $repository
      *
-     * @return Status
+     * @return \GitElephant\Status\Status
      */
     public static function get(Repository $repository)
     {
-        return new self($repository);
+        return new static($repository);
     }
 
     /**
@@ -157,49 +172,13 @@ class Status
     }
 
     /**
-     * filter files by index status
-     *
-     * @param string $type
-     *
-     * @return Sequence
-     */
-    private function filterByIndexType($type)
-    {
-        if (!$this->files) {
-            return new Sequence();
-        }
-
-        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
-            return $type === $statusFile->getIndexStatus();
-        }));
-    }
-
-    /**
-     * filter files by working tree status
-     *
-     * @param string $type
-     *
-     * @return Sequence
-     */
-    private function filterByWorkingTreeType($type)
-    {
-        if (!$this->files) {
-            return new Sequence();
-        }
-
-        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
-            return $type === $statusFile->getWorkingTreeStatus();
-        }));
-    }
-
-    /**
      * filter files status in working tree and in index status
      *
      * @param string $type
      *
      * @return Sequence
      */
-    private function filterByType($type)
+    protected function filterByType($type)
     {
         if (!$this->files) {
             return new Sequence();

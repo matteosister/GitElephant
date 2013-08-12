@@ -17,59 +17,44 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-namespace GitElephant\Objects\Diff;
+namespace GitElephant\Status;
+
+use PhpCollection\Sequence;
 
 /**
- * A changed line in the DiffChunk
+ * Class StatusWorkingTree
  *
- * @author Mathias Geat <mathias@ailoo.net>
+ * @package GitElephant\Status
  */
-abstract class DiffChunkLineChanged extends DiffChunkLine
+class StatusWorkingTree extends Status
 {
     /**
-     * Line number
+     * all files with modified status in the working tree
      *
-     * @var int
+     * @return Sequence
      */
-    protected $number;
-
-    /**
-     * Set line number
-     *
-     * @param int $number line number
-     */
-    public function setNumber($number)
+    public function all()
     {
-        $this->number = $number;
+        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) {
+            return $statusFile->getWorkingTreeStatus();
+        }));
     }
 
     /**
-     * Get line number
+     * filter files by working tree status
      *
-     * @return int
+     * @param string $type
+     *
+     * @return Sequence
      */
-    public function getNumber()
+    protected function filterByType($type)
     {
-        return $this->number;
-    }
+        if (!$this->files) {
+            return new Sequence();
+        }
 
-    /**
-     * Get origin line number
-     *
-     * @return int
-     */
-    public function getOriginNumber()
-    {
-        return $this->getNumber();
-    }
-
-    /**
-     * Get destination line number
-     *
-     * @return int
-     */
-    public function getDestNumber()
-    {
-        return $this->getNumber();
+        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
+            return $type === $statusFile->getWorkingTreeStatus();
+        }));
     }
 }

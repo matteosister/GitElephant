@@ -1,26 +1,28 @@
 <?php
-
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Objects
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\Caller;
 use GitElephant\Objects\Object;
 use GitElephant\Repository;
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\CatFileCommand;
-
 
 /**
  * An abstraction of a git tree
@@ -30,7 +32,6 @@ use GitElephant\Command\CatFileCommand;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
 {
     /**
@@ -321,7 +322,15 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
             }
             if (!in_array($name, $this->pathChildren)) {
                 $path                 = rtrim(rtrim($slices['fullPath'], $name), '/');
-                $treeObject           = new Object($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
+                $treeObject           = new Object(
+                    $this->repository,
+                    $slices['permissions'],
+                    $slices['type'],
+                    $slices['sha'],
+                    $slices['size'],
+                    $name,
+                    $path
+                );
                 $this->children[]     = $treeObject;
                 $this->pathChildren[] = $name;
             }
