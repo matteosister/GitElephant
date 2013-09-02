@@ -14,7 +14,6 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\FetchCommand;
 use GitElephant\GitBinary;
 use GitElephant\Command\Caller;
 use GitElephant\Objects\Tree;
@@ -489,6 +488,14 @@ class Repository
         $command = LogCommand::getInstance()->showObjectLog($obj, $branch, $limit, $offset);
 
         return Log::createFromOutputLines($this, $this->caller->execute($command)->getOutputLines());
+    }
+
+    /**
+     * Fetch from the remote repository.
+     */
+    public function fetch()
+    {
+        $this->caller->execute(MainCommand::getInstance()->fetch());
     }
 
     /**
