@@ -93,7 +93,6 @@ class Caller implements CallerInterface
      */
     public function execute($cmd, $git = true, $cwd = null)
     {
-        $this->outputLines = array();
         if ($git) {
             $cmd = $this->binary->getPath() . ' ' . $cmd;
         }
