@@ -19,6 +19,7 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\CallerInterface;
 use GitElephant\Command\RemoteCommand;
 use GitElephant\Exception\InvalidBranchNameException;
 use GitElephant\Exception\InvalidRepositoryPathException;
