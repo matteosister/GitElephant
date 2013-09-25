@@ -63,23 +63,6 @@ You have now GitElephant installed in *vendor/cypresslab/gitelephant*
 
 And an handy autoload file to include in you project in *vendor/autoload.php*
 
-**pear**
-
-*I will remove pear support soon. Please switch to composer!*
-Add the cypresslab channel
-
-``` bash
-$ pear channel-discover pear.cypresslab.net
-```
-
-And install the package. *By now GitElephant is in alpha state. So remember the -alpha in the library name*
-
-``` bash
-$ pear install cypresslab/GitElephant-alpha
-```
-
-On [Cypresslab pear channel homepage](http://pear.cypresslab.net/) you can find other useful information
-
 How to use
 ----------
 
@@ -90,6 +73,22 @@ use GitElephant\Repository;
 $repo = new Repository('/path/to/git/repository');
 // or the factory method
 $repo = Repository::open('/path/to/git/repository');
+```
+
+By default GitElephant try to use the git binary on your system.
+
+If you need to access remote repository you have to install the [ssh2 extension](http://www.php.net/manual/en/book.ssh2.php) and pass a new *Caller* to the repository. *this is a new feature...consider this in a testing phase*
+
+``` php
+<?php
+
+$repo = new Repository('/path/to/git/repository');
+$connection = ssh_connect('host', 'port');
+// authorize the connection with the method you want
+ssh2_auth_password($connection, 'user', 'password');
+$caller = new CallerSSH2($connection, '/path/to/git/binary/on/server');
+$repo = Repository::open('/path/to/git/repository');
+$repo->setCaller($caller);
 ```
 
 the *Repository* class is the main class where you can find every method you need...

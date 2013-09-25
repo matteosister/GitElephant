@@ -19,8 +19,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Exception\NoSSH2ExtensionException;
-
 /**
  * Caller via ssh2 PECL extension
  *
@@ -46,28 +44,16 @@ class CallerSSH2 implements CallerInterface
     private $outputLines = array();
 
     /**
-     * @param string $host    remote host
-     * @param int    $port    remote port
-     * @param string $gitPath path of the git executable on the remote host
+     * @param resource $resource
+     * @param string   $gitPath path of the git executable on the remote host
      *
-     * @throws \GitElephant\Exception\NoSSH2ExtensionException
+     * @internal param string $host remote host
+     * @internal param int $port remote port
      */
-    public function __construct($host, $port = 22, $gitPath = '/usr/bin/git')
+    public function __construct($resource, $gitPath = '/usr/bin/git')
     {
-        if (!function_exists('ssh2_connect')) {
-            throw new NoSSH2ExtensionException;
-        }
-        $this->resource = ssh2_connect($host, $port);
+        $this->resource = $resource;
         $this->gitPath = $gitPath;
-    }
-
-    /**
-     * @param string $user     user
-     * @param string $password password
-     */
-    public function setUserPasswordAuthentication($user, $password)
-    {
-        ssh2_auth_password($this->resource, $user, $password);
     }
 
     /**
@@ -85,8 +71,11 @@ class CallerSSH2 implements CallerInterface
             $cmd = $this->gitPath . ' ' . $cmd;
         }
         $stream = ssh2_exec($this->resource, $cmd);
+        stream_set_blocking($stream, 1);
+        $data = stream_get_contents($stream);
+        fclose($stream);
         // rtrim values
-        $values = array_map('rtrim', explode(PHP_EOL, stream_get_contents($stream)));
+        $values = array_map('rtrim', explode(PHP_EOL, $d));
         $this->outputLines = $values;
 
         return $this;
