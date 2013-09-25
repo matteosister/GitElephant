@@ -225,6 +225,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('showCommit')
             ->will($this->returnValue(''));
+
         return $command;
     }
 
