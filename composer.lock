@@ -249,22 +249,27 @@
     "packages-dev": [
         {
             "name": "dflydev/markdown",
-            "version": "v1.0.2",
+            "version": "v1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dflydev/dflydev-markdown.git",
-                "reference": "v1.0.2"
+                "reference": "6baed9b50f29c980795b6656d43722aadb126f7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://github.com/dflydev/dflydev-markdown/zipball/v1.0.2",
-                "reference": "v1.0.2",
+                "url": "https://api.github.com/repos/dflydev/dflydev-markdown/zipball/6baed9b50f29c980795b6656d43722aadb126f7e",
+                "reference": "6baed9b50f29c980795b6656d43722aadb126f7e",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "dflydev\\markdown": "src"
@@ -272,7 +277,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "New BSD License"
+                "BSD-3-Clause"
             ],
             "authors": [
                 {
@@ -299,7 +304,7 @@
             "keywords": [
                 "markdown"
             ],
-            "time": "2012-01-15 19:36:37"
+            "time": "2013-09-23 12:00:18"
         },
         {
             "name": "nikic/php-parser",
@@ -764,12 +769,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Sami.git",
-                "reference": "cc3bcaf63a87378957921f10d3ef16c493f2c5c7"
+                "reference": "a0c61407331850fa3999127496d7e7e4a1919829"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Sami/zipball/cc3bcaf63a87378957921f10d3ef16c493f2c5c7",
-                "reference": "cc3bcaf63a87378957921f10d3ef16c493f2c5c7",
+                "url": "https://api.github.com/repos/fabpot/Sami/zipball/a0c61407331850fa3999127496d7e7e4a1919829",
+                "reference": "a0c61407331850fa3999127496d7e7e4a1919829",
                 "shasum": ""
             },
             "require": {
@@ -813,7 +818,7 @@
             "keywords": [
                 "phpdoc"
             ],
-            "time": "2013-08-04 15:19:13"
+            "time": "2013-09-19 04:52:25"
         },
         {
             "name": "symfony/console",
