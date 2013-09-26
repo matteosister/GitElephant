@@ -1,10 +1,8 @@
-# GitElephant [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/matteosister/GitElephant/badges/quality-score.png?s=c7ca8a7c5ea9c64b291f6bcaef27955ed6d8a836)](https://scrutinizer-ci.com/g/matteosister/GitElephant/)
+# GitElephant [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/matteosister/GitElephant/badges/quality-score.png?s=c7ca8a7c5ea9c64b291f6bcaef27955ed6d8a836)](https://scrutinizer-ci.com/g/matteosister/GitElephant/) [![Stable Version](https://poser.pugx.org/cypresslab/gitelephant/version.png)](https://packagist.org/packages/cypresslab/gitelephant)
 
 develop branch: [![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=develop)](https://travis-ci.org/matteosister/GitElephant)
 
 master branch: [![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=master)](https://travis-ci.org/matteosister/GitElephant)
-
-[![Stable Version](https://poser.pugx.org/cypresslab/gitelephant/version.png)](https://packagist.org/packages/cypresslab/gitelephant)
 
 GitElephant is an abstraction layer to manage your git repositories with php
 
