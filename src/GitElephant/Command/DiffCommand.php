@@ -34,7 +34,7 @@ class DiffCommand extends BaseCommand
     /**
      * @return DiffCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

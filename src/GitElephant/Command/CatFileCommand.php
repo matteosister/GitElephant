@@ -35,7 +35,7 @@ class CatFileCommand extends BaseCommand
     /**
      * @return CatFileCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

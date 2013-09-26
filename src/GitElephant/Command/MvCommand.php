@@ -33,7 +33,7 @@ class MvCommand extends BaseCommand
     /**
      * @return MvCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

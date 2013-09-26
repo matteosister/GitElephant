@@ -36,7 +36,7 @@ class DiffTreeCommand extends BaseCommand
     /**
      * @return DiffTreeCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

@@ -87,7 +87,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      *
      * @return \GitElephant\Objects\Log
      */
-    static public function createFromOutputLines(Repository $repository, $outputLines)
+    public static function createFromOutputLines(Repository $repository, $outputLines)
     {
         $tree = new self($repository);
         $tree->parseOutputLines($outputLines);

@@ -34,7 +34,7 @@ class TagCommand extends BaseCommand
     /**
      * @return TagCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

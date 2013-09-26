@@ -36,7 +36,7 @@ class LogCommand extends BaseCommand
     /**
      * @return LogCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

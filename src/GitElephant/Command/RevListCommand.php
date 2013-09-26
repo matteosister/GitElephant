@@ -35,7 +35,7 @@ class RevListCommand extends BaseCommand
     /**
      * @return RevListCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

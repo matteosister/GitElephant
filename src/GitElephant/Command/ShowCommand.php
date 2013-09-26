@@ -34,7 +34,7 @@ class ShowCommand extends BaseCommand
     /**
      * @return ShowCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

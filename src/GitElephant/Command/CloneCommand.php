@@ -33,7 +33,7 @@ class CloneCommand extends BaseCommand
     /**
      * @return CloneCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

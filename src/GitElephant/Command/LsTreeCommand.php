@@ -37,7 +37,7 @@ class LsTreeCommand extends BaseCommand
     /**
      * @return LsTreeCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

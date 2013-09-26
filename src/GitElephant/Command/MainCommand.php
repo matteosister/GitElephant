@@ -42,7 +42,7 @@ class MainCommand extends BaseCommand
     /**
      * @return MainCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

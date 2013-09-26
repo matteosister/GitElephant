@@ -33,7 +33,7 @@ class Utilities
      *
      * @return mixed
      */
-    static public function normalizeDirectorySeparator($path)
+    public static function normalizeDirectorySeparator($path)
     {
         return str_replace(DIRECTORY_SEPARATOR, '/', $path);
     }
@@ -47,7 +47,7 @@ class Utilities
     * @return array an array of array pieces
     * @throws \InvalidArgumentException
     */
-    static public function pregSplitArray($array, $regexp)
+    public static function pregSplitArray($array, $regexp)
     {
         if (static::isAssociative($array)) {
             throw new \InvalidArgumentException('pregSplitArray only accepts non-associative arrays.');
@@ -77,7 +77,7 @@ class Utilities
      *
      * @return array
      */
-    static public function pregSplitFlatArray($array, $regexp)
+    public static function pregSplitFlatArray($array, $regexp)
     {
         $index = 0;
         $slices = array();
@@ -104,7 +104,7 @@ class Utilities
      *
      * @return bool
      */
-    static public function isAssociative($arr)
+    public static function isAssociative($arr)
     {
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
