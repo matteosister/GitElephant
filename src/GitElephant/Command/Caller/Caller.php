@@ -17,10 +17,9 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-namespace GitElephant\Command;
+namespace GitElephant\Command\Caller;
 
 use GitElephant\GitBinary;
-use GitElephant\Command\CallerInterface;
 use Symfony\Component\Process\Process;
 
 

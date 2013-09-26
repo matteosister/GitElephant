@@ -21,7 +21,6 @@ namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
 
-
 /**
  * Branch command generator
  *
@@ -34,7 +33,7 @@ class BranchCommand extends BaseCommand
     /**
      * @return BranchCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

@@ -16,7 +16,7 @@ namespace GitElephant;
 use GitElephant\Command\MvCommand;
 use GitElephant\Repository;
 use GitElephant\GitBinary;
-use GitElephant\Command\Caller;
+use GitElephant\Command\Caller\Caller;
 use GitElephant\Objects\Commit;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
@@ -29,7 +29,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class TestCase extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @var \GitElephant\Command\CallerInterface
+     * @var \GitElephant\Command\Caller\CallerInterface
      */
     protected $caller;
 
@@ -61,7 +61,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     protected function getCaller()
     {
@@ -183,7 +183,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
      */
     protected function getMockCaller($command, $output)
     {
-        $mock = $this->getMock('GitElephant\Command\CallerInterface');
+        $mock = $this->getMock('GitElephant\Command\Caller\CallerInterface');
         $mock
             ->expects($this->any())
             ->method('execute')

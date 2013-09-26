@@ -17,7 +17,7 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-namespace GitElephant\Command;
+namespace GitElephant\Command\Caller;
 
 /**
  * interface for the git command caller

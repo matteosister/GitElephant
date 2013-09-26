@@ -14,7 +14,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\TestCase;
-use GitElephant\Command\Caller;
+use GitElephant\Command\Caller\Caller;
 use GitElephant\GitBinary;
 use GitElephant\Command\MainCommand;
 
@@ -34,7 +34,7 @@ class CallerTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Command\Caller::__construct
+     * @covers GitElephant\Command\Caller\Caller::__construct
      */
     public function testConstructor()
     {

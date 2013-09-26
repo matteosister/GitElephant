@@ -177,7 +177,7 @@ class Tag extends Object
     }
 
     /**
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     private function getCaller()
     {

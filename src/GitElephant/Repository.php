@@ -19,12 +19,12 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\CallerInterface;
+use GitElephant\Command\Caller\CallerInterface;
 use GitElephant\Command\RemoteCommand;
 use GitElephant\Exception\InvalidBranchNameException;
 use GitElephant\Exception\InvalidRepositoryPathException;
 use GitElephant\GitBinary;
-use GitElephant\Command\Caller;
+use GitElephant\Command\Caller\Caller;
 use GitElephant\Objects\Remote;
 use GitElephant\Objects\Tree;
 use GitElephant\Objects\Branch;
@@ -69,7 +69,7 @@ class Repository
     /**
      * the caller instance
      *
-     * @var \GitElephant\Command\Caller
+     * @var \GitElephant\Command\Caller\Caller
      */
     private $caller;
 
@@ -815,7 +815,7 @@ class Repository
     /**
      * Caller setter
      *
-     * @param \GitElephant\Command\Caller $caller the caller variable
+     * @param \GitElephant\Command\Caller\Caller $caller the caller variable
      */
     public function setCaller($caller)
     {
@@ -825,7 +825,7 @@ class Repository
     /**
      * Caller getter
      *
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     public function getCaller()
     {

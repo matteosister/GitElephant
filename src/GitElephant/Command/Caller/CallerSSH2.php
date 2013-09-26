@@ -17,7 +17,7 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-namespace GitElephant\Command;
+namespace GitElephant\Command\Caller;
 
 /**
  * Caller via ssh2 PECL extension
@@ -75,7 +75,7 @@ class CallerSSH2 implements CallerInterface
         $data = stream_get_contents($stream);
         fclose($stream);
         // rtrim values
-        $values = array_map('rtrim', explode(PHP_EOL, $d));
+        $values = array_map('rtrim', explode(PHP_EOL, $data));
         $this->outputLines = $values;
 
         return $this;

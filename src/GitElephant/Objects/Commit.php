@@ -242,7 +242,7 @@ class Commit implements TreeishInterface, \Countable
     }
 
     /**
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     private function getCaller()
     {

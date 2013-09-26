@@ -131,7 +131,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     private function getCaller()
     {

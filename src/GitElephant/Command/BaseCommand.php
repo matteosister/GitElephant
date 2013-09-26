@@ -219,6 +219,30 @@ class BaseCommand
             throw new \RuntimeException("You should pass a commandName to execute a command");
         }
         $command = '';
+        $this->configs($command);
+        $command .= $this->commandName;
+        $command .= ' ';
+        if (count($this->commandArguments) > 0) {
+            $command .= implode(' ', array_map('escapeshellarg', $this->commandArguments));
+            $command .= ' ';
+        }
+        $this->subject($command);
+        $this->subject2($command);
+        if (null !== $this->path) {
+            $command .= sprintf(' -- %s', escapeshellarg($this->path));
+        }
+        $command = preg_replace('/\\s{2,}/', ' ', $command);
+
+        return trim($command);
+    }
+
+    /**
+     * add configs
+     *
+     * @param string &$command
+     */
+    private function configs(&$command)
+    {
         if (count($this->configs)) {
             foreach ($this->configs as $config => $value) {
                 $command .= escapeshellarg('-c');
@@ -226,12 +250,15 @@ class BaseCommand
             }
             $command .= ' ';
         }
-        $command .= $this->commandName;
-        $command .= ' ';
-        if (count($this->commandArguments) > 0) {
-            $command .= implode(' ', array_map('escapeshellarg', $this->commandArguments));
-            $command .= ' ';
-        }
+    }
+
+    /**
+     * add subject
+     *
+     * @param string &$command
+     */
+    private function subject(&$command)
+    {
         if (null !== $this->commandSubject) {
             if ($this->commandSubject instanceof SubCommandCommand) {
                 $command .= $this->commandSubject->getCommand();
@@ -240,6 +267,15 @@ class BaseCommand
             }
             $command .= ' ';
         }
+    }
+
+    /**
+     * add second subject
+     *
+     * @param string &$command
+     */
+    private function subject2(&$command)
+    {
         if (null !== $this->commandSubject2) {
             if ($this->commandSubject2 instanceof SubCommandCommand) {
                 $command .= $this->commandSubject2->getCommand();
@@ -248,11 +284,5 @@ class BaseCommand
             }
             $command .= ' ';
         }
-        if (null !== $this->path) {
-            $command .= sprintf(' -- %s', escapeshellarg($this->path));
-        }
-        $command = preg_replace('/\\s{2,}/', ' ', $command);
-
-        return trim($command);
     }
 }
