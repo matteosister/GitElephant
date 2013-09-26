@@ -1,4 +1,4 @@
-# GitElephant
+# GitElephant [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/matteosister/GitElephant/badges/quality-score.png?s=c7ca8a7c5ea9c64b291f6bcaef27955ed6d8a836)](https://scrutinizer-ci.com/g/matteosister/GitElephant/)
 
 develop branch: [![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=develop)](https://travis-ci.org/matteosister/GitElephant)
 

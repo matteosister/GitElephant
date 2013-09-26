@@ -329,8 +329,7 @@ class Repository
                 },
                 $outputLines
             );
-            $sorter = function ($a, $b)
-            {
+            $sorter = function ($a, $b) {
                 if ($a == 'master') {
                     return -1;
                 } else {
@@ -346,8 +345,7 @@ class Repository
             foreach ($outputLines as $branchLine) {
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
-            $sorter = function (Branch $a, Branch $b)
-            {
+            $sorter = function (Branch $a, Branch $b) {
                 if ($a->getName() == 'master') {
                     return -1;
                 } else {
@@ -663,7 +661,9 @@ class Repository
     public function getTree($ref = 'HEAD', $path = null)
     {
         if (is_string($path) && '' !== $path) {
-            $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(true);
+            $outputLines = $this->getCaller()->execute(
+                LsTreeCommand::getInstance()->tree($ref, $path)
+            )->getOutputLines(true);
             $path = Object::createFromOutputLine($this, $outputLines[0]);
         }
 
