@@ -226,8 +226,7 @@ class BaseCommand
             $command .= implode(' ', array_map('escapeshellarg', $this->commandArguments));
             $command .= ' ';
         }
-        $this->subject($command);
-        $this->subject2($command);
+        $this->subjects($command);
         if (null !== $this->path) {
             $command .= sprintf(' -- %s', escapeshellarg($this->path));
         }
@@ -253,11 +252,11 @@ class BaseCommand
     }
 
     /**
-     * add subject
+     * add subjects
      *
      * @param string &$command
      */
-    private function subject(&$command)
+    private function subjects(&$command)
     {
         if (null !== $this->commandSubject) {
             if ($this->commandSubject instanceof SubCommandCommand) {
@@ -267,15 +266,6 @@ class BaseCommand
             }
             $command .= ' ';
         }
-    }
-
-    /**
-     * add second subject
-     *
-     * @param string &$command
-     */
-    private function subject2(&$command)
-    {
         if (null !== $this->commandSubject2) {
             if ($this->commandSubject2 instanceof SubCommandCommand) {
                 $command .= $this->commandSubject2->getCommand();
