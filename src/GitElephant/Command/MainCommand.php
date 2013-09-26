@@ -154,7 +154,7 @@ class MainCommand extends BaseCommand
         $what = $ref;
         if ($ref instanceof Branch) {
             $what = $ref->getName();
-        } else if ($ref instanceof TreeishInterface) {
+        } elseif ($ref instanceof TreeishInterface) {
             $what = $ref->getSha();
         }
 

@@ -23,6 +23,8 @@ class StatusTest extends TestCase
     public function setUp()
     {
         $this->getRepository()->init();
+        $this->addFile('initial');
+        $this->getRepository()->commit('initial commit', true);
     }
 
     /**

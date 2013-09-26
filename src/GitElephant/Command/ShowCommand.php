@@ -19,9 +19,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand;
-
-
 /**
  * show command generator
  *

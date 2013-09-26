@@ -24,7 +24,6 @@ use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Objects\Object;
 
-
 /**
  * ls-tree command generator
  *

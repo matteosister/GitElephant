@@ -70,7 +70,7 @@ class RemoteCommand extends BaseCommand
 
         $this->addCommandName(self::GIT_REMOTE);
 
-        foreach ($normalizedOptions as $key => $value) {
+        foreach ($normalizedOptions as $value) {
             $this->addCommandArgument($value);
         }
 
