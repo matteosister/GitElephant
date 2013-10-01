@@ -33,7 +33,7 @@ interface CallerInterface
      *
      * @return CallerInterface
      */
-    function execute($cmd, $git = true, $cwd = null);
+    public function execute($cmd, $git = true, $cwd = null);
 
     /**
      * after calling execute this method should return the output
@@ -42,5 +42,5 @@ interface CallerInterface
      *
      * @return array
      */
-    function getOutputLines($stripBlankLines = false);
+    public function getOutputLines($stripBlankLines = false);
 }
