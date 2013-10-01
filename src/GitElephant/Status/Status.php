@@ -184,7 +184,7 @@ class Status
             return new Sequence();
         }
 
-        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
+        return new Sequence(array_filter($this->files, function (StatusFile $statusFile) use ($type) {
             return $type === $statusFile->getWorkingTreeStatus() || $type === $statusFile->getIndexStatus();
         }));
     }
