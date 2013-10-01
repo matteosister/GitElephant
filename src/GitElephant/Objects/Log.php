@@ -94,7 +94,9 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     {
         $command = LogCommand::getInstance()->showLog($ref, $path, $limit, $offset);
         $outputLines = $this->getRepository()->getCaller()->execute(
-            $command, true, $this->getRepository()->getPath()
+            $command,
+            true,
+            $this->getRepository()->getPath()
         )->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }
