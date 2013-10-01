@@ -230,7 +230,14 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
     protected function getMockRepository()
     {
-        return $this->getMock('GitElephant\Repository', array(), array($this->repository->getPath(), $this->getMockBinary()));
+        return $this->getMock(
+            'GitElephant\Repository',
+            array(),
+            array(
+                $this->repository->getPath(),
+                $this->getMockBinary()
+            )
+        );
     }
 
     protected function getMockBinary()
@@ -238,8 +245,18 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return $this->getMock('GitElephant\GitBinary');
     }
 
-    protected function doCommitTest(Commit $commit, $sha, $tree, $author, $committer, $emailAuthor, $emailCommitter, $datetimeAuthor, $datetimeCommitter, $message)
-    {
+    protected function doCommitTest(
+        Commit $commit,
+        $sha,
+        $tree,
+        $author,
+        $committer,
+        $emailAuthor,
+        $emailCommitter,
+        $datetimeAuthor,
+        $datetimeCommitter,
+        $message
+    ) {
         $this->assertInstanceOf('GitElephant\Objects\Commit', $commit);
         $this->assertEquals($sha, $commit->getSha());
         $this->assertEquals($tree, $commit->getTree());
