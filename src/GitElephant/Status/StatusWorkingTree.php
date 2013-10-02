@@ -35,7 +35,7 @@ class StatusWorkingTree extends Status
      */
     public function all()
     {
-        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) {
+        return new Sequence(array_filter($this->files, function (StatusFile $statusFile) {
             return $statusFile->getWorkingTreeStatus();
         }));
     }
@@ -53,7 +53,7 @@ class StatusWorkingTree extends Status
             return new Sequence();
         }
 
-        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
+        return new Sequence(array_filter($this->files, function (StatusFile $statusFile) use ($type) {
             return $type === $statusFile->getWorkingTreeStatus();
         }));
     }

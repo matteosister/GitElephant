@@ -44,13 +44,30 @@ class UtilitiesTest extends TestCase
      */
     public function testPregSplitArray()
     {
-        $this->assertEquals(array(array('b', 'c', '1', 'd'), array('b', 'e')), Utilities::pregSplitArray($this->arr, '/^b$/'));
-        $this->assertEquals(array(array('1', 'd', 'b', 'e')), Utilities::pregSplitArray($this->arr, '/^\d$/'));
+        $this->assertEquals(
+            array(
+                array('b', 'c', '1', 'd'),
+                array('b', 'e')
+            ),
+            Utilities::pregSplitArray($this->arr, '/^b$/')
+        );
+        $this->assertEquals(
+            array(
+                array('1', 'd', 'b', 'e')
+            ),
+            Utilities::pregSplitArray($this->arr, '/^\d$/')
+        );
     }
 
     public function testPregSplitFlatArray()
     {
-        $this->assertEquals(array(array('a'), array('b', 'c', '1', 'd'), array('b', 'e')), Utilities::pregSplitFlatArray($this->arr, '/^b$/'));
+        $this->assertEquals(
+            array(
+                array('a'),
+                array('b', 'c', '1', 'd'),
+                array('b', 'e')),
+            Utilities::pregSplitFlatArray($this->arr, '/^b$/')
+        );
     }
 
     /**
