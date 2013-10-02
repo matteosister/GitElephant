@@ -258,7 +258,11 @@ EOM;
         $remote->parseOutputLines($output);
         $actual = $remote->getPushURL();
         $expected = $this->sampleRemoteShowPushURL();
-        $this->assertEquals($expected, $actual, 'parseOutputLines() proper digests git-remote show <remote> push URL');
+        $this->assertEquals(
+            $expected,
+            $actual,
+            'parseOutputLines() proper digests git-remote show <remote> push URL'
+        );
     }
 
     /**
@@ -284,7 +288,11 @@ EOM;
         $remote->parseOutputLines($output);
         $actual = $remote->getRemoteHEAD();
         $expected = $this->sampleRemoteShowRemoteHEAD();
-        $this->assertEquals($expected, $actual, 'parseOutputLines() proper digests git-remote show <remote> remote HEAD');
+        $this->assertEquals(
+            $expected,
+            $actual,
+            'parseOutputLines() proper digests git-remote show <remote> remote HEAD'
+        );
     }
 
     /**
@@ -310,7 +318,11 @@ EOM;
         $remote->parseOutputLines($output);
         $actual = $remote->getBranches();
         $expected = $this->sampleRemoteShowAsArray();
-        $this->assertEquals($expected, $actual, 'parseOutputLines() proper digests git-remote show <remote> branch references');
+        $this->assertEquals(
+            $expected,
+            $actual,
+            'parseOutputLines() proper digests git-remote show <remote> branch references'
+        );
     }
 
     /**
@@ -348,7 +360,11 @@ EOM;
 
         $name = $this->sampleRemoteShowRemoteName();
         $mockRemote->__construct($this->getRepository(), $name);
-        $this->assertEquals($this->sampleRemoteShowRemoteName(), $mockRemote->getName(), 'able to create mock object with properly parsed sample data');
+        $this->assertEquals(
+            $this->sampleRemoteShowRemoteName(),
+            $mockRemote->getName(),
+            'able to create mock object with properly parsed sample data'
+        );
 
         return $mockRemote;
     }
@@ -373,7 +389,11 @@ EOM;
     public function testToString()
     {
         $obj = $this->getMockRemote();
-        $this->assertEquals($this->sampleRemoteShowRemoteName(), (string) $obj, 'magic to string method provides the remote name');
+        $this->assertEquals(
+            $this->sampleRemoteShowRemoteName(),
+            (string) $obj,
+            'magic to string method provides the remote name'
+        );
     }
 
     /**

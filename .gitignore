@@ -7,3 +7,11 @@ composer.phar
 build/
 cache/
 deploy_docs.sh
+
+# IntelliJ
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store

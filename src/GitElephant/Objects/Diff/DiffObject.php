@@ -243,7 +243,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
             return $this->similarityIndex;
         }
 
-        throw new \RuntimeException('Cannot get similiarity index on non-renames');
+        throw new \RuntimeException('Cannot get similarity index on non-renames');
     }
 
     /**

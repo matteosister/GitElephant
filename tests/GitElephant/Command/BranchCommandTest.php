@@ -72,10 +72,22 @@ class BranchCommandTest extends TestCase
     public function testSingleInfo()
     {
         $bc = new BranchCommand();
-        $this->assertEquals("branch '-v' '--list' '--no-color' '--no-abbrev' 'master'", $bc->singleInfo('master'));
-        $this->assertEquals("branch '-v' '--list' '--no-color' '--no-abbrev' '-a' 'master'", $bc->singleInfo('master', true));
-        $this->assertEquals("branch '-v' '--list' '--no-color' '--no-abbrev' '-a' '-vv' 'master'", $bc->singleInfo('master', true, false, true));
-        $this->assertEquals("branch '--list' '--no-color' '--no-abbrev' '-a' '-vv' 'master'", $bc->singleInfo('master', true, true, true));
+        $this->assertEquals(
+            "branch '-v' '--list' '--no-color' '--no-abbrev' 'master'",
+            $bc->singleInfo('master')
+        );
+        $this->assertEquals(
+            "branch '-v' '--list' '--no-color' '--no-abbrev' '-a' 'master'",
+            $bc->singleInfo('master', true)
+        );
+        $this->assertEquals(
+            "branch '-v' '--list' '--no-color' '--no-abbrev' '-a' '-vv' 'master'",
+            $bc->singleInfo('master', true, false, true)
+        );
+        $this->assertEquals(
+            "branch '--list' '--no-color' '--no-abbrev' '-a' '-vv' 'master'",
+            $bc->singleInfo('master', true, true, true)
+        );
     }
 
     /**

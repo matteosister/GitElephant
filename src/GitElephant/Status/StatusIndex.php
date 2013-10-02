@@ -43,7 +43,7 @@ class StatusIndex extends Status
      */
     public function all()
     {
-        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) {
+        return new Sequence(array_filter($this->files, function (StatusFile $statusFile) {
             return $statusFile->getIndexStatus() && '?' !== $statusFile->getIndexStatus();
         }));
     }
@@ -61,7 +61,7 @@ class StatusIndex extends Status
             return new Sequence();
         }
 
-        return new Sequence(array_filter($this->files, function(StatusFile $statusFile) use ($type) {
+        return new Sequence(array_filter($this->files, function (StatusFile $statusFile) use ($type) {
             return $type === $statusFile->getIndexStatus();
         }));
     }

@@ -41,7 +41,7 @@ class GitBinary
      */
     public function __construct($path = null)
     {
-        if ($path == null) {
+        if (null == $path) {
             // unix only!
             $path = exec('which git');
         }
