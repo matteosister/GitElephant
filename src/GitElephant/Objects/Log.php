@@ -93,7 +93,11 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     private function createFromCommand($ref, $path, $limit, $offset)
     {
         $command = LogCommand::getInstance()->showLog($ref, $path, $limit, $offset);
-        $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines(true);
+        $outputLines = $this->getRepository()->getCaller()->execute(
+            $command,
+            true,
+            $this->getRepository()->getPath()
+        )->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }
 
@@ -177,6 +181,8 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      *
      * @param int   $offset offset
      * @param mixed $value  value
+     *
+     * @throws \RuntimeException
      */
     public function offsetSet($offset, $value)
     {
@@ -187,6 +193,8 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * ArrayAccess interface
      *
      * @param int $offset offset
+     *
+     * @throws \RuntimeException
      */
     public function offsetUnset($offset)
     {

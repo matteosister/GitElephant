@@ -98,7 +98,15 @@ class Object implements TreeishInterface
             $name = substr($fullPath, $pos + 1);
         }
 
-        return new self($repository, $slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
+        return new self(
+            $repository,
+            $slices['permissions'],
+            $slices['type'],
+            $slices['sha'],
+            $slices['size'],
+            $name,
+            $path
+        );
     }
 
     /**

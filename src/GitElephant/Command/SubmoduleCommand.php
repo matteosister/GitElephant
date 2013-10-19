@@ -34,7 +34,7 @@ class SubmoduleCommand extends BaseCommand
     /**
      * @return SubmoduleCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

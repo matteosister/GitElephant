@@ -64,6 +64,10 @@ class SubCommandCommandTest extends TestCase
         $rmeth->invoke($subcmd, array($argTwo, $argTwoValue));
 
         $actual = $subcmd->getCommand();
-        $this->assertEquals($expected, $actual, 'getCommand() produces string made from subject stact and extracted args');
+        $this->assertEquals(
+            $expected,
+            $actual,
+            'getCommand() produces string made from subject stact and extracted args'
+        );
     }
 }

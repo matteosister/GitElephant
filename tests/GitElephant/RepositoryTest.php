@@ -188,7 +188,11 @@ class RepositoryTest extends TestCase
         $this->addFile('test');
         $this->getRepository()->stage();
         $this->getRepository()->commit('initial import', true);
-        $this->assertCount(1, $this->getRepository()->getBranches(), 'an initialized repository should have only one branch');
+        $this->assertCount(
+            1,
+            $this->getRepository()->getBranches(),
+            'an initialized repository should have only one branch'
+        );
         $this->getRepository()->createBranch('test-branch');
         $this->assertCount(2, $this->getRepository()->getBranches(), 'two branches expected');
         $branches = $this->getRepository()->getBranches();
@@ -196,9 +200,20 @@ class RepositoryTest extends TestCase
         $this->getRepository()->deleteBranch('test-branch');
         $this->assertCount(1, $this->getRepository()->getBranches(), 'one branch expected');
         $mainBranch = $this->getRepository()->getMainBranch();
-        $this->assertInstanceOf('GitElephant\Objects\Branch', $this->getRepository()->getMainBranch(), 'main branch should be an instance of Branch');
-        $this->assertTrue($this->getRepository()->getMainBranch()->getCurrent(), 'getCurrent on main branch should be true');
-        $this->assertEquals('master', $this->getRepository()->getMainBranch()->getName(), 'main branch should be named "master"');
+        $this->assertInstanceOf(
+            'GitElephant\Objects\Branch',
+            $this->getRepository()->getMainBranch(),
+            'main branch should be an instance of Branch'
+        );
+        $this->assertTrue(
+            $this->getRepository()->getMainBranch()->getCurrent(),
+            'getCurrent on main branch should be true'
+        );
+        $this->assertEquals(
+            'master',
+            $this->getRepository()->getMainBranch()->getName(),
+            'main branch should be named "master"'
+        );
         $this->assertEquals(array('master'), $this->getRepository()->getBranches(true));
         $this->getRepository()->createBranch('develop');
         $this->assertEquals(array('master', 'develop'), $this->getRepository()->getBranches(true));
@@ -485,16 +500,44 @@ class RepositoryTest extends TestCase
         $this->assertTrue($this->getRepository()->getTree($this->getRepository()->getCommit(), 'test')->isBlob());
         $this->assertCount(2, $tree, 'One file in the repository');
         $firstNode = $tree[0];
-        $this->assertInstanceOf('GitElephant\Objects\Object', $firstNode, 'array access on tree should give always a node type');
-        $this->assertEquals('test-folder', $firstNode->getName(), 'First repository file should be named "test"');
+        $this->assertInstanceOf(
+            'GitElephant\Objects\Object',
+            $firstNode,
+            'array access on tree should give always a node type'
+        );
+        $this->assertEquals(
+            'test-folder',
+            $firstNode->getName(),
+            'First repository file should be named "test"'
+        );
         $secondNode = $tree[1];
-        $this->assertInstanceOf('GitElephant\Objects\Object', $secondNode, 'array access on tree should give always a node type');
-        $this->assertEquals(Object::TYPE_BLOB, $secondNode->getType(), 'second node should be of type tree');
+        $this->assertInstanceOf(
+            'GitElephant\Objects\Object',
+            $secondNode,
+            'array access on tree should give always a node type'
+        );
+        $this->assertEquals(
+            Object::TYPE_BLOB,
+            $secondNode->getType(),
+            'second node should be of type tree'
+        );
         $subtree = $this->getRepository()->getTree('master', 'test-folder');
         $subnode = $subtree[0];
-        $this->assertInstanceOf('GitElephant\Objects\Object', $subnode, 'array access on tree should give always a node type');
-        $this->assertEquals(Object::TYPE_BLOB, $subnode->getType(), 'subnode should be of type blob');
-        $this->assertEquals('test2', $subnode->getName(), 'subnode should be named "test2"');
+        $this->assertInstanceOf(
+            'GitElephant\Objects\Object',
+            $subnode,
+            'array access on tree should give always a node type'
+        );
+        $this->assertEquals(
+            Object::TYPE_BLOB,
+            $subnode->getType(),
+            'subnode should be of type blob'
+        );
+        $this->assertEquals(
+            'test2',
+            $subnode->getName(),
+            'subnode should be named "test2"'
+        );
     }
 
     /**
@@ -518,15 +561,20 @@ class RepositoryTest extends TestCase
 
     /**
      * testCloneFrom
-     *
-     * @group online
      */
     public function testCloneFrom()
     {
-        $this->initRepository();
-        $this->getRepository()->cloneFrom('git://github.com/matteosister/GitElephant.git', '.');
-        $commit = $this->getRepository()->getCommit();
-        $this->assertFalse($commit->isRoot());
+        $this->initRepository(null, 0);
+        $this->initRepository(null, 1);
+        $remote = $this->getRepository(0);
+        $remote->init();
+        $this->addFile('test', null, null, $remote);
+        $remote->commit('test', true);
+        $local = $this->getRepository(1);
+        $local->cloneFrom($remote->getPath(), '.');
+        $commit = $local->getCommit();
+        $this->assertEquals($remote->getCommit()->getSha(), $commit->getSha());
+        $this->assertEquals($remote->getCommit()->getMessage(), $commit->getMessage());
     }
 
     /**
@@ -626,19 +674,27 @@ class RepositoryTest extends TestCase
     /**
      * testCreateFromRemote
      *
-     * @group online
-     *
      * @return null
      */
     public function testCreateFromRemote()
     {
-        $repo = Repository::createFromRemote('git://github.com/matteosister/GitElephant.git');
+        $this->initRepository(null, 0);
+        $remote = $this->getRepository(0);
+        $remote->init();
+        $this->addFile('test', null, null, $remote);
+        $remote->commit('test', true);
+        $remote->createBranch('develop');
+
+        $repo = Repository::createFromRemote($remote->getPath());
         $this->assertInstanceOf('GitElephant\Repository', $repo);
         $this->assertGreaterThanOrEqual(2, $repo->getBranches());
         $branches = $repo->getBranches();
-        $branchesName = array_map(function(Branch $b) {
-            return $b->getName();
-        }, $branches);
+        $branchesName = array_map(
+            function (Branch $b) {
+                return $b->getName();
+            },
+            $branches
+        );
         $this->assertContains('master', $branchesName);
         $this->assertContains('develop', $branchesName);
     }
@@ -648,10 +704,80 @@ class RepositoryTest extends TestCase
      */
     public function testRemote()
     {
+        $this->initRepository(null, 0);
+        $remote = $this->getRepository(0);
+        $remote->init(true);
+        $this->initRepository();
         $this->repository->init();
-        $this->repository->addRemote('github', 'git://github.com/matteosister/GitElephant.git');
+        $this->repository->addRemote('github', $remote->getPath());
         $this->assertInstanceOf('GitElephant\Objects\Remote', $this->repository->getRemote('github'));
-        $this->repository->addRemote('github2', 'git://github.com/matteosister/GitElephant.git');
+        $this->repository->addRemote('github2', $remote->getPath());
         $this->assertCount(2, $this->repository->getRemotes());
+    }
+
+    /**
+     * testFetch, git branch -a should find the branch
+     */
+    public function testFetch()
+    {
+        $this->initRepository(null, 0);
+        $this->initRepository(null, 1);
+        $r1 = $this->getRepository(0);
+        $r1->init();
+        $this->addFile('test1', null, null, $r1);
+        $r1->commit('test commit', true);
+        $r2 = $this->getRepository(1);
+        $r2->init();
+        $r2->addRemote('origin', $r1->getPath());
+        $this->assertEmpty($r2->getBranches(true, true));
+        $r2->fetch();
+        $this->assertNotEmpty($r2->getBranches(true, true));
+    }
+
+    /**
+     * test pull
+     */
+    public function testPull()
+    {
+        $this->initRepository(null, 0);
+        $this->initRepository(null, 1);
+        $r1 = $this->getRepository(0);
+        $r1->init();
+        $this->addFile('test1', null, null, $r1);
+        $r1->commit('test commit', true);
+        $r2 = $this->getRepository(1);
+        $r2->init();
+        $r2->addRemote('origin', $r1->getPath());
+        $r2->pull('origin', 'master');
+        $this->assertEquals('test commit', $r2->getLog()->last()->getMessage());
+        $this->assertEquals($r1->getMainBranch()->getSha(), $r2->getLog()->last()->getSha());
+    }
+
+    /**
+     * test pull
+     */
+    public function testPush()
+    {
+        $this->initRepository(null, 0);
+        $this->initRepository(null, 1);
+        $this->initRepository(null, 2);
+        // commit on r1
+        $r1 = $this->getRepository(0);
+        $r1->init();
+        $this->addFile('test1', null, null, $r1);
+        $r1->commit('test commit', true);
+        // push from r1 to r2
+        $r2 = $this->getRepository(1);
+        $r2->init(true);
+        $r1->addRemote('origin', $r2->getPath());
+        $r1->push('origin', 'master');
+        // pull from r2 to r3 should get the same result
+        $r3 = $this->getRepository(2);
+        $r3->init();
+        $r3->addRemote('origin', $r2->getPath());
+        $r3->pull('origin', 'master');
+
+        $this->assertEquals('test commit', $r3->getLog()->last()->getMessage());
+        $this->assertEquals($r1->getMainBranch()->getSha(), $r3->getLog()->last()->getSha());
     }
 }

@@ -46,10 +46,31 @@ class CatFileCommandTest extends TestCase
         $cfc = new CatFileCommand();
         $master = $this->getRepository()->getBranch('master');
         $tree = $this->getRepository()->getTree('HEAD', 'test-folder/test2');
-        $this->assertEquals(sprintf("cat-file '-p' '%s:test-folder/test2'", $master->getSha()), $cfc->content($tree->getBlob(), $master));
+        $this->assertEquals(
+            sprintf(
+                "cat-file '-p' '%s:test-folder/test2'",
+                $master->getSha()
+            ),
+            $cfc->content($tree->getBlob(), $master)
+        );
         $this->getRepository()->createTag('test-tag');
         $tag = $this->getRepository()->getTag('test-tag');
-        $this->assertEquals(sprintf("cat-file '-p' '%s:test-folder/test2'", $tag->getSha()), $cfc->content($tree->getBlob(), $tag));
-        $this->assertEquals(sprintf("cat-file '-p' '%s:test-folder/test2'", $tag->getSha()), $cfc->content($tree->getBlob(), $tag->getSha()));
+        $this->assertEquals(
+            sprintf(
+                "cat-file '-p' '%s:test-folder/test2'",
+                $tag->getSha()
+            ),
+            $cfc->content($tree->getBlob(), $tag)
+        );
+        $this->assertEquals(
+            sprintf(
+                "cat-file '-p' '%s:test-folder/test2'",
+                $tag->getSha()
+            ),
+            $cfc->content(
+                $tree->getBlob(),
+                $tag->getSha()
+            )
+        );
     }
 }

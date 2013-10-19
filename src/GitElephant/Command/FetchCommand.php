@@ -17,52 +17,50 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
+
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Object;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\Remote;
 
 /**
- * Class MvCommand
- *
- * @package GitElephant\Command
+ * Class FetchCommand
  */
-class MvCommand extends BaseCommand
+class FetchCommand extends BaseCommand
 {
-    const MV_COMMAND = 'mv';
+    const GIT_FETCH_COMMAND = 'fetch';
 
     /**
-     * @return MvCommand
+     * @return FetchCommand
      */
-    public static function getInstance()
+    static public function getInstance()
     {
         return new self();
     }
 
     /**
-     * @param string|Object $source source name
-     * @param string        $target dest name
-     *
-     * @throws \InvalidArgumentException
+     * @param Remote|string $remote
+     * @param Branch|string $branch
      *
      * @return string
      */
-    public function rename($source, $target)
+    public function fetch($remote = null, $branch = null)
     {
-        if ($source instanceof Object) {
-            if (!$source->isBlob()) {
-                throw new \InvalidArgumentException('The given object is not a blob, it couldn\'t be renamed');
-            }
-            $sourceName = $source->getFullPath();
-        } else {
-            $sourceName = $source;
+        if ($remote instanceof Remote) {
+            $remote = $remote->getName();
+        }
+        if ($branch instanceof Branch) {
+            $branch = $branch->getName();
         }
         $this->clearAll();
-        $this->addCommandName(self::MV_COMMAND);
-        // Skip move or rename actions which would lead to an error condition
-        $this->addCommandArgument('-k');
-        $this->addCommandSubject($sourceName);
-        $this->addCommandSubject2($target);
+        $this->addCommandName(self::GIT_FETCH_COMMAND);
+        if (!is_null($remote)) {
+            $this->addCommandSubject($remote);
+        }
+        if (!is_null($branch)) {
+            $this->addCommandSubject2($branch);
+        }
 
         return $this->getCommand();
     }
-}
+} 

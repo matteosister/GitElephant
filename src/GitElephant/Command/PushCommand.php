@@ -17,52 +17,46 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
+
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Object;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\Remote;
 
 /**
- * Class MvCommand
- *
- * @package GitElephant\Command
+ * Class PushCommand
  */
-class MvCommand extends BaseCommand
+class PushCommand extends BaseCommand
 {
-    const MV_COMMAND = 'mv';
+    const GIT_PUSH_COMMAND = 'push';
 
     /**
-     * @return MvCommand
+     * @return PushCommand
      */
-    public static function getInstance()
+    static public function getInstance()
     {
         return new self();
     }
 
     /**
-     * @param string|Object $source source name
-     * @param string        $target dest name
-     *
-     * @throws \InvalidArgumentException
+     * @param Remote|string $remote
+     * @param Branch|string $branch
      *
      * @return string
      */
-    public function rename($source, $target)
+    public function push($remote = 'origin', $branch = 'master')
     {
-        if ($source instanceof Object) {
-            if (!$source->isBlob()) {
-                throw new \InvalidArgumentException('The given object is not a blob, it couldn\'t be renamed');
-            }
-            $sourceName = $source->getFullPath();
-        } else {
-            $sourceName = $source;
+        if ($remote instanceof Remote) {
+            $remote = $remote->getName();
+        }
+        if ($branch instanceof Branch) {
+            $branch = $branch->getName();
         }
         $this->clearAll();
-        $this->addCommandName(self::MV_COMMAND);
-        // Skip move or rename actions which would lead to an error condition
-        $this->addCommandArgument('-k');
-        $this->addCommandSubject($sourceName);
-        $this->addCommandSubject2($target);
+        $this->addCommandName(self::GIT_PUSH_COMMAND);
+        $this->addCommandSubject($remote);
+        $this->addCommandSubject2($branch);
 
         return $this->getCommand();
     }
-}
+} 

@@ -87,7 +87,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      *
      * @return \GitElephant\Objects\Log
      */
-    static public function createFromOutputLines(Repository $repository, $outputLines)
+    public static function createFromOutputLines(Repository $repository, $outputLines)
     {
         $tree = new self($repository);
         $tree->parseOutputLines($outputLines);
@@ -103,7 +103,14 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
     private function createFromCommand()
     {
         $command = LsTreeCommand::getInstance()->tree($this->ref, $this->subject);
-        $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines(true);
+        $outputLines = $this->getCaller()
+            ->execute(
+                $command,
+                true,
+                $this->getRepository()
+                ->getPath()
+            )
+            ->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }
 
@@ -144,7 +151,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     private function getCaller()
     {

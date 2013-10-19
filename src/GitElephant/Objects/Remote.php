@@ -242,9 +242,12 @@ class Remote
             $configuredRefs[$type] = array_splice($remoteDetails, $lineno);
             array_shift($configuredRefs[$type]);
         }
-        $configuredRefs['remoteBranches'] = (isset($configuredRefs['remoteBranches'])) ? $this->parseRemoteBranches($configuredRefs['remoteBranches']) : array();
-        $configuredRefs['localBranches'] = (isset($configuredRefs['localBranches'])) ? $this->parseLocalPullBranches($configuredRefs['localBranches']) : array();
-        $configuredRefs['localRefs'] = (isset($configuredRefs['localRefs'])) ? $this->parseLocalPushRefs($configuredRefs['localRefs']) : array();
+        $configuredRefs['remoteBranches'] = (isset($configuredRefs['remoteBranches'])) ?
+            $this->parseRemoteBranches($configuredRefs['remoteBranches']) : array();
+        $configuredRefs['localBranches'] = (isset($configuredRefs['localBranches'])) ?
+            $this->parseLocalPullBranches($configuredRefs['localBranches']) : array();
+        $configuredRefs['localRefs'] = (isset($configuredRefs['localRefs'])) ?
+            $this->parseLocalPushRefs($configuredRefs['localRefs']) : array();
         $aggBranches = array();
         foreach ($configuredRefs as $branches) {
             foreach ($branches as $branchName => $data) {
@@ -478,4 +481,3 @@ class Remote
         $this->branches = $branches;
     }
 }
-

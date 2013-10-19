@@ -34,7 +34,7 @@ class MergeCommand extends BaseCommand
     /**
      * @return MergeCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

@@ -102,4 +102,3 @@ class SubCommandCommand extends BaseCommand
         return trim($command);
     }
 }
-

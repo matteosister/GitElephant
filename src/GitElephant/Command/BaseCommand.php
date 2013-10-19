@@ -219,6 +219,29 @@ class BaseCommand
             throw new \RuntimeException("You should pass a commandName to execute a command");
         }
         $command = '';
+        $this->configs($command);
+        $command .= $this->commandName;
+        $command .= ' ';
+        if (count($this->commandArguments) > 0) {
+            $command .= implode(' ', array_map('escapeshellarg', $this->commandArguments));
+            $command .= ' ';
+        }
+        $this->subjects($command);
+        if (null !== $this->path) {
+            $command .= sprintf(' -- %s', escapeshellarg($this->path));
+        }
+        $command = preg_replace('/\\s{2,}/', ' ', $command);
+
+        return trim($command);
+    }
+
+    /**
+     * add configs
+     *
+     * @param string &$command
+     */
+    private function configs(&$command)
+    {
         if (count($this->configs)) {
             foreach ($this->configs as $config => $value) {
                 $command .= escapeshellarg('-c');
@@ -226,12 +249,15 @@ class BaseCommand
             }
             $command .= ' ';
         }
-        $command .= $this->commandName;
-        $command .= ' ';
-        if (count($this->commandArguments) > 0) {
-            $command .= implode(' ', array_map('escapeshellarg', $this->commandArguments));
-            $command .= ' ';
-        }
+    }
+
+    /**
+     * add subjects
+     *
+     * @param string &$command
+     */
+    private function subjects(&$command)
+    {
         if (null !== $this->commandSubject) {
             if ($this->commandSubject instanceof SubCommandCommand) {
                 $command .= $this->commandSubject->getCommand();
@@ -248,11 +274,5 @@ class BaseCommand
             }
             $command .= ' ';
         }
-        if (null !== $this->path) {
-            $command .= sprintf(' -- %s', escapeshellarg($this->path));
-        }
-        $command = preg_replace('/\\s{2,}/', ' ', $command);
-
-        return trim($command);
     }
 }

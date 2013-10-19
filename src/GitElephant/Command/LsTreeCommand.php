@@ -24,7 +24,6 @@ use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Objects\Object;
 
-
 /**
  * ls-tree command generator
  *
@@ -37,7 +36,7 @@ class LsTreeCommand extends BaseCommand
     /**
      * @return LsTreeCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

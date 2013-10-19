@@ -46,6 +46,7 @@ class MainCommandTest extends TestCase
     public function testInit()
     {
         $this->assertEquals(MainCommand::GIT_INIT, $this->mainCommand->init());
+        $this->assertEquals(MainCommand::GIT_INIT." '--bare'", $this->mainCommand->init(true));
     }
 
     /**

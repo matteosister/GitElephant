@@ -19,8 +19,7 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand,
-    GitElephant\Objects\Commit;
+use GitElephant\Objects\Commit;
 
 /**
  * DiffTreeCommand
@@ -36,7 +35,7 @@ class DiffTreeCommand extends BaseCommand
     /**
      * @return DiffTreeCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

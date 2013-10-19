@@ -42,7 +42,7 @@ class MainCommand extends BaseCommand
     /**
      * @return MainCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }
@@ -50,11 +50,16 @@ class MainCommand extends BaseCommand
     /**
      * Init the repository
      *
+     * @param bool $bare
+     *
      * @return Main
      */
-    public function init()
+    public function init($bare = false)
     {
         $this->clearAll();
+        if ($bare) {
+            $this->addCommandArgument('--bare');
+        }
         $this->addCommandName(self::GIT_INIT);
 
         return $this->getCommand();
@@ -154,7 +159,7 @@ class MainCommand extends BaseCommand
         $what = $ref;
         if ($ref instanceof Branch) {
             $what = $ref->getName();
-        } else if ($ref instanceof TreeishInterface) {
+        } elseif ($ref instanceof TreeishInterface) {
             $what = $ref->getSha();
         }
 

@@ -19,9 +19,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand,
-    GitElephant\Objects\Tag,
-    GitElephant\Objects\Commit;
+use GitElephant\Objects\Tag;
+use GitElephant\Objects\Commit;
 
 /**
  * RevList Command generator
@@ -35,7 +34,7 @@ class RevListCommand extends BaseCommand
     /**
      * @return RevListCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }

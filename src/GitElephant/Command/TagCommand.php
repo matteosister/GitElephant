@@ -34,7 +34,7 @@ class TagCommand extends BaseCommand
     /**
      * @return TagCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }
@@ -52,7 +52,7 @@ class TagCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
-        if ($message != null) {
+        if (null != $message) {
             $this->addCommandArgument('-m');
             $this->addCommandArgument($message);
         }

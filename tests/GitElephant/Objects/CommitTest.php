@@ -13,11 +13,11 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\TestCase,
-    GitElephant\Objects\Commit,
-    GitElephant\Command\ShowCommand,
-    GitElephant\Command\MainCommand,
-    GitElephant\Command\CommandContainer;
+use GitElephant\TestCase;
+use GitElephant\Objects\Commit;
+use GitElephant\Command\ShowCommand;
+use GitElephant\Command\MainCommand;
+use GitElephant\Command\CommandContainer;
 
 /**
  * CommitTest
@@ -106,10 +106,14 @@ class CommitTest extends TestCase
         $commit = Commit::pick($mockRepo);
         $this->doCommitTest(
             $commit,
-            'c277373174aa442af12a8e59de1812f3472c15f5', '9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016',
-            'matt jack', 'matt jack',
-            'matteog@gmail.com', 'matteog@gmail.com',
-            '1326214449', '1326214449',
+            'c277373174aa442af12a8e59de1812f3472c15f5',
+            '9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016',
+            'matt jack',
+            'matt jack',
+            'matteog@gmail.com',
+            'matteog@gmail.com',
+            '1326214449',
+            '1326214449',
             'first commit'
         );
     }
@@ -134,10 +138,14 @@ class CommitTest extends TestCase
         $commit = Commit::pick($mockRepo);
         $this->doCommitTest(
             $commit,
-            'c277373174aa442af12a8e59de1812f3472c15f5', 'c277373174aa442af12a8e59de1812f3472c15f6',
-            'John Doe', 'Jack Doe',
-            'john.doe@example.org', 'jack.doe@example.org',
-            '1326214449', '1326214449',
+            'c277373174aa442af12a8e59de1812f3472c15f5',
+            'c277373174aa442af12a8e59de1812f3472c15f6',
+            'John Doe',
+            'Jack Doe',
+            'john.doe@example.org',
+            'jack.doe@example.org',
+            '1326214449',
+            '1326214449',
             'First commit'
         );
     }
@@ -159,10 +167,14 @@ class CommitTest extends TestCase
         $commit = Commit::createFromOutputLines($this->getRepository(), $outputLines);
         $this->doCommitTest(
             $commit,
-            'c277373174aa442af12a8e59de1812f3472c15f5', '9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016',
-            'John Doe', 'Jack Doe',
-            'john.doe@example.org', 'jack.doe@example.org',
-            '1326214000', '1326214100',
+            'c277373174aa442af12a8e59de1812f3472c15f5',
+            '9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016',
+            'John Doe',
+            'Jack Doe',
+            'john.doe@example.org',
+            'jack.doe@example.org',
+            '1326214000',
+            '1326214100',
             'Initial commit'
         );
     }

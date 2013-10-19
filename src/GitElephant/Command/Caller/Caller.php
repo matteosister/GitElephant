@@ -17,12 +17,10 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-namespace GitElephant\Command;
+namespace GitElephant\Command\Caller;
 
 use GitElephant\GitBinary;
-use GitElephant\Command\CallerInterface;
 use Symfony\Component\Process\Process;
-
 
 /**
  * Caller
@@ -93,7 +91,6 @@ class Caller implements CallerInterface
      */
     public function execute($cmd, $git = true, $cwd = null)
     {
-        $this->outputLines = array();
         if ($git) {
             $cmd = $this->binary->getPath() . ' ' . $cmd;
         }

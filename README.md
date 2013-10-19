@@ -1,10 +1,6 @@
-# GitElephant
+# GitElephant [![Latest Stable Version](https://poser.pugx.org/cypresslab/GitElephant/v/stable.png)](https://packagist.org/packages/cypresslab/GitElephant)
 
-develop branch: [![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=develop)](https://travis-ci.org/matteosister/GitElephant)
-
-master branch: [![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=master)](https://travis-ci.org/matteosister/GitElephant)
-
-[![Stable Version](https://poser.pugx.org/cypresslab/gitelephant/version.png)](https://packagist.org/packages/cypresslab/gitelephant)
+[![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=master)](https://travis-ci.org/matteosister/GitElephant) [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/matteosister/GitElephant/badges/quality-score.png?s=c7ca8a7c5ea9c64b291f6bcaef27955ed6d8a836)](https://scrutinizer-ci.com/g/matteosister/GitElephant/) [![Code Coverage](https://scrutinizer-ci.com/g/matteosister/GitElephant/badges/coverage.png?s=fd7981a4f57fd639912d1a415e3dd92615ddce51)](https://scrutinizer-ci.com/g/matteosister/GitElephant/) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d6da541e-d928-4f70-868a-dd0b6426a7b5/mini.png)](https://insight.sensiolabs.com/projects/d6da541e-d928-4f70-868a-dd0b6426a7b5)
 
 GitElephant is an abstraction layer to manage your git repositories with php
 
@@ -63,23 +59,6 @@ You have now GitElephant installed in *vendor/cypresslab/gitelephant*
 
 And an handy autoload file to include in you project in *vendor/autoload.php*
 
-**pear**
-
-*I will remove pear support soon. Please switch to composer!*
-Add the cypresslab channel
-
-``` bash
-$ pear channel-discover pear.cypresslab.net
-```
-
-And install the package. *By now GitElephant is in alpha state. So remember the -alpha in the library name*
-
-``` bash
-$ pear install cypresslab/GitElephant-alpha
-```
-
-On [Cypresslab pear channel homepage](http://pear.cypresslab.net/) you can find other useful information
-
 How to use
 ----------
 
@@ -90,6 +69,22 @@ use GitElephant\Repository;
 $repo = new Repository('/path/to/git/repository');
 // or the factory method
 $repo = Repository::open('/path/to/git/repository');
+```
+
+By default GitElephant try to use the git binary on your system.
+
+If you need to access remote repository you have to install the [ssh2 extension](http://www.php.net/manual/en/book.ssh2.php) and pass a new *Caller* to the repository. *this is a new feature...consider this in a testing phase*
+
+``` php
+<?php
+
+$repo = new Repository('/path/to/git/repository');
+$connection = ssh_connect('host', 'port');
+// authorize the connection with the method you want
+ssh2_auth_password($connection, 'user', 'password');
+$caller = new CallerSSH2($connection, '/path/to/git/binary/on/server');
+$repo = Repository::open('/path/to/git/repository');
+$repo->setCaller($caller);
 ```
 
 the *Repository* class is the main class where you can find every method you need...

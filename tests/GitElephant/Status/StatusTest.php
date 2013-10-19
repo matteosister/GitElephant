@@ -23,6 +23,8 @@ class StatusTest extends TestCase
     public function setUp()
     {
         $this->getRepository()->init();
+        $this->addFile('initial');
+        $this->getRepository()->commit('initial commit', true);
     }
 
     /**
@@ -129,31 +131,38 @@ class StatusTest extends TestCase
         $wt = $this->repository->getWorkingTreeStatus();
         $this->assertCount(1, $wt->untracked());
         $this->repository->stage('test');
-        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $wt = $this->repository->getWorkingTreeStatus();
+        $index = $this->repository->getIndexStatus();
         $this->assertCount(0, $wt->untracked());
         $this->assertCount(1, $index->added());
         $this->repository->unstage('test');
-        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $wt = $this->repository->getWorkingTreeStatus();
+        $index = $this->repository->getIndexStatus();
         $this->assertCount(1, $wt->untracked());
         $this->assertCount(0, $index->added());
         $this->repository->commit('test-commit', true);
-        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $wt = $this->repository->getWorkingTreeStatus();
+        $index = $this->repository->getIndexStatus();
         $this->assertCount(0, $wt->all());
         $this->assertCount(0, $index->all());
         $this->addFile('test', null, 'new content');
-        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $wt = $this->repository->getWorkingTreeStatus();
+        $index = $this->repository->getIndexStatus();
         $this->assertCount(1, $wt->modified());
         $this->assertCount(0, $index->modified());
         $this->repository->stage('test');
-        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $wt = $this->repository->getWorkingTreeStatus();
+        $index = $this->repository->getIndexStatus();
         $this->assertCount(0, $wt->modified());
         $this->assertCount(1, $index->modified());
         $this->removeFile('test');
-        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $wt = $this->repository->getWorkingTreeStatus();
+        $index = $this->repository->getIndexStatus();
         $this->assertCount(1, $wt->deleted());
         $this->assertCount(1, $index->modified());
         $this->repository->unstage('test');
-        $wt = $this->repository->getWorkingTreeStatus(); $index = $this->repository->getIndexStatus();
+        $wt = $this->repository->getWorkingTreeStatus();
+        $index = $this->repository->getIndexStatus();
         $this->assertCount(1, $wt->deleted());
         $this->assertCount(0, $index->all());
     }

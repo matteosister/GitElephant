@@ -79,6 +79,19 @@ class BranchTest extends TestCase
     }
 
     /**
+     * testBranchCreate
+     */
+    public function testBranchCreate()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->getRepository()->commit('test', true);
+        Branch::create($this->getRepository(), 'test-branch');
+        $this->assertCount(2, $this->getRepository()->getBranches());
+        $this->assertContains('test-branch', $this->getRepository()->getBranches(true));
+    }
+
+    /**
      * __toString
      */
     public function testToString()

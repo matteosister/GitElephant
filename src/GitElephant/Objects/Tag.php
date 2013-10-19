@@ -124,7 +124,9 @@ class Tag extends Object
      */
     public function delete()
     {
-        $this->repository->getCaller()->execute(TagCommand::getInstance()->delete($this));
+        $this->repository
+            ->getCaller()
+            ->execute(TagCommand::getInstance()->delete($this));
     }
 
     /**
@@ -154,7 +156,9 @@ class Tag extends Object
         foreach ($outputLines as $tagString) {
             if ($tagString != '') {
                 if ($this->name === trim($tagString)) {
-                    $lines = $this->getCaller()->execute(RevListCommand::getInstance()->getTagCommit($this))->getOutputLines();
+                    $lines = $this->getCaller()
+                        ->execute(RevListCommand::getInstance()->getTagCommit($this))
+                        ->getOutputLines();
                     $this->setSha($lines[0]);
                     $found = true;
                     break;
@@ -177,7 +181,7 @@ class Tag extends Object
     }
 
     /**
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     private function getCaller()
     {

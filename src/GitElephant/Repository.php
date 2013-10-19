@@ -19,11 +19,14 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\FetchCommand;
+use GitElephant\Command\PullCommand;
+use GitElephant\Command\PushCommand;
 use GitElephant\Command\RemoteCommand;
 use GitElephant\Exception\InvalidBranchNameException;
 use GitElephant\Exception\InvalidRepositoryPathException;
 use GitElephant\GitBinary;
-use GitElephant\Command\Caller;
+use GitElephant\Command\Caller\Caller;
 use GitElephant\Objects\Remote;
 use GitElephant\Objects\Tree;
 use GitElephant\Objects\Branch;
@@ -68,7 +71,7 @@ class Repository
     /**
      * the caller instance
      *
-     * @var \GitElephant\Command\Caller
+     * @var \GitElephant\Command\Caller\Caller
      */
     private $caller;
 
@@ -135,6 +138,9 @@ class Repository
             $fs->mkdir($repositoryPath);
         }
         $repository = new Repository($repositoryPath, $binary, $name);
+        if ($git instanceof Repository) {
+            $git = $git->getPath();
+        }
         $repository->cloneFrom($git, $repositoryPath);
         $repository->checkoutAllRemoteBranches();
 
@@ -144,11 +150,13 @@ class Repository
     /**
      * Init the repository
      *
+     * @param bool $bare created a bare repository
+     *
      * @return Repository
      */
-    public function init()
+    public function init($bare = false)
     {
-        $this->caller->execute(MainCommand::getInstance()->init());
+        $this->caller->execute(MainCommand::getInstance()->init($bare));
 
         return $this;
     }
@@ -328,8 +336,7 @@ class Repository
                 },
                 $outputLines
             );
-            $sorter = function ($a, $b)
-            {
+            $sorter = function ($a, $b) {
                 if ($a == 'master') {
                     return -1;
                 } else {
@@ -345,8 +352,7 @@ class Repository
             foreach ($outputLines as $branchLine) {
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
-            $sorter = function (Branch $a, Branch $b)
-            {
+            $sorter = function (Branch $a, Branch $b) {
                 if ($a->getName() == 'master') {
                     return -1;
                 } else {
@@ -662,7 +668,9 @@ class Repository
     public function getTree($ref = 'HEAD', $path = null)
     {
         if (is_string($path) && '' !== $path) {
-            $outputLines = $this->getCaller()->execute(LsTreeCommand::getInstance()->tree($ref, $path))->getOutputLines(true);
+            $outputLines = $this->getCaller()->execute(
+                LsTreeCommand::getInstance()->tree($ref, $path)
+            )->getOutputLines(true);
             $path = Object::createFromOutputLine($this, $outputLines[0]);
         }
 
@@ -735,6 +743,39 @@ class Repository
         }
 
         return $remotes;
+    }
+
+    /**
+     * Download objects and refs from another repository
+     *
+     * @param string $from
+     * @param string $ref
+     */
+    public function fetch($from = null, $ref = null)
+    {
+        $this->caller->execute(FetchCommand::getInstance()->fetch($from, $ref));
+    }
+
+    /**
+     * Fetch from and merge with another repository or a local branch
+     *
+     * @param string $from
+     * @param string $ref
+     */
+    public function pull($from = null, $ref = null)
+    {
+        $this->caller->execute(PullCommand::getInstance()->pull($from, $ref));
+    }
+
+    /**
+     * Fetch from and merge with another repository or a local branch
+     *
+     * @param string $to
+     * @param string $ref
+     */
+    public function push($to = null, $ref = null)
+    {
+        $this->caller->execute(PushCommand::getInstance()->push($to, $ref));
     }
 
     /**
@@ -814,7 +855,7 @@ class Repository
     /**
      * Caller setter
      *
-     * @param \GitElephant\Command\Caller $caller the caller variable
+     * @param \GitElephant\Command\Caller\Caller $caller the caller variable
      */
     public function setCaller($caller)
     {
@@ -824,7 +865,7 @@ class Repository
     /**
      * Caller getter
      *
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     public function getCaller()
     {
