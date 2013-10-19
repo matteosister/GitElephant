@@ -700,4 +700,70 @@ class RepositoryTest extends TestCase
         $this->repository->addRemote('github2', 'git://github.com/matteosister/GitElephant.git');
         $this->assertCount(2, $this->repository->getRemotes());
     }
+
+    /**
+     * testFetch, git branch -a should find the branch
+     */
+    public function testFetch()
+    {
+        $this->initRepository(null, 0);
+        $this->initRepository(null, 1);
+        $r1 = $this->getRepository(0);
+        $r1->init();
+        $this->addFile('test1', null, null, $r1);
+        $r1->commit('test commit', true);
+        $r2 = $this->getRepository(1);
+        $r2->init();
+        $r2->addRemote('origin', $r1->getPath());
+        $this->assertEmpty($r2->getBranches(true, true));
+        $r2->fetch();
+        $this->assertNotEmpty($r2->getBranches(true, true));
+    }
+
+    /**
+     * test pull
+     */
+    public function testPull()
+    {
+        $this->initRepository(null, 0);
+        $this->initRepository(null, 1);
+        $r1 = $this->getRepository(0);
+        $r1->init();
+        $this->addFile('test1', null, null, $r1);
+        $r1->commit('test commit', true);
+        $r2 = $this->getRepository(1);
+        $r2->init();
+        $r2->addRemote('origin', $r1->getPath());
+        $r2->pull('origin', 'master');
+        $this->assertEquals('test commit', $r2->getLog()->last()->getMessage());
+        $this->assertEquals($r1->getMainBranch()->getSha(), $r2->getLog()->last()->getSha());
+    }
+
+    /**
+     * test pull
+     */
+    public function testPush()
+    {
+        $this->initRepository(null, 0);
+        $this->initRepository(null, 1);
+        $this->initRepository(null, 2);
+        // commit on r1
+        $r1 = $this->getRepository(0);
+        $r1->init();
+        $this->addFile('test1', null, null, $r1);
+        $r1->commit('test commit', true);
+        // push from r1 to r2
+        $r2 = $this->getRepository(1);
+        $r2->init(true);
+        $r1->addRemote('origin', $r2->getPath());
+        $r1->push('origin', 'master');
+        // pull from r2 to r3 should get the same result
+        $r3 = $this->getRepository(2);
+        $r3->init();
+        $r3->addRemote('origin', $r2->getPath());
+        $r3->pull('origin', 'master');
+
+        $this->assertEquals('test commit', $r3->getLog()->last()->getMessage());
+        $this->assertEquals($r1->getMainBranch()->getSha(), $r3->getLog()->last()->getSha());
+    }
 }

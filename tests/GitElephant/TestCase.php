@@ -49,15 +49,20 @@ class TestCase extends \PHPUnit_Framework_TestCase
     protected $finder;
 
     /**
+     * @param null $name
+     *
      * @return \GitElephant\Repository
      */
-    protected function getRepository()
+    protected function getRepository($name = null)
     {
         if ($this->repository == null) {
-            $this->initRepository();
+            $this->initRepository($name);
         }
-
-        return $this->repository;
+        if (is_null($name)) {
+            return $this->repository;
+        } else {
+            return $this->repository[$name];
+        }
     }
 
     /**
@@ -73,11 +78,12 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @param null|string $name the folder name
+     * @param null|string $name  the folder name
+     * @param int         $index the repository index (for getting them back)
      *
      * @return void
      */
-    protected function initRepository($name = null)
+    protected function initRepository($name = null, $index = null)
     {
         $tempDir = realpath(sys_get_temp_dir());
         $tempName = null === $name ? tempnam($tempDir, 'gitelephant') : $tempDir.DIRECTORY_SEPARATOR.$name;
@@ -86,28 +92,48 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $fs = new Filesystem();
         $fs->mkdir($this->path);
         $this->caller = new Caller(new GitBinary(), $this->path);
-        $this->repository = Repository::open($this->path);
-        $this->assertInstanceOf('GitElephant\Repository', $this->repository);
+        if (is_null($index)) {
+            $this->repository = Repository::open($this->path);
+            $this->assertInstanceOf('GitElephant\Repository', $this->repository);
+        } else {
+            if (!is_array($this->repository)) {
+                $this->repository = array();
+            }
+            $this->repository[$index] = Repository::open($this->path);
+            $this->assertInstanceOf('GitElephant\Repository', $this->repository[$index]);
+        }
     }
 
     protected function tearDown()
     {
         $fs = new Filesystem();
-        $fs->remove($this->path);
+        if (is_array($this->repository)) {
+            array_map(function(Repository $repo) use ($fs) {
+                $fs->remove($repo->getPath());
+            }, $this->repository);
+        } else {
+            $fs->remove($this->path);
+        }
     }
 
     /**
-     * @param string      $name    file name
-     * @param string|null $folder  folder name
-     * @param null        $content content
+     * @param string      $name       file name
+     * @param string|null $folder     folder name
+     * @param null        $content    content
+     * @param Repository  $repository repository to add file to
      *
      * @return void
      */
-    protected function addFile($name, $folder = null, $content = null)
+    protected function addFile($name, $folder = null, $content = null, $repository = null)
     {
+        if (is_null($repository)) {
+            $path = $this->path;
+        } else {
+            $path = $repository->getPath();
+        }
         $filename = $folder == null ?
-                $this->path.DIRECTORY_SEPARATOR.$name :
-                $this->path.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name;
+            $path.DIRECTORY_SEPARATOR.$name :
+            $path.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name;
         $handle = fopen($filename, 'w');
         $fileContent = $content == null ? 'test content' : $content;
         $this->assertTrue(false !== fwrite($handle, $fileContent), sprintf('unable to write the file %s', $name));
@@ -225,6 +251,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('showCommit')
             ->will($this->returnValue(''));
+
         return $command;
     }
 

@@ -50,11 +50,16 @@ class MainCommand extends BaseCommand
     /**
      * Init the repository
      *
+     * @param bool $bare
+     *
      * @return Main
      */
-    public function init()
+    public function init($bare = false)
     {
         $this->clearAll();
+        if ($bare) {
+            $this->addCommandArgument('--bare');
+        }
         $this->addCommandName(self::GIT_INIT);
 
         return $this->getCommand();
