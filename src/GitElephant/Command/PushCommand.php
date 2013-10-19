@@ -24,14 +24,14 @@ use GitElephant\Objects\Branch;
 use GitElephant\Objects\Remote;
 
 /**
- * Class FetchCommand
+ * Class PushCommand
  */
-class FetchCommand extends BaseCommand
+class PushCommand extends BaseCommand
 {
-    const GIT_FETCH_COMMAND = 'fetch';
+    const GIT_PUSH_COMMAND = 'push';
 
     /**
-     * @return FetchCommand
+     * @return PushCommand
      */
     static public function getInstance()
     {
@@ -44,7 +44,7 @@ class FetchCommand extends BaseCommand
      *
      * @return string
      */
-    public function fetch($remote = null, $branch = null)
+    public function push($remote = 'origin', $branch = 'master')
     {
         if ($remote instanceof Remote) {
             $remote = $remote->getName();
@@ -53,13 +53,9 @@ class FetchCommand extends BaseCommand
             $branch = $branch->getName();
         }
         $this->clearAll();
-        $this->addCommandName(self::GIT_FETCH_COMMAND);
-        if (!is_null($remote)) {
-            $this->addCommandSubject($remote);
-        }
-        if (!is_null($branch)) {
-            $this->addCommandSubject2($branch);
-        }
+        $this->addCommandName(self::GIT_PUSH_COMMAND);
+        $this->addCommandSubject($remote);
+        $this->addCommandSubject2($branch);
 
         return $this->getCommand();
     }

@@ -20,6 +20,9 @@
 namespace GitElephant;
 
 use GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Command\FetchCommand;
+use GitElephant\Command\PullCommand;
+use GitElephant\Command\PushCommand;
 use GitElephant\Command\RemoteCommand;
 use GitElephant\Exception\InvalidBranchNameException;
 use GitElephant\Exception\InvalidRepositoryPathException;
@@ -136,6 +139,9 @@ class Repository
             $fs->mkdir($repositoryPath);
         }
         $repository = new Repository($repositoryPath, $binary, $name);
+        if ($git instanceof Repository) {
+            $git = $git->getPath();
+        }
         $repository->cloneFrom($git, $repositoryPath);
         $repository->checkoutAllRemoteBranches();
 
@@ -145,11 +151,13 @@ class Repository
     /**
      * Init the repository
      *
+     * @param bool $bare created a bare repository
+     *
      * @return Repository
      */
-    public function init()
+    public function init($bare = false)
     {
-        $this->caller->execute(MainCommand::getInstance()->init());
+        $this->caller->execute(MainCommand::getInstance()->init($bare));
 
         return $this;
     }
@@ -736,6 +744,39 @@ class Repository
         }
 
         return $remotes;
+    }
+
+    /**
+     * Download objects and refs from another repository
+     *
+     * @param string $from
+     * @param string $ref
+     */
+    public function fetch($from = null, $ref = null)
+    {
+        $this->caller->execute(FetchCommand::getInstance()->fetch($from, $ref));
+    }
+
+    /**
+     * Fetch from and merge with another repository or a local branch
+     *
+     * @param string $from
+     * @param string $ref
+     */
+    public function pull($from = null, $ref = null)
+    {
+        $this->caller->execute(PullCommand::getInstance()->pull($from, $ref));
+    }
+
+    /**
+     * Fetch from and merge with another repository or a local branch
+     *
+     * @param string $to
+     * @param string $ref
+     */
+    public function push($to = null, $ref = null)
+    {
+        $this->caller->execute(PushCommand::getInstance()->push($to, $ref));
     }
 
     /**

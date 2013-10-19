@@ -30,7 +30,7 @@ use GitElephant\Objects\Commit;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class FetchCommandTest extends TestCase
+class PullCommandTest extends TestCase
 {
     /**
      * set up
@@ -44,18 +44,18 @@ class FetchCommandTest extends TestCase
     }
 
     /**
-     * fetch test
+     * clone url
      */
-    public function testFetch()
+    public function testPull()
     {
-        $fc = FetchCommand::getInstance();
-        $this->assertEquals("fetch", $fc->fetch());
-        $this->assertEquals("fetch 'github'", $fc->fetch('github'));
-        $this->assertEquals("fetch 'github' 'develop'", $fc->fetch('github', 'develop'));
+        $pc = PullCommand::getInstance();
+        $this->assertEquals("pull", $pc->pull());
+        $this->assertEquals("pull 'github'", $pc->pull('github'));
+        $this->assertEquals("pull 'github' 'develop'", $pc->pull('github', 'develop'));
         $this->getRepository()->addRemote('test-remote', 'git@github.com:matteosister/GitElephant.git');
         $remote = Remote::pick($this->getRepository(), 'test-remote');
-        $this->assertEquals("fetch 'test-remote' 'develop'", $fc->fetch($remote, 'develop'));
+        $this->assertEquals("pull 'test-remote' 'develop'", $pc->pull($remote, 'develop'));
         $branch = Branch::create($this->getRepository(), 'test-branch');
-        $this->assertEquals("fetch 'test-remote' 'test-branch'", $fc->fetch($remote, $branch));
+        $this->assertEquals("pull 'test-remote' 'test-branch'", $pc->pull($remote, $branch));
     }
 }
