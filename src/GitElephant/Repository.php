@@ -19,7 +19,6 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\Caller\CallerInterface;
 use GitElephant\Command\FetchCommand;
 use GitElephant\Command\PullCommand;
 use GitElephant\Command\PushCommand;
