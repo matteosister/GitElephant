@@ -23,6 +23,7 @@ use GitElephant\Objects\Branch;
 use GitElephant\Objects\Remote;
 use GitElephant\TestCase;
 use GitElephant\Objects\Commit;
+use Mockery as m;
 
 /**
  * CloneCommandTest
@@ -53,7 +54,8 @@ class FetchCommandTest extends TestCase
         $this->assertEquals("fetch 'github'", $fc->fetch('github'));
         $this->assertEquals("fetch 'github' 'develop'", $fc->fetch('github', 'develop'));
         $this->getRepository()->addRemote('test-remote', 'git@github.com:matteosister/GitElephant.git');
-        $remote = Remote::pick($this->getRepository(), 'test-remote');
+        $remote = m::mock('GitElephant\Objects\Remote')
+            ->shouldReceive('getName')->andReturn('test-remote')->getMock();
         $this->assertEquals("fetch 'test-remote' 'develop'", $fc->fetch($remote, 'develop'));
         $branch = Branch::create($this->getRepository(), 'test-branch');
         $this->assertEquals("fetch 'test-remote' 'test-branch'", $fc->fetch($remote, $branch));

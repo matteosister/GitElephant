@@ -561,15 +561,20 @@ class RepositoryTest extends TestCase
 
     /**
      * testCloneFrom
-     *
-     * @group online
      */
     public function testCloneFrom()
     {
-        $this->initRepository();
-        $this->getRepository()->cloneFrom('git://github.com/matteosister/GitElephant.git', '.');
-        $commit = $this->getRepository()->getCommit();
-        $this->assertFalse($commit->isRoot());
+        $this->initRepository(null, 0);
+        $this->initRepository(null, 1);
+        $remote = $this->getRepository(0);
+        $remote->init();
+        $this->addFile('test', null, null, $remote);
+        $remote->commit('test', true);
+        $local = $this->getRepository(1);
+        $local->cloneFrom($remote->getPath(), '.');
+        $commit = $local->getCommit();
+        $this->assertEquals($remote->getCommit()->getSha(), $commit->getSha());
+        $this->assertEquals($remote->getCommit()->getMessage(), $commit->getMessage());
     }
 
     /**
@@ -669,13 +674,18 @@ class RepositoryTest extends TestCase
     /**
      * testCreateFromRemote
      *
-     * @group online
-     *
      * @return null
      */
     public function testCreateFromRemote()
     {
-        $repo = Repository::createFromRemote('git://github.com/matteosister/GitElephant.git');
+        $this->initRepository(null, 0);
+        $remote = $this->getRepository(0);
+        $remote->init();
+        $this->addFile('test', null, null, $remote);
+        $remote->commit('test', true);
+        $remote->createBranch('develop');
+
+        $repo = Repository::createFromRemote($remote->getPath());
         $this->assertInstanceOf('GitElephant\Repository', $repo);
         $this->assertGreaterThanOrEqual(2, $repo->getBranches());
         $branches = $repo->getBranches();
@@ -694,10 +704,14 @@ class RepositoryTest extends TestCase
      */
     public function testRemote()
     {
+        $this->initRepository(null, 0);
+        $remote = $this->getRepository(0);
+        $remote->init(true);
+        $this->initRepository();
         $this->repository->init();
-        $this->repository->addRemote('github', 'git://github.com/matteosister/GitElephant.git');
+        $this->repository->addRemote('github', $remote->getPath());
         $this->assertInstanceOf('GitElephant\Objects\Remote', $this->repository->getRemote('github'));
-        $this->repository->addRemote('github2', 'git://github.com/matteosister/GitElephant.git');
+        $this->repository->addRemote('github2', $remote->getPath());
         $this->assertCount(2, $this->repository->getRemotes());
     }
 

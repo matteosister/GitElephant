@@ -20,6 +20,7 @@ use GitElephant\Command\Caller\Caller;
 use GitElephant\Objects\Commit;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Filesystem\Filesystem;
+use Mockery as m;
 
 /**
  * Class TestCase
@@ -114,6 +115,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
         } else {
             $fs->remove($this->path);
         }
+        m::close();
     }
 
     /**
