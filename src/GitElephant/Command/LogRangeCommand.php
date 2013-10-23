@@ -24,6 +24,7 @@ use GitElephant\Objects\TreeishInterface;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  * @author John Cartwright <jcartdev@gmail.com>
+ * @author Dhaval Patel <tech.dhaval@gmail.com>
  */
 class LogRangeCommand extends BaseCommand
 {
@@ -40,15 +41,16 @@ class LogRangeCommand extends BaseCommand
     /**
      * Build a generic log command
      *
-     * @param \GitElephant\Objects\TreeishInterface|string $refStart the reference range start to build the log for
-     * @param \GitElephant\Objects\TreeishInterface|string $refEnd   the reference range end to build the log for
-     * @param string|null                                  $path     the physical path to the tree relative to the repository root
-     * @param int|null                                     $limit    limit to n entries
-     * @param int|null                                     $offset   skip n entries
+     * @param \GitElephant\Objects\TreeishInterface|string $refStart    the reference range start to build the log for
+     * @param \GitElephant\Objects\TreeishInterface|string $refEnd      the reference range end to build the log for
+     * @param string|null                                  $path        the physical path to the tree relative to the repository root
+     * @param int|null                                     $limit       limit to n entries
+     * @param int|null                                     $offset      skip n entries
+     * @param boolean|false                                $firstParent skip commits brought in to branch by a merge
      *
      * @return string
      */
-    public function showLog($refStart, $refEnd, $path = null, $limit = null, $offset = null)
+    public function showLog($refStart, $refEnd, $path = null, $limit = null, $offset = null, $firstParent = false)
     {
         $this->clearAll();
 
@@ -65,6 +67,10 @@ class LogRangeCommand extends BaseCommand
         if (null !== $offset) {
             $offset = (int) $offset;
             $this->addCommandArgument('--skip=' . $offset);
+        }
+
+        if (true === $firstParent) {
+            $this->addCommandArgument('--first-parent');
         }
 
         if ($refStart instanceof TreeishInterface) {
