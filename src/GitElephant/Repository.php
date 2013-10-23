@@ -42,6 +42,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * Base Class for repository operations
  *
  * @author Matteo Giachino <matteog@gmail.com>
+ * @author Dhaval Patel <tech.dhaval@gmail.com>
  */
 
 class Repository
@@ -436,33 +437,35 @@ class Repository
     /**
      * Get a log for a ref
      *
-     * @param string|TreeishInterface $ref    the treeish to check
-     * @param string|TreeObject       $path   the physical path to the tree relative to the repository root
-     * @param int|null                $limit  limit to n entries
-     * @param int|null                $offset skip n entries
+     * @param string|TreeishInterface $ref         the treeish to check
+     * @param string|TreeObject       $path        the physical path to the tree relative to the repository root
+     * @param int|null                $limit       limit to n entries
+     * @param int|null                $offset      skip n entries
+     * @param boolean|false           $firstParent skip commits brought in to branch by a merge
      *
      * @return \GitElephant\Objects\Log
      */
-    public function getLog($ref = 'HEAD', $path = null, $limit = 10, $offset = null)
+    public function getLog($ref = 'HEAD', $path = null, $limit = 10, $offset = null, $firstParent = false)
     {
-        return new Log($this, $ref, $path, $limit, $offset);
+        return new Log($this, $ref, $path, $limit, $offset, $firstParent);
     }
 
     /**
      * Get a log for a range ref
      *
-     * @param string|TreeishInterface $ref    the treeish to check
-     * @param string|TreeObject       $path   the physical path to the tree relative to the repository root
-     * @param int|null                $limit  limit to n entries
-     * @param int|null                $offset skip n entries
+     * @param string|TreeishInterface $ref         the treeish to check
+     * @param string|TreeObject       $path        the physical path to the tree relative to the repository root
+     * @param int|null                $limit       limit to n entries
+     * @param int|null                $offset      skip n entries
+     * @param boolean|false           $firstParent skip commits brought in to branch by a merge
      *
      * @return \GitElephant\Objects\LogRange
      */
-    public function getLogRange($refStart, $refEnd, $path = null, $limit = 10, $offset = null)
+    public function getLogRange($refStart, $refEnd, $path = null, $limit = 10, $offset = null, $firstParent = false)
     {
         // Handle when clients provide bad start reference on branch creation
         if (preg_match('~^[0]+$~', $refStart)) {
-            return new Log($this, $refEnd, $path, $limit, $offset);
+            return new Log($this, $refEnd, $path, $limit, $offset, $firstParent);
         }
 
         // Handle when clients provide bad end reference on branch deletion
@@ -470,7 +473,7 @@ class Repository
             $refEnd = $refStart;
         }
 
-        return new LogRange($this, $refStart, $refEnd, $path, $limit, $offset);
+        return new LogRange($this, $refStart, $refEnd, $path, $limit, $offset, $firstParent);
     }
 
     /**

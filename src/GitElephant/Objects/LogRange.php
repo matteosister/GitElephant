@@ -24,6 +24,7 @@ use GitElephant\Objects\GitAuthor,
  *
  * @author Matteo Giachino <matteog@gmail.com>
  * @author John Cartwright <jcartdev@gmail.com>
+ * @author Dhaval Patel <tech.dhaval@gmail.com>
  */
 class LogRange implements \ArrayAccess, \Countable, \Iterator
 {
@@ -65,32 +66,34 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
     /**
      * Class constructor
      *
-     * @param \GitElephant\Repository $repository repo
-     * @param string                  $ref        treeish reference
-     * @param null                    $path       path
-     * @param int                     $limit      limit
-     * @param null                    $offset     offset
+     * @param \GitElephant\Repository $repository  repo
+     * @param string                  $ref         treeish reference
+     * @param null                    $path        path
+     * @param int                     $limit       limit
+     * @param null                    $offset      offset
+     * @param boolean                 $firstParent first parent
      */
-    public function __construct(Repository $repository, $refStart, $refEnd, $path = null, $limit = 15, $offset = null)
+    public function __construct(Repository $repository, $refStart, $refEnd, $path = null, $limit = 15, $offset = null, $firstParent = false)
     {
         $this->repository = $repository;
-        $this->createFromCommand($refStart, $refEnd, $path, $limit, $offset);
+        $this->createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent);
     }
 
     /**
      * get the commit properties from command
      *
-     * @param string $refStart  treeish reference
-     * @param string $refEnd    treeish reference
-     * @param string $path      path
-     * @param int    $limit     limit
-     * @param string $offset    offset
+     * @param string  $refStart    treeish reference
+     * @param string  $refEnd      treeish reference
+     * @param string  $path        path
+     * @param int     $limit       limit
+     * @param string  $offset      offset
+     * @param boolean $firstParent first parent
      *
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand($refStart, $refEnd, $path, $limit, $offset)
+    private function createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent)
     {
-        $command = LogRangeCommand::getInstance()->showLog($refStart, $refEnd, $path, $limit, $offset);
+        $command = LogRangeCommand::getInstance()->showLog($refStart, $refEnd, $path, $limit, $offset, $firstParent);
         $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
