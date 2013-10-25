@@ -96,7 +96,7 @@ class RepositoryTest extends TestCase
      */
     public function testUnstage()
     {
-        $this->markTestSkipped();
+        $this->markTestSkipped("Repository::unstage invokes 'get reset HEAD', which does't work on a repo with no commits");
 
         $this->getRepository()->init();
         $this->addFile('test');
