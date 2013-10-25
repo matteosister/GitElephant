@@ -398,9 +398,10 @@ class Repository
      */
     public function getBranch($name)
     {
-        try {
-            return Branch::checkout($this, $name);
-        } catch (InvalidBranchNameException $e) {
+        foreach ($this->getBranches() as $branch) {
+            if ($branch->getName() == $name) {
+                return $branch;
+            }
         }
 
         return null;
