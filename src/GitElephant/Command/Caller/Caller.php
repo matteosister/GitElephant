@@ -1,30 +1,32 @@
 <?php
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Command
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-namespace GitElephant\Command;
+namespace GitElephant\Command\Caller;
 
 use GitElephant\GitBinary;
-use GitElephant\Command\CallerInterface;
 use Symfony\Component\Process\Process;
-
 
 /**
  * Caller
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class Caller implements CallerInterface
 {
     /**
@@ -89,7 +91,6 @@ class Caller implements CallerInterface
      */
     public function execute($cmd, $git = true, $cwd = null)
     {
-        $this->outputLines = array();
         if ($git) {
             $cmd = $this->binary->getPath() . ' ' . $cmd;
         }
@@ -106,18 +107,6 @@ class Caller implements CallerInterface
         $this->outputLines = $values;
 
         return $this;
-    }
-
-    /**
-     * filter an array of output lines and remove the empty ones.
-     *
-     * @param string $var the array value
-     *
-     * @return bool
-     */
-    private function clearBlankLines($var)
-    {
-        return $var !== '';
     }
 
     /**

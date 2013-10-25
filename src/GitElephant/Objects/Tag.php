@@ -1,32 +1,34 @@
 <?php
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Objects
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\TreeishInterface,
-    GitElephant\Repository,
-    GitElephant\Command\TagCommand,
-    GitElephant\Command\RevListCommand;
-
+use GitElephant\Repository;
+use GitElephant\Command\TagCommand;
+use GitElephant\Command\RevListCommand;
 
 /**
  * An object representing a git tag
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
-class TreeTag implements TreeishInterface
+class Tag extends Object
 {
     /**
      * @var \GitElephant\Repository
@@ -53,6 +55,23 @@ class TreeTag implements TreeishInterface
      * @var string
      */
     private $sha;
+
+    /**
+     * Creates a new tag on the repository and returns it
+     *
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       branch name
+     * @param string                  $startPoint branch to start from
+     * @param string                  $message    tag message
+     *
+     * @return \GitElephant\Objects\Branch
+     */
+    public static function create(Repository $repository, $name, $startPoint = null, $message = null)
+    {
+        $repository->getCaller()->execute(TagCommand::getInstance()->create($name, $startPoint, $message));
+
+        return $repository->getTag($name);
+    }
 
     /**
      * static generator to generate a single commit from output of command.show service
@@ -88,6 +107,29 @@ class TreeTag implements TreeishInterface
     }
 
     /**
+     * factory method
+     *
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       name
+     *
+     * @return \GitElephant\Objects\Tag
+     */
+    public static function pick(Repository $repository, $name)
+    {
+        return new self($repository, $name);
+    }
+
+    /**
+     * deletes the tag
+     */
+    public function delete()
+    {
+        $this->repository
+            ->getCaller()
+            ->execute(TagCommand::getInstance()->delete($this));
+    }
+
+    /**
      * get the commit properties from command
      *
      * @see ShowCommand::commitInfo
@@ -114,7 +156,9 @@ class TreeTag implements TreeishInterface
         foreach ($outputLines as $tagString) {
             if ($tagString != '') {
                 if ($this->name === trim($tagString)) {
-                    $lines = $this->getCaller()->execute(RevListCommand::getInstance()->getTagCommit($this))->getOutputLines();
+                    $lines = $this->getCaller()
+                        ->execute(RevListCommand::getInstance()->getTagCommit($this))
+                        ->getOutputLines();
                     $this->setSha($lines[0]);
                     $found = true;
                     break;
@@ -137,7 +181,7 @@ class TreeTag implements TreeishInterface
     }
 
     /**
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     private function getCaller()
     {

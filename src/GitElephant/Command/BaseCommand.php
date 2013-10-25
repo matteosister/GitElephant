@@ -1,20 +1,23 @@
 <?php
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Command
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Command;
-
-use GitElephant\Command\Caller;
 
 /**
  * BaseCommand
@@ -23,7 +26,6 @@ use GitElephant\Command\Caller;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class BaseCommand
 {
     /**
@@ -32,6 +34,13 @@ class BaseCommand
      * @var string
      */
     private $commandName;
+
+    /**
+     * an array of config options
+     *
+     * @var array
+     */
+    private $configs;
 
     /**
      * the command arguments
@@ -84,6 +93,38 @@ class BaseCommand
     }
 
     /**
+     * Get command name
+     * 
+     * @return string
+     */
+    protected function getCommandName()
+    {
+        return $this->commandName;
+    }
+
+    /**
+     * Set Configs
+     *
+     * @param array $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
+     */
+    public function addConfigs($configs)
+    {
+        foreach ($configs as $config => $value) {
+            $this->configs[$config] = $value;
+        }
+    }
+
+    /**
+     * Get Configs
+     *
+     * @return array
+     */
+    public function getConfigs()
+    {
+        return $this->configs;
+    }
+
+    /**
      * Add a command argument
      *
      * @param string $commandArgument the command argument
@@ -91,6 +132,16 @@ class BaseCommand
     protected function addCommandArgument($commandArgument)
     {
         $this->commandArguments[] = $commandArgument;
+    }
+
+    /**
+     * Get all added command arguments
+     * 
+     * @return array
+     */
+    protected function getCommandArguments()
+    {
+        return ($this->commandArguments) ? $this->commandArguments: array();
     }
 
     /**
@@ -124,45 +175,104 @@ class BaseCommand
     }
 
     /**
-     * escape path (for spaces)
+     * Normalize any valid option to its long name
+     * an provide a structure that can be more intellegently
+     * handled by other routines
      *
-     * @param string $path path
+     * @param array $options       command options
+     * @param array $switchOptions list of valid options that are switch like
+     * @param array $valueOptions  list of valid options that must have a value assignment
      *
-     * @return mixed
+     * @return array Associative array of valid, normalized command options
      */
-    protected function escapePath($path)
+    public function normalizeOptions(Array $options = array(), Array $switchOptions = array(), $valueOptions = array())
     {
-        return str_replace(' ', '\ ', $path);
+        $normalizedOptions = array();
+
+        foreach ($options as $option) {
+            if (array_key_exists($option, $switchOptions)) {
+                $normalizedOptions[$switchOptions[$option]] = $switchOptions[$option];
+            } else {
+                $parts = preg_split('/([\s=])+/', $option, 2, PREG_SPLIT_DELIM_CAPTURE);
+                if (count($parts)) {
+                    $optionName = $parts[0];
+                    if (in_array($optionName, $valueOptions)) {
+                        $value = ($parts[1] == '=') ? $option : array($parts[0], $parts[2]);
+                        $normalizedOptions[$optionName] = $value;
+                    }
+                }
+            }
+        }
+
+        return $normalizedOptions;
     }
 
     /**
      * Get the current command
      *
      * @return string
-     * @throws \InvalidParameterException
+     * @throws \RuntimeException
      */
     public function getCommand()
     {
         if ($this->commandName == null) {
-            throw new \InvalidParameterException("You should pass a commandName to execute a command");
+            throw new \RuntimeException("You should pass a commandName to execute a command");
         }
-
-        $command = $this->commandName;
+        $command = '';
+        $this->configs($command);
+        $command .= $this->commandName;
         $command .= ' ';
         if (count($this->commandArguments) > 0) {
             $command .= implode(' ', array_map('escapeshellarg', $this->commandArguments));
             $command .= ' ';
         }
-        if (null !== $this->commandSubject) {
-            $command .= escapeshellarg($this->commandSubject);
-        }
-        if (null !== $this->commandSubject2) {
-            $command .= ' '.escapeshellarg($this->commandSubject2);
-        }
+        $this->subjects($command);
         if (null !== $this->path) {
             $command .= sprintf(' -- %s', escapeshellarg($this->path));
         }
+        $command = preg_replace('/\\s{2,}/', ' ', $command);
 
         return trim($command);
+    }
+
+    /**
+     * add configs
+     *
+     * @param string &$command
+     */
+    private function configs(&$command)
+    {
+        if (count($this->configs)) {
+            foreach ($this->configs as $config => $value) {
+                $command .= escapeshellarg('-c');
+                $command .= sprintf(' %s=%s', escapeshellarg($config), escapeshellarg($value));
+            }
+            $command .= ' ';
+        }
+    }
+
+    /**
+     * add subjects
+     *
+     * @param string &$command
+     */
+    private function subjects(&$command)
+    {
+        if (null !== $this->commandSubject) {
+            if ($this->commandSubject instanceof SubCommandCommand) {
+                $command .= $this->commandSubject->getCommand();
+            } else {
+                $command .= escapeshellarg($this->commandSubject);
+            }
+            $command .= ' ';
+        }
+        if (null !== $this->commandSubject2) {
+            if ($this->commandSubject2 instanceof SubCommandCommand) {
+                $command .= $this->commandSubject2->getCommand();
+            } else {
+                $command .= escapeshellarg($this->commandSubject2);
+            }
+            $command .= ' ';
+        }
     }
 }

@@ -16,9 +16,15 @@ todo
 * git pull
 
 1.0.0
+* remotes DONE
+* better status handling with --porcelain DONE
+* named exceptions DONE
+* unstage DONE
+* SSH to execute command on remote server
+
+next
 * git blame
 * blobs management
 * submodules management
+* signed tags
 
-Next
-* introduce traits and make the library php 5.4 only?

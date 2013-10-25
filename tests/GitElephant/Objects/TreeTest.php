@@ -15,7 +15,7 @@ namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
 use GitElephant\GitBinary;
-use GitElephant\Command\Caller;
+use GitElephant\Command\Caller\Caller;
 use GitElephant\Repository;
 
 /**
@@ -58,9 +58,9 @@ class TreeTest extends TestCase
         $tree = $this->repository->getTree('HEAD');
         $this->assertCount(3, $tree);
         $treeObj1 = $tree[0];
-        $this->assertEquals(TreeObject::TYPE_TREE, $treeObj1->getType());
+        $this->assertEquals(Object::TYPE_TREE, $treeObj1->getType());
         $treeObj2 = $tree[1];
-        $this->assertEquals(TreeObject::TYPE_BLOB, $treeObj2->getType());
+        $this->assertEquals(Object::TYPE_BLOB, $treeObj2->getType());
     }
 
     /**
@@ -75,7 +75,7 @@ class TreeTest extends TestCase
         $this->assertInstanceOf('Countable', $tree);
         $this->assertCount(3, $tree);
         $treeObjChild = $tree[0];
-        $this->assertEquals(TreeObject::TYPE_TREE, $treeObjChild->getType());
+        $this->assertEquals(Object::TYPE_TREE, $treeObjChild->getType());
         $tree = $this->repository->getTree('HEAD', $treeObjChild);
         $this->assertCount(1, $tree);
     }
@@ -98,7 +98,7 @@ class TreeTest extends TestCase
         $this->assertContains('.gitmodules', $tree);
         $this->assertContains($this->repository->getHumanishName(), $tree);
         $submodule = $tree[1];
-        $this->assertEquals(TreeObject::TYPE_LINK, $submodule->getType());
+        $this->assertEquals(Object::TYPE_LINK, $submodule->getType());
     }
 
     /**
@@ -116,16 +116,16 @@ class TreeTest extends TestCase
     }
 
     /**
-     * testGetTreeObject
+     * testGetObject
      */
-    public function testGetTreeObject()
+    public function testGetObject()
     {
         $tree = $this->getRepository()->getTree();
-        $this->assertNull($tree->getTreeObject());
+        $this->assertNull($tree->getObject());
         $tree = $this->getRepository()->getTree('HEAD', 'test');
-        $this->assertNotNull($tree->getTreeObject());
-        $this->assertEquals(TreeObject::TYPE_TREE, $tree->getTreeObject()->getType());
+        $this->assertNotNull($tree->getObject());
+        $this->assertEquals(Object::TYPE_TREE, $tree->getObject()->getType());
         $tree = $this->getRepository()->getTree('HEAD', 'test/1');
-        $this->assertEquals(TreeObject::TYPE_BLOB, $tree->getTreeObject()->getType());
+        $this->assertEquals(Object::TYPE_BLOB, $tree->getObject()->getType());
     }
 }

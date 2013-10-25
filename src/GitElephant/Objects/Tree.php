@@ -1,37 +1,38 @@
 <?php
-
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Objects
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\Caller,
-    GitElephant\Objects\TreeObject,
-    GitElephant\Repository,
-    GitElephant\Command\LsTreeCommand;
+use GitElephant\Objects\Object;
+use GitElephant\Repository;
+use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\CatFileCommand;
-
 
 /**
  * An abstraction of a git tree
  *
  * Retrieve an object with array access, iterable and countable
- * with a collection of TreeObject at the given path of the repository
+ * with a collection of Object at the given path of the repository
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
-class Tree implements \ArrayAccess, \Countable, \Iterator
+class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
 {
     /**
      * @var Repository
@@ -53,7 +54,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     /**
      * the tree subject
      *
-     * @var TreeObject
+     * @var Object
      */
     private $subject;
 
@@ -74,7 +75,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     /**
      * the blob of the actual tree
      *
-     * @var \GitElephant\Objects\TreeObject
+     * @var \GitElephant\Objects\Object
      */
     private $blob;
 
@@ -86,34 +87,12 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *
      * @return \GitElephant\Objects\Log
      */
-    static public function createFromOutputLines(Repository $repository, $outputLines)
+    public static function createFromOutputLines(Repository $repository, $outputLines)
     {
         $tree = new self($repository);
         $tree->parseOutputLines($outputLines);
 
         return $tree;
-    }
-
-    /**
-     * Some path examples:
-     *    empty string for root
-     *    folder1/folder2
-     *    folder1/folder2/filename
-     *
-     * @param \GitElephant\Repository $repository the repository
-     * @param string                  $ref        a treeish reference
-     * @param TreeObject              $subject    the subject
-     *
-     * @internal param \GitElephant\Objects\TreeObject|string $treeObject TreeObject instance
-     *
-     */
-    public function __construct(Repository $repository, $ref = 'HEAD', $subject = null)
-    {
-        $this->position   = 0;
-        $this->repository = $repository;
-        $this->ref = $ref;
-        $this->subject = $subject;
-        $this->createFromCommand();
     }
 
     /**
@@ -124,8 +103,37 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     private function createFromCommand()
     {
         $command = LsTreeCommand::getInstance()->tree($this->ref, $this->subject);
-        $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines(true);
+        $outputLines = $this->getCaller()
+            ->execute(
+                $command,
+                true,
+                $this->getRepository()
+                ->getPath()
+            )
+            ->getOutputLines(true);
         $this->parseOutputLines($outputLines);
+    }
+
+    /**
+     * Some path examples:
+     *    empty string for root
+     *    folder1/folder2
+     *    folder1/folder2/filename
+     *
+     * @param \GitElephant\Repository $repository the repository
+     * @param string                  $ref        a treeish reference
+     * @param Object                  $subject    the subject
+     *
+     * @internal param \GitElephant\Objects\Object|string $treeObject Object instance
+     *
+     */
+    public function __construct(Repository $repository, $ref = 'HEAD', $subject = null)
+    {
+        $this->position   = 0;
+        $this->repository = $repository;
+        $this->ref = $ref;
+        $this->subject = $subject;
+        $this->createFromCommand();
     }
 
     /**
@@ -143,7 +151,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     private function getCaller()
     {
@@ -191,7 +199,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      */
     public function isBinary()
     {
-        return $this->isRoot() ? false : TreeObject::TYPE_BLOB === $this->subject->getType();
+        return $this->isRoot() ? false : Object::TYPE_BLOB === $this->subject->getType();
     }
 
     /**
@@ -201,7 +209,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      */
     public function getBinaryData()
     {
-        $cmd = CatFileCommand::getInstance()->content($this->subject, $this->ref);
+        $cmd = CatFileCommand::getInstance()->content($this->getSubject(), $this->ref);
 
         return $this->getCaller()->execute($cmd)->getRawOutput();
     }
@@ -258,7 +266,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
             return;
         }
         if (1 === count($outputLines)) {
-            $treeObject = TreeObject::createFromOutputLine($outputLines[0]);
+            $treeObject = Object::createFromOutputLine($this->repository, $outputLines[0]);
             if ($treeObject->getSha() === $this->subject->getSha()) {
                 $this->blob = $treeObject;
             }
@@ -269,12 +277,12 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      * Reorder children of the tree
      * Tree first (alphabetically) and then blobs (alphabetically)
      *
-     * @param TreeObject $a the first object
-     * @param TreeObject $b the second object
+     * @param \GitElephant\Objects\Object $a the first object
+     * @param \GitElephant\Objects\Object $b the second object
      *
      * @return int
      */
-    private function sortChildren(TreeObject $a, TreeObject $b)
+    private function sortChildren(Object $a, Object $b)
     {
         if ($a->getType() == $b->getType()) {
             $names = array($a->getName(), $b->getName());
@@ -283,7 +291,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
             return ($a->getName() == $names[0]) ? -1 : 1;
         }
 
-        return $a->getType() == TreeObject::TYPE_TREE && $b->getType() == TreeObject::TYPE_BLOB ? -1 : 1;
+        return $a->getType() == Object::TYPE_TREE && $b->getType() == Object::TYPE_BLOB ? -1 : 1;
     }
 
     /**
@@ -298,7 +306,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         if ($line == '') {
             return;
         }
-        $slices = TreeObject::getLineSlices($line);
+        $slices = Object::getLineSlices($line);
         if ($this->isBlob()) {
             $this->pathChildren[] = $this->blob->getName();
         } else {
@@ -321,7 +329,15 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
             }
             if (!in_array($name, $this->pathChildren)) {
                 $path                 = rtrim(rtrim($slices['fullPath'], $name), '/');
-                $treeObject           = new TreeObject($slices['permissions'], $slices['type'], $slices['sha'], $slices['size'], $name, $path);
+                $treeObject           = new Object(
+                    $this->repository,
+                    $slices['permissions'],
+                    $slices['type'],
+                    $slices['sha'],
+                    $slices['size'],
+                    $name,
+                    $path
+                );
                 $this->children[]     = $treeObject;
                 $this->pathChildren[] = $name;
             }
@@ -345,7 +361,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
      *
      * @param string $ref
      *
-     * @return GitAuthor
+     * @return Author
      */
     public function getLastCommitAuthor($ref = 'master')
     {
@@ -364,7 +380,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
         if ($this->isRoot()) {
             return $this->getRepository()->getCommit($ref);
         }
-        $log = $this->repository->getTreeObjectLog($this->getTreeObject(), $ref);
+        $log = $this->repository->getObjectLog($this->getObject(), $ref);
 
         return $log[0];
     }
@@ -372,9 +388,9 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     /**
      * get the tree object for this tree
      *
-     * @return null|TreeObject
+     * @return Object
      */
-    public function getTreeObject()
+    public function getObject()
     {
         if ($this->isRoot()) {
             return null;
@@ -406,7 +422,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     /**
      * Blob getter
      *
-     * @return TreeObject
+     * @return \GitElephant\Objects\Object
      */
     public function getBlob()
     {
@@ -416,7 +432,7 @@ class Tree implements \ArrayAccess, \Countable, \Iterator
     /**
      * Get Subject
      *
-     * @return \GitElephant\Objects\TreeObject
+     * @return \GitElephant\Objects\Object
      */
     public function getSubject()
     {

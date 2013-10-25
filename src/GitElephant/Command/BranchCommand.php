@@ -1,28 +1,31 @@
 <?php
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Command
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
 
-
 /**
  * Branch command generator
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class BranchCommand extends BaseCommand
 {
     const BRANCH_COMMAND = 'branch';
@@ -30,7 +33,7 @@ class BranchCommand extends BaseCommand
     /**
      * @return BranchCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }
@@ -105,6 +108,7 @@ class BranchCommand extends BaseCommand
      * @param bool   $verbose verbose, show also the upstream branch
      *
      * @return string
+     * @deprecated there is a problem with the --list command, as it is available from git >= 1.7.8
      */
     public function singleInfo($name, $all = false, $simple = false, $verbose = false)
     {

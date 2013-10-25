@@ -1,34 +1,38 @@
 <?php
-
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Objects
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\GitAuthor,
-    GitElephant\Objects\TreeishInterface,
-    GitElephant\Objects\Commit\Message,
-    GitElephant\Repository,
-    GitElephant\Command\ShowCommand,
-    GitElephant\Command\RevListCommand,
-    GitElephant\Command\BranchCommand;
+use GitElephant\Command\BranchCommand;
+use GitElephant\Command\MainCommand;
+use GitElephant\Command\RevListCommand;
+use GitElephant\Command\ShowCommand;
+use GitElephant\Objects\Author;
+use GitElephant\Objects\Commit\Message;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * The Commit object represent a commit
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class Commit implements TreeishInterface, \Countable
 {
     /**
@@ -63,16 +67,16 @@ class Commit implements TreeishInterface, \Countable
     private $parents;
 
     /**
-     * the GitAuthor instance for author
+     * the Author instance for author
      *
-     * @var \GitElephant\Objects\GitAuthor
+     * @var \GitElephant\Objects\Author
      */
     private $author;
 
     /**
-     * the GitAuthor instance for committer
+     * the Author instance for committer
      *
-     * @var \GitElephant\Objects\GitAuthor
+     * @var \GitElephant\Objects\Author
      */
     private $committer;
 
@@ -98,6 +102,34 @@ class Commit implements TreeishInterface, \Countable
     private $datetimeCommitter;
 
     /**
+     * @param Repository $repository repository instance
+     * @param string     $message    commit message
+     * @param bool       $stageAll   automatically stage the dirty working tree. Alternatively call stage() on the repo
+     *
+     * @return Commit
+     */
+    public static function create(Repository $repository, $message, $stageAll = false)
+    {
+        $repository->getCaller()->execute(MainCommand::getInstance()->commit($message, $stageAll));
+
+        return $repository->getCommit();
+    }
+
+    /**
+     * @param Repository              $repository repository
+     * @param TreeishInterface|string $treeish    treeish
+     *
+     * @return Commit
+     */
+    public static function pick(Repository $repository, $treeish = null)
+    {
+        $commit = new self($repository, $treeish);
+        $commit->createFromCommand();
+
+        return $commit;
+    }
+
+    /**
      * static generator to generate a single commit from output of command.show service
      *
      * @param \GitElephant\Repository $repository  repository
@@ -119,12 +151,11 @@ class Commit implements TreeishInterface, \Countable
      * @param \GitElephant\Repository $repository the repository
      * @param string                  $treeish    a treeish reference
      */
-    public function __construct(Repository $repository, $treeish = 'HEAD')
+    private function __construct(Repository $repository, $treeish = 'HEAD')
     {
         $this->repository = $repository;
         $this->ref = $treeish;
         $this->parents = array();
-        $this->createFromCommand();
     }
 
     /**
@@ -132,7 +163,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand()
+    public function createFromCommand()
     {
         $command = ShowCommand::getInstance()->showCommit($this->ref);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
@@ -181,7 +212,7 @@ class Commit implements TreeishInterface, \Countable
                 $this->parents[] = $matches[1];
             }
             if (preg_match('/^author (.*) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
-                $author = new GitAuthor();
+                $author = new Author();
                 $author->setName($matches[1]);
                 $author->setEmail($matches[2]);
                 $this->author = $author;
@@ -189,7 +220,7 @@ class Commit implements TreeishInterface, \Countable
                 $this->datetimeAuthor = $date;
             }
             if (preg_match('/^committer (.*) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
-                $committer = new GitAuthor();
+                $committer = new Author();
                 $committer->setName($matches[1]);
                 $committer->setEmail($matches[2]);
                 $this->committer = $committer;
@@ -224,7 +255,7 @@ class Commit implements TreeishInterface, \Countable
     }
 
     /**
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     private function getCaller()
     {
@@ -254,7 +285,7 @@ class Commit implements TreeishInterface, \Countable
     /**
      * author getter
      *
-     * @return GitAuthor
+     * @return Author
      */
     public function getAuthor()
     {
@@ -264,7 +295,7 @@ class Commit implements TreeishInterface, \Countable
     /**
      * committer getter
      *
-     * @return GitAuthor
+     * @return Author
      */
     public function getCommitter()
     {

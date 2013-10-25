@@ -1,22 +1,27 @@
 <?php
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Command
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
-use GitElephant\Objects\TreeObject;
-use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\Object;
+use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
 
 /**
@@ -32,7 +37,7 @@ class LogCommand extends BaseCommand
     /**
      * @return LogCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }
@@ -40,18 +45,18 @@ class LogCommand extends BaseCommand
     /**
      * Build an object log command
      *
-     * @param \GitElephant\Objects\TreeObject             $obj    the TreeObject to get the log for
-     * @param \GitElephant\Objects\TreeBranch|string|null $branch the branch to consider
-     * @param int|null                                    $limit  limit to n entries
-     * @param int|null                                    $offset skip n entries
+     * @param \GitElephant\Objects\Object             $obj    the Object to get the log for
+     * @param \GitElephant\Objects\Branch|string|null $branch the branch to consider
+     * @param int|null                                $limit  limit to n entries
+     * @param int|null                                $offset skip n entries
      *
      * @return string
      */
-    public function showObjectLog(TreeObject $obj, $branch = null, $limit = null, $offset = null)
+    public function showObjectLog(Object $obj, $branch = null, $limit = null, $offset = null)
     {
         $subject = null;
         if (null !== $branch) {
-            if ($branch instanceof TreeBranch) {
+            if ($branch instanceof Branch) {
                 $subject .= $branch->getName();
             } else {
                 $subject .= (string) $branch;

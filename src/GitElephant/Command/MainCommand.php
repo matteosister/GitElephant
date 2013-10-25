@@ -1,21 +1,26 @@
 <?php
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Command
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
-use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
 
 /**
@@ -23,7 +28,6 @@ use GitElephant\Objects\TreeishInterface;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class MainCommand extends BaseCommand
 {
     const GIT_INIT     = 'init';
@@ -34,11 +38,12 @@ class MainCommand extends BaseCommand
     const GIT_MOVE     = 'mv';
     const GIT_REMOVE   = 'rm';
     const GIT_FETCH    = 'fetch';
+    const GIT_RESET    = 'reset';
 
     /**
      * @return MainCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }
@@ -46,11 +51,16 @@ class MainCommand extends BaseCommand
     /**
      * Init the repository
      *
+     * @param bool $bare
+     *
      * @return Main
      */
-    public function init()
+    public function init($bare = false)
     {
         $this->clearAll();
+        if ($bare) {
+            $this->addCommandArgument('--bare');
+        }
         $this->addCommandName(self::GIT_INIT);
 
         return $this->getCommand();
@@ -59,18 +69,25 @@ class MainCommand extends BaseCommand
     /**
      * Get the repository status
      *
+     * @param bool $porcelain
+     *
      * @return string
      */
-    public function status()
+    public function status($porcelain = false)
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_STATUS);
+        if ($porcelain) {
+            $this->addCommandArgument('--porcelain');
+        } else {
+            $this->addConfigs(array('color.status' => 'false'));
+        }
 
         return $this->getCommand();
     }
 
     /**
-     * Add a node to the repository
+     * Add a node to the stage
      *
      * @param string $what what should be added to the repository
      *
@@ -86,15 +103,32 @@ class MainCommand extends BaseCommand
     }
 
     /**
+     * Remove a node from the stage and put in the working tree
+     *
+     * @param string $what what should be removed from the stage
+     *
+     * @return string
+     */
+    public function unstage($what)
+    {
+        $this->clearAll();
+        $this->addCommandName(self::GIT_RESET);
+        $this->addCommandArgument('HEAD');
+        $this->addPath($what);
+
+        return $this->getCommand();
+    }
+
+    /**
      * Commit
      *
-     * @param string $message   the commit message
-     * @param bool   $commitAll commit all changes
+     * @param string $message  the commit message
+     * @param bool   $stageAll commit all changes
      *
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function commit($message, $commitAll = false)
+    public function commit($message, $stageAll = false)
     {
         $this->clearAll();
         if (trim($message) == '' || $message == null) {
@@ -102,7 +136,7 @@ class MainCommand extends BaseCommand
         }
         $this->addCommandName(self::GIT_COMMIT);
 
-        if ($commitAll) {
+        if ($stageAll) {
             $this->addCommandArgument('-a');
         }
 
@@ -115,7 +149,7 @@ class MainCommand extends BaseCommand
     /**
      * Checkout a treeish reference
      *
-     * @param string|TreeBranch $ref the reference to checkout
+     * @param string|Branch $ref the reference to checkout
      *
      * @return string
      */
@@ -124,9 +158,9 @@ class MainCommand extends BaseCommand
         $this->clearAll();
 
         $what = $ref;
-        if ($ref instanceof TreeBranch) {
+        if ($ref instanceof Branch) {
             $what = $ref->getName();
-        } else if ($ref instanceof TreeishInterface) {
+        } elseif ($ref instanceof TreeishInterface) {
             $what = $ref->getSha();
         }
 
@@ -140,8 +174,8 @@ class MainCommand extends BaseCommand
     /**
      * Move a file/directory
      *
-     * @param string|TreeObject $from source path
-     * @param string|TreeObject $to   destination path
+     * @param string|Object $from source path
+     * @param string|Object $to   destination path
      *
      * @throws \InvalidArgumentException
      * @return string
@@ -170,9 +204,9 @@ class MainCommand extends BaseCommand
     /**
      * Remove a file/directory
      *
-     * @param string|TreeObject $path      the path to remove
-     * @param bool              $recursive recurse
-     * @param bool              $force     force
+     * @param string|Object $path      the path to remove
+     * @param bool          $recursive recurse
+     * @param bool          $force     force
      *
      * @throws \InvalidArgumentException
      * @return string

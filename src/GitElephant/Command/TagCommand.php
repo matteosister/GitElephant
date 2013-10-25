@@ -1,29 +1,32 @@
 <?php
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Command
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
-use GitElephant\Objects\TreeTag;
-
+use GitElephant\Objects\Tag;
 
 /**
  * Tag command generator
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class TagCommand extends BaseCommand
 {
     const TAG_COMMAND = 'tag';
@@ -31,7 +34,7 @@ class TagCommand extends BaseCommand
     /**
      * @return TagCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }
@@ -49,11 +52,16 @@ class TagCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
-        if ($message != null) {
-            $this->addCommandArgument(sprintf('-m %s', $message));
+        if (null != $message) {
+            $this->addCommandArgument('-m');
+            $this->addCommandArgument($message);
         }
-        $subject = $startPoint == null ? $name : $name . ' ' . $startPoint;
-        $this->addCommandSubject($subject);
+        if (null !== $startPoint) {
+            $this->addCommandArgument($name);
+            $this->addCommandSubject($startPoint);
+        } else {
+            $this->addCommandSubject($name);
+        }
 
         return $this->getCommand();
     }
@@ -74,7 +82,7 @@ class TagCommand extends BaseCommand
     /**
      * Delete a tag
      *
-     * @param string|TreeTag $tag The name of tag, or the TreeTag instance to delete
+     * @param string|Tag $tag The name of tag, or the Tag instance to delete
      *
      * @return string the command
      */
@@ -83,7 +91,7 @@ class TagCommand extends BaseCommand
         $this->clearAll();
 
         $name = $tag;
-        if ($tag instanceof TreeTag) {
+        if ($tag instanceof Tag) {
             $name = $tag->getName();
         }
 

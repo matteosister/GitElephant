@@ -1,4 +1,6 @@
-# GitElephant ![Travis build status](https://secure.travis-ci.org/matteosister/GitElephant.png)#
+# GitElephant [![Latest Stable Version](https://poser.pugx.org/cypresslab/GitElephant/v/stable.png)](https://packagist.org/packages/cypresslab/GitElephant)
+
+[![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=master)](https://travis-ci.org/matteosister/GitElephant) [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/matteosister/GitElephant/badges/quality-score.png?s=c7ca8a7c5ea9c64b291f6bcaef27955ed6d8a836)](https://scrutinizer-ci.com/g/matteosister/GitElephant/) [![Code Coverage](https://scrutinizer-ci.com/g/matteosister/GitElephant/badges/coverage.png?s=fd7981a4f57fd639912d1a415e3dd92615ddce51)](https://scrutinizer-ci.com/g/matteosister/GitElephant/) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d6da541e-d928-4f70-868a-dd0b6426a7b5/mini.png)](https://insight.sensiolabs.com/projects/d6da541e-d928-4f70-868a-dd0b6426a7b5)
 
 GitElephant is an abstraction layer to manage your git repositories with php
 
@@ -8,13 +10,27 @@ Watch a [simple live example](http://gitelephant.cypresslab.net) of what you can
 
 [Download the demo bundle code](https://github.com/matteosister/GitElephantDemoBundle) used in the live example
 
+How it works
+------------
+
+GitElephant mostly rely on the git binary to retrieve information about the repository, read the output and create an OOP layer to interact with
+
+Some parts are (or will be) implemented by reading directly inside the .git folder
+
+The api is completely transparent to the end user. You don't have to worry about which method is used.
+
+API Reference
+-------------
+
+Here you can find [the complete reference](http://gitelephantdocs.cypresslab.net/master/) for master, and for any tags.
+
 Requirements
 ------------
 
-- php >= 5.3
+- php >= 5.3.0
 - *nix system with git installed
 
-I work on an ubuntu box, but the lib should work well with every unix system.
+I work on linux, but the lib should work well with every unix system, as far as a git binary is available.
 I don't have a windows installation to test...if someone want to help...
 
 Installation
@@ -43,23 +59,6 @@ You have now GitElephant installed in *vendor/cypresslab/gitelephant*
 
 And an handy autoload file to include in you project in *vendor/autoload.php*
 
-**pear**
-
-*I will remove pear support soon. Please switch to composer!*
-Add the cypresslab channel
-
-``` bash
-$ pear channel-discover pear.cypresslab.net
-```
-
-And install the package. *By now GitElephant is in alpha state. So remember the -alpha in the library name*
-
-``` bash
-$ pear install cypresslab/GitElephant-alpha
-```
-
-On [Cypresslab pear channel homepage](http://pear.cypresslab.net/) you can find other useful information
-
 How to use
 ----------
 
@@ -68,6 +67,24 @@ How to use
 
 use GitElephant\Repository;
 $repo = new Repository('/path/to/git/repository');
+// or the factory method
+$repo = Repository::open('/path/to/git/repository');
+```
+
+By default GitElephant try to use the git binary on your system.
+
+If you need to access remote repository you have to install the [ssh2 extension](http://www.php.net/manual/en/book.ssh2.php) and pass a new *Caller* to the repository. *this is a new feature...consider this in a testing phase*
+
+``` php
+<?php
+
+$repo = new Repository('/path/to/git/repository');
+$connection = ssh_connect('host', 'port');
+// authorize the connection with the method you want
+ssh2_auth_password($connection, 'user', 'password');
+$caller = new CallerSSH2($connection, '/path/to/git/binary/on/server');
+$repo = Repository::open('/path/to/git/repository');
+$repo->setCaller($caller);
 ```
 
 the *Repository* class is the main class where you can find every method you need...
@@ -77,16 +94,23 @@ the *Repository* class is the main class where you can find every method you nee
 ``` php
 <?php
 // get the current status
-$repo->getStatus(); // returns an array of lines of the status message
+$repo->getStatusOutput(); // returns an array of lines of the status message
 
 // branches
-$repo->getBranches(); // return an array of TreeBranch objects
-$repo->getMainBranch(); // return the TreeBranch instance of the current checked out branch
-$repo->getBranch('master'); // return a TreeBranch instance by its name
+$repo->getBranches(); // return an array of Branch objects
+$repo->getMainBranch(); // return the Branch instance of the current checked out branch
+$repo->getBranch('master'); // return a Branch instance by its name
+$develop = Branch::checkout($repo, 'develop');
+$develop = Branch::checkout($repo, 'develop', true); // create and checkout
+
 
 // tags
-$repo->getTags(); // array of TreeTag instances
-$repo->getTag('v1.0'); // a TreeTag instance by name
+$repo->getTags(); // array of Tag instances
+$repo->getTag('v1.0'); // a Tag instance by name
+Tag::pick($repo, 'v1.0'); // a Tag instance by name
+
+// last tag by date
+$repo->getLastTag();
 
 // commit
 $repo->getCommit(); // get a Commit instance of the current HEAD
@@ -102,6 +126,10 @@ $repo->countCommits('1ac370d'); // number of commits to arrive at 1ac370d
 $commit->count();
 // as well as
 count($commit);
+
+// remotes (thanks to @davidneimeyer)
+$repo->getRemote('origin'); // a Remote object
+$repo->getRemotes(); // array of Remote objects
 
 // Log contains a collection of commit objects
 // syntax: getLog(<tree-ish>, path = null, limit = 15, offset = null)
@@ -141,6 +169,9 @@ $repo->stage(); // stage all
 $repo->commit('my first commit');
 $repo->commit('my first commit', true); // commit and stage every pending changes in the working tree
 
+// remotes
+$repo->addRemote('awesome', 'git://github.com/matteosister/GitElephant.git');
+
 // checkout
 $repo->checkout($this->getCommit('v1.0')); // checkout a tag
 $repo->checkout('master'); // checkout master
@@ -159,6 +190,28 @@ $repo->createTag('v1.0', null, 'my first release!');
 // create a tag from a Commit object
 $repo->createTag($repo->getCommit());
 ```
+
+Status
+------
+
+**new in alpha4** If you build a GitElephant\Status\Status class, you will get a nice api for getting the actual state of the working tree and staging area.
+
+``` php
+$status = $repo->getStatus();
+$status = GitElephant\Status\Status::get($repo); // it's the same...
+
+$status->all(); // A PhpCollection of StatusFile objects
+$status->untracked();
+$status->modified();
+$status->added();
+$status->deleted();
+$status->renamed();
+$status->copied();
+```
+
+all this methods returns a [PhpCollection](https://github.com/schmittjoh/php-collection) of StatusFile objects
+
+a StatusFile instance has all the information about the tree node changes. File names (and new file names for renamed objects), index and working tree status, and also a "git style" description like: *added to index* or *deleted in work tree*
 
 A versioned tree of files
 -------------------------
@@ -188,12 +241,12 @@ foreach ($tree as $treeObject) {
 }
 ```
 
-A TreeObject instance is a php representation of a node in a git tree
+A Object instance is a php representation of a node in a git tree
 
 ``` php
 <?php
 echo $treeObject; // the name of the object (folder, file or link)
-$treeObject->getType(); // one class constant of TreeObject::TYPE_BLOB, TreeObject::TYPE_TREE and TreeObject::TYPE_LINK
+$treeObject->getType(); // one class constant of Object::TYPE_BLOB, Object::TYPE_TREE and Object::TYPE_LINK
 $treeObject->getSha();
 $treeObject->getSize();
 $treeObject->getName();
@@ -221,7 +274,7 @@ $diff = $repo->getDiff($repo->getCommit());
 $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'));
 // same as before for a given path
 $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'), 'lib/vendor');
-// or even pass a TreeObject
+// or even pass a Object
 $diff = $repo->getDiff($repo->getCommit('1ac370d'), $repo->getCommit('8fb7281'), $treeObject);
 // alternatively you could directly use the sha of the commit
 $diff = $repo->getDiff('1ac370d', '8fb7281');
@@ -294,6 +347,8 @@ Dependencies
 
 - [symfony/process](https://packagist.org/packages/symfony/process)
 - [symfony/filesystem](https://packagist.org/packages/symfony/filesystem)
+- [symfony/finder](https://packagist.org/packages/symfony/finder)
+- [phpcollection/phpcollection](https://github.com/schmittjoh/php-collection)
 
 *for tests*
 
