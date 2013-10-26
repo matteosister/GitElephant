@@ -3,5 +3,7 @@ vendor/*
 *.tgz
 package.xml
 output/
-.idea
 composer.phar
+build/
+cache/
+deploy_docs.sh

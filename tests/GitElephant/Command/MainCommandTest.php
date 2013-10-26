@@ -46,6 +46,7 @@ class MainCommandTest extends TestCase
     public function testInit()
     {
         $this->assertEquals(MainCommand::GIT_INIT, $this->mainCommand->init());
+        $this->assertEquals(MainCommand::GIT_INIT." '--bare'", $this->mainCommand->init(true));
     }
 
     /**
@@ -53,7 +54,7 @@ class MainCommandTest extends TestCase
      */
     public function testStatus()
     {
-        $this->assertEquals(MainCommand::GIT_STATUS, $this->mainCommand->status());
+        $this->assertEquals("'-c' 'color.status'='false' ".MainCommand::GIT_STATUS, $this->mainCommand->status());
     }
 
     /**
@@ -63,6 +64,14 @@ class MainCommandTest extends TestCase
     {
         $this->assertEquals(MainCommand::GIT_ADD." '.'", $this->mainCommand->add());
         $this->assertEquals(MainCommand::GIT_ADD." 'foo'", $this->mainCommand->add('foo'));
+    }
+
+    /**
+     * unstage test
+     */
+    public function testUnstage()
+    {
+        $this->assertEquals(MainCommand::GIT_RESET." 'HEAD' -- 'foo'", $this->mainCommand->unstage('foo'));
     }
 
     /**

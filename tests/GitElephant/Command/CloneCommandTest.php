@@ -13,9 +13,9 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\CloneCommand,
-    GitElephant\TestCase,
-    GitElephant\Objects\Commit;
+use GitElephant\Command\CloneCommand;
+use GitElephant\TestCase;
+use GitElephant\Objects\Commit;
 
 /**
  * CloneCommandTest
@@ -26,25 +26,26 @@ use GitElephant\Command\CloneCommand,
 class CloneCommandTest extends TestCase
 {
     /**
-     * @var \GitElephant\Command\CloneCommand;
-     */
-    private $cloneCommand;
-
-    /**
      * set up
      */
     public function setUp()
     {
         $this->initRepository();
-        $this->cloneCommand = new CloneCommand();
     }
 
     /**
      * set up
      */
-    public function testClone()
+    public function testCloneUrl()
     {
-        $command = $this->cloneCommand->cloneUrl('git://github.com/matteosister/GitElephant.git');
-        $this->assertEquals("clone 'git://github.com/matteosister/GitElephant.git'", $command);
+        $cc = CloneCommand::getInstance();
+        $this->assertEquals(
+            "clone 'git://github.com/matteosister/GitElephant.git'",
+            $cc->cloneUrl('git://github.com/matteosister/GitElephant.git')
+        );
+        $this->assertEquals(
+            "clone 'git://github.com/matteosister/GitElephant.git' 'test'",
+            $cc->cloneUrl('git://github.com/matteosister/GitElephant.git', 'test')
+        );
     }
 }

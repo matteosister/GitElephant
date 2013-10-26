@@ -1,33 +1,35 @@
 <?php
-
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Objects
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Objects;
 
 use GitElephant\Command\BranchCommand;
-use GitElephant\Command\MergeCommand;
+use GitElephant\Exception\InvalidBranchNameException;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Repository;
-
 
 /**
  * An object representing a git branch
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
-class TreeBranch implements TreeishInterface
+class Branch extends Object implements TreeishInterface
 {
     /**
      * @var \GitElephant\Repository
@@ -70,12 +72,28 @@ class TreeBranch implements TreeishInterface
     private $fullRef;
 
     /**
+     * Creates a new branch on the repository and returns it
+     *
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string                  $name       branch name
+     * @param string                  $startPoint branch to start from
+     *
+     * @return \GitElephant\Objects\Branch
+     */
+    public static function create(Repository $repository, $name, $startPoint = null)
+    {
+        $repository->getCaller()->execute(BranchCommand::getInstance()->create($name, $startPoint));
+
+        return new self($repository, $name);
+    }
+
+    /**
      * static generator to generate a single commit from output of command.show service
      *
      * @param \GitElephant\Repository $repository repository
      * @param string                  $outputLine output line
      *
-     * @return TreeBranch
+     * @return Branch
      */
     public static function createFromOutputLine(Repository $repository, $outputLine)
     {
@@ -84,6 +102,22 @@ class TreeBranch implements TreeishInterface
         $branch->parseOutputLine($outputLine);
 
         return $branch;
+    }
+
+    /**
+     * @param \GitElephant\Repository $repository repository instance
+     * @param string|Treeish          $name       branch name
+     * @param bool                    $create     like checkout -b, create a branch and check it out
+     *
+     * @return Branch
+     */
+    public static function checkout(Repository $repository, $name, $create = false)
+    {
+        if ($create) {
+            return self::create($repository, $name);
+        }
+
+        return new self($repository, $name);
     }
 
     /**
@@ -107,12 +141,17 @@ class TreeBranch implements TreeishInterface
      */
     private function createFromCommand()
     {
-        $command = BranchCommand::getInstance()->singleInfo($this->name, true);
+        $command = BranchCommand::getInstance()->lists();
         $outputLines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
-        if (0 == count($outputLines)) {
-            throw new \InvalidArgumentException(sprintf('The %s branch doesn\'t exists', $this->name));
+        foreach ($outputLines as $outputLine) {
+            $matches = static::getMatches($outputLine);
+            if ($this->name === $matches[1]) {
+                $this->parseOutputLine($outputLine);
+
+                return;
+            }
         }
-        $this->parseOutputLine(trim($outputLines[0]));
+        throw new InvalidBranchNameException(sprintf('The %s branch doesn\'t exists', $this->name));
     }
 
     /**

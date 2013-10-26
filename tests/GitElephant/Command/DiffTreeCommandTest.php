@@ -13,9 +13,9 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\DiffTreeCommand,
-    GitElephant\TestCase,
-    GitElephant\Objects\Commit;
+use GitElephant\Command\DiffTreeCommand;
+use GitElephant\TestCase;
+use GitElephant\Objects\Commit;
 
 /**
  * DiffTreeCommandTest
@@ -26,11 +26,6 @@ use GitElephant\Command\DiffTreeCommand,
 class DiffTreeCommandTest extends TestCase
 {
     /**
-     * @var \GitElephant\Command\DiffTreeCommand;
-     */
-    private $diffTreeCommand;
-
-    /**
      * set up
      */
     public function setUp()
@@ -39,7 +34,6 @@ class DiffTreeCommandTest extends TestCase
         $this->getRepository()->init();
         $this->addFile('foo');
         $this->getRepository()->commit('first commit', true);
-        $this->diffTreeCommand = new DiffTreeCommand();
     }
 
     /**
@@ -47,11 +41,16 @@ class DiffTreeCommandTest extends TestCase
      */
     public function testRootDiff()
     {
+        $dtc = DiffTreeCommand::getInstance();
         $commit = $this->getRepository()->getCommit();
-        $command = $this->diffTreeCommand->rootDiff($commit);
+        $command = $dtc->rootDiff($commit);
         $this->assertEquals(
             sprintf("diff-tree '--cc' '--root' '--dst-prefix=DST/' '--src-prefix=SRC/' '%s'", $commit),
             $command
         );
+        $this->addFile('test');
+        $this->getRepository()->commit('test commit', true);
+        $this->setExpectedException('InvalidArgumentException');
+        $this->fail($dtc->rootDiff($this->getRepository()->getCommit()));
     }
 }

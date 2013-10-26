@@ -29,7 +29,6 @@ class LogTest extends TestCase
      */
     public function setUp()
     {
-        $this->initRepository();
         $this->getRepository()->init();
 
         for ($i = 0; $i < 10; $i++) {
@@ -45,6 +44,31 @@ class LogTest extends TestCase
     {
         $log = $this->getRepository()->getLog();
         $this->assertEquals($log->count(), count($log));
+    }
+
+    /**
+     * parents created by log
+     */
+    public function testParents()
+    {
+        $log = $this->getRepository()->getLog();
+        $lastCommit = $this->repository->getCommit();
+        $lastLogCommit = $log[0];
+        $this->assertEquals($lastCommit->getParents(), $lastLogCommit->getParents());
+        Branch::create($this->repository, 'new-branch');
+        $this->getRepository()->checkout('new-branch');
+        $this->addFile('another file');
+        $this->repository->commit('another commit', true);
+        $lastCommitOtherBranch = $this->getRepository()->getCommit();
+        $this->getRepository()->checkout('master');
+        $this->addFile('another file on master');
+        $this->getRepository()->commit('new commit on master', true);
+        $lastCommitOnMaster = $this->getRepository()->getCommit();
+        $this->getRepository()->merge($this->getRepository()->getBranch('new-branch'));
+        $log = $this->getRepository()->getLog();
+        $lastLogCommit = $log[0];
+        $this->assertContains($lastCommitOnMaster->getSha(), $lastLogCommit->getParents());
+        $this->assertContains($lastCommitOtherBranch->getSha(), $lastLogCommit->getParents());
     }
 
     /**
@@ -124,9 +148,9 @@ class LogTest extends TestCase
     }
 
     /**
-     * testTreeObjectLog
+     * testObjectLog
      */
-    public function testTreeObjectLog()
+    public function testObjectLog()
     {
         $tree = $this->getRepository()->getTree();
         $file = $tree[0];

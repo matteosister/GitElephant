@@ -1,28 +1,32 @@
 <?php
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Command
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Command;
 
 use GitElephant\Command\BaseCommand;
-use GitElephant\Objects\TreeBranch;
+use GitElephant\Objects\Branch;
 
 /**
  * Merge command generator
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class MergeCommand extends BaseCommand
 {
     const MERGE_COMMAND = 'merge';
@@ -30,7 +34,7 @@ class MergeCommand extends BaseCommand
     /**
      * @return MergeCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }
@@ -38,32 +42,15 @@ class MergeCommand extends BaseCommand
     /**
      * Generate a merge command
      *
-     * @param \GitElephant\Objects\TreeBranch $with the branch to merge
+     * @param \GitElephant\Objects\Branch $with the branch to merge
      * 
      * @return string
      */
-    public function merge(TreeBranch $with)
+    public function merge(Branch $with)
     {
         $this->clearAll();
         $this->addCommandName(static::MERGE_COMMAND);
         $this->addCommandSubject($with->getFullRef());
-
-        return $this->getCommand();
-    }
-
-    /**
-     * update a branch with its upstream
-     *
-     * @param string $upstream upstream (@see TreeBranch::getUpstream)
-     *
-     * @internal param string $remote remote
-     * @return string
-     */
-    public function updateWithUpstream($upstream)
-    {
-        $this->clearAll();
-        $this->addCommandName(static::MERGE_COMMAND);
-        $this->addCommandSubject($upstream);
 
         return $this->getCommand();
     }

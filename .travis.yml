@@ -1,7 +1,10 @@
 language: php
-phps:
+
+php:
   - 5.3
   - 5.4
+  - 5.5
+
 branches:
   only:
     - master
@@ -10,6 +13,8 @@ branches:
 before_script:
   - curl -s https://getcomposer.org/installer | php
   - php composer.phar --dev install
+  - git config --global user.email "test@travis-ci.org"
+  - git config --global user.name "Travis"
 
 script:
   - vendor/bin/phpunit --coverage-clover "clover"

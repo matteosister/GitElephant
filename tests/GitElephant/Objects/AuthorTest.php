@@ -14,19 +14,22 @@
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
-use GitElephant\Objects\GitAuthor;
+use GitElephant\Objects\Author;
 
 /**
- * GitAuthorTest
+ * AuthorTest
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class GitAuthorTest extends TestCase
+class AuthorTest extends TestCase
 {
-    public function testGitAuthor()
+    /**
+     * testAuthor
+     */
+    public function testAuthor()
     {
-        $author = new GitAuthor();
+        $author = new Author();
         $author->setEmail('foo@bar.com');
         $author->setName('foo');
         $this->assertEquals('foo@bar.com', $author->getEmail());

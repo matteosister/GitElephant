@@ -1,31 +1,35 @@
 <?php
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * @package GitElephant\Objects\Diff
- *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Objects\Diff;
 
-use GitElephant\Objects\Diff\DiffObject,
-    GitElephant\Utilities,
-    GitElephant\Repository,
-    GitElephant\Command\DiffTreeCommand,
-    GitElephant\Command\DiffCommand;
+use GitElephant\Objects\Diff\DiffObject;
+use GitElephant\Utilities;
+use GitElephant\Repository;
+use GitElephant\Command\DiffTreeCommand;
+use GitElephant\Command\DiffCommand;
 
 /**
  * Represent a collection of diffs between two trees
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class Diff implements \ArrayAccess, \Countable, \Iterator
 {
     /**
@@ -88,7 +92,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      *
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand($commit1 = null, $commit2 = null, $path = null)
+    public function createFromCommand($commit1 = null, $commit2 = null, $path = null)
     {
         if (null === $commit1) {
             $commit1 = $this->getRepository()->getCommit();
@@ -127,7 +131,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
-     * @return \GitElephant\Command\Caller
+     * @return \GitElephant\Command\Caller\Caller
      */
     private function getCaller()
     {
