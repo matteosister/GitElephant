@@ -615,18 +615,11 @@ class Repository
     /**
      * Get a log for a ref
      *
-<<<<<<< HEAD
      * @param string|TreeishInterface $ref         the treeish to check
-     * @param string|TreeObject       $path        the physical path to the tree relative to the repository root
+     * @param string|Object           $path        the physical path to the tree relative to the repository root
      * @param int|null                $limit       limit to n entries
      * @param int|null                $offset      skip n entries
      * @param boolean|false           $firstParent skip commits brought in to branch by a merge
-=======
-     * @param string|TreeishInterface $ref    the treeish to check
-     * @param string|Object           $path   the physical path to the tree relative to the repository root
-     * @param int|null                $limit  limit to n entries
-     * @param int|null                $offset skip n entries
->>>>>>> matteosister/master
      *
      * @return \GitElephant\Objects\Log
      */
@@ -639,7 +632,7 @@ class Repository
      * Get a log for a range ref
      *
      * @param string|TreeishInterface $ref         the treeish to check
-     * @param string|TreeObject       $path        the physical path to the tree relative to the repository root
+     * @param string|Object           $path        the physical path to the tree relative to the repository root
      * @param int|null                $limit       limit to n entries
      * @param int|null                $offset      skip n entries
      * @param boolean|false           $firstParent skip commits brought in to branch by a merge
