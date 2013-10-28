@@ -37,7 +37,6 @@ class MainCommand extends BaseCommand
     const GIT_CHECKOUT = 'checkout';
     const GIT_MOVE     = 'mv';
     const GIT_REMOVE   = 'rm';
-    const GIT_FETCH    = 'fetch';
     const GIT_RESET    = 'reset';
 
     /**
@@ -231,19 +230,6 @@ class MainCommand extends BaseCommand
         }
 
         $this->addPath($path);
-
-        return $this->getCommand();
-    }
-
-    /**
-     * Fetch the remote branches.
-     *
-     * @return string
-     */
-    public function fetch()
-    {
-        $this->clearAll();
-        $this->addCommandName(self::GIT_FETCH);
 
         return $this->getCommand();
     }
