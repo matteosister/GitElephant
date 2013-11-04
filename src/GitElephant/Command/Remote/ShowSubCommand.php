@@ -23,7 +23,7 @@ use GitElephant\Command\SubCommandCommand;
 
 /**
  * Class ShowRemoteCommand
- * 
+ *
  * remote subcommand generator for show
  *
  * @package GitElephant\Objects

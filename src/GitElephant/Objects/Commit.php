@@ -23,9 +23,7 @@ use GitElephant\Command\BranchCommand;
 use GitElephant\Command\MainCommand;
 use GitElephant\Command\RevListCommand;
 use GitElephant\Command\ShowCommand;
-use GitElephant\Objects\Author;
 use GitElephant\Objects\Commit\Message;
-use GitElephant\Objects\TreeishInterface;
 use GitElephant\Repository;
 
 /**

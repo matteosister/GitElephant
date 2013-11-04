@@ -76,8 +76,14 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * @param null                    $offset      offset
      * @param boolean                 $firstParent first parent
      */
-    public function __construct(Repository $repository, $ref = 'HEAD', $path = null, $limit = 15, $offset = null, $firstParent = false)
-    {
+    public function __construct(
+        Repository $repository,
+        $ref = 'HEAD',
+        $path = null,
+        $limit = 15,
+        $offset = null,
+        $firstParent = false
+    ) {
         $this->repository = $repository;
         $this->createFromCommand($ref, $path, $limit, $offset, $firstParent);
     }
@@ -96,7 +102,11 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     private function createFromCommand($ref, $path, $limit, $offset, $firstParent)
     {
         $command = LogCommand::getInstance()->showLog($ref, $path, $limit, $offset, $firstParent);
-        $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines(true);
+        $outputLines = $this->getRepository()->getCaller()->execute(
+            $command,
+            true,
+            $this->getRepository()->getPath()
+        )->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }
 

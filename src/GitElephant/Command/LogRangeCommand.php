@@ -14,9 +14,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand;
-use GitElephant\Objects\TreeObject;
-use GitElephant\Objects\TreeBranch;
 use GitElephant\Objects\TreeishInterface;
 
 /**
@@ -33,7 +30,7 @@ class LogRangeCommand extends BaseCommand
     /**
      * @return LogCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }
@@ -43,7 +40,8 @@ class LogRangeCommand extends BaseCommand
      *
      * @param \GitElephant\Objects\TreeishInterface|string $refStart    the reference range start to build the log for
      * @param \GitElephant\Objects\TreeishInterface|string $refEnd      the reference range end to build the log for
-     * @param string|null                                  $path        the physical path to the tree relative to the repository root
+     * @param string|null                                  $path        the physical path to the tree relative
+     *                                                                  to the repository root
      * @param int|null                                     $limit       limit to n entries
      * @param int|null                                     $offset      skip n entries
      * @param boolean|false                                $firstParent skip commits brought in to branch by a merge
@@ -60,12 +58,12 @@ class LogRangeCommand extends BaseCommand
         $this->addCommandArgument('--no-color');
 
         if (null !== $limit) {
-            $limit = (int) $limit;
+            $limit = (int)$limit;
             $this->addCommandArgument('--max-count=' . $limit);
         }
 
         if (null !== $offset) {
-            $offset = (int) $offset;
+            $offset = (int)$offset;
             $this->addCommandArgument('--skip=' . $offset);
         }
 
@@ -74,7 +72,7 @@ class LogRangeCommand extends BaseCommand
         }
 
         if ($refStart instanceof TreeishInterface) {
-            $refStart = $ref->getSha();
+            $refStart = $refStart->getSha();
         }
 
         if ($refEnd instanceof TreeishInterface) {
@@ -85,7 +83,7 @@ class LogRangeCommand extends BaseCommand
             $this->addPath($path);
         }
 
-        $this->addCommandSubject($refStart .'..'. $refEnd);
+        $this->addCommandSubject($refStart . '..' . $refEnd);
 
         return $this->getCommand();
     }

@@ -33,7 +33,7 @@ class PushCommand extends BaseCommand
     /**
      * @return PushCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }
@@ -59,4 +59,4 @@ class PushCommand extends BaseCommand
 
         return $this->getCommand();
     }
-} 
+}

@@ -19,14 +19,12 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Repository;
-use GitElephant\Command\BaseCommand;
 use GitElephant\Command\Remote\AddSubCommand;
 use GitElephant\Command\Remote\ShowSubCommand;
 
 /**
  * Class RemoteCommand
- * 
+ *
  * remote command generator
  *
  * @package GitElephant\Objects
@@ -40,26 +38,24 @@ class RemoteCommand extends BaseCommand
 
     /**
      * Fetch an instance of RemoteCommand object
-     * 
-     * @param \GitElephant\Repository $repository Optional repository object to inject
-     * 
+     *
      * @return RemoteCommand
      */
-    public static function getInstance(Repository $repository = null)
+    public static function getInstance()
     {
         return new self();
     }
 
     /**
      * Build the remote command
-     * 
+     *
      * NOTE: git-remote is most useful when using its subcommands, therefore
      * in practice you will likely pass a SubCommandCommand object. This
      * class provide "convenience" methods that do this for you.
-     * 
+     *
      * @param \GitElephant\Command\SubCommandCommand $subcommand A subcommand object
      * @param array                                  $options    Options for the main git-remote command
-     * 
+     *
      * @return string Command string to pass to caller
      */
     public function remote(SubCommandCommand $subcommand = null, Array $options = array())
@@ -83,7 +79,7 @@ class RemoteCommand extends BaseCommand
 
     /**
      * Valid options for remote command that do not require an associated value
-     * 
+     *
      * @return array Associative array mapping all non-value options and their respective normalized option
      */
     public function remoteCmdSwitchOptions()
@@ -96,7 +92,7 @@ class RemoteCommand extends BaseCommand
 
     /**
      * git-remote --verbose command
-     * 
+     *
      * @return string
      */
     public function verbose()
@@ -106,12 +102,12 @@ class RemoteCommand extends BaseCommand
 
     /**
      * git-remote show [name] command
-     * 
+     *
      * NOTE: for technical reasons $name is optional, however under normal
      * implementation it SHOULD be passed!
-     * 
+     *
      * @param string $name
-     * 
+     *
      * @return string
      */
     public function show($name = null)
@@ -124,11 +120,11 @@ class RemoteCommand extends BaseCommand
 
     /**
      * git-remote add [options] <name> <url>
-     * 
+     *
      * @param string $name    remote name
      * @param string $url     URL of remote
      * @param array  $options options for the add subcommand
-     * 
+     *
      * @return string
      */
     public function add($name, $url, $options = array())

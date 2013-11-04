@@ -22,7 +22,7 @@ namespace GitElephant\Command;
 /**
  * SubCommandCommand
  *
- * A base class that can handle subcommand parameters ordering, which differes
+ * A base class that can handle subcommand parameters ordering, which differs
  * for a general command
  *
  * @package GitElephant\Command
@@ -32,7 +32,7 @@ class SubCommandCommand extends BaseCommand
 {
 
     /**
-     * Subjects to a subcommand name 
+     * Subjects to a subcommand name
      */
     private $orderedSubjects = array();
 

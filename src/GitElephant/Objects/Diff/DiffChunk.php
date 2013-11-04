@@ -19,10 +19,6 @@
 
 namespace GitElephant\Objects\Diff;
 
-use GitElephant\Objects\Diff\DiffChunkLineAdded;
-use GitElephant\Objects\Diff\DiffChunkLineDeleted;
-use GitElephant\Objects\Diff\DiffChunkLineUnchanged;
-
 /**
  * A single portion of a file changed in a diff
  *

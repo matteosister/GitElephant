@@ -33,7 +33,7 @@ class PullCommand extends BaseCommand
     /**
      * @return PullCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }
@@ -63,4 +63,4 @@ class PullCommand extends BaseCommand
 
         return $this->getCommand();
     }
-} 
+}

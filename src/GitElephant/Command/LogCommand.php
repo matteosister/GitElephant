@@ -19,7 +19,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand;
 use GitElephant\Objects\Object;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
@@ -70,7 +69,8 @@ class LogCommand extends BaseCommand
      * Build a generic log command
      *
      * @param \GitElephant\Objects\TreeishInterface|string $ref         the reference to build the log for
-     * @param string|null                                  $path        the physical path to the tree relative to the repository root
+     * @param string|null                                  $path        the physical path to the tree relative to the
+     *                                                                  repository root
      * @param int|null                                     $limit       limit to n entries
      * @param int|null                                     $offset      skip n entries
      * @param boolean|false                                $firstParent skip commits brought in to branch by a merge

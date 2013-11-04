@@ -19,7 +19,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand;
 use GitElephant\Objects\Branch;
 
 /**
@@ -43,7 +42,7 @@ class MergeCommand extends BaseCommand
      * Generate a merge command
      *
      * @param \GitElephant\Objects\Branch $with the branch to merge
-     * 
+     *
      * @return string
      */
     public function merge(Branch $with)

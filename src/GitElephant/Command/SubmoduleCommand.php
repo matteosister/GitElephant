@@ -19,8 +19,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand;
-
 /**
  * Submodule command generator
  *

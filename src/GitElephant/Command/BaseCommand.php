@@ -71,7 +71,7 @@ class BaseCommand
     private $path;
 
     /**
-     * Clear all previuos variables
+     * Clear all previous variables
      */
     public function clearAll()
     {
@@ -94,7 +94,7 @@ class BaseCommand
 
     /**
      * Get command name
-     * 
+     *
      * @return string
      */
     protected function getCommandName()
@@ -136,7 +136,7 @@ class BaseCommand
 
     /**
      * Get all added command arguments
-     * 
+     *
      * @return array
      */
     protected function getCommandArguments()
@@ -176,7 +176,7 @@ class BaseCommand
 
     /**
      * Normalize any valid option to its long name
-     * an provide a structure that can be more intellegently
+     * an provide a structure that can be more intelligently
      * handled by other routines
      *
      * @param array $options       command options

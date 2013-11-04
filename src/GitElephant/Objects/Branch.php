@@ -21,7 +21,6 @@ namespace GitElephant\Objects;
 
 use GitElephant\Command\BranchCommand;
 use GitElephant\Exception\InvalidBranchNameException;
-use GitElephant\Objects\TreeishInterface;
 use GitElephant\Repository;
 
 /**
@@ -106,7 +105,7 @@ class Branch extends Object implements TreeishInterface
 
     /**
      * @param \GitElephant\Repository $repository repository instance
-     * @param string|Treeish          $name       branch name
+     * @param string|TreeishInterface $name       branch name
      * @param bool                    $create     like checkout -b, create a branch and check it out
      *
      * @return Branch

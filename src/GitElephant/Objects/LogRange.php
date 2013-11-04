@@ -15,9 +15,8 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\GitAuthor,
-    GitElephant\Repository,
-    GitElephant\Command\LogRangeCommand;
+use GitElephant\Repository;
+use GitElephant\Command\LogRangeCommand;
 
 /**
  * Git range log abstraction object
@@ -48,33 +47,27 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
     private $position = 0;
 
     /**
-     * static method to generate standalone log
-     *
-     * @param \GitElephant\Repository $repository  repo
-     * @param array                   $outputLines output lines from command.log
-     *
-     * @return \GitElephant\Objects\Log
-     */
-    static public function createFromOutputLines(Repository $repository, $outputLines)
-    {
-        $log = new self($repository);
-        $log->parseOutputLines($outputLines);
-
-        return $log;
-    }
-
-    /**
      * Class constructor
      *
      * @param \GitElephant\Repository $repository  repo
-     * @param string                  $ref         treeish reference
+     * @param string                  $refStart    starting reference
+     * @param string                  $refEnd      ending reference
      * @param null                    $path        path
      * @param int                     $limit       limit
      * @param null                    $offset      offset
      * @param boolean                 $firstParent first parent
+     *
+     * @internal param string $ref treeish reference
      */
-    public function __construct(Repository $repository, $refStart, $refEnd, $path = null, $limit = 15, $offset = null, $firstParent = false)
-    {
+    public function __construct(
+        Repository $repository,
+        $refStart,
+        $refEnd,
+        $path = null,
+        $limit = 15,
+        $offset = null,
+        $firstParent = false
+    ) {
         $this->repository = $repository;
         $this->createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent);
     }
@@ -94,7 +87,11 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
     private function createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent)
     {
         $command = LogRangeCommand::getInstance()->showLog($refStart, $refEnd, $path, $limit, $offset, $firstParent);
-        $outputLines = $this->getRepository()->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+        $outputLines = $this->getRepository()->getCaller()->execute(
+            $command,
+            true,
+            $this->getRepository()->getPath()
+        )->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
 
@@ -190,6 +187,8 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      *
      * @param int   $offset offset
      * @param mixed $value  value
+     *
+     * @throws \RuntimeException
      */
     public function offsetSet($offset, $value)
     {
@@ -200,6 +199,8 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * ArrayAccess interface
      *
      * @param int $offset offset
+     *
+     * @throws \RuntimeException
      */
     public function offsetUnset($offset)
     {

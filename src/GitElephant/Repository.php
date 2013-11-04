@@ -23,9 +23,7 @@ use GitElephant\Command\FetchCommand;
 use GitElephant\Command\PullCommand;
 use GitElephant\Command\PushCommand;
 use GitElephant\Command\RemoteCommand;
-use GitElephant\Exception\InvalidBranchNameException;
 use GitElephant\Exception\InvalidRepositoryPathException;
-use GitElephant\GitBinary;
 use GitElephant\Command\Caller\Caller;
 use GitElephant\Objects\Remote;
 use GitElephant\Objects\Tree;
@@ -398,6 +396,7 @@ class Repository
      */
     public function getBranch($name)
     {
+        /** @var Branch $branch */
         foreach ($this->getBranches() as $branch) {
             if ($branch->getName() == $name) {
                 return $branch;
@@ -631,12 +630,14 @@ class Repository
     /**
      * Get a log for a range ref
      *
-     * @param string|TreeishInterface $ref         the treeish to check
-     * @param string|Object           $path        the physical path to the tree relative to the repository root
-     * @param int|null                $limit       limit to n entries
-     * @param int|null                $offset      skip n entries
-     * @param boolean|false           $firstParent skip commits brought in to branch by a merge
+     * @param string        $refStart
+     * @param string        $refEnd
+     * @param string|Object $path        the physical path to the tree relative to the repository root
+     * @param int|null      $limit       limit to n entries
+     * @param int|null      $offset      skip n entries
+     * @param boolean|false $firstParent skip commits brought in to branch by a merge
      *
+     * @internal param \GitElephant\Objects\TreeishInterface|string $ref the treeish to check
      * @return \GitElephant\Objects\LogRange
      */
     public function getLogRange($refStart, $refEnd, $path = null, $limit = 10, $offset = null, $firstParent = false)

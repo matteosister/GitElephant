@@ -19,7 +19,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Objects\Object;

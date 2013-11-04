@@ -19,7 +19,6 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\Object;
 use GitElephant\Repository;
 use GitElephant\Command\LsTreeCommand;
 use GitElephant\Command\CatFileCommand;
@@ -388,7 +387,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
     /**
      * get the tree object for this tree
      *
-     * @return Object
+     * @return \GitElephant\Objects\Object
      */
     public function getObject()
     {

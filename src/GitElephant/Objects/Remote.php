@@ -24,7 +24,7 @@ use GitElephant\Repository;
 
 /**
  * Class Remote
- * 
+ *
  * An object representing a git remote
  *
  * @package GitElephant\Objects
@@ -72,7 +72,7 @@ class Remote
      *
      * @param \GitElephant\Repository $repository repository instance
      * @param string                  $name       remote name
-     * 
+     *
      * @return \GitElephant\Objects\Remote
      */
     public function __construct(Repository $repository, $name = null)
@@ -101,9 +101,9 @@ class Remote
 
     /**
      * get output lines from git-remote --verbose
-     * 
+     *
      * @param RemoteCommand $remoteCmd Optionally provide RemoteCommand object
-     * 
+     *
      * @return array
      */
     public function getVerboseOutput(RemoteCommand $remoteCmd = null)
@@ -118,13 +118,13 @@ class Remote
 
     /**
      * get output lines from git-remote show [name]
-     * 
+     *
      * NOTE: for technical reasons $name is optional, however under normal
      * implementation it SHOULD be passed!
-     * 
+     *
      * @param string        $name      Name of remote to show details
      * @param RemoteCommand $remoteCmd Optionally provide RemoteCommand object
-     * 
+     *
      * @return array
      */
     public function getShowOutput($name = null, RemoteCommand $remoteCmd = null)
@@ -139,12 +139,12 @@ class Remote
 
     /**
      * get/store the properties from git-remote command
-     * 
+     *
      * NOTE: the name property should be set if this is to do anything,
      * otherwise it's likely to throw
      *
      * @throws \InvalidArgumentException
-     * 
+     *
      * @return \GitElephant\Objects\Remote
      */
     private function createFromCommand()
@@ -227,11 +227,11 @@ class Remote
     /**
      * provided with the start points of the branch details, parse out the
      * branch details and return a structured representation of said details
-     * 
+     *
      * @param array $groupLines    Associative array whose values are line numbers
-     * are respective of the "group" detail present in $remoteDetails 
+     * are respective of the "group" detail present in $remoteDetails
      * @param array $remoteDetails Output of git-remote show [name]
-     * 
+     *
      * @return array
      */
     protected function aggregateBranchDetails($groupLines, $remoteDetails)
@@ -263,9 +263,9 @@ class Remote
 
     /**
      * parse the details related to remote branch references
-     * 
+     *
      * @param array $lines
-     * 
+     *
      * @return array
      */
     public function parseRemoteBranches($lines)
@@ -287,9 +287,9 @@ class Remote
     /**
      * parse the details related to local branches and the remotes that they
      * merge with
-     * 
+     *
      * @param array $lines
-     * 
+     *
      * @return array
      */
     public function parseLocalPullBranches($lines)
@@ -335,9 +335,9 @@ class Remote
 
     /**
      * parse remote name from git-remote show [name] output line
-     *  
+     *
      * @param string $line
-     * 
+     *
      * @return string remote name or blank if invalid
      */
     public function parseName($line)
