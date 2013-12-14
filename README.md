@@ -376,3 +376,7 @@ Thanks
 
 Many thanks to Linus and all those who have worked/contributed in any way to git.
 Because **it's awesome!!!** I can't imagine being a developer without it.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/matteosister/gitelephant/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
