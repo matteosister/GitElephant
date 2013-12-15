@@ -19,7 +19,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand;
 use GitElephant\Objects\TreeishInterface;
 
 /**
@@ -67,7 +66,11 @@ class DiffCommand extends BaseCommand
         }
 
         if ($path != null) {
-            $this->addPath(is_string($path) ? $path : $path->getPath());
+            if (!is_string($path)) {
+                /** @var Object $path */
+                $path = $path->getPath();
+            }
+            $this->addPath($path);
         }
 
         $this->addCommandSubject($subject);

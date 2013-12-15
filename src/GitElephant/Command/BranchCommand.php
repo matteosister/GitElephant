@@ -19,8 +19,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand;
-
 /**
  * Branch command generator
  *
@@ -36,6 +34,23 @@ class BranchCommand extends BaseCommand
     public static function getInstance()
     {
         return new self();
+    }
+
+    /**
+     * Locate branches that contain a reference
+     *
+     * @param string $reference reference
+     *
+     * @return string the command
+     */
+    public function contains($reference)
+    {
+        $this->clearAll();
+        $this->addCommandName(self::BRANCH_COMMAND);
+        $this->addCommandArgument('--contains');
+        $this->addCommandSubject($reference);
+
+        return $this->getCommand();
     }
 
     /**

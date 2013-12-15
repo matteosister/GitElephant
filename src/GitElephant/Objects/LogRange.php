@@ -1,35 +1,31 @@
 <?php
+
 /**
- * GitElephant - An abstraction layer for git written in PHP
- * Copyright (C) 2013  Matteo Giachino
+ * This file is part of the GitElephant package.
  *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
+ * (c) Matteo Giachino <matteog@gmail.com>
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see [http://www.gnu.org/licenses/].
+ * @package GitElephant\Objects
+ *
+ * Just for fun...
  */
 
 namespace GitElephant\Objects;
 
 use GitElephant\Repository;
-use GitElephant\Command\LogCommand;
-use GitElephant\Utilities;
+use GitElephant\Command\LogRangeCommand;
 
 /**
- * Git log abstraction object
+ * Git range log abstraction object
  *
  * @author Matteo Giachino <matteog@gmail.com>
+ * @author John Cartwright <jcartdev@gmail.com>
  * @author Dhaval Patel <tech.dhaval@gmail.com>
  */
-class Log implements \ArrayAccess, \Countable, \Iterator
+class LogRange implements \ArrayAccess, \Countable, \Iterator
 {
     /**
      * @var \GitElephant\Repository
@@ -51,47 +47,36 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     private $position = 0;
 
     /**
-     * static method to generate standalone log
-     *
-     * @param \GitElephant\Repository $repository  repo
-     * @param array                   $outputLines output lines from command.log
-     *
-     * @return \GitElephant\Objects\Log
-     */
-    public static function createFromOutputLines(Repository $repository, $outputLines)
-    {
-        $log = new self($repository);
-        $log->parseOutputLines($outputLines);
-
-        return $log;
-    }
-
-    /**
      * Class constructor
      *
      * @param \GitElephant\Repository $repository  repo
-     * @param string                  $ref         treeish reference
+     * @param string                  $refStart    starting reference
+     * @param string                  $refEnd      ending reference
      * @param null                    $path        path
      * @param int                     $limit       limit
      * @param null                    $offset      offset
      * @param boolean                 $firstParent first parent
+     *
+     * @internal param string $ref treeish reference
      */
     public function __construct(
         Repository $repository,
-        $ref = 'HEAD',
+        $refStart,
+        $refEnd,
         $path = null,
         $limit = 15,
         $offset = null,
         $firstParent = false
     ) {
         $this->repository = $repository;
-        $this->createFromCommand($ref, $path, $limit, $offset, $firstParent);
+        $this->createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent);
     }
 
     /**
      * get the commit properties from command
      *
-     * @param string  $ref         treeish reference
+     * @param string  $refStart    treeish reference
+     * @param string  $refEnd      treeish reference
      * @param string  $path        path
      * @param int     $limit       limit
      * @param string  $offset      offset
@@ -99,23 +84,35 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      *
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand($ref, $path, $limit, $offset, $firstParent)
+    private function createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent)
     {
-        $command = LogCommand::getInstance()->showLog($ref, $path, $limit, $offset, $firstParent);
+        $command = LogRangeCommand::getInstance()->showLog($refStart, $refEnd, $path, $limit, $offset, $firstParent);
         $outputLines = $this->getRepository()->getCaller()->execute(
             $command,
             true,
             $this->getRepository()->getPath()
-        )->getOutputLines(true);
+        )->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
 
     private function parseOutputLines($outputLines)
     {
+        $commitLines = null;
         $this->commits = array();
-        $commits = Utilities::pregSplitFlatArray($outputLines, '/^commit (\w+)$/');
-        foreach ($commits as $commitOutputLines) {
-            $this->commits[] = Commit::createFromOutputLines($this->repository, $commitOutputLines);
+        foreach ($outputLines as $line) {
+            if ('' == $line) {
+                continue;
+            }
+            if (preg_match('/^commit (\w+)$/', $line) > 0) {
+                if (null !== $commitLines) {
+                    $this->commits[] = Commit::createFromOutputLines($this->repository, $commitLines);
+                }
+                $commitLines = array();
+            }
+            $commitLines[] = $line;
+        }
+        if (null !== $commitLines && count($commitLines) > 0) {
+            $this->commits[] = Commit::createFromOutputLines($this->repository, $commitLines);
         }
     }
 

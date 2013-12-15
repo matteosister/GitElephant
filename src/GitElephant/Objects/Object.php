@@ -19,7 +19,6 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\LsTreeCommand;
 use GitElephant\Repository;
 
 /**

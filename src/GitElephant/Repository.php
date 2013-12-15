@@ -23,9 +23,7 @@ use GitElephant\Command\FetchCommand;
 use GitElephant\Command\PullCommand;
 use GitElephant\Command\PushCommand;
 use GitElephant\Command\RemoteCommand;
-use GitElephant\Exception\InvalidBranchNameException;
 use GitElephant\Exception\InvalidRepositoryPathException;
-use GitElephant\GitBinary;
 use GitElephant\Command\Caller\Caller;
 use GitElephant\Objects\Remote;
 use GitElephant\Objects\Tree;
@@ -35,6 +33,7 @@ use GitElephant\Objects\Object;
 use GitElephant\Objects\Diff\Diff;
 use GitElephant\Objects\Commit;
 use GitElephant\Objects\Log;
+use GitElephant\Objects\LogRange;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Command\MainCommand;
 use GitElephant\Command\BranchCommand;
@@ -58,6 +57,7 @@ use Symfony\Component\Finder\SplFileInfo;
  * Base Class for repository operations
  *
  * @author Matteo Giachino <matteog@gmail.com>
+ * @author Dhaval Patel <tech.dhaval@gmail.com>
  */
 class Repository
 {
@@ -396,9 +396,11 @@ class Repository
      */
     public function getBranch($name)
     {
-        try {
-            return Branch::checkout($this, $name);
-        } catch (InvalidBranchNameException $e) {
+        /** @var Branch $branch */
+        foreach ($this->getBranches() as $branch) {
+            if ($branch->getName() == $name) {
+                return $branch;
+            }
         }
 
         return null;
@@ -612,16 +614,45 @@ class Repository
     /**
      * Get a log for a ref
      *
-     * @param string|TreeishInterface $ref    the treeish to check
-     * @param string|Object           $path   the physical path to the tree relative to the repository root
-     * @param int|null                $limit  limit to n entries
-     * @param int|null                $offset skip n entries
+     * @param string|TreeishInterface $ref         the treeish to check
+     * @param string|Object           $path        the physical path to the tree relative to the repository root
+     * @param int|null                $limit       limit to n entries
+     * @param int|null                $offset      skip n entries
+     * @param boolean|false           $firstParent skip commits brought in to branch by a merge
      *
      * @return \GitElephant\Objects\Log
      */
-    public function getLog($ref = 'HEAD', $path = null, $limit = 10, $offset = null)
+    public function getLog($ref = 'HEAD', $path = null, $limit = 10, $offset = null, $firstParent = false)
     {
-        return new Log($this, $ref, $path, $limit, $offset);
+        return new Log($this, $ref, $path, $limit, $offset, $firstParent);
+    }
+
+    /**
+     * Get a log for a range ref
+     *
+     * @param string        $refStart
+     * @param string        $refEnd
+     * @param string|Object $path        the physical path to the tree relative to the repository root
+     * @param int|null      $limit       limit to n entries
+     * @param int|null      $offset      skip n entries
+     * @param boolean|false $firstParent skip commits brought in to branch by a merge
+     *
+     * @internal param \GitElephant\Objects\TreeishInterface|string $ref the treeish to check
+     * @return \GitElephant\Objects\LogRange
+     */
+    public function getLogRange($refStart, $refEnd, $path = null, $limit = 10, $offset = null, $firstParent = false)
+    {
+        // Handle when clients provide bad start reference on branch creation
+        if (preg_match('~^[0]+$~', $refStart)) {
+            return new Log($this, $refEnd, $path, $limit, $offset, $firstParent);
+        }
+
+        // Handle when clients provide bad end reference on branch deletion
+        if (preg_match('~^[0]+$~', $refEnd)) {
+            $refEnd = $refStart;
+        }
+
+        return new LogRange($this, $refStart, $refEnd, $path, $limit, $offset, $firstParent);
     }
 
     /**

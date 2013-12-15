@@ -23,7 +23,7 @@ use GitElephant\Command\SubCommandCommand;
 
 /**
  * Class AddRemoteCommand
- * 
+ *
  * remote subcommand generator for add
  *
  * @package GitElephant\Objects

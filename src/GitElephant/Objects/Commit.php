@@ -19,13 +19,12 @@
 
 namespace GitElephant\Objects;
 
+use GitElephant\Command\BranchCommand;
 use GitElephant\Command\MainCommand;
-use GitElephant\Objects\Author;
-use GitElephant\Objects\TreeishInterface;
+use GitElephant\Command\RevListCommand;
+use GitElephant\Command\ShowCommand;
 use GitElephant\Objects\Commit\Message;
 use GitElephant\Repository;
-use GitElephant\Command\ShowCommand;
-use GitElephant\Command\RevListCommand;
 
 /**
  * The Commit object represent a commit
@@ -167,6 +166,18 @@ class Commit implements TreeishInterface, \Countable
         $command = ShowCommand::getInstance()->showCommit($this->ref);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
+    }
+
+    /**
+     * get the branches this commit is contained in
+     *
+     * @see BranchCommand::contains
+     */
+    public function getContainedIn()
+    {
+        $command = BranchCommand::getInstance()->contains($this->getSha());
+
+        return array_map('trim', (array)$this->getCaller()->execute($command)->getOutputLines(true));
     }
 
     /**

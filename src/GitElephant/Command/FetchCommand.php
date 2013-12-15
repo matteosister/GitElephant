@@ -33,7 +33,7 @@ class FetchCommand extends BaseCommand
     /**
      * @return FetchCommand
      */
-    static public function getInstance()
+    public static function getInstance()
     {
         return new self();
     }
@@ -63,4 +63,4 @@ class FetchCommand extends BaseCommand
 
         return $this->getCommand();
     }
-} 
+}

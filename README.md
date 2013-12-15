@@ -1,14 +1,12 @@
-# GitElephant [![Latest Stable Version](https://poser.pugx.org/cypresslab/GitElephant/v/stable.png)](https://packagist.org/packages/cypresslab/GitElephant)
+# GitElephant [![Latest Stable Version](https://poser.pugx.org/cypresslab/GitElephant/v/stable.png)](https://packagist.org/packages/cypresslab/GitElephant) [![Total Downloads](https://poser.pugx.org/cypresslab/GitElephant/downloads.png)](https://packagist.org/packages/cypresslab/GitElephant)
 
 [![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=master)](https://travis-ci.org/matteosister/GitElephant) [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/matteosister/GitElephant/badges/quality-score.png?s=c7ca8a7c5ea9c64b291f6bcaef27955ed6d8a836)](https://scrutinizer-ci.com/g/matteosister/GitElephant/) [![Code Coverage](https://scrutinizer-ci.com/g/matteosister/GitElephant/badges/coverage.png?s=fd7981a4f57fd639912d1a415e3dd92615ddce51)](https://scrutinizer-ci.com/g/matteosister/GitElephant/) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d6da541e-d928-4f70-868a-dd0b6426a7b5/mini.png)](https://insight.sensiolabs.com/projects/d6da541e-d928-4f70-868a-dd0b6426a7b5)
 
 GitElephant is an abstraction layer to manage your git repositories with php
 
-It's not stable yet...I created a small [todo list](https://github.com/matteosister/GitElephant/blob/develop/ROADMAP.md) for the things that I would like to implement. If you want give a hand you are more than welcome!
+This library officially supports git >= 1.8, older version are supported as well, but with some caveat.
 
-Watch a [simple live example](http://gitelephant.cypresslab.net) of what you can do with GitElephant, Symfony2 and a git repository...
-
-[Download the demo bundle code](https://github.com/matteosister/GitElephantDemoBundle) used in the live example
+Watch a [live example](http://gitelephant.cypresslab.net) of what you can do with GitElephant, Symfony2 and a git repository...
 
 How it works
 ------------

@@ -19,7 +19,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BaseCommand;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
 
@@ -52,7 +51,7 @@ class MainCommand extends BaseCommand
      *
      * @param bool $bare
      *
-     * @return Main
+     * @return MainCommand
      */
     public function init($bare = false)
     {
@@ -131,7 +130,7 @@ class MainCommand extends BaseCommand
     {
         $this->clearAll();
         if (trim($message) == '' || $message == null) {
-            throw new \InvalidArgumentException(sprintf('You can\'t commit whitout message'));
+            throw new \InvalidArgumentException(sprintf('You can\'t commit without message'));
         }
         $this->addCommandName(self::GIT_COMMIT);
 

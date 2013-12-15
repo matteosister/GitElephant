@@ -19,7 +19,6 @@
 
 namespace GitElephant\Objects\Diff;
 
-use GitElephant\Objects\Diff\DiffObject;
 use GitElephant\Utilities;
 use GitElephant\Repository;
 use GitElephant\Command\DiffTreeCommand;

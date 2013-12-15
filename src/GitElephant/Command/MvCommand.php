@@ -50,7 +50,7 @@ class MvCommand extends BaseCommand
     {
         if ($source instanceof Object) {
             if (!$source->isBlob()) {
-                throw new \InvalidArgumentException('The given object is not a blob, it couldn\'t be renamed');
+                throw new \InvalidArgumentException("The given object is not a blob, it couldn't be renamed");
             }
             $sourceName = $source->getFullPath();
         } else {

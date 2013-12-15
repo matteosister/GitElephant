@@ -19,9 +19,6 @@
 
 namespace GitElephant\Objects\Diff;
 
-use GitElephant\Utilities;
-use GitElephant\Objects\Diff\DiffChunk;
-
 /**
  * Represent a diff for a single object in the repository
  *
@@ -127,7 +124,10 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      */
     private function findChunks($lines)
     {
-        $arrayChunks = Utilities::pregSplitArray($lines, '/^@@ -(\d+,\d+)|(\d+) \+(\d+,\d+)|(\d+) @@(.*)$/');
+        $arrayChunks = \GitElephant\Utilities::pregSplitArray(
+            $lines,
+            '/^@@ -(\d+,\d+)|(\d+) \+(\d+,\d+)|(\d+) @@(.*)$/'
+        );
         foreach ($arrayChunks as $chunkLines) {
             $this->chunks[] = new DiffChunk($chunkLines);
         }
