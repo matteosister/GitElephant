@@ -127,6 +127,8 @@ class StatusTest extends TestCase
      */
     public function testWorkingTreeStatus()
     {
+        $this->addFile('initial file');
+        $this->getRepository()->commit('first commit', true);
         $this->addFile('test', null, 'test content');
         $wt = $this->repository->getWorkingTreeStatus();
         $this->assertCount(1, $wt->untracked());
