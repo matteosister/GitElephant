@@ -17,7 +17,7 @@ class ObjectTest extends TestCase
         $this->getRepository()->commit('first commit', true);
     }
 
-    public function testGetLastCommitWithOneCommit()
+    public function testGetLastCommitFromTree()
     {
         $tree = $this->getRepository()->getTree('master');
         $testFile = $tree[0];
@@ -25,10 +25,9 @@ class ObjectTest extends TestCase
         $this->assertEquals('first commit', $testFile->getLastCommit()->getMessage());
     }
 
-    public function testGetLastCommitFromAnotherBranch()
+    public function testGetLastCommitFromBranch()
     {
         Branch::checkout($this->getRepository(), 'test', true);
-        $this->getRepository()->checkout('test');
         $this->addFile('test-in-test-branch');
         $this->getRepository()->commit('test branch commit', true);
         $tree = $this->getRepository()->getTree('test');
@@ -42,6 +41,12 @@ class ObjectTest extends TestCase
         $this->getRepository()->createTag('test-tag');
         $tag = $this->getRepository()->getTag('test-tag');
         $this->assertInstanceOf('GitElephant\Objects\Commit', $tag->getLastCommit());
-        $this->assertEquals('test branch commit', $tag->getLastCommit()->getMessage());
+        $this->assertEquals('first commit', $tag->getLastCommit()->getMessage());
+        $this->addFile('file2');
+        $this->getRepository()->commit('tag 2 commit', true);
+        $this->getRepository()->createTag('test-tag-2');
+        $tag = $this->getRepository()->getTag('test-tag-2');
+        $this->assertInstanceOf('GitElephant\Objects\Commit', $tag->getLastCommit());
+        $this->assertEquals('tag 2 commit', $tag->getLastCommit()->getMessage());
     }
 }
