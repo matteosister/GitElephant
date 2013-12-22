@@ -31,11 +31,6 @@ use GitElephant\Repository;
 class Branch extends Object implements TreeishInterface
 {
     /**
-     * @var \GitElephant\Repository
-     */
-    private $repository;
-
-    /**
      * current checked out branch
      *
      * @var bool
