@@ -127,8 +127,12 @@ class StatusTest extends TestCase
      */
     public function testWorkingTreeStatus()
     {
-        $this->addFile('initial file');
-        $this->getRepository()->commit('first commit', true);
+        /*$this->markTestSkipped(
+            'Caller::execute throws a RuntimeException here because. Repository::unstage
+invokes "git reset HEAD -- test", which returns 1 (not 0) on git < 1.8, even though it executes successfully.
+On new git version this is not happening anymore.'
+        );*/
+
         $this->addFile('test', null, 'test content');
         $wt = $this->repository->getWorkingTreeStatus();
         $this->assertCount(1, $wt->untracked());

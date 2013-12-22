@@ -245,7 +245,10 @@ class Object implements TreeishInterface
      */
     public function getFullPath()
     {
-        return rtrim('' == $this->path ? $this->name : $this->path.'/'.$this->name, '/');
+        return rtrim(
+            '' == $this->path ? $this->name : $this->path.DIRECTORY_SEPARATOR.$this->name,
+            DIRECTORY_SEPARATOR
+        );
     }
 
     /**
@@ -315,7 +318,7 @@ class Object implements TreeishInterface
      */
     public function getLastCommit()
     {
-        $log = $this->repository->getLog('HEAD', $this->getPath(), 1);
+        $log = $this->repository->getLog('master', $this->getPath(), 1);
         return $log[0];
     }
 }
