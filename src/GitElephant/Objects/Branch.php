@@ -108,10 +108,13 @@ class Branch extends Object implements TreeishInterface
     public static function checkout(Repository $repository, $name, $create = false)
     {
         if ($create) {
-            return self::create($repository, $name);
+            $branch = self::create($repository, $name);
+        } else {
+            $branch = new self($repository, $name);
         }
+        $repository->checkout($branch);
 
-        return new self($repository, $name);
+        return $branch;
     }
 
     /**
