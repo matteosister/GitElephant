@@ -102,11 +102,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     private function createFromCommand($ref, $path, $limit, $offset, $firstParent)
     {
         $command = LogCommand::getInstance()->showLog($ref, $path, $limit, $offset, $firstParent);
-        $outputLines = $this->getRepository()->getCaller()->execute(
-            $command,
-            true,
-            $this->getRepository()->getPath()
-        )->getOutputLines(true);
+        $outputLines = $this->getRepository()->getCaller()->execute($command)->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }
 
