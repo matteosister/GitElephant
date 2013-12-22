@@ -162,6 +162,7 @@ class Object implements TreeishInterface
      */
     public function __construct(Repository $repository, $permissions, $type, $sha, $size, $name, $path)
     {
+        $this->repository  = $repository;
         $this->permissions = $permissions;
         $this->type        = $type;
         $this->sha         = $sha;
@@ -305,5 +306,16 @@ class Object implements TreeishInterface
     public function getSize()
     {
         return $this->size;
+    }
+
+    /**
+     * gets the last commit in this object
+     *
+     * @return Commit
+     */
+    public function getLastCommit()
+    {
+        $log = $this->repository->getLog('HEAD', $this->getPath(), 1);
+        return $log[0];
     }
 }
