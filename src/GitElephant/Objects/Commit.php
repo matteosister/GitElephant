@@ -169,6 +169,18 @@ class Commit implements TreeishInterface, \Countable
     }
 
     /**
+     * Get an entire file from a given commit
+     *
+     * @param string $filePath
+     *
+     * @return array
+     */
+    public function getFile($filePath){
+        $command = ShowCommand::getInstance()->showCommit($this->ref, $filePath);
+        return $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
+    }
+
+    /**
      * get the branches this commit is contained in
      *
      * @see BranchCommand::contains
