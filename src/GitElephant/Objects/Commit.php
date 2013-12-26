@@ -100,6 +100,21 @@ class Commit implements TreeishInterface, \Countable
     private $datetimeCommitter;
 
     /**
+     * Class constructor
+     *
+     * @param \GitElephant\Repository $repository the repository
+     * @param string                  $treeish    a treeish reference
+     */
+    private function __construct(Repository $repository, $treeish = 'HEAD')
+    {
+        $this->repository = $repository;
+        $this->ref = $treeish;
+        $this->parents = array();
+    }
+
+    /**
+     * factory method to create a commit
+     *
      * @param Repository $repository repository instance
      * @param string     $message    commit message
      * @param bool       $stageAll   automatically stage the dirty working tree. Alternatively call stage() on the repo
@@ -114,6 +129,8 @@ class Commit implements TreeishInterface, \Countable
     }
 
     /**
+     * pick an existing commit
+     *
      * @param Repository              $repository repository
      * @param TreeishInterface|string $treeish    treeish
      *
@@ -144,19 +161,6 @@ class Commit implements TreeishInterface, \Countable
     }
 
     /**
-     * Class constructor
-     *
-     * @param \GitElephant\Repository $repository the repository
-     * @param string                  $treeish    a treeish reference
-     */
-    private function __construct(Repository $repository, $treeish = 'HEAD')
-    {
-        $this->repository = $repository;
-        $this->ref = $treeish;
-        $this->parents = array();
-    }
-
-    /**
      * get the commit properties from command
      *
      * @see ShowCommand::commitInfo
@@ -181,6 +185,8 @@ class Commit implements TreeishInterface, \Countable
     }
 
     /**
+     * number of commits that lead to this one
+     *
      * @return int|void
      */
     public function count()
@@ -188,6 +194,11 @@ class Commit implements TreeishInterface, \Countable
         $command = RevListCommand::getInstance()->commitPath($this);
 
         return count($this->getCaller()->execute($command)->getOutputLines(true));
+    }
+
+    public function getDiff()
+    {
+        return $this->getRepository()->getDiff($this);
     }
 
     /**

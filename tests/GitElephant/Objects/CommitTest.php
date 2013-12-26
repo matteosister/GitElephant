@@ -190,4 +190,26 @@ class CommitTest extends TestCase
         $commit = Commit::create($this->repository, 'first commit', true);
         $this->assertEquals($commit, $this->repository->getCommit());
     }
+
+    /**
+     * testGetDiff
+     */
+    public function testGetDiff()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->repository->stage();
+        $commit = Commit::create($this->repository, 'first commit', true);
+        $diff = $commit->getDiff();
+        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $diff);
+        $this->assertCount(1, $diff);
+
+        $this->addFile('test2');
+        $this->addFile('test3');
+        $this->repository->stage();
+        $commit = Commit::create($this->repository, 'second commit', true);
+        $diff = $commit->getDiff();
+        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $diff);
+        $this->assertCount(2, $diff);
+    }
 }
