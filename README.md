@@ -20,7 +20,7 @@ The api is completely transparent to the end user. You don't have to worry about
 API Reference
 -------------
 
-Here you can find [the complete reference](http://gitelephantdocs.cypresslab.net/master/) for master, and for any tags.
+Here you can find [the complete reference](http://gitelephantdocs.cypresslab.net) for master, and for any tags.
 
 Requirements
 ------------
