@@ -18,6 +18,7 @@ branches:
 before_script:
   - curl -s https://getcomposer.org/installer | php
   - $(which php) composer.phar --dev install
+  - git --version
   - git config --global user.email "test@travis-ci.org"
   - git config --global user.name "Travis"
   - git --version
