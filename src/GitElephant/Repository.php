@@ -184,7 +184,7 @@ class Repository
      */
     public function unstage($path)
     {
-        $this->caller->execute(MainCommand::getInstance()->unstage($path));
+        $this->caller->execute(MainCommand::getInstance()->unstage($path), true, null, array(0, 1));
 
         return $this;
     }
