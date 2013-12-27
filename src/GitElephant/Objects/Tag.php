@@ -31,11 +31,6 @@ use GitElephant\Command\RevListCommand;
 class Tag extends Object
 {
     /**
-     * @var \GitElephant\Repository
-     */
-    private $repository;
-
-    /**
      * tag name
      *
      * @var string
