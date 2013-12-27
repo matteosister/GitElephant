@@ -20,7 +20,7 @@ The api is completely transparent to the end user. You don't have to worry about
 API Reference
 -------------
 
-Here you can find [the complete reference](http://gitelephantdocs.cypresslab.net/master/) for master, and for any tags.
+Here you can find [the complete reference](http://gitelephantdocs.cypresslab.net) for master, and for any tags.
 
 Requirements
 ------------
@@ -374,3 +374,7 @@ Thanks
 
 Many thanks to Linus and all those who have worked/contributed in any way to git.
 Because **it's awesome!!!** I can't imagine being a developer without it.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/matteosister/gitelephant/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+

@@ -20,6 +20,7 @@ before_script:
   - php composer.phar --dev install
   - git config --global user.email "test@travis-ci.org"
   - git config --global user.name "Travis"
+  - git --version
 
 script:
   - vendor/bin/phpunit --coverage-clover "clover"
