@@ -93,6 +93,11 @@ class RepositoryTest extends TestCase
 
     /**
      * @covers GitElephant\Repository::unstage
+     *
+     * I commit before doing the checks because unstaging (git reset HEAD) in a repository with no commits causes
+     * problem in old version of git. Here is a possible solution: http://stackoverflow.com/a/3894817
+     * In a repository with no commits git rm --cached should be used
+     * TODO: manage the problem for old git versions
      */
     public function testUnstage()
     {

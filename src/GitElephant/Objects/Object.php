@@ -318,7 +318,7 @@ class Object implements TreeishInterface
      */
     public function getLastCommit()
     {
-        $log = $this->repository->getLog('HEAD', $this->getFullPath(), 1);
+        $log = $this->repository->getLog('master', $this->getPath(), 1);
         return $log[0];
     }
 }

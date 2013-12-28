@@ -40,10 +40,11 @@ class ShowCommand extends BaseCommand
      * build the show command
      *
      * @param string|\GitElephant\Objects\Commit $ref the reference for the show command
+     * @param string|bool                        $filePath
      *
      * @return string
      */
-    public function showCommit($ref)
+    public function showCommit( $ref, $filePath = false )
     {
         $this->clearAll();
 
@@ -51,7 +52,12 @@ class ShowCommand extends BaseCommand
         $this->addCommandArgument('-s');
         $this->addCommandArgument('--pretty=raw');
         $this->addCommandArgument('--no-color');
-        $this->addCommandSubject($ref);
+
+        if ($filePath !== false) {
+            $this->addCommandSubject($ref . ':' . $filePath);
+        } else {
+            $this->addCommandSubject($ref);
+        }
 
         return $this->getCommand();
     }
