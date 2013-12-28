@@ -109,7 +109,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
     {
         $fs = new Filesystem();
         if (is_array($this->repository)) {
-            array_map(function(Repository $repo) use ($fs) {
+            array_map(function (Repository $repo) use ($fs) {
                 $fs->remove($repo->getPath());
             }, $this->repository);
         } else {

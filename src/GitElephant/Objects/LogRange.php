@@ -50,7 +50,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * Class constructor
      *
      * @param \GitElephant\Repository $repository  repo
-     * @param string                  $refStart    starting reference
+     * @param string                  $refStart    starting reference (excluded from the range)
      * @param string                  $refEnd      ending reference
      * @param null                    $path        path
      * @param int                     $limit       limit
@@ -91,7 +91,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
             $command,
             true,
             $this->getRepository()->getPath()
-        )->getOutputLines();
+        )->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }
 
@@ -100,9 +100,6 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
         $commitLines = null;
         $this->commits = array();
         foreach ($outputLines as $line) {
-            if ('' == $line) {
-                continue;
-            }
             if (preg_match('/^commit (\w+)$/', $line) > 0) {
                 if (null !== $commitLines) {
                     $this->commits[] = Commit::createFromOutputLines($this->repository, $commitLines);
