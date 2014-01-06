@@ -1,4 +1,5 @@
 before_commands:
+  - git --version
   - git config --global user.email "git-elephant@scrutinizer-ci.com"
   - git config --global user.name "git-elephant"
   - composer install

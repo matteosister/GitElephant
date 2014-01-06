@@ -378,3 +378,4 @@ Because **it's awesome!!!** I can't imagine being a developer without it.
 
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/matteosister/gitelephant/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
+[![Analytics](https://ga-beacon.appspot.com/UA-33181125-2/GitElephant/README?pixel)](https://github.com/igrigorik/ga-beacon)

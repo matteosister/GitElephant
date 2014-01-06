@@ -82,14 +82,15 @@ class Caller implements CallerInterface
     /**
      * Executes a command
      *
-     * @param string $cmd the command to execute
-     * @param bool   $git if the command is git or a generic command
-     * @param null   $cwd the directory where the command must be executed
+     * @param string $cmd               the command to execute
+     * @param bool   $git               if the command is git or a generic command
+     * @param null   $cwd               the directory where the command must be executed
+     * @param array  $acceptedExitCodes exit codes accepted to consider the command execution successful
      *
-     * @return Caller
      * @throws \RuntimeException
+     * @return Caller
      */
-    public function execute($cmd, $git = true, $cwd = null)
+    public function execute($cmd, $git = true, $cwd = null, $acceptedExitCodes = array(0))
     {
         if ($git) {
             $cmd = $this->binary->getPath() . ' ' . $cmd;
@@ -98,7 +99,7 @@ class Caller implements CallerInterface
         $process = new Process($cmd, $cwd == null ? $this->repositoryPath : $cwd);
         $process->setTimeout(15000);
         $process->run();
-        if (!$process->isSuccessful()) {
+        if (!in_array($process->getExitCode(), $acceptedExitCodes)) {
             throw new \RuntimeException($process->getErrorOutput());
         }
         $this->rawOutput = $process->getOutput();

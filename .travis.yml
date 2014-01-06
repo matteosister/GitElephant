@@ -4,11 +4,11 @@ php:
   - 5.3
   - 5.4
   - 5.5
-  - hhvm
+#  - hhvm
 
-matrix:
-  allow_failures:
-    - hhvm
+#matrix:
+#  allow_failures:
+#    - hhvm
 
 branches:
   only:
@@ -17,7 +17,8 @@ branches:
 
 before_script:
   - curl -s https://getcomposer.org/installer | php
-  - php composer.phar --dev install
+  - $(which php) composer.phar --dev install
+  - git --version
   - git config --global user.email "test@travis-ci.org"
   - git config --global user.name "Travis"
   - git --version

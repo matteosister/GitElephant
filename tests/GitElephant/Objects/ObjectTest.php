@@ -27,13 +27,14 @@ class ObjectTest extends TestCase
 
     public function testGetLastCommitFromBranch()
     {
-        Branch::checkout($this->getRepository(), 'test', true);
+        $this->getRepository()->createBranch('test');
+        $this->getRepository()->checkout('test');
         $this->addFile('test-in-test-branch');
         $this->getRepository()->commit('test branch commit', true);
-        $tree = $this->getRepository()->getTree('test');
-        $testFile = $tree[0];
+        $tree = $this->getRepository()->getTree('test', 'test-in-test-branch');
+        $testFile = $tree->getBlob();
         $this->assertInstanceOf('GitElephant\Objects\Commit', $testFile->getLastCommit());
-        $this->assertEquals('test branch commit', $testFile->getLastCommit()->getMessage());
+        $this->assertEquals('test branch commit', $testFile->getLastCommit()->getMessage()->getFullMessage());
     }
 
     public function testGetLastCommitFromTag()
