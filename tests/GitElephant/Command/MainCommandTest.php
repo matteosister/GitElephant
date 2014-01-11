@@ -62,8 +62,8 @@ class MainCommandTest extends TestCase
      */
     public function testAdd()
     {
-        $this->assertEquals(MainCommand::GIT_ADD." '.'", $this->mainCommand->add());
-        $this->assertEquals(MainCommand::GIT_ADD." 'foo'", $this->mainCommand->add('foo'));
+        $this->assertEquals(MainCommand::GIT_ADD." '--all' '.'", $this->mainCommand->add());
+        $this->assertEquals(MainCommand::GIT_ADD." '--all' 'foo'", $this->mainCommand->add('foo'));
     }
 
     /**
