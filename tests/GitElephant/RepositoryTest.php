@@ -292,11 +292,11 @@ class RepositoryTest extends TestCase
         $this->getRepository()->init();
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
+        $this->assertNull($this->getRepository()->getLastTag());
         $this->getRepository()->createTag('0.0.2');
-        sleep(1);
         $this->getRepository()->createTag('0.0.4');
-        sleep(1);
         $this->getRepository()->createTag('0.0.3');
+        // I need to wait or the file system is unable to sort by date
         sleep(1);
         $this->getRepository()->createTag('0.0.1');
         sleep(1);

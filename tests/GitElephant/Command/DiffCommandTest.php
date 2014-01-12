@@ -1,14 +1,20 @@
 <?php
-
 /**
- * This file is part of the GitElephant package.
+ * GitElephant - An abstraction layer for git written in PHP
+ * Copyright (C) 2013  Matteo Giachino
  *
- * (c) Matteo Giachino <matteog@gmail.com>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Just for fun...
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
 namespace GitElephant\Command;
@@ -21,7 +27,6 @@ use GitElephant\TestCase;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class DiffCommandTest extends TestCase
 {
     /**
