@@ -1,4 +1,6 @@
-# GitElephant [![Latest Stable Version](https://poser.pugx.org/cypresslab/GitElephant/v/stable.png)](https://packagist.org/packages/cypresslab/GitElephant) [![Total Downloads](https://poser.pugx.org/cypresslab/GitElephant/downloads.png)](https://packagist.org/packages/cypresslab/GitElephant)
+![GitElephant](https://raw.github.com/matteosister/GitElephant/develop/graphics/gitelephant_600.png)
+
+[![Latest Stable Version](https://poser.pugx.org/cypresslab/GitElephant/v/stable.png)](https://packagist.org/packages/cypresslab/GitElephant) [![License](https://poser.pugx.org/cypresslab/gitelephant/license.png)](https://packagist.org/packages/cypresslab/gitelephant) [![Total Downloads](https://poser.pugx.org/cypresslab/GitElephant/downloads.png)](https://packagist.org/packages/cypresslab/GitElephant) [![Montly Downloads](https://poser.pugx.org/cypresslab/gitelephant/d/monthly.png)](https://packagist.org/packages/cypresslab/gitelephant)
 
 [![Build Status](https://travis-ci.org/matteosister/GitElephant.png?branch=master)](https://travis-ci.org/matteosister/GitElephant) [![Scrutinizer Quality Score](https://scrutinizer-ci.com/g/matteosister/GitElephant/badges/quality-score.png?s=c7ca8a7c5ea9c64b291f6bcaef27955ed6d8a836)](https://scrutinizer-ci.com/g/matteosister/GitElephant/) [![Code Coverage](https://scrutinizer-ci.com/g/matteosister/GitElephant/badges/coverage.png?s=fd7981a4f57fd639912d1a415e3dd92615ddce51)](https://scrutinizer-ci.com/g/matteosister/GitElephant/) [![SensioLabsInsight](https://insight.sensiolabs.com/projects/d6da541e-d928-4f70-868a-dd0b6426a7b5/mini.png)](https://insight.sensiolabs.com/projects/d6da541e-d928-4f70-868a-dd0b6426a7b5)
 
@@ -375,7 +377,6 @@ Thanks
 Many thanks to Linus and all those who have worked/contributed in any way to git.
 Because **it's awesome!!!** I can't imagine being a developer without it.
 
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/matteosister/gitelephant/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+Logo design by [Stefano Lodovico](it.linkedin.com/pub/stefano-lodovico/49/a04/261)
 
 [![Analytics](https://ga-beacon.appspot.com/UA-33181125-2/GitElephant/README?pixel)](https://github.com/igrigorik/ga-beacon)

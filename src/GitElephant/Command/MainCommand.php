@@ -95,6 +95,7 @@ class MainCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_ADD);
+        $this->addCommandArgument('--all');
         $this->addCommandSubject($what);
 
         return $this->getCommand();
