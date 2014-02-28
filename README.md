@@ -1,4 +1,4 @@
-![GitElephant](https://raw.github.com/matteosister/GitElephant/develop/graphics/gitelephant_400.png)
+![GitElephant](https://raw.github.com/matteosister/GitElephant/develop/graphics/gitelephant_600.png)
 
 [![Latest Stable Version](https://poser.pugx.org/cypresslab/GitElephant/v/stable.png)](https://packagist.org/packages/cypresslab/GitElephant) [![License](https://poser.pugx.org/cypresslab/gitelephant/license.png)](https://packagist.org/packages/cypresslab/gitelephant)
 
