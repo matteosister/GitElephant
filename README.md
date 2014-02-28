@@ -377,6 +377,6 @@ Thanks
 Many thanks to Linus and all those who have worked/contributed in any way to git.
 Because **it's awesome!!!** I can't imagine being a developer without it.
 
-Logo design by [Stefano Lodovico](it.linkedin.com/pub/stefano-lodovico/49/a04/261)
+Logo design by [Stefano Lodovico](http://it.linkedin.com/pub/stefano-lodovico/49/a04/261)
 
 [![Analytics](https://ga-beacon.appspot.com/UA-33181125-2/GitElephant/README?pixel)](https://github.com/igrigorik/ga-beacon)
