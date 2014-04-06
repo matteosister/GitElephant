@@ -173,7 +173,7 @@ $repo->commit('my first commit', true); // commit and stage every pending change
 $repo->addRemote('awesome', 'git://github.com/matteosister/GitElephant.git');
 
 // checkout
-$repo->checkout($this->getCommit('v1.0')); // checkout a tag
+$repo->checkout($repo->getTag('v1.0')); // checkout a tag
 $repo->checkout('master'); // checkout master
 
 // manage branches

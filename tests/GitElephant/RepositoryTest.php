@@ -484,6 +484,27 @@ class RepositoryTest extends TestCase
     }
 
     /**
+     * @covers GitElephant\Repository::checkout
+     */
+    public function testCheckoutTag()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test-file');
+        $this->getRepository()->commit('test', true);
+        $this->getRepository()->createTag('v0.0.1');
+        $this->addFile('test-file2');
+        $this->getRepository()->commit('test2', true);
+        $tag = $this->getRepository()->getTag('v0.0.1');
+        $this->assertInstanceOf('GitElephant\Objects\Tag', $tag);
+        $lastCommit = $this->getRepository()->getCommit();
+        $this->assertNotContains('detached', implode(' ', $this->getRepository()->getStatusOutput()));
+        $this->getRepository()->checkout($tag);
+        $newCommit = $this->getRepository()->getCommit();
+        $this->assertNotEquals($newCommit->getSha(), $lastCommit->getSha());
+        $this->assertContains('detached', implode(' ', $this->getRepository()->getStatusOutput()));
+    }
+
+    /**
      * @covers GitElephant\Repository::getTree
      * @covers GitElephant\Objects\Tree
      */
