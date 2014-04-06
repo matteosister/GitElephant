@@ -45,6 +45,7 @@ class DiffTreeCommand extends BaseCommand
      *
      * @param \GitElephant\Objects\Commit $commit the root commit object
      *
+     * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @return string
      */

@@ -45,6 +45,7 @@ class DiffCommand extends BaseCommand
      * @param TreeishInterface|null $with the source reference to diff with $of, if not specified is the current HEAD
      * @param null                  $path the path to diff, if not specified the full repository
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function diff($of, $with = null, $path = null)

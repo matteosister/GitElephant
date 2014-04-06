@@ -45,6 +45,7 @@ class CatFileCommand extends BaseCommand
      * @param \GitElephant\Objects\Object                  $object  a Object instance
      * @param \GitElephant\Objects\TreeishInterface|string $treeish an object with TreeishInterface interface
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function content(Object $object, $treeish)
@@ -68,6 +69,7 @@ class CatFileCommand extends BaseCommand
      *
      * @param string $sha
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function contentBySha($sha)

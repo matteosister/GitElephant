@@ -42,8 +42,8 @@ class MvCommand extends BaseCommand
      * @param string|Object $source source name
      * @param string        $target dest name
      *
+     * @throws \RuntimeException
      * @throws \InvalidArgumentException
-     *
      * @return string
      */
     public function rename($source, $target)

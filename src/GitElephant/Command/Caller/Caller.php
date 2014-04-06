@@ -88,6 +88,10 @@ class Caller implements CallerInterface
      * @param array  $acceptedExitCodes exit codes accepted to consider the command execution successful
      *
      * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\ProcessTimedOutException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @throws \Symfony\Component\Process\Exception\LogicException
      * @return Caller
      */
     public function execute($cmd, $git = true, $cwd = null, $acceptedExitCodes = array(0))

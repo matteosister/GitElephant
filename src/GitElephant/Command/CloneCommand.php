@@ -42,6 +42,7 @@ class CloneCommand extends BaseCommand
      * @param string $url repository url
      * @param string $to  where to clone the repo
      *
+     * @throws \RuntimeException
      * @return string command
      */
     public function cloneUrl($url, $to = null)

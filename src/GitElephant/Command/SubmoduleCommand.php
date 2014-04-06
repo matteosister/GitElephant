@@ -43,6 +43,7 @@ class SubmoduleCommand extends BaseCommand
      * @param string $gitUrl git url of the submodule
      * @param string $path   path to register the submodule to
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function add($gitUrl, $path = null)
@@ -60,6 +61,7 @@ class SubmoduleCommand extends BaseCommand
     /**
      * Lists tags
      *
+     * @throws \RuntimeException
      * @return string the command
      */
     public function lists()

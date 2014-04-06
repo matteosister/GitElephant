@@ -42,6 +42,7 @@ class PullCommand extends BaseCommand
      * @param Remote|string $remote
      * @param Branch|string $branch
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function pull($remote = null, $branch = null)

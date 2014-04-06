@@ -49,6 +49,7 @@ class LogCommand extends BaseCommand
      * @param int|null                                $limit  limit to n entries
      * @param int|null                                $offset skip n entries
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function showObjectLog(Object $obj, $branch = null, $limit = null, $offset = null)
@@ -75,6 +76,7 @@ class LogCommand extends BaseCommand
      * @param int|null                                     $offset      skip n entries
      * @param boolean|false                                $firstParent skip commits brought in to branch by a merge
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function showLog($ref, $path = null, $limit = null, $offset = null, $firstParent = false)

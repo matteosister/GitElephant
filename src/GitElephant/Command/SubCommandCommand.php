@@ -37,7 +37,7 @@ class SubCommandCommand extends BaseCommand
     private $orderedSubjects = array();
 
     /**
-     * Clear all previuos variables
+     * Clear all previous variables
      */
     public function clearAll()
     {

@@ -42,6 +42,9 @@ class Status
 
     /**
      * @param Repository $repository
+     *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
     private function __construct(Repository $repository)
     {

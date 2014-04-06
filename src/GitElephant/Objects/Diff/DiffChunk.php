@@ -79,6 +79,8 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      * Class constructor
      *
      * @param array $lines output lines from git binary
+     *
+     * @throws \Exception
      */
     public function __construct($lines)
     {
