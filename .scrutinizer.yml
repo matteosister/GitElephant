@@ -10,7 +10,8 @@ tools:
   php_code_coverage:
     enabled: true
     filter:
-      paths: [ src/ ]
+      paths: [ src/* ]
+      excluded_paths: [ tests/*, graphics/*, vendor/* ]
     test_command: ./vendor/bin/phpunit
   php_code_sniffer:
     enabled: true
