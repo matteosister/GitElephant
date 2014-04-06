@@ -119,6 +119,11 @@ class Commit implements TreeishInterface, \Countable
      * @param string     $message    commit message
      * @param bool       $stageAll   automatically stage the dirty working tree. Alternatively call stage() on the repo
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\LogicException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Commit
      */
     public static function create(Repository $repository, $message, $stageAll = false)
@@ -134,6 +139,8 @@ class Commit implements TreeishInterface, \Countable
      * @param Repository              $repository repository
      * @param TreeishInterface|string $treeish    treeish
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Commit
      */
     public static function pick(Repository $repository, $treeish = null)
@@ -187,6 +194,10 @@ class Commit implements TreeishInterface, \Countable
     /**
      * number of commits that lead to this one
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\LogicException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return int|void
      */
     public function count()

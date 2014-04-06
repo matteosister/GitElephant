@@ -58,6 +58,9 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      * @param null|string|\GitElephant\Objects\Commit $commit2    second commit
      * @param null|string                             $path       path to consider
      *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Diff
      */
     public static function create(Repository $repository, $commit1 = null, $commit2 = null, $path = null)
@@ -89,6 +92,11 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      * @param null $commit2 commit 2
      * @param null $path    path
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\LogicException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @see ShowCommand::commitInfo
      */
     public function createFromCommand($commit1 = null, $commit2 = null, $path = null)
@@ -119,6 +127,8 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      * parse the output of a git command showing a commit
      *
      * @param array $outputLines output lines
+     *
+     * @throws \InvalidArgumentException
      */
     private function parseOutputLines($outputLines)
     {

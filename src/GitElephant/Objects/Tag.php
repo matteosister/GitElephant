@@ -59,6 +59,7 @@ class Tag extends Object
      * @param string                  $startPoint branch to start from
      * @param string                  $message    tag message
      *
+     * @throws \RuntimeException
      * @return \GitElephant\Objects\Branch
      */
     public static function create(Repository $repository, $name, $startPoint = null, $message = null)
@@ -75,6 +76,9 @@ class Tag extends Object
      * @param array                   $outputLines output lines
      * @param string                  $name        name
      *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Commit
      */
     public static function createFromOutputLines(Repository $repository, $outputLines, $name)
@@ -91,6 +95,8 @@ class Tag extends Object
      * @param \GitElephant\Repository $repository repository instance
      * @param string                  $name       name
      *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
      * @internal param string $line a single tag line from the git binary
      */
     public function __construct(Repository $repository, $name)
@@ -141,8 +147,11 @@ class Tag extends Object
      *
      * @param array $outputLines output lines
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \InvalidArgumentException
-     *
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return void
      */
     private function parseOutputLines($outputLines)

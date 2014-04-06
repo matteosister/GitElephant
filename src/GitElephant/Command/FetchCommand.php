@@ -42,6 +42,7 @@ class FetchCommand extends BaseCommand
      * @param Remote|string $remote
      * @param Branch|string $branch
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function fetch($remote = null, $branch = null)

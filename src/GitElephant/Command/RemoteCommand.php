@@ -56,6 +56,7 @@ class RemoteCommand extends BaseCommand
      * @param \GitElephant\Command\SubCommandCommand $subcommand A subcommand object
      * @param array                                  $options    Options for the main git-remote command
      *
+     * @throws \RuntimeException
      * @return string Command string to pass to caller
      */
     public function remote(SubCommandCommand $subcommand = null, Array $options = array())
@@ -93,6 +94,7 @@ class RemoteCommand extends BaseCommand
     /**
      * git-remote --verbose command
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function verbose()
@@ -108,6 +110,7 @@ class RemoteCommand extends BaseCommand
      *
      * @param string $name
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function show($name = null)
@@ -125,6 +128,7 @@ class RemoteCommand extends BaseCommand
      * @param string $url     URL of remote
      * @param array  $options options for the add subcommand
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function add($name, $url, $options = array())

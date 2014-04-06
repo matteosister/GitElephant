@@ -43,6 +43,7 @@ class MergeCommand extends BaseCommand
      *
      * @param \GitElephant\Objects\Branch $with the branch to merge
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function merge(Branch $with)
