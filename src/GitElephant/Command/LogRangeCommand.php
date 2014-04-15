@@ -46,6 +46,7 @@ class LogRangeCommand extends BaseCommand
      * @param int|null                                     $offset      skip n entries
      * @param boolean|false                                $firstParent skip commits brought in to branch by a merge
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function showLog($refStart, $refEnd, $path = null, $limit = null, $offset = null, $firstParent = false)

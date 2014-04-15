@@ -73,6 +73,9 @@ class Remote
      * @param \GitElephant\Repository $repository repository instance
      * @param string                  $name       remote name
      *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \UnexpectedValueException
      * @return \GitElephant\Objects\Remote
      */
     public function __construct(Repository $repository, $name = null)
@@ -104,6 +107,10 @@ class Remote
      *
      * @param RemoteCommand $remoteCmd Optionally provide RemoteCommand object
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\LogicException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
     public function getVerboseOutput(RemoteCommand $remoteCmd = null)
@@ -125,6 +132,10 @@ class Remote
      * @param string        $name      Name of remote to show details
      * @param RemoteCommand $remoteCmd Optionally provide RemoteCommand object
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\LogicException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
     public function getShowOutput($name = null, RemoteCommand $remoteCmd = null)
@@ -143,8 +154,10 @@ class Remote
      * NOTE: the name property should be set if this is to do anything,
      * otherwise it's likely to throw
      *
+     * @throws \RuntimeException
+     * @throws \UnexpectedValueException
      * @throws \InvalidArgumentException
-     *
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Remote
      */
     private function createFromCommand()
@@ -185,18 +198,18 @@ class Remote
             throw new \UnexpectedValueException(sprintf('Invalid data provided for remote detail parsing'));
         }
         $this->name = $name;
-        $fetchURLpattern = '/^Fetch\s+URL:\s*(.*)$/';
+        $fetchURLPattern = '/^Fetch\s+URL:\s*(.*)$/';
         $fetchURL = null;
 
-        $pushURLpattern = '/^Push\s+URL:\s*(.*)$/';
+        $pushURLPattern = '/^Push\s+URL:\s*(.*)$/';
         $pushURL = null;
 
-        $remoteHEADpattern = '/^HEAD\s+branch:\s*(.*)$/';
+        $remoteHEADPattern = '/^HEAD\s+branch:\s*(.*)$/';
         $remoteHEAD = null;
 
-        $remoteBranchHeaderpattern = '/^Remote\s+branch(?:es)?:$/';
-        $localBranchPullHeaderpattern = '/^Local\sbranch(?:es)?\sconfigured\sfor\s\'git\spull\'\:$/';
-        $localRefPushHeaderpattern = '/^Local\sref(?:s)?\sconfigured\sfor\s\'git\spush\':$/';
+        $remoteBranchHeaderPattern = '/^Remote\s+branch(?:es)?:$/';
+        $localBranchPullHeaderPattern = '/^Local\sbranch(?:es)?\sconfigured\sfor\s\'git\spull\'\:$/';
+        $localRefPushHeaderPattern = '/^Local\sref(?:s)?\sconfigured\sfor\s\'git\spush\':$/';
         $groups = array(
             'remoteBranches'=>null,
             'localBranches'=>null,
@@ -206,17 +219,17 @@ class Remote
         foreach ($remoteDetails as $lineno => $line) {
             $line = trim($line);
             $matches = array();
-            if (is_null($fetchURL) && preg_match($fetchURLpattern, $line, $matches)) {
+            if (is_null($fetchURL) && preg_match($fetchURLPattern, $line, $matches)) {
                 $this->fetchURL = $fetchURL = $matches[1];
-            } elseif (is_null($pushURL) && preg_match($pushURLpattern, $line, $matches)) {
+            } elseif (is_null($pushURL) && preg_match($pushURLPattern, $line, $matches)) {
                 $this->pushURL = $pushURL = $matches[1];
-            } elseif (is_null($remoteHEAD) && preg_match($remoteHEADpattern, $line, $matches)) {
+            } elseif (is_null($remoteHEAD) && preg_match($remoteHEADPattern, $line, $matches)) {
                 $this->remoteHEAD = $remoteHEAD = $matches[1];
-            } elseif (is_null($groups['remoteBranches']) && preg_match($remoteBranchHeaderpattern, $line, $matches)) {
+            } elseif (is_null($groups['remoteBranches']) && preg_match($remoteBranchHeaderPattern, $line, $matches)) {
                 $groups['remoteBranches'] = $lineno;
-            } elseif (is_null($groups['localBranches']) && preg_match($localBranchPullHeaderpattern, $line, $matches)) {
+            } elseif (is_null($groups['localBranches']) && preg_match($localBranchPullHeaderPattern, $line, $matches)) {
                 $groups['localBranches'] = $lineno;
-            } elseif (is_null($groups['localRefs']) && preg_match($localRefPushHeaderpattern, $line, $matches)) {
+            } elseif (is_null($groups['localRefs']) && preg_match($localRefPushHeaderPattern, $line, $matches)) {
                 $groups['localRefs'] = $lineno;
             }
         }

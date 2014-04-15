@@ -45,6 +45,7 @@ class TagCommand extends BaseCommand
      * @param string|null $startPoint the new tag start point.
      * @param null        $message    the tag message
      *
+     * @throws \RuntimeException
      * @return string the command
      */
     public function create($name, $startPoint = null, $message = null)
@@ -68,6 +69,7 @@ class TagCommand extends BaseCommand
     /**
      * Lists tags
      *
+     * @throws \RuntimeException
      * @return string the command
      */
     public function lists()
@@ -83,6 +85,7 @@ class TagCommand extends BaseCommand
      *
      * @param string|Tag $tag The name of tag, or the Tag instance to delete
      *
+     * @throws \RuntimeException
      * @return string the command
      */
     public function delete($tag)

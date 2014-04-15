@@ -41,6 +41,7 @@ class BranchCommand extends BaseCommand
      *
      * @param string $reference reference
      *
+     * @throws \RuntimeException
      * @return string the command
      */
     public function contains($reference)
@@ -59,6 +60,7 @@ class BranchCommand extends BaseCommand
      * @param string      $name       The new branch name
      * @param string|null $startPoint the new branch start point.
      *
+     * @throws \RuntimeException
      * @return string the command
      */
     public function create($name, $startPoint = null)
@@ -79,6 +81,7 @@ class BranchCommand extends BaseCommand
      * @param bool $all    lists all remotes
      * @param bool $simple list only branch names
      *
+     * @throws \RuntimeException
      * @return string the command
      */
     public function lists($all = false, $simple = false)
@@ -105,6 +108,7 @@ class BranchCommand extends BaseCommand
      * @param bool   $simple  list only branch names
      * @param bool   $verbose verbose, show also the upstream branch
      *
+     * @throws \RuntimeException
      * @return string
      * @deprecated there is a problem with the --list command, as it is available from git >= 1.7.8
      */
@@ -134,6 +138,7 @@ class BranchCommand extends BaseCommand
      *
      * @param string $name The branch to delete
      *
+     * @throws \RuntimeException
      * @return string the command
      */
     public function delete($name)

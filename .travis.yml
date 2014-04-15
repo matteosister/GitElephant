@@ -24,8 +24,9 @@ before_script:
   - git --version
 
 script:
-  - vendor/bin/phpunit --coverage-clover "clover"
+  #- vendor/bin/phpunit --coverage-clover "clover"
+  - vendor/bin/phpunit
 
-after_success:
-  - curl -sL https://bit.ly/artifact-uploader | php
+#after_success:
+#  - curl -sL https://bit.ly/artifact-uploader | php
   

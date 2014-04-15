@@ -15,7 +15,7 @@
         "symfony/process": "~2.0",
         "symfony/filesystem": "~2.0",
         "symfony/finder": "~2.0",
-        "phpcollection/phpcollection": ">=0.1,<0.3-dev"
+        "phpcollection/phpcollection": "~0.4"
     },
     "require-dev": {
         "phpunit/phpunit": "3.7.*",

@@ -72,6 +72,10 @@ class Branch extends Object implements TreeishInterface
      * @param string                  $name       branch name
      * @param string                  $startPoint branch to start from
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\LogicException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Branch
      */
     public static function create(Repository $repository, $name, $startPoint = null)
@@ -87,6 +91,7 @@ class Branch extends Object implements TreeishInterface
      * @param \GitElephant\Repository $repository repository
      * @param string                  $outputLine output line
      *
+     * @throws \InvalidArgumentException
      * @return Branch
      */
     public static function createFromOutputLine(Repository $repository, $outputLine)
@@ -103,6 +108,8 @@ class Branch extends Object implements TreeishInterface
      * @param string|TreeishInterface $name       branch name
      * @param bool                    $create     like checkout -b, create a branch and check it out
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Branch
      */
     public static function checkout(Repository $repository, $name, $create = false)
@@ -122,6 +129,11 @@ class Branch extends Object implements TreeishInterface
      *
      * @param \GitElephant\Repository $repository repository instance
      * @param string                  $name       branch name
+     *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \GitElephant\Exception\InvalidBranchNameException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
     public function __construct(Repository $repository, $name)
     {
@@ -155,6 +167,7 @@ class Branch extends Object implements TreeishInterface
      * parse an output line from the BranchCommand::singleInfo command
      *
      * @param string $branchString an output line for a branch
+     * @throws \InvalidArgumentException
      */
     public function parseOutputLine($branchString)
     {

@@ -52,14 +52,14 @@ class BaseCommand
     /**
      * the command subject
      *
-     * @var string
+     * @var string|SubCommandCommand
      */
     private $commandSubject;
 
     /**
      * the command second subject (i.e. for branch)
      *
-     * @var string
+     * @var string|SubCommandCommand
      */
     private $commandSubject2;
 
@@ -255,6 +255,8 @@ class BaseCommand
      * add subjects
      *
      * @param string &$command
+     *
+     * @throws \RuntimeException
      */
     private function subjects(&$command)
     {

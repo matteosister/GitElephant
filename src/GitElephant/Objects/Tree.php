@@ -111,8 +111,9 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      * @param string                  $ref        a treeish reference
      * @param Object                  $subject    the subject
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @internal param \GitElephant\Objects\Object|string $treeObject Object instance
-     *
      */
     public function __construct(Repository $repository, $ref = 'HEAD', $subject = null)
     {
@@ -192,6 +193,10 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
     /**
      * get binary data
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\LogicException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return string
      */
     public function getBinaryData()
@@ -336,6 +341,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      *
      * @param string $ref
      *
+     * @throws \RuntimeException
      * @return Commit\Message
      */
     public function getLastCommitMessage($ref = 'master')
@@ -348,6 +354,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      *
      * @param string $ref
      *
+     * @throws \RuntimeException
      * @return Author
      */
     public function getLastCommitAuthor($ref = 'master')
@@ -360,6 +367,8 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      *
      * @param string $ref
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Commit
      */
     public function getLastCommit($ref = 'master')

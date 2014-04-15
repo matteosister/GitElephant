@@ -57,6 +57,8 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * @param null                    $offset      offset
      * @param boolean                 $firstParent first parent
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @internal param string $ref treeish reference
      */
     public function __construct(
@@ -82,6 +84,10 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * @param string  $offset      offset
      * @param boolean $firstParent first parent
      *
+     * @throws \RuntimeException
+     * @throws \Symfony\Component\Process\Exception\LogicException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @see ShowCommand::commitInfo
      */
     private function createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent)

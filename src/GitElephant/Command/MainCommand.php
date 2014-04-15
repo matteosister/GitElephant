@@ -51,6 +51,7 @@ class MainCommand extends BaseCommand
      *
      * @param bool $bare
      *
+     * @throws \RuntimeException
      * @return MainCommand
      */
     public function init($bare = false)
@@ -69,6 +70,7 @@ class MainCommand extends BaseCommand
      *
      * @param bool $porcelain
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function status($porcelain = false)
@@ -89,6 +91,7 @@ class MainCommand extends BaseCommand
      *
      * @param string $what what should be added to the repository
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function add($what = '.')
@@ -106,6 +109,7 @@ class MainCommand extends BaseCommand
      *
      * @param string $what what should be removed from the stage
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function unstage($what)
@@ -124,6 +128,7 @@ class MainCommand extends BaseCommand
      * @param string $message  the commit message
      * @param bool   $stageAll commit all changes
      *
+     * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @return string
      */
@@ -150,6 +155,7 @@ class MainCommand extends BaseCommand
      *
      * @param string|Branch $ref the reference to checkout
      *
+     * @throws \RuntimeException
      * @return string
      */
     public function checkout($ref)
@@ -176,6 +182,7 @@ class MainCommand extends BaseCommand
      * @param string|Object $from source path
      * @param string|Object $to   destination path
      *
+     * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @return string
      */
@@ -207,6 +214,7 @@ class MainCommand extends BaseCommand
      * @param bool          $recursive recurse
      * @param bool          $force     force
      *
+     * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @return string
      */
