@@ -3,20 +3,20 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "a85fbb4911a57f7f46035209ca8bc804",
+    "hash": "d9b7ede0a31372101b912e5150218209",
     "packages": [
         {
             "name": "phpcollection/phpcollection",
-            "version": "0.2.0",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/schmittjoh/php-collection.git",
-                "reference": "0.2.0"
+                "reference": "b8bf55a0a929ca43b01232b36719f176f86c7e83"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/schmittjoh/php-collection/zipball/0.2.0",
-                "reference": "0.2.0",
+                "url": "https://api.github.com/repos/schmittjoh/php-collection/zipball/b8bf55a0a929ca43b01232b36719f176f86c7e83",
+                "reference": "b8bf55a0a929ca43b01232b36719f176f86c7e83",
                 "shasum": ""
             },
             "require": {
@@ -25,7 +25,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.2-dev"
+                    "dev-master": "0.3-dev"
                 }
             },
             "autoload": {
@@ -41,7 +41,7 @@
                 {
                     "name": "Johannes M. Schmitt",
                     "email": "schmittjoh@gmail.com",
-                    "homepage": "http://jmsyst.com",
+                    "homepage": "https://github.com/schmittjoh",
                     "role": "Developer of wrapped JMSSerializerBundle"
                 }
             ],
@@ -53,7 +53,7 @@
                 "sequence",
                 "set"
             ],
-            "time": "2013-01-23 15:16:14"
+            "time": "2014-03-11 13:46:42"
         },
         {
             "name": "phpoption/phpoption",
