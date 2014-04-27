@@ -1,0 +1,27 @@
+# GitElephant tests
+#
+# VERSION       0.1.0
+
+FROM ubuntu:14.04
+
+MAINTAINER Matteo Giachino matteog@gmail.com
+
+# apt packages
+RUN apt-get install -y php5
+RUN apt-get install -y wget
+RUN apt-get install -y build-essential
+
+# git dependencies
+RUN apt-get install -y libcurl4-gnutls-dev libexpat1-dev gettext libz-dev libssl-dev
+
+# download and build git
+RUN wget https://github.com/git/git/archive/v1.9.2.tar.gz -P /git
+RUN cd /git && tar -xzf v1.9.2.tar.gz && cd git-1.9.2
+RUN cd /git/git-1.9.2 && make prefix=/usr/local all
+RUN cd /git/git-1.9.2 && sudo make prefix=/usr/local install
+
+# git config
+RUN git config --global user.email "docker@docker.it"
+RUN git config --global user.name "Docker User"
+
+# CMD ["/bin/bash", "/install.sh"]
