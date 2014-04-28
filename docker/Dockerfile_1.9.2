@@ -24,4 +24,5 @@ RUN cd /git/git-1.9.2 && sudo make prefix=/usr/local install
 RUN git config --global user.email "docker@docker.it"
 RUN git config --global user.name "Docker User"
 
-# CMD ["/bin/bash", "/install.sh"]
+ENTRYPOINT ["/tests/vendor/bin/phpunit"]
+CMD ["-c", "/tests"]
