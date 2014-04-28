@@ -28,4 +28,4 @@ spl_autoload_register(function ($class) {
     }
 });
 
-var_dump('si');
+echo exec('git --version')."\n";
