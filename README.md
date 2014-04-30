@@ -357,7 +357,7 @@ Dependencies
 Code style
 ----------
 
-* GitElephant follows the [Symfony2 Coding Standard](https://github.com/opensky/Symfony2-coding-standard)
+* GitElephant follows the [PSR-2 Coding Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
 * I'm using [gitflow](https://github.com/nvie/gitflow)
 
 Want to contribute?
