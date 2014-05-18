@@ -1,4 +1,0 @@
-#!/bin/bash
-for i in `ls docker/`; do
-    sudo docker.io build -t git-$i - < docker/$i
-done;

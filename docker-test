@@ -1,0 +1,4 @@
+#!/bin/bash
+docker run -v $PWD:/tests git-1.9.2
+docker run -v $PWD:/tests git-1.8.5.3
+
