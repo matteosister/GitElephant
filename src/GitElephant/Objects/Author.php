@@ -79,4 +79,16 @@ class Author
     {
         return $this->name;
     }
+
+    /**
+     * return author as RFC 822 representation ( Foo Bar <foo@example.com )
+     *
+     * @return string
+     */
+    function __toString()
+    {
+        return $this->name . ' <' . $this->email . '>';
+    }
+
+
 }
