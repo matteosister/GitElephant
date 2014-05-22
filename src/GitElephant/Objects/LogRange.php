@@ -37,7 +37,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      *
      * @var array
      */
-    private $commits  = array();
+    private $rangeCommits  = array();
 
     /**
      * the cursor position
@@ -104,18 +104,18 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
     private function parseOutputLines($outputLines)
     {
         $commitLines = null;
-        $this->commits = array();
+        $this->rangeCommits = array();
         foreach ($outputLines as $line) {
             if (preg_match('/^commit (\w+)$/', $line) > 0) {
                 if (null !== $commitLines) {
-                    $this->commits[] = Commit::createFromOutputLines($this->repository, $commitLines);
+                    $this->rangeCommits[] = Commit::createFromOutputLines($this->repository, $commitLines);
                 }
                 $commitLines = array();
             }
             $commitLines[] = $line;
         }
         if (null !== $commitLines && count($commitLines) > 0) {
-            $this->commits[] = Commit::createFromOutputLines($this->repository, $commitLines);
+            $this->rangeCommits[] = Commit::createFromOutputLines($this->repository, $commitLines);
         }
     }
 
@@ -126,7 +126,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      */
     public function toArray()
     {
-        return $this->commits;
+        return $this->rangeCommits;
     }
 
     /**
@@ -170,7 +170,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      */
     public function offsetExists($offset)
     {
-        return isset($this->commits[$offset]);
+        return isset($this->rangeCommits[$offset]);
     }
 
     /**
@@ -182,7 +182,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      */
     public function offsetGet($offset)
     {
-        return isset($this->commits[$offset]) ? $this->commits[$offset] : null;
+        return isset($this->rangeCommits[$offset]) ? $this->rangeCommits[$offset] : null;
     }
 
     /**
@@ -217,7 +217,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      */
     public function count()
     {
-        return count($this->commits);
+        return count($this->rangeCommits);
     }
 
     /**

@@ -20,11 +20,11 @@ todo
 * better status handling with --porcelain DONE
 * named exceptions DONE
 * unstage DONE
-* SSH to execute command on remote server
 
 next
 * git blame
 * blobs management
 * submodules management
 * signed tags
+* SSH to execute command on remote server
 
