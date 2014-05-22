@@ -41,6 +41,16 @@ class Author
     private $email;
 
     /**
+     * return author as RFC 822 representation ( Foo Bar <foo@example.com )
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name . ' <' . $this->email . '>';
+    }
+
+    /**
      * email setter
      *
      * @param string $email the email

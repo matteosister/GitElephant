@@ -34,5 +34,6 @@ class AuthorTest extends TestCase
         $author->setName('foo');
         $this->assertEquals('foo@bar.com', $author->getEmail());
         $this->assertEquals('foo', $author->getName());
+        $this->assertEquals('foo <foo@bar.com>', $author);
     }
 }
