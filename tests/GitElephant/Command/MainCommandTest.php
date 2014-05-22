@@ -80,6 +80,11 @@ class MainCommandTest extends TestCase
     public function testCommit()
     {
         $this->assertEquals(MainCommand::GIT_COMMIT." '-m' 'foo'", $this->mainCommand->commit('foo'));
+        $this->assertEquals(MainCommand::GIT_COMMIT." '-a' '-m' 'foo'", $this->mainCommand->commit('foo', true));
+        $this->assertEquals(MainCommand::GIT_COMMIT." '--author' 'example <example@example.com>' '-m' 'foo'",
+            $this->mainCommand->commit('foo', false, 'example <example@example.com>'));
+        $this->assertEquals(MainCommand::GIT_COMMIT." '-a' '--author' 'example <example@example.com>' '-m' 'foo'",
+            $this->mainCommand->commit('foo', true, 'example <example@example.com>'));
     }
 
     /**
