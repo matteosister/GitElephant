@@ -19,6 +19,7 @@
 
 namespace GitElephant\Command;
 
+use GitElephant\Objects\Author;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
 
@@ -125,9 +126,9 @@ class MainCommand extends BaseCommand
     /**
      * Commit
      *
-     * @param string $message  the commit message
-     * @param bool   $stageAll commit all changes
-     * @param string $author   override the author for this commit
+     * @param string        $message  the commit message
+     * @param bool          $stageAll commit all changes
+     * @param string|Author $author   override the author for this commit
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException

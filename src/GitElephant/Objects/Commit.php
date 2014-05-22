@@ -115,10 +115,10 @@ class Commit implements TreeishInterface, \Countable
     /**
      * factory method to create a commit
      *
-     * @param Repository $repository repository instance
-     * @param string     $message    commit message
-     * @param bool       $stageAll   automatically stage the dirty working tree. Alternatively call stage() on the repo
-     * @param string     $author     override the author for this commit
+     * @param Repository    $repository repository instance
+     * @param string        $message    commit message
+     * @param bool          $stageAll   automatically stage the dirty working tree. Alternatively call stage() on the repo
+     * @param string|Author $author     override the author for this commit
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
