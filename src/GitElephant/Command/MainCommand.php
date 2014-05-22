@@ -145,7 +145,7 @@ class MainCommand extends BaseCommand
             $this->addCommandArgument('-a');
         }
 
-        if($author !== null){
+        if ($author !== null){
             $this->addCommandArgument('--author');
             $this->addCommandArgument($author);
         }
