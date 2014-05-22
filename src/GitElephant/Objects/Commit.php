@@ -118,6 +118,7 @@ class Commit implements TreeishInterface, \Countable
      * @param Repository $repository repository instance
      * @param string     $message    commit message
      * @param bool       $stageAll   automatically stage the dirty working tree. Alternatively call stage() on the repo
+     * @param string     $author     override the author for this commit
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -126,9 +127,9 @@ class Commit implements TreeishInterface, \Countable
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Commit
      */
-    public static function create(Repository $repository, $message, $stageAll = false)
+    public static function create(Repository $repository, $message, $stageAll = false, $author = null)
     {
-        $repository->getCaller()->execute(MainCommand::getInstance()->commit($message, $stageAll));
+        $repository->getCaller()->execute(MainCommand::getInstance()->commit($message, $stageAll, $author));
 
         return $repository->getCommit();
     }

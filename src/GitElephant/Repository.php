@@ -250,13 +250,14 @@ class Repository
      * @param string      $message  the commit message
      * @param bool        $stageAll whether to stage on not everything before commit
      * @param string|null $ref      the reference to commit to (checkout -> commit -> checkout previous)
+     * @param string      $author   override the author for this commit
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function commit($message, $stageAll = false, $ref = null)
+    public function commit($message, $stageAll = false, $ref = null, $author = null)
     {
         $currentBranch = null;
         if ($ref != null) {
@@ -266,7 +267,7 @@ class Repository
         if ($stageAll) {
             $this->stage();
         }
-        $this->caller->execute(MainCommand::getInstance()->commit($message, $stageAll));
+        $this->caller->execute(MainCommand::getInstance()->commit($message, $stageAll, $author));
         if ($ref != null) {
             $this->checkout($currentBranch);
         }

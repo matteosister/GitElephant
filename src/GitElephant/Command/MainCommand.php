@@ -127,12 +127,13 @@ class MainCommand extends BaseCommand
      *
      * @param string $message  the commit message
      * @param bool   $stageAll commit all changes
+     * @param string $author   override the author for this commit
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function commit($message, $stageAll = false)
+    public function commit($message, $stageAll = false, $author = null)
     {
         $this->clearAll();
         if (trim($message) == '' || $message == null) {
@@ -142,6 +143,11 @@ class MainCommand extends BaseCommand
 
         if ($stageAll) {
             $this->addCommandArgument('-a');
+        }
+
+        if($author !== null){
+            $this->addCommandArgument('--author');
+            $this->addCommandArgument($author);
         }
 
         $this->addCommandArgument('-m');
