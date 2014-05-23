@@ -78,7 +78,6 @@ the *Repository* class is the main class where you can find every method you nee
 **Read repository**
 
 ``` php
-<?php
 // get the current status
 $repo->getStatusOutput(); // returns an array of lines of the status message
 ```
