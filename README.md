@@ -146,6 +146,27 @@ foreach ($log as $commit) {
 }
 ```
 
+*status*
+
+If you build a GitElephant\Status\Status class, you will get a nice api for getting the actual state of the working tree and staging area.
+
+``` php
+$status = $repo->getStatus();
+$status = GitElephant\Status\Status::get($repo); // it's the same...
+
+$status->all(); // A PhpCollection of StatusFile objects
+$status->untracked();
+$status->modified();
+$status->added();
+$status->deleted();
+$status->renamed();
+$status->copied();
+```
+
+all this methods returns a [PhpCollection](https://github.com/schmittjoh/php-collection) of StatusFile objects
+
+a StatusFile instance has all the information about the tree node changes. File names (and new file names for renamed objects), index and working tree status, and also a "git style" description like: *added to index* or *deleted in work tree*
+
 **Manage repository**
 
 You could also use GitElephant to manage your git repositories via PHP.
@@ -202,28 +223,6 @@ $caller = new CallerSSH2($connection, '/path/to/git/binary/on/server');
 $repo = Repository::open('/path/to/git/repository');
 $repo->setCaller($caller);
 ```
-
-Status
-------
-
-**new in alpha4** If you build a GitElephant\Status\Status class, you will get a nice api for getting the actual state of the working tree and staging area.
-
-``` php
-$status = $repo->getStatus();
-$status = GitElephant\Status\Status::get($repo); // it's the same...
-
-$status->all(); // A PhpCollection of StatusFile objects
-$status->untracked();
-$status->modified();
-$status->added();
-$status->deleted();
-$status->renamed();
-$status->copied();
-```
-
-all this methods returns a [PhpCollection](https://github.com/schmittjoh/php-collection) of StatusFile objects
-
-a StatusFile instance has all the information about the tree node changes. File names (and new file names for renamed objects), index and working tree status, and also a "git style" description like: *added to index* or *deleted in work tree*
 
 A versioned tree of files
 -------------------------
