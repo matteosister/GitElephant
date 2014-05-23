@@ -122,7 +122,7 @@ $commit->count();
 count($commit);
 ```
 
-*remotes* (thanks to @davidneimeyer)
+*remotes*
 
 ``` php
 $repo->getRemote('origin'); // a Remote object
