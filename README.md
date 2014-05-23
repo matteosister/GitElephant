@@ -81,24 +81,32 @@ the *Repository* class is the main class where you can find every method you nee
 <?php
 // get the current status
 $repo->getStatusOutput(); // returns an array of lines of the status message
+```
 
-// branches
+*branches*
+
+``` php
 $repo->getBranches(); // return an array of Branch objects
 $repo->getMainBranch(); // return the Branch instance of the current checked out branch
 $repo->getBranch('master'); // return a Branch instance by its name
 $develop = Branch::checkout($repo, 'develop');
 $develop = Branch::checkout($repo, 'develop', true); // create and checkout
+```
 
+*tags*
 
-// tags
+``` php
 $repo->getTags(); // array of Tag instances
 $repo->getTag('v1.0'); // a Tag instance by name
 Tag::pick($repo, 'v1.0'); // a Tag instance by name
 
 // last tag by date
 $repo->getLastTag();
+```
 
-// commit
+*commits*
+
+``` php
 $repo->getCommit(); // get a Commit instance of the current HEAD
 $repo->getCommit('v1.0'); // get a Commit instance for a tag
 $repo->getCommit('1ac370d'); // sha (follow [git standards](http://book.git-scm.com/4_git_treeishes.html) to format the sha)
@@ -112,8 +120,11 @@ $repo->countCommits('1ac370d'); // number of commits to arrive at 1ac370d
 $commit->count();
 // as well as
 count($commit);
+```
 
-// remotes (thanks to @davidneimeyer)
+*remotes* (thanks to @davidneimeyer)
+
+``` php
 $repo->getRemote('origin'); // a Remote object
 $repo->getRemotes(); // array of Remote objects
 
