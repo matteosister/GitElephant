@@ -73,23 +73,9 @@ $repo = Repository::open('/path/to/git/repository');
 
 By default GitElephant try to use the git binary on your system.
 
-If you need to access remote repository you have to install the [ssh2 extension](http://www.php.net/manual/en/book.ssh2.php) and pass a new *Caller* to the repository. *this is a new feature...consider this in a testing phase*
-
-``` php
-<?php
-
-$repo = new Repository('/path/to/git/repository');
-$connection = ssh_connect('host', 'port');
-// authorize the connection with the method you want
-ssh2_auth_password($connection, 'user', 'password');
-$caller = new CallerSSH2($connection, '/path/to/git/binary/on/server');
-$repo = Repository::open('/path/to/git/repository');
-$repo->setCaller($caller);
-```
-
 the *Repository* class is the main class where you can find every method you need...
 
- **Read repository**
+**Read repository**
 
 ``` php
 <?php
@@ -189,6 +175,22 @@ $repo->createTag('v1.0', 'master', 'my first release!');
 $repo->createTag('v1.0', null, 'my first release!');
 // create a tag from a Commit object
 $repo->createTag($repo->getCommit());
+```
+
+**Remote repositories**
+
+If you need to access remote repository you have to install the [ssh2 extension](http://www.php.net/manual/en/book.ssh2.php) and pass a new *Caller* to the repository. *this is a new feature...consider this in a testing phase*
+
+``` php
+<?php
+
+$repo = new Repository('/path/to/git/repository');
+$connection = ssh_connect('host', 'port');
+// authorize the connection with the method you want
+ssh2_auth_password($connection, 'user', 'password');
+$caller = new CallerSSH2($connection, '/path/to/git/binary/on/server');
+$repo = Repository::open('/path/to/git/repository');
+$repo->setCaller($caller);
 ```
 
 Status
