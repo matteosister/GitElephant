@@ -109,7 +109,7 @@ $repo->getLastTag();
 ``` php
 $repo->getCommit(); // get a Commit instance of the current HEAD
 $repo->getCommit('v1.0'); // get a Commit instance for a tag
-$repo->getCommit('1ac370d'); // sha (follow [git standards](http://book.git-scm.com/4_git_treeishes.html) to format the sha)
+$repo->getCommit('1ac370d'); // full sha or part of it
 // or directly create a commit object
 $commit = new Commit($repo, '1ac370d');
 $commit = new Commit($repo, '1ac370d'); // head commit
