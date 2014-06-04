@@ -899,14 +899,15 @@ class Repository
      *
      * @param string $from
      * @param string $ref
+     * @param bool   $rebase
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function pull($from = null, $ref = null)
+    public function pull($from = null, $ref = null, $rebase = true)
     {
-        $this->caller->execute(PullCommand::getInstance()->pull($from, $ref));
+        $this->caller->execute(PullCommand::getInstance()->pull($from, $ref, $rebase));
     }
 
     /**

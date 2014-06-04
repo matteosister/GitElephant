@@ -41,6 +41,7 @@ class PullCommand extends BaseCommand
     /**
      * @param Remote|string $remote
      * @param Branch|string $branch
+     * @param bool          $rebase
      *
      * @throws \RuntimeException
      * @return string
