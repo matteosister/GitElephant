@@ -41,11 +41,12 @@ class PullCommand extends BaseCommand
     /**
      * @param Remote|string $remote
      * @param Branch|string $branch
+     * @param bool          $rebase
      *
      * @throws \RuntimeException
      * @return string
      */
-    public function pull($remote = null, $branch = null)
+    public function pull($remote = null, $branch = null, $rebase = false)
     {
         if ($remote instanceof Remote) {
             $remote = $remote->getName();
@@ -55,6 +56,9 @@ class PullCommand extends BaseCommand
         }
         $this->clearAll();
         $this->addCommandName(self::GIT_PULL_COMMAND);
+        if ($rebase) {
+            $this->addCommandArgument('--rebase');
+        }
         if (!is_null($remote)) {
             $this->addCommandSubject($remote);
         }
