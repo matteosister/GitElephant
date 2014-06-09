@@ -18,6 +18,7 @@
  */
 
 namespace GitElephant\Command;
+use GitElephant\Command\Config\Config;
 
 /**
  * ConfigCommand generator
@@ -75,6 +76,9 @@ class ConfigCommand extends BaseCommand
     /**
      * Get the value for a given key (optionally filtered by a regex matching the value).
      * Returns error code 1 if the key was not found and error code 2 if multiple key values were found.
+     *
+     * @var string|Config $config
+     * @return string
      */
     public function get($config)
     {
@@ -88,6 +92,9 @@ class ConfigCommand extends BaseCommand
 
     /**
      * Like get, but does not fail if the number of values for the key is not exactly one.
+     *
+     * @var string|Config $config
+     * @return string
      */
     public function getAll($config)
     {
@@ -100,7 +107,29 @@ class ConfigCommand extends BaseCommand
     }
 
     /**
+     * Like getAll, but interprets the name as a regular expression and writes out the key names.
+     * Regular expression matching is currently case-sensitive and done against a canonicalized version of the key
+     * in which section and variable names are lowercased, but subsection names are not.
+     *
+     * @var string|Config $config
+     * @return string
+     */
+    public function getRegexp($config)
+    {
+        $this->clearAll();
+        $this->addCommandName(self::GIT_CONFIG_COMMAND);
+        $this->addFileOption();
+        $this->addCommandArgument('--get-regexp');
+        $this->addCommandSubject($config);
+        return $this->getCommand();
+    }
+
+    /**
      * Sets a new config value
+     *
+     * @var string|Config $config
+     * @var string $value
+     * @return string
      */
     public function set($config, $value)
     {
@@ -114,6 +143,10 @@ class ConfigCommand extends BaseCommand
 
     /**
      * Adds a new line to the option without altering any existing values.
+     *
+     * @var string|Config $config
+     * @var string $value
+     * @return string
      */
     public function add($config, $value)
     {
@@ -123,6 +156,38 @@ class ConfigCommand extends BaseCommand
         $this->addCommandArgument('--add');
         $this->addCommandSubject($config);
         $this->addCommandSubject2($value);
+        return $this->getCommand();
+    }
+
+    /**
+     * Remove the line matching the key from config file. (--unset)
+     *
+     * @var string|Config $config
+     * @return string
+     */
+    public function uset($config)
+    {
+        $this->clearAll();
+        $this->addCommandName(self::GIT_CONFIG_COMMAND);
+        $this->addFileOption();
+        $this->addCommandArgument('--unset');
+        $this->addCommandSubject($config);
+        return $this->getCommand();
+    }
+
+    /**
+     * Remove all lines matching the key from config file. (--unset-all)
+     *
+     * @var string|Config $config
+     * @return string
+     */
+    public function usetAll($config)
+    {
+        $this->clearAll();
+        $this->addCommandName(self::GIT_CONFIG_COMMAND);
+        $this->addFileOption();
+        $this->addCommandArgument('--unset-all');
+        $this->addCommandSubject($config);
         return $this->getCommand();
     }
 }

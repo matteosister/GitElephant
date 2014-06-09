@@ -58,6 +58,18 @@ class ConfigCommandTest extends TestCase
         );
     }
 
+    public function testGetRegexp()
+    {
+        $this->assertEquals(
+            "config '--local' '--get-regexp' 'user.name'",
+            ConfigCommand::getInstance()->getRegexp('user.name')
+        );
+        $this->assertEquals(
+            "config '--local' '--get-regexp' 'user.name'",
+            ConfigCommand::getInstance()->getRegexp(Config::create('user', 'name'))
+        );
+    }
+
     public function testSet()
     {
         $this->assertEquals(
@@ -79,6 +91,30 @@ class ConfigCommandTest extends TestCase
         $this->assertEquals(
             "config '--local' '--add' 'user.name' 'test'",
             ConfigCommand::getInstance()->add(Config::create('user', 'name'), 'test')
+        );
+    }
+
+    public function testUset()
+    {
+        $this->assertEquals(
+            "config '--local' '--unset' 'user.name'",
+            ConfigCommand::getInstance()->uset('user.name')
+        );
+        $this->assertEquals(
+            "config '--local' '--unset' 'user.name'",
+            ConfigCommand::getInstance()->uset(Config::create('user', 'name'))
+        );
+    }
+
+    public function testUsetAll()
+    {
+        $this->assertEquals(
+            "config '--local' '--unset-all' 'user.name'",
+            ConfigCommand::getInstance()->usetAll('user.name')
+        );
+        $this->assertEquals(
+            "config '--local' '--unset-all' 'user.name'",
+            ConfigCommand::getInstance()->usetAll(Config::create('user', 'name'))
         );
     }
 }
