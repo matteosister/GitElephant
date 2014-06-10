@@ -9,6 +9,7 @@ MAINTAINER Matteo Giachino matteog@gmail.com
 ENV GITVERSION 1.8.5.3
 
 # apt packages
+RUN apt-get update
 RUN apt-get install -y php5
 RUN apt-get install -y wget
 RUN apt-get install -y build-essential
@@ -27,7 +28,7 @@ RUN git config --global user.email "docker@docker.it"
 RUN git config --global user.name "Docker User"
 
 # phpunit
-RUN wget https://phar.phpunit.de/phpunit.phar -P /
+ADD https://phar.phpunit.de/phpunit.phar /
 
 ENTRYPOINT ["/usr/bin/php", "phpunit.phar"]
 CMD ["-c", "/tests"]
