@@ -24,7 +24,7 @@ use GitElephant\Objects\Branch;
 use GitElephant\Objects\Remote;
 
 /**
- * Class PushCommand
+ * Class ResetCommand
  */
 class ResetCommand extends BaseCommand
 {
