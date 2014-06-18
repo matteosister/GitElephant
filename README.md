@@ -167,6 +167,15 @@ all this methods returns a [PhpCollection](https://github.com/schmittjoh/php-col
 
 a StatusFile instance has all the information about the tree node changes. File names (and new file names for renamed objects), index and working tree status, and also a "git style" description like: *added to index* or *deleted in work tree*
 
+** reset **
+Reset the branch to it's head.
+``` php
+use GitElephant\Command\ResetCommand;
+$option = ResetCommand::OPTION_HARD;
+$tag = ResetCommand::TAG_HEAD;
+$Repository->reset($option, $tag);
+```
+
 **Manage repository**
 
 You could also use GitElephant to manage your git repositories via PHP.
