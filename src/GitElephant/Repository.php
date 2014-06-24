@@ -258,7 +258,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function commit($message, $stageAll = false, $ref = null, $author = null)
+    public function commit($message, $stageAll = false, $ref = null, $author = null, $allowEmpty = false)
     {
         $currentBranch = null;
         if ($ref != null) {
@@ -268,7 +268,7 @@ class Repository
         if ($stageAll) {
             $this->stage();
         }
-        $this->caller->execute(MainCommand::getInstance()->commit($message, $stageAll, $author));
+        $this->caller->execute(MainCommand::getInstance()->commit($message, $stageAll, $author, $allowEmpty));
         if ($ref != null) {
             $this->checkout($currentBranch);
         }
