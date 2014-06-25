@@ -134,7 +134,7 @@ class MainCommand extends BaseCommand
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function commit($message, $stageAll = false, $author = null)
+    public function commit($message, $stageAll = false, $author = null, $allowEmpty = false)
     {
         $this->clearAll();
         if (trim($message) == '' || $message == null) {
@@ -149,6 +149,10 @@ class MainCommand extends BaseCommand
         if ($author !== null) {
             $this->addCommandArgument('--author');
             $this->addCommandArgument($author);
+        }
+
+        if ($allowEmpty) {
+            $this->addCommandArgument('--allow-empty');
         }
 
         $this->addCommandArgument('-m');

@@ -85,6 +85,8 @@ class MainCommandTest extends TestCase
             $this->mainCommand->commit('foo', false, 'example <example@example.com>'));
         $this->assertEquals(MainCommand::GIT_COMMIT." '-a' '--author' 'example <example@example.com>' '-m' 'foo'",
             $this->mainCommand->commit('foo', true, 'example <example@example.com>'));
+        $this->assertEquals(MainCommand::GIT_COMMIT." '--author' 'example <example@example.com>' '--allow-empty' '-m' 'foo'",
+          $this->mainCommand->commit('foo', false, 'example <example@example.com>', true));
     }
 
     /**
