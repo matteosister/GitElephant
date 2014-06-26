@@ -39,6 +39,7 @@ use GitElephant\Objects\TreeishInterface;
 use GitElephant\Command\MainCommand;
 use GitElephant\Command\BranchCommand;
 use GitElephant\Command\MergeCommand;
+use GitElephant\Command\RevParseCommand;
 use GitElephant\Command\TagCommand;
 use GitElephant\Command\LogCommand;
 use GitElephant\Command\CloneCommand;
@@ -274,6 +275,24 @@ class Repository
         }
 
         return $this;
+    }
+
+    /**
+     * rev-parse command - often used to return a commit tag.
+     *
+     * @param array         $options the options to apply to rev-parse 
+     * @param string        $arg the argument (may be a branch head, etc)
+     *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @return array
+     */
+    public function getRevParse($options = null, $arg = null)
+    {
+        $this->caller->execute(RevParseCommand::getInstance()->revParse($options, $arg));
+
+        return array_map('trim', $this->caller->getOutputLines());
     }
 
     /**
