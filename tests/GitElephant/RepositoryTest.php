@@ -841,4 +841,15 @@ class RepositoryTest extends TestCase
         $this->assertEquals('test commit', $r3->getLog()->last()->getMessage());
         $this->assertEquals($r1->getMainBranch()->getSha(), $r3->getLog()->last()->getSha());
     }
+
+    public function testGetRevParse()
+    {
+        $this->initRepository(null, 0);
+        $r = $this->getRepository(0);
+        $r->init();
+        $this->addFile('test1', null, null, $r);
+        $r->commit('test commit', true);
+        $master = $r->getBranch('master');
+        $this->assertEquals($master->getSha(), $r->getRevParse($master, [])[0]);
+    }
 }
