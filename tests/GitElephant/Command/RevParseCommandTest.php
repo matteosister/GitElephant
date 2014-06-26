@@ -27,6 +27,10 @@ class RevParseCommandTest extends TestCase
     {
         $c = RevParseCommand::getInstance();
         $this->assertEquals("rev-parse 'master'", $c->revParse('master'));
-        $this->assertEquals("rev-parse '--all' 'master'", $c->revParse('master', [RevParseCommand::OPTION_ALL]));
+        $this->assertEquals("rev-parse '--all' 'master'", $c->revParse('master', array(RevParseCommand::OPTION_ALL)));
+        $this->assertEquals("rev-parse '--all' '--abbrev-ref' 'master'", $c->revParse('master', array(
+            RevParseCommand::OPTION_ALL,
+            RevParseCommand::OPTION_ABBREV_REF
+        )));
     }
 }

@@ -850,6 +850,7 @@ class RepositoryTest extends TestCase
         $this->addFile('test1', null, null, $r);
         $r->commit('test commit', true);
         $master = $r->getBranch('master');
-        $this->assertEquals($master->getSha(), $r->getRevParse($master, [])[0]);
+        $revParse = $r->getRevParse($master, array());
+        $this->assertEquals($master->getSha(), $revParse[0]);
     }
 }
