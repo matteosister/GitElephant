@@ -258,7 +258,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function commit($message, $stageAll = false, $ref = null, $author = null)
+    public function commit($message, $stageAll = false, $ref = null, $author = null, $allowEmpty = false)
     {
         $currentBranch = null;
         if ($ref != null) {
@@ -268,7 +268,7 @@ class Repository
         if ($stageAll) {
             $this->stage();
         }
-        $this->caller->execute(MainCommand::getInstance()->commit($message, $stageAll, $author));
+        $this->caller->execute(MainCommand::getInstance()->commit($message, $stageAll, $author, $allowEmpty));
         if ($ref != null) {
             $this->checkout($currentBranch);
         }
@@ -901,14 +901,15 @@ class Repository
      *
      * @param string $from
      * @param string $ref
+     * @param bool   $rebase
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function pull($from = null, $ref = null)
+    public function pull($from = null, $ref = null, $rebase = true)
     {
-        $this->caller->execute(PullCommand::getInstance()->pull($from, $ref));
+        $this->caller->execute(PullCommand::getInstance()->pull($from, $ref, $rebase));
     }
 
     /**

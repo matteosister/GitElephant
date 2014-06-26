@@ -59,5 +59,7 @@ class PullCommandTest extends TestCase
         $this->assertEquals("pull 'test-remote' 'develop'", $pc->pull($remote, 'develop'));
         $branch = Branch::create($this->getRepository(), 'test-branch');
         $this->assertEquals("pull 'test-remote' 'test-branch'", $pc->pull($remote, $branch));
+        $this->assertEquals("pull '--rebase'", $pc->pull(null, null, true));
+        $this->assertEquals("pull '--rebase' 'test-remote' 'test-branch'", $pc->pull($remote, $branch, true));
     }
 }

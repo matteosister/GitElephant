@@ -2,7 +2,7 @@
     "name": "cypresslab/gitelephant",
     "description": "An abstraction layer for git written in PHP 5.3",
     "keywords": ["git"],
-    "homepage": "http://matteosister.github.com/GitElephant",
+    "homepage": "http://gitelephant.cypresslab.net/",
     "license": "LGPL-3.0+",
     "authors": [
         {

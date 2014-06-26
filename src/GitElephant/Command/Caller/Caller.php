@@ -104,7 +104,11 @@ class Caller implements CallerInterface
         $process->setTimeout(15000);
         $process->run();
         if (!in_array($process->getExitCode(), $acceptedExitCodes)) {
-            throw new \RuntimeException($process->getErrorOutput());
+            $text = 'Exit code: ' . $process->getExitCode();
+            $text .= ' while executing: "' . $cmd;
+            $text .= '" with reason: ' . $process->getErrorOutput();
+            $text .= "\n" . $process->getOutput();
+            throw new \RuntimeException($text);
         }
         $this->rawOutput = $process->getOutput();
         // rtrim values

@@ -73,49 +73,42 @@ $repo = Repository::open('/path/to/git/repository');
 
 By default GitElephant try to use the git binary on your system.
 
-If you need to access remote repository you have to install the [ssh2 extension](http://www.php.net/manual/en/book.ssh2.php) and pass a new *Caller* to the repository. *this is a new feature...consider this in a testing phase*
-
-``` php
-<?php
-
-$repo = new Repository('/path/to/git/repository');
-$connection = ssh_connect('host', 'port');
-// authorize the connection with the method you want
-ssh2_auth_password($connection, 'user', 'password');
-$caller = new CallerSSH2($connection, '/path/to/git/binary/on/server');
-$repo = Repository::open('/path/to/git/repository');
-$repo->setCaller($caller);
-```
-
 the *Repository* class is the main class where you can find every method you need...
 
- **Read repository**
+**Read repository**
 
 ``` php
-<?php
 // get the current status
 $repo->getStatusOutput(); // returns an array of lines of the status message
+```
 
-// branches
+*branches*
+
+``` php
 $repo->getBranches(); // return an array of Branch objects
 $repo->getMainBranch(); // return the Branch instance of the current checked out branch
 $repo->getBranch('master'); // return a Branch instance by its name
 $develop = Branch::checkout($repo, 'develop');
 $develop = Branch::checkout($repo, 'develop', true); // create and checkout
+```
 
+*tags*
 
-// tags
+``` php
 $repo->getTags(); // array of Tag instances
 $repo->getTag('v1.0'); // a Tag instance by name
 Tag::pick($repo, 'v1.0'); // a Tag instance by name
 
 // last tag by date
 $repo->getLastTag();
+```
 
-// commit
+*commits*
+
+``` php
 $repo->getCommit(); // get a Commit instance of the current HEAD
 $repo->getCommit('v1.0'); // get a Commit instance for a tag
-$repo->getCommit('1ac370d'); // sha (follow [git standards](http://book.git-scm.com/4_git_treeishes.html) to format the sha)
+$repo->getCommit('1ac370d'); // full sha or part of it
 // or directly create a commit object
 $commit = new Commit($repo, '1ac370d');
 $commit = new Commit($repo, '1ac370d'); // head commit
@@ -126,8 +119,11 @@ $repo->countCommits('1ac370d'); // number of commits to arrive at 1ac370d
 $commit->count();
 // as well as
 count($commit);
+```
 
-// remotes (thanks to @davidneimeyer)
+*remotes*
+
+``` php
 $repo->getRemote('origin'); // a Remote object
 $repo->getRemotes(); // array of Remote objects
 
@@ -149,6 +145,27 @@ foreach ($log as $commit) {
     echo $commit->getMessage();
 }
 ```
+
+*status*
+
+If you build a GitElephant\Status\Status class, you will get a nice api for getting the actual state of the working tree and staging area.
+
+``` php
+$status = $repo->getStatus();
+$status = GitElephant\Status\Status::get($repo); // it's the same...
+
+$status->all(); // A PhpCollection of StatusFile objects
+$status->untracked();
+$status->modified();
+$status->added();
+$status->deleted();
+$status->renamed();
+$status->copied();
+```
+
+all this methods returns a [PhpCollection](https://github.com/schmittjoh/php-collection) of StatusFile objects
+
+a StatusFile instance has all the information about the tree node changes. File names (and new file names for renamed objects), index and working tree status, and also a "git style" description like: *added to index* or *deleted in work tree*
 
 **Manage repository**
 
@@ -191,27 +208,21 @@ $repo->createTag('v1.0', null, 'my first release!');
 $repo->createTag($repo->getCommit());
 ```
 
-Status
-------
+**Remote repositories**
 
-**new in alpha4** If you build a GitElephant\Status\Status class, you will get a nice api for getting the actual state of the working tree and staging area.
+If you need to access remote repository you have to install the [ssh2 extension](http://www.php.net/manual/en/book.ssh2.php) and pass a new *Caller* to the repository. *this is a new feature...consider this in a testing phase*
 
 ``` php
-$status = $repo->getStatus();
-$status = GitElephant\Status\Status::get($repo); // it's the same...
+<?php
 
-$status->all(); // A PhpCollection of StatusFile objects
-$status->untracked();
-$status->modified();
-$status->added();
-$status->deleted();
-$status->renamed();
-$status->copied();
+$repo = new Repository('/path/to/git/repository');
+$connection = ssh_connect('host', 'port');
+// authorize the connection with the method you want
+ssh2_auth_password($connection, 'user', 'password');
+$caller = new CallerSSH2($connection, '/path/to/git/binary/on/server');
+$repo = Repository::open('/path/to/git/repository');
+$repo->setCaller($caller);
 ```
-
-all this methods returns a [PhpCollection](https://github.com/schmittjoh/php-collection) of StatusFile objects
-
-a StatusFile instance has all the information about the tree node changes. File names (and new file names for renamed objects), index and working tree status, and also a "git style" description like: *added to index* or *deleted in work tree*
 
 A versioned tree of files
 -------------------------
