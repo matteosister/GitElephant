@@ -17,7 +17,6 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-
 namespace GitElephant\Command;
 
 use GitElephant\Objects\Branch;
@@ -78,26 +77,22 @@ class RevParseCommand extends BaseCommand
 
     /**
      * @param array $options
-     * @param Branch|string $branch
+     * @param Branch|string $arg
      *
      * @throws \RuntimeException
      * @return string
      */
-    public function revParse($options = null, $arg = null)
+    public function revParse($arg = null, $options = [])
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_REV_PARSE_COMMAND);
         // if there are options add them.
-        if (!is_null($options)) {
-            if (is_array($options)) {
-                foreach($options as $option) {
-                   $this->addCommandSubject($option);
-                }
-            } else {
-                $this->addCommandSubject($options);
+        if (! is_null($options)) {
+            foreach ($options as $option) {
+               $this->addCommandArgument($option);
             }
         } 
-        if (!is_null($arg)) {
+        if (! is_null($arg)) {
             $this->addCommandSubject2($arg);
         }
 

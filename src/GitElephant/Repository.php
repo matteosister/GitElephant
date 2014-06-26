@@ -288,11 +288,11 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getRevParse($options = null, $arg = null)
+    public function getRevParse($arg = null, $options = [])
     {
-        $this->caller->execute(RevParseCommand::getInstance()->revParse($options, $arg));
+        $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
 
-        return array_map('trim', $this->caller->getOutputLines());
+        return array_map('trim', $this->caller->getOutputLines(true));
     }
 
     /**
