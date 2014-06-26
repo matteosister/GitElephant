@@ -288,7 +288,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getRevParse($arg = null, $options = [])
+    public function getRevParse($arg = null, $options = array())
     {
         $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
 
