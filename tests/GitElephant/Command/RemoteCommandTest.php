@@ -61,7 +61,7 @@ class RemoteCommandTest extends TestCase
         $this->assertEquals($expected, $actual, 'show() builds remote command with show subcommand');
 
         $actual = RemoteCommand::getInstance()->show($remotename, true);
-        $expected = "remote show '$remotename' '-n'";
+        $expected = "remote show '-n' '$remotename'";
         $this->assertEquals($expected, $actual, 'show(, true) builds remote command with show subcommand and -n flag');
     }
 

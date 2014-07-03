@@ -177,7 +177,7 @@ class Remote
         }
         array_filter($list);
         if (in_array($this->name, $list)) {
-            $remoteDetails = $this->getShowOutput($this->name, $dontQueryRemotes);
+            $remoteDetails = $this->getShowOutput($this->name, null, $dontQueryRemotes);
             $this->parseOutputLines($remoteDetails);
         } else {
             throw new \InvalidArgumentException(sprintf('The %s remote doesn\'t exists', $this->name));
