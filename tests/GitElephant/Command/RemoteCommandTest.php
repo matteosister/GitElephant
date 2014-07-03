@@ -59,10 +59,14 @@ class RemoteCommandTest extends TestCase
         $actual = RemoteCommand::getInstance()->show($remotename);
         $expected = "remote show '$remotename'";
         $this->assertEquals($expected, $actual, 'show() builds remote command with show subcommand');
+
+        $actual = RemoteCommand::getInstance()->show($remotename, true);
+        $expected = "remote show '$remotename' '-n'";
+        $this->assertEquals($expected, $actual, 'show(, true) builds remote command with show subcommand and -n flag');
     }
 
     /**
-     * validate git-remote --vervose
+     * validate git-remote --verbose
      */
     public function testVerbose()
     {
