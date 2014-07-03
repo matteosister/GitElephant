@@ -113,10 +113,10 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function show($name = null)
+    public function show($name = null, $dontQueryRemotes = false)
     {
         $subcmd = new ShowSubCommand();
-        $subcmd->prepare($name);
+        $subcmd->prepare($name, $dontQueryRemotes);
 
         return $this->remote($subcmd);
     }

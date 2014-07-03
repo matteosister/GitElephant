@@ -70,20 +70,21 @@ class Remote
     /**
      * Class constructor
      *
-     * @param \GitElephant\Repository $repository repository instance
-     * @param string                  $name       remote name
+     * @param \GitElephant\Repository $repository       repository instance
+     * @param string                  $name             remote name
+     * @param bool                    $dontQueryRemotes Do not fetch new information from remotes
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \UnexpectedValueException
      * @return \GitElephant\Objects\Remote
      */
-    public function __construct(Repository $repository, $name = null)
+    public function __construct(Repository $repository, $name = null, $dontQueryRemotes = false)
     {
         $this->repository = $repository;
         if ($name) {
             $this->name = trim($name);
-            $this->createFromCommand();
+            $this->createFromCommand($dontQueryRemotes);
         }
 
         return $this;
@@ -92,14 +93,15 @@ class Remote
     /**
      * Static constructor
      *
-     * @param \GitElephant\Repository $repository repository instance
-     * @param string                  $name       remote name
+     * @param \GitElephant\Repository $repository       repository instance
+     * @param string                  $name             remote name
+     * @param bool                    $dontQueryRemotes Do not fetch new information from remotes
      *
      * @return \GitElephant\Objects\Remote
      */
-    public static function pick(Repository $repository, $name = null)
+    public static function pick(Repository $repository, $name = null, $dontQueryRemotes = false)
     {
-        return new self($repository, $name);
+        return new self($repository, $name, $dontQueryRemotes);
     }
 
     /**
@@ -129,8 +131,9 @@ class Remote
      * NOTE: for technical reasons $name is optional, however under normal
      * implementation it SHOULD be passed!
      *
-     * @param string        $name      Name of remote to show details
-     * @param RemoteCommand $remoteCmd Optionally provide RemoteCommand object
+     * @param string        $name             Name of remote to show details
+     * @param RemoteCommand $remoteCmd        Optionally provide RemoteCommand object
+     * @param bool          $dontQueryRemotes Do not fetch new information from remotes
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -138,12 +141,12 @@ class Remote
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getShowOutput($name = null, RemoteCommand $remoteCmd = null)
+    public function getShowOutput($name = null, RemoteCommand $remoteCmd = null, $dontQueryRemotes = false)
     {
         if (!$remoteCmd) {
             $remoteCmd = RemoteCommand::getInstance();
         }
-        $command = $remoteCmd->show($name);
+        $command = $remoteCmd->show($name, $dontQueryRemotes);
 
         return $this->repository->getCaller()->execute($command)->getOutputLines(true);
     }
@@ -154,13 +157,15 @@ class Remote
      * NOTE: the name property should be set if this is to do anything,
      * otherwise it's likely to throw
      *
+     * @param bool $dontQueryRemotes Do not fetch new information from remotes
+     *
      * @throws \RuntimeException
      * @throws \UnexpectedValueException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Remote
      */
-    private function createFromCommand()
+    private function createFromCommand($dontQueryRemotes = false)
     {
         $outputLines = $this->getVerboseOutput();
         $list = array();
@@ -172,7 +177,7 @@ class Remote
         }
         array_filter($list);
         if (in_array($this->name, $list)) {
-            $remoteDetails = $this->getShowOutput($this->name);
+            $remoteDetails = $this->getShowOutput($this->name, $dontQueryRemotes);
             $this->parseOutputLines($remoteDetails);
         } else {
             throw new \InvalidArgumentException(sprintf('The %s remote doesn\'t exists', $this->name));

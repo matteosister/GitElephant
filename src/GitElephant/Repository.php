@@ -849,13 +849,14 @@ class Repository
     }
 
     /**
-     * @param string $name remote name
+     * @param string $name             remote name
+     * @param bool   $dontQueryRemotes Do not fetch new information from remotes
      *
      * @return \GitElephant\Objects\Remote
      */
-    public function getRemote($name)
+    public function getRemote($name, $dontQueryRemotes = false)
     {
-        return Remote::pick($this, $name);
+        return Remote::pick($this, $name, $dontQueryRemotes);
     }
 
     /**
@@ -867,12 +868,13 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getRemotes()
+    public function getRemotes($dontQueryRemotes = false)
     {
-        $remoteNames = $this->caller->execute(RemoteCommand::getInstance()->show())->getOutputLines(true);
+        $remoteNames = $this->caller->execute(RemoteCommand::getInstance()->show(null, $dontQueryRemotes))
+          ->getOutputLines(true);
         $remotes = array();
         foreach ($remoteNames as $remoteName) {
-            $remotes[] = $this->getRemote($remoteName);
+            $remotes[] = $this->getRemote($remoteName, $dontQueryRemotes);
         }
 
         return $remotes;
