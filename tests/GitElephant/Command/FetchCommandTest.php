@@ -30,7 +30,6 @@ use Mockery as m;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class FetchCommandTest extends TestCase
 {
     /**
