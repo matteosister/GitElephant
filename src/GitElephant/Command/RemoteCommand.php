@@ -109,14 +109,15 @@ class RemoteCommand extends BaseCommand
      * implementation it SHOULD be passed!
      *
      * @param string $name
+     * @param bool   $queryRemotes
      *
      * @throws \RuntimeException
      * @return string
      */
-    public function show($name = null, $dontQueryRemotes = false)
+    public function show($name = null, $queryRemotes = true)
     {
         $subcmd = new ShowSubCommand();
-        $subcmd->prepare($name, $dontQueryRemotes);
+        $subcmd->prepare($name, $queryRemotes);
 
         return $this->remote($subcmd);
     }

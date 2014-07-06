@@ -41,11 +41,11 @@ class ShowSubCommand extends SubCommandCommand
      * implementation it SHOULD be passed!
      *
      * @param string $name
-     * @param bool   $dontQueryRemotes
+     * @param bool   $queryRemotes Fetch new information from remotes
      *
      * @return ShowSubCommand
      */
-    public function prepare($name = null, $dontQueryRemotes = false)
+    public function prepare($name = null, $queryRemotes = true)
     {
         $this->addCommandName(self::GIT_REMOTE_SHOW);
         /**
@@ -58,7 +58,7 @@ class ShowSubCommand extends SubCommandCommand
             $this->addCommandSubject($name);
         }
 
-        if ($dontQueryRemotes) {
+        if (!$queryRemotes) {
             $this->addCommandArgument('-n');
         }
 
