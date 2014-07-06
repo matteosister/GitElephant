@@ -378,9 +378,14 @@ Want to contribute?
 
 Just remember:
 
-* Symfony2 coding standard
+* PSR2 coding standard
 * test everything you develop with phpunit
 * if you don't use gitflow, just remember to branch from "develop" and send your PR there. **Please do not send pull requests on the master branch**.
+
+Author
+------
+
+- Matteo Giachino ([twitter](https://twitter.com/spicy_sake))
 
 Thanks
 ------
