@@ -385,7 +385,9 @@ Just remember:
 Author
 ------
 
-- Matteo Giachino ([twitter](https://twitter.com/spicy_sake))
+Matteo Giachino ([twitter](https://twitter.com/spicy_sake))
+
+Many thanks to all the [contributors](https://github.com/matteosister/GitElephant/graphs/contributors)
 
 Thanks
 ------
