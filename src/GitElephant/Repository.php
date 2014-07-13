@@ -851,17 +851,20 @@ class Repository
     }
 
     /**
-     * @param string $name remote name
+     * @param string $name         remote name
+     * @param bool   $queryRemotes Fetch new information from remotes
      *
      * @return \GitElephant\Objects\Remote
      */
-    public function getRemote($name)
+    public function getRemote($name, $queryRemotes = true)
     {
-        return Remote::pick($this, $name);
+        return Remote::pick($this, $name, $queryRemotes);
     }
 
     /**
      * gets a list of remote objects
+     *
+     * @param bool $queryRemotes Fetch new information from remotes
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -869,12 +872,13 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getRemotes()
+    public function getRemotes($queryRemotes = true)
     {
-        $remoteNames = $this->caller->execute(RemoteCommand::getInstance()->show())->getOutputLines(true);
+        $remoteNames = $this->caller->execute(RemoteCommand::getInstance()->show(null, $queryRemotes))
+          ->getOutputLines(true);
         $remotes = array();
         foreach ($remoteNames as $remoteName) {
-            $remotes[] = $this->getRemote($remoteName);
+            $remotes[] = $this->getRemote($remoteName, $queryRemotes);
         }
 
         return $remotes;
