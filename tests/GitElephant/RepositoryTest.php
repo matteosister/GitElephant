@@ -749,12 +749,18 @@ class RepositoryTest extends TestCase
         $r1->init();
         $this->addFile('test1', null, null, $r1);
         $r1->commit('test commit', true);
+        $r1->createBranch('tag-test');
+        $this->addFile('test2', null, null, $r1);
+        $r1->commit('another test commit', true);
+        $r1->createTag('test-tag');
         $r2 = $this->getRepository(1);
         $r2->init();
         $r2->addRemote('origin', $r1->getPath());
         $this->assertEmpty($r2->getBranches(true, true));
         $r2->fetch();
         $this->assertNotEmpty($r2->getBranches(true, true));
+        $r2->fetch(null, null, true);
+        $this->assertNotNull($r2->getTag('test-tag'));
     }
 
     /**
