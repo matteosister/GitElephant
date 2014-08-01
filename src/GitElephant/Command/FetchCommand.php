@@ -29,6 +29,7 @@ use GitElephant\Objects\Remote;
 class FetchCommand extends BaseCommand
 {
     const GIT_FETCH_COMMAND = 'fetch';
+    const GIT_FETCH_OPTION_TAGS = '--tags';
 
     /**
      * @return FetchCommand
@@ -41,11 +42,12 @@ class FetchCommand extends BaseCommand
     /**
      * @param Remote|string $remote
      * @param Branch|string $branch
+     * @param array         $options
      *
      * @throws \RuntimeException
      * @return string
      */
-    public function fetch($remote = null, $branch = null)
+    public function fetch($remote = null, $branch = null, Array $options = array())
     {
         if ($remote instanceof Remote) {
             $remote = $remote->getName();
@@ -53,8 +55,15 @@ class FetchCommand extends BaseCommand
         if ($branch instanceof Branch) {
             $branch = $branch->getName();
         }
+        $normalizedOptions = $this->normalizeOptions($options, $this->fetchCmdSwitchOptions());
+
         $this->clearAll();
         $this->addCommandName(self::GIT_FETCH_COMMAND);
+
+        foreach ($normalizedOptions as $value) {
+            $this->addCommandArgument($value);
+        }
+
         if (!is_null($remote)) {
             $this->addCommandSubject($remote);
         }
@@ -63,5 +72,17 @@ class FetchCommand extends BaseCommand
         }
 
         return $this->getCommand();
+    }
+
+    /**
+     * Valid options for remote command that do not require an associated value
+     *
+     * @return array Associative array mapping all non-value options and their respective normalized option
+     */
+    public function fetchCmdSwitchOptions()
+    {
+        return array(
+            self::GIT_FETCH_OPTION_TAGS => self::GIT_FETCH_OPTION_TAGS,
+        );
     }
 }
