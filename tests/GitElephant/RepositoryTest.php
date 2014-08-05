@@ -13,6 +13,8 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\Config\Config;
+use GitElephant\Command\ConfigCommand;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\Object;
 use GitElephant\Objects\Tag;
@@ -808,5 +810,39 @@ class RepositoryTest extends TestCase
 
         $this->assertEquals('test commit', $r3->getLog()->last()->getMessage());
         $this->assertEquals($r1->getMainBranch()->getSha(), $r3->getLog()->last()->getSha());
+    }
+
+    public function test_setConfig()
+    {
+        $this->initRepository();
+        $r = $this->getRepository();
+        $r->init();
+        $r->setConfig('user.name', 'test user');
+        $this->assertEquals('test user', $r->getConfig('user.name'));
+    }
+
+    public function test_getConfig()
+    {
+        $this->initRepository();
+        $r = $this->getRepository();
+        $r->init();
+        $r->setConfig('user.name', 'test user');
+        $this->assertEquals('test user', $r->getConfig('user.name'));
+        $r->setConfig('user.name', 'test user 2');
+        $this->assertEquals('test user 2', $r->getConfig('user.name'));
+    }
+
+    public function test_getConfigByRegexp()
+    {
+        $this->initRepository();
+        $r = $this->getRepository();
+        $r->init();
+        $r->setConfig('user.name', 'test user');
+        $r->setConfig('user.email', 'test@test.com');
+        $res = $r->getConfigByRegexp('user.*');
+        $this->assertArrayHasKey('user.name', $res);
+        $this->assertArrayHasKey('user.email', $res);
+        $this->assertEquals('test user', $res['user.name']);
+        $this->assertEquals('test@test.com', $res['user.email']);
     }
 }

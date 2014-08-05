@@ -30,6 +30,16 @@ class ConfigCommand extends BaseCommand
     const GIT_CONFIG_COMMAND = 'config';
 
     /**
+     * global context
+     */
+    const FILE_LOCATION_GLOBAL = '--global';
+
+    /**
+     * system context
+     */
+    const FILE_LOCATION_SYSTEM = '--system';
+
+    /**
      * local context
      */
     const FILE_LOCATION_LOCAL = '--local';
@@ -58,7 +68,10 @@ class ConfigCommand extends BaseCommand
         $this->context = $context;
     }
 
-    private function addFileOption()
+    /**
+     * add context to the command
+     */
+    private function addContextOption()
     {
         $this->addCommandArgument($this->context);
     }
@@ -67,14 +80,15 @@ class ConfigCommand extends BaseCommand
      * Get the value for a given key (optionally filtered by a regex matching the value).
      * Returns error code 1 if the key was not found and error code 2 if multiple key values were found.
      *
-     * @var string|Config $config
+     * @param Config|string $config
+     *
      * @return string
      */
     public function get($config)
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_CONFIG_COMMAND);
-        $this->addFileOption();
+        $this->addContextOption();
         $this->addCommandArgument('--get');
         $this->addCommandSubject($config);
         return $this->getCommand();
@@ -90,7 +104,7 @@ class ConfigCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_CONFIG_COMMAND);
-        $this->addFileOption();
+        $this->addContextOption();
         $this->addCommandArgument('--get-all');
         $this->addCommandSubject($config);
         return $this->getCommand();
@@ -108,7 +122,7 @@ class ConfigCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_CONFIG_COMMAND);
-        $this->addFileOption();
+        $this->addContextOption();
         $this->addCommandArgument('--get-regexp');
         $this->addCommandSubject($config);
         return $this->getCommand();
@@ -125,7 +139,6 @@ class ConfigCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_CONFIG_COMMAND);
-        $this->addFileOption();
         $this->addCommandSubject($config);
         $this->addCommandSubject2($value);
         return $this->getCommand();
@@ -142,7 +155,6 @@ class ConfigCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_CONFIG_COMMAND);
-        $this->addFileOption();
         $this->addCommandArgument('--add');
         $this->addCommandSubject($config);
         $this->addCommandSubject2($value);
@@ -159,7 +171,6 @@ class ConfigCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_CONFIG_COMMAND);
-        $this->addFileOption();
         $this->addCommandArgument('--unset');
         $this->addCommandSubject($config);
         return $this->getCommand();
@@ -175,7 +186,6 @@ class ConfigCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_CONFIG_COMMAND);
-        $this->addFileOption();
         $this->addCommandArgument('--unset-all');
         $this->addCommandSubject($config);
         return $this->getCommand();
