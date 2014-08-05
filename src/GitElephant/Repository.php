@@ -889,15 +889,20 @@ class Repository
      *
      * @param string $from
      * @param string $ref
+     * @param bool   $tags
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function fetch($from = null, $ref = null)
+    public function fetch($from = null, $ref = null, $tags = false)
     {
-        $this->caller->execute(FetchCommand::getInstance()->fetch($from, $ref));
+        $options = array();
+        if ($tags === true) {
+            $options = array('--tags');
+        }
+        $this->caller->execute(FetchCommand::getInstance()->fetch($from, $ref, $options));
     }
 
     /**

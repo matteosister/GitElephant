@@ -59,5 +59,6 @@ class FetchCommandTest extends TestCase
         $this->assertEquals("fetch 'test-remote' 'develop'", $fc->fetch($remote, 'develop'));
         $branch = Branch::create($this->getRepository(), 'test-branch');
         $this->assertEquals("fetch 'test-remote' 'test-branch'", $fc->fetch($remote, $branch));
+        $this->assertEquals("fetch '--tags' 'test-remote' 'test-branch'", $fc->fetch($remote, $branch, array('--tags')));
     }
 }
