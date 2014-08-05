@@ -30,16 +30,6 @@ class ConfigCommand extends BaseCommand
     const GIT_CONFIG_COMMAND = 'config';
 
     /**
-     * global context
-     */
-    const FILE_LOCATION_GLOBAL = '--global';
-
-    /**
-     * system context
-     */
-    const FILE_LOCATION_SYSTEM = '--system';
-
-    /**
      * local context
      */
     const FILE_LOCATION_LOCAL = '--local';
