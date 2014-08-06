@@ -19,6 +19,7 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\CommandFactory;
 use GitElephant\Command\FetchCommand;
 use GitElephant\Command\PullCommand;
 use GitElephant\Command\PushCommand;
@@ -84,6 +85,11 @@ class Repository
     private $name;
 
     /**
+     * @var CommandFactory
+     */
+    private $commandFactory;
+
+    /**
      * Class constructor
      *
      * @param string         $repositoryPath the path of the git repository
@@ -103,6 +109,7 @@ class Repository
         $this->path = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
         $this->name = $name;
+        $this->commandFactory = CommandFactory::create();
     }
 
     /**
@@ -987,6 +994,21 @@ class Repository
         $command = CatFileCommand::getInstance()->content($obj, $treeish);
 
         return $this->caller->execute($command)->getRawOutput();
+    }
+
+    public function addGlobalArgument($argument)
+    {
+        $this->commandFactory->addArgument($argument);
+    }
+
+    public function addGlobalConfig($key, $value)
+    {
+        $this->commandFactory->addConfig($key, $value);
+    }
+
+    public function addGlobalOption($key, $value)
+    {
+        $this->commandFactory->addOption($key, $value);
     }
 
     /**

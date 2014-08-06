@@ -18,6 +18,8 @@
  */
 
 namespace GitElephant\Command;
+use PhpCollection\Map;
+use PhpCollection\Sequence;
 
 /**
  * BaseCommand
@@ -43,11 +45,32 @@ class BaseCommand
     private $configs;
 
     /**
+     * global configs
+     *
+     * @var array
+     */
+    private $globalConfigs;
+
+    /**
+     * global configs
+     *
+     * @var array
+     */
+    private $globalOptions;
+
+    /**
      * the command arguments
      *
      * @var array
      */
     private $commandArguments = array();
+
+    /**
+     * the global command arguments
+     *
+     * @var array
+     */
+    private $globalCommandArguments = array();
 
     /**
      * the command subject
@@ -105,12 +128,36 @@ class BaseCommand
     /**
      * Set Configs
      *
-     * @param array $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
+     * @param array|Map $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
      */
     public function addConfigs($configs)
     {
         foreach ($configs as $config => $value) {
             $this->configs[$config] = $value;
+        }
+    }
+
+    /**
+     * Set global configs
+     *
+     * @param array|Map $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
+     */
+    public function addGlobalConfigs($configs)
+    {
+        foreach ($configs as $config => $value) {
+            $this->globalConfigs[$config] = $value;
+        }
+    }
+
+    /**
+     * Set global option
+     *
+     * @param array|Map $options a global option
+     */
+    public function addGlobalOptions($options)
+    {
+        foreach ($options as $name => $value) {
+            $this->globalOptions[$name] = $value;
         }
     }
 
@@ -129,9 +176,19 @@ class BaseCommand
      *
      * @param string $commandArgument the command argument
      */
-    protected function addCommandArgument($commandArgument)
+    public function addCommandArgument($commandArgument)
     {
         $this->commandArguments[] = $commandArgument;
+    }
+
+    /**
+     * Add a global command argument
+     *
+     * @param string $commandArgument the command argument
+     */
+    public function addGlobalCommandArgument($commandArgument)
+    {
+        $this->globalCommandArguments[] = $commandArgument;
     }
 
     /**
@@ -222,6 +279,16 @@ class BaseCommand
         $this->configs($command);
         $command .= $this->commandName;
         $command .= ' ';
+        if (count($this->globalOptions) > 0) {
+            foreach ($this->globalOptions as $name => $value) {
+                $command .= sprintf('%s=%s', escapeshellarg($name), escapeshellarg($value));
+            }
+            $command .= ' ';
+        }
+        if (count($this->globalCommandArguments) > 0) {
+            $command .= implode(' ', array_map('escapeshellarg', $this->globalCommandArguments));
+            $command .= ' ';
+        }
         if (count($this->commandArguments) > 0) {
             $command .= implode(' ', array_map('escapeshellarg', $this->commandArguments));
             $command .= ' ';
@@ -242,6 +309,13 @@ class BaseCommand
      */
     private function configs(&$command)
     {
+        if (count($this->globalConfigs)) {
+            foreach ($this->globalConfigs as $config => $value) {
+                $command .= escapeshellarg('-c');
+                $command .= sprintf(' %s=%s', escapeshellarg($config), escapeshellarg($value));
+            }
+            $command .= ' ';
+        }
         if (count($this->configs)) {
             foreach ($this->configs as $config => $value) {
                 $command .= escapeshellarg('-c');
