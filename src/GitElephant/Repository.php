@@ -39,6 +39,7 @@ use GitElephant\Objects\TreeishInterface;
 use GitElephant\Command\MainCommand;
 use GitElephant\Command\BranchCommand;
 use GitElephant\Command\MergeCommand;
+use GitElephant\Command\ResetCommand;
 use GitElephant\Command\TagCommand;
 use GitElephant\Command\LogCommand;
 use GitElephant\Command\CloneCommand;
@@ -274,6 +275,22 @@ class Repository
         }
 
         return $this;
+    }
+
+    /**
+     * Reset this branch of the repository
+     *
+     * @param string        $option  usually --hard
+     * @param tag           $the tag to use as the reference for the reset
+     *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @return Repository
+     */
+    public function reset($option = null, $tag = null)
+    {
+        $this->caller->execute(ResetCommand::getInstance()->reset($option, $tag));
     }
 
     /**
