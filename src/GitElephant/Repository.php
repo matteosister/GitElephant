@@ -339,7 +339,8 @@ class Repository
      * Delete a branch by its name
      * This function change the state of the repository on the filesystem
      *
-     * @param string $name The branch to delete
+     * @param string $name  The branch to delete
+     * @param bool   $force Force the delete
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -347,9 +348,9 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function deleteBranch($name)
+    public function deleteBranch($name, $force = false)
     {
-        $this->caller->execute(BranchCommand::getInstance()->delete($name));
+        $this->caller->execute(BranchCommand::getInstance()->delete($name, $force));
 
         return $this;
     }
