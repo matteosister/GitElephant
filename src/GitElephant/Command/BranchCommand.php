@@ -136,16 +136,18 @@ class BranchCommand extends BaseCommand
     /**
      * Delete a branch by its name
      *
-     * @param string $name The branch to delete
+     * @param string $name  The branch to delete
+     * @param bool   $force Force the delete
      *
      * @throws \RuntimeException
      * @return string the command
      */
-    public function delete($name)
+    public function delete($name, $force = false)
     {
+        $arg = ($force === true) ? '-D' : '-d';
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
-        $this->addCommandArgument('-d');
+        $this->addCommandArgument($arg);
         $this->addCommandSubject($name);
 
         return $this->getCommand();

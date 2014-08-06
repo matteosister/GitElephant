@@ -176,9 +176,15 @@ class RepositoryTest extends TestCase
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->getRepository()->createBranch('branch2');
-        $this->assertEquals(2, count($this->getRepository()->getBranches()));
+        $this->assertEquals(2, count($this->getRepository()->getBranches(true)));
         $this->getRepository()->deleteBranch('branch2');
-        $this->assertEquals(1, count($this->getRepository()->getBranches()));
+        $this->assertEquals(1, count($this->getRepository()->getBranches(true)));
+        $this->addFile('test-file2');
+        $this->getRepository()->commit('test2', true);
+        $this->getRepository()->createBranch('branch3');
+        $this->assertEquals(2, count($this->getRepository()->getBranches(true)));
+        $this->getRepository()->deleteBranch('branch3', true);
+        $this->assertEquals(1, count($this->getRepository()->getBranches(true)));
     }
 
     /**
