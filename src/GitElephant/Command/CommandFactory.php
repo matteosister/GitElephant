@@ -103,6 +103,8 @@ class CommandFactory
     }
 
     /**
+     * instantiate a Command class
+     *
      * @param $name
      *
      * @return BaseCommand
@@ -127,7 +129,7 @@ class CommandFactory
     }
 
     /**
-     * turns a command in name in a FQDN of the command class
+     * turns a command name in a FQDN of the command class
      *
      * @param $name
      * @return string
