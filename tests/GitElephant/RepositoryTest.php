@@ -13,6 +13,7 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\MainCommand;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\Object;
 use GitElephant\Objects\Tag;
@@ -867,5 +868,40 @@ class RepositoryTest extends TestCase
         $r->init(true);
 
         $this->assertEquals(true, $r->isBare());
+
+    public function test_addGlobalArgument()
+    {
+        $this->initRepository();
+        $r = $this->getRepository();
+        $r->init();
+        $r->addGlobalArgument('-v');
+        $factory = $this->getPrivateOrProtectedProperty($r, 'commandFactory')->getValue($r);
+        /** @var MainCommand $mainCommand */
+        $mainCommand = $factory->get('main');
+        $this->assertEquals("commit '-v' '-m' 'test'", $mainCommand->commit('test'));
+    }
+
+    public function test_addGlobalConfig()
+    {
+        $this->initRepository();
+        $r = $this->getRepository();
+        $r->init();
+        $r->addGlobalConfig('color.diff', 'true');
+        $factory = $this->getPrivateOrProtectedProperty($r, 'commandFactory')->getValue($r);
+        /** @var MainCommand $mainCommand */
+        $mainCommand = $factory->get('main');
+        $this->assertEquals("'-c' 'color.diff'='true' commit '-m' 'test'", $mainCommand->commit('test'));
+    }
+
+    public function test_addGlobalOption()
+    {
+        $this->initRepository();
+        $r = $this->getRepository();
+        $r->init();
+        $r->addGlobalOption('--work-tree', '/path/to/work/tree');
+        $factory = $this->getPrivateOrProtectedProperty($r, 'commandFactory')->getValue($r);
+        /** @var MainCommand $mainCommand */
+        $mainCommand = $factory->get('main');
+        $this->assertEquals("commit '--work-tree'='/path/to/work/tree' '-m' 'test'", $mainCommand->commit('test'));
     }
 }

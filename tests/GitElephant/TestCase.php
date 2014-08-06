@@ -301,4 +301,30 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $this->assertEquals($datetimeCommitter, $commit->getDatetimeCommitter()->format('U'));
         $this->assertEquals($message, $commit->getMessage()->getShortMessage());
     }
+
+    /**
+     * @param $class
+     * @param $methodName
+     * @return \ReflectionMethod
+     */
+    protected function getPrivateOrProtectedMethod($class, $methodName)
+    {
+        $refl = new \ReflectionClass($class);
+        $method = $refl->getMethod($methodName);
+        $method->setAccessible(true);
+        return $method;
+    }
+
+    /**
+     * @param $class
+     * @param $propertyName
+     * @return \ReflectionProperty
+     */
+    protected function getPrivateOrProtectedProperty($class, $propertyName)
+    {
+        $refl = new \ReflectionClass($class);
+        $property = $refl->getProperty($propertyName);
+        $property->setAccessible(true);
+        return $property;
+    }
 }
