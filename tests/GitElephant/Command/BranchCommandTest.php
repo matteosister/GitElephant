@@ -98,7 +98,8 @@ class BranchCommandTest extends TestCase
     public function testDelete()
     {
         $branch = new BranchCommand();
-        $this->assertEquals("branch '-d' 'test-branch'", $branch->delete('test-branch'), 'list branch command');
+        $this->assertEquals("branch '-d' 'test-branch'", $branch->delete('test-branch'),       'list branch command without force');
+        $this->assertEquals("branch '-D' 'test-branch'", $branch->delete('test-branch', true), 'list branch command with force');
         $this->getCaller()->execute($branch->create('test'));
         $this->getCaller()->execute($branch->delete('test'));
         $this->assertEquals(1, count($this->getRepository()->getBranches()), 'two branches after add branch command');
