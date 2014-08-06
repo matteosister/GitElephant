@@ -491,7 +491,9 @@ class Repository
     /**
      * Merge a Branch in the current checked out branch
      *
-     * @param Objects\Branch $branch The branch to merge in the current checked out branch
+     * @param Objects\Branch $branch  The branch to merge in the current checked out branch
+     * @param string         $message The message for the merge commit, if merge is 3-way
+     * @param string         $mode    The merge mode: ff-only, no-ff or auto
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -499,9 +501,28 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function merge(Branch $branch)
+    public function merge(Branch $branch, $message = '', $mode = 'auto')
     {
-        $this->caller->execute(MergeCommand::getInstance()->merge($branch));
+        $valid_modes = array(
+            'auto',    // deafult git behavior
+            'ff-only', // force fast forward merge
+            'no-ff',   // force 3-way merge
+        );
+        if (!in_array($mode, $valid_modes)) {
+            throw new \Symfony\Component\Process\Exception\InvalidArgumentException("Invalid merge mode: $mode.");
+        }
+
+        $options = array();
+        switch ($mode) {
+            case 'ff-only':
+                $options[] = MergeCommand::MERGE_OPTION_FF_ONLY;
+                break;
+            case 'no-ff':
+                $options[] = MergeCommand::MERGE_OPTION_NO_FF;
+                break;
+        }
+
+        $this->caller->execute(MergeCommand::getInstance()->merge($branch, $message, $options));
 
         return $this;
     }
