@@ -176,7 +176,9 @@ class Commit implements TreeishInterface, \Countable
      */
     public function createFromCommand()
     {
-        $command = ShowCommand::getInstance()->showCommit($this->ref);
+        /** @var ShowCommand $cmdInstance */
+        $cmdInstance = $this->repository->getCommandFactory()->get('show');
+        $command = $cmdInstance->showCommit($this->ref);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }

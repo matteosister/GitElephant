@@ -44,14 +44,15 @@ class LogCommandTest extends TestCase
     {
         $branch = $this->getRepository()->getBranch('master');
         $obj = $this->getRepository()->getTree('HEAD', 'test-folder/test-file')->getBlob();
-        $lc = LogCommand::getInstance();
+        /** @var LogCommand $cmdInstance */
+        $cmdInstance = $this->getRepository()->getCommandFactory()->get('log');
         $this->assertEquals(
             "log '-s' '--pretty=raw' '--no-color' -- 'test-folder/test-file'",
-            $lc->showObjectLog($obj)
+            $cmdInstance->showObjectLog($obj)
         );
         $this->assertEquals(
             "log '-s' '--pretty=raw' '--no-color' 'master' -- 'test-folder/test-file'",
-            $lc->showObjectLog($obj, $branch)
+            $cmdInstance->showObjectLog($obj, $branch)
         );
     }
 }

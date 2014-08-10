@@ -171,7 +171,9 @@ class Repository
      */
     public function init($bare = false)
     {
-        $this->caller->execute(MainCommand::getInstance()->init($bare));
+        /** @var MainCommand $cmdInstance */
+        $cmdInstance = $this->commandFactory->get('main');
+        $this->caller->execute($cmdInstance->init($bare));
 
         return $this;
     }
@@ -189,7 +191,9 @@ class Repository
      */
     public function stage($path = '.')
     {
-        $this->caller->execute(MainCommand::getInstance()->add($path));
+        /** @var MainCommand $cmdInstance */
+        $cmdInstance = $this->commandFactory->get('main');
+        $this->caller->execute($cmdInstance->add($path));
 
         return $this;
     }
@@ -276,7 +280,9 @@ class Repository
         if ($stageAll) {
             $this->stage();
         }
-        $this->caller->execute(MainCommand::getInstance()->commit($message, $stageAll, $author, $allowEmpty));
+        /** @var MainCommand $cmdInstance */
+        $cmdInstance = $this->commandFactory->get('main');
+        $this->caller->execute($cmdInstance->commit($message, $stageAll, $author, $allowEmpty));
         if ($ref != null) {
             $this->checkout($currentBranch);
         }
@@ -431,7 +437,9 @@ class Repository
                 }
             };
         } else {
-            $outputLines = $this->caller->execute(BranchCommand::getInstance()->listBranches($all))->getOutputLines(true);
+            /** @var BranchCommand $cmdInstance */
+            $cmdInstance = $this->commandFactory->get('branch');
+            $outputLines = $this->caller->execute($cmdInstance->listBranches($all))->getOutputLines(true);
             foreach ($outputLines as $branchLine) {
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
@@ -665,7 +673,9 @@ class Repository
     public function getTags()
     {
         $tags = array();
-        $this->caller->execute(TagCommand::getInstance()->listTags());
+        /** @var TagCommand $cmdInstance */
+        $cmdInstance = $this->commandFactory->get('tag');
+        $this->caller->execute($cmdInstance->listTags());
         foreach ($this->caller->getOutputLines() as $tagString) {
             if ($tagString != '') {
                 $tags[] = new Tag($this, trim($tagString));
@@ -857,7 +867,9 @@ class Repository
      */
     public function checkout($ref)
     {
-        $this->caller->execute(MainCommand::getInstance()->checkout($ref));
+        /** @var MainCommand $cmdInstance */
+        $cmdInstance = $this->commandFactory->get('main');
+        $this->caller->execute($cmdInstance->checkout($ref));
 
         return $this;
     }
@@ -878,9 +890,12 @@ class Repository
     public function getTree($ref = 'HEAD', $path = null)
     {
         if (is_string($path) && '' !== $path) {
-            $outputLines = $this->getCaller()->execute(
-                LsTreeCommand::getInstance()->tree($ref, $path)
-            )->getOutputLines(true);
+            /** @var LsTreeCommand $cmdInstance */
+            $cmdInstance = $this->commandFactory->get('ls_tree');
+            $outputLines = $this
+                ->getCaller()
+                ->execute($cmdInstance->tree($ref, $path))
+                ->getOutputLines(true);
             $path = Object::createFromOutputLine($this, $outputLines[0]);
         }
 
@@ -934,7 +949,9 @@ class Repository
      */
     public function addRemote($name, $url)
     {
-        $this->caller->execute(RemoteCommand::getInstance()->add($name, $url));
+        /** @var RemoteCommand $cmdInstance */
+        $cmdInstance = $this->commandFactory->get('remote');
+        $this->caller->execute($cmdInstance->add($name, $url));
 
         return $this;
     }
@@ -963,7 +980,9 @@ class Repository
      */
     public function getRemotes($queryRemotes = true)
     {
-        $remoteNames = $this->caller->execute(RemoteCommand::getInstance()->show(null, $queryRemotes))
+        /** @var RemoteCommand $cmdInstance */
+        $cmdInstance = $this->commandFactory->get('remote');
+        $remoteNames = $this->caller->execute($cmdInstance->show(null, $queryRemotes))
           ->getOutputLines(true);
         $remotes = array();
         foreach ($remoteNames as $remoteName) {
@@ -1107,6 +1126,14 @@ class Repository
     public function addGlobalOption($key, $value)
     {
         $this->commandFactory->addOption($key, $value);
+    }
+
+    /**
+     * @return CommandFactory
+     */
+    public function getCommandFactory()
+    {
+        return $this->commandFactory;
     }
 
     /**
