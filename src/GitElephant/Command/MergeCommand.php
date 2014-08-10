@@ -29,6 +29,8 @@ use GitElephant\Objects\Branch;
 class MergeCommand extends BaseCommand
 {
     const MERGE_COMMAND = 'merge';
+    const MERGE_OPTION_FF_ONLY = '--ff-only';
+    const MERGE_OPTION_NO_FF = '--no-ff';
 
     /**
      * @return MergeCommand
@@ -41,17 +43,47 @@ class MergeCommand extends BaseCommand
     /**
      * Generate a merge command
      *
-     * @param \GitElephant\Objects\Branch $with the branch to merge
+     * @param \GitElephant\Objects\Branch $with    the branch to merge
+     * @param string                      $message a message for the merge commit, if merge is 3-way
+     * @param array                       $options option flags for git merge
      *
      * @throws \RuntimeException
      * @return string
      */
-    public function merge(Branch $with)
+    public function merge(Branch $with, $message = '', Array $options = array())
     {
+        if (in_array(self::MERGE_OPTION_FF_ONLY, $options) && in_array(self::MERGE_OPTION_NO_FF, $options)) {
+            throw new \Symfony\Component\Process\Exception\InvalidArgumentException("Invalid options: cannot use flags --ff-only and --no-ff together.");
+        }
+        $normalizedOptions = $this->normalizeOptions($options, $this->mergeCmdSwitchOptions());
+
         $this->clearAll();
         $this->addCommandName(static::MERGE_COMMAND);
+
+        foreach ($normalizedOptions as $value) {
+            $this->addCommandArgument($value);
+        }
+
+        if (!empty($message)) {
+            $this->addCommandArgument('-m');
+            $this->addCommandArgument($message);
+        }
+
         $this->addCommandSubject($with->getFullRef());
 
         return $this->getCommand();
+    }
+
+    /**
+     * Valid options for remote command that do not require an associated value
+     *
+     * @return array Associative array mapping all non-value options and their respective normalized option
+     */
+    public function mergeCmdSwitchOptions()
+    {
+        return array(
+            self::MERGE_OPTION_FF_ONLY => self::MERGE_OPTION_FF_ONLY,
+            self::MERGE_OPTION_NO_FF => self::MERGE_OPTION_NO_FF,
+        );
     }
 }

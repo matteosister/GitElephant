@@ -268,6 +268,32 @@ class RepositoryTest extends TestCase
         $this->assertEquals(1, count($this->getRepository()->getTree()));
         $this->getRepository()->merge($this->getRepository()->getBranch('branch2'));
         $this->assertEquals(2, count($this->getRepository()->getTree()));
+
+        // attempt to merge a different branch by forcing a 3-way merge and verify the merge commit message
+        $this->getRepository()->createBranch('branch3');
+        $this->getRepository()->checkout('branch3');
+        $this->addFile('file3');
+        $this->getRepository()->commit('test3', true);
+        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        $this->getRepository()->checkout('master');
+        $this->assertEquals(2, count($this->getRepository()->getTree()));
+        $this->getRepository()->merge($this->getRepository()->getBranch('branch3'), 'test msg', 'no-ff');
+        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        $this->assertEquals('test msg', $this->getRepository()->getCommit()->getMessage()->getFullMessage());
+
+        // attempt a fast forward merge where a 3-way is necessary and trap the resulting exception
+        $this->getRepository()->checkout('branch2');
+        $this->addFile('file4');
+        $this->getRepository()->commit('test4', true);
+        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        $this->getRepository()->checkout('master');
+        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        try {
+            $this->getRepository()->merge($this->getRepository()->getBranch('branch2'), '', 'ff-only');
+        } catch (\RuntimeException $e) {
+            return;
+        }
+        $this->fail("Merge should have produced a runtime exception.");
     }
 
     /**
