@@ -68,7 +68,9 @@ class Status
      */
     private function createFromCommand()
     {
-        $command = MainCommand::getInstance()->status(true);
+        /** @var MainCommand $cmdInstance */
+        $cmdInstance = $this->repository->getCommandFactory()->get('main');
+        $command = $cmdInstance->status(true);
         $lines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
         $this->parseOutputLines($lines);
     }

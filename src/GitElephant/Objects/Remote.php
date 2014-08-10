@@ -118,7 +118,8 @@ class Remote
     public function getVerboseOutput(RemoteCommand $remoteCmd = null)
     {
         if (!$remoteCmd) {
-            $remoteCmd = RemoteCommand::getInstance();
+            /** @var RemoteCommand $remoteCmd */
+            $remoteCmd = $this->repository->getCommandFactory()->get('remote');
         }
         $command = $remoteCmd->verbose();
 

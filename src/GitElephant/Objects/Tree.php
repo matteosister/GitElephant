@@ -96,7 +96,9 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      */
     private function createFromCommand()
     {
-        $command = LsTreeCommand::getInstance()->tree($this->ref, $this->subject);
+        /** @var LsTreeCommand $cmdInstance */
+        $cmdInstance = $this->repository->getCommandFactory()->get('ls_tree');
+        $command = $cmdInstance->tree($this->ref, $this->subject);
         $outputLines = $this->getCaller()->execute($command)->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }

@@ -46,7 +46,7 @@ class DiffCommandTest extends TestCase
      */
     public function testDiff()
     {
-        $commit = $this->getRepository()->getCommit();
+        $commit = $this->getRepository()->init()->getCommit();
         $this->assertEquals(
             DiffCommand::DIFF_COMMAND . " '--full-index' '--no-color' '-M' '--dst-prefix=DST/' '--src-prefix=SRC/' 'HEAD^..HEAD'",
             $this->diffCommand->diff('HEAD')

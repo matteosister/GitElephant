@@ -64,7 +64,9 @@ class Tag extends Object
      */
     public static function create(Repository $repository, $name, $startPoint = null, $message = null)
     {
-        $repository->getCaller()->execute(TagCommand::getInstance()->create($name, $startPoint, $message));
+        /** @var TagCommand $cmdInstance */
+        $cmdInstance = $repository->getCommandFactory()->get('tag');
+        $repository->getCaller()->execute($cmdInstance->create($name, $startPoint, $message));
 
         return $repository->getTag($name);
     }
@@ -137,7 +139,9 @@ class Tag extends Object
      */
     private function createFromCommand()
     {
-        $command = TagCommand::getInstance()->lists();
+        /** @var TagCommand $cmdInstance */
+        $cmdInstance = $this->repository->getCommandFactory()->get('tag');
+        $command = $cmdInstance->lists();
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
@@ -160,8 +164,10 @@ class Tag extends Object
         foreach ($outputLines as $tagString) {
             if ($tagString != '') {
                 if ($this->name === trim($tagString)) {
+                    /** @var RevListCommand $cmdInstance */
+                    $cmdInstance = $this->repository->getCommandFactory()->get('rev_list');
                     $lines = $this->getCaller()
-                        ->execute(RevListCommand::getInstance()->getTagCommit($this))
+                        ->execute($cmdInstance->getTagCommit($this))
                         ->getOutputLines();
                     $this->setSha($lines[0]);
                     $found = true;

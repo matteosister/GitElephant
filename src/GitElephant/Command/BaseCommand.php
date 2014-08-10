@@ -105,6 +105,11 @@ class BaseCommand
         $this->path             = null;
     }
 
+    public static function getInstance()
+    {
+        return new static();
+    }
+
     /**
      * Add the command name
      *

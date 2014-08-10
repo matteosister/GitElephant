@@ -35,6 +35,8 @@ class MergeCommandTest extends TestCase
     public function testMerge()
     {
         $branch = $this->getRepository()->getBranch('test');
-        $this->assertEquals("merge 'refs/heads/test'", MergeCommand::getInstance()->merge($branch));
+        /** @var MergeCommand $cmdInstance */
+        $cmdInstance = $this->getRepository()->getCommandFactory()->get('merge');
+        $this->assertEquals("merge 'refs/heads/test'", $cmdInstance->merge($branch));
     }
 }

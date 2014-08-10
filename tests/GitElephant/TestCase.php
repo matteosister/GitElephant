@@ -13,6 +13,7 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\CommandFactory;
 use GitElephant\Command\MvCommand;
 use GitElephant\Repository;
 use GitElephant\GitBinary;
@@ -238,12 +239,12 @@ class TestCase extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->getMockCommand()));
     }
 
-    protected function addOutputToMockRepo(\PHPUnit_Framework_MockObject_MockObject $repo, $output)
+    protected function addOutputToMockRepo(m\MockInterface $repo, $output)
     {
-        $repo
-            ->expects($this->any())
-            ->method('getCaller')
-            ->will($this->returnValue($this->getMockCaller('', $output)));
+        $mockCaller = m::mock('GitElephant\Command\Caller\Caller');
+        $mockCaller->shouldReceive('execute')->andReturnSelf();
+        $mockCaller->shouldReceive('getOutputLines')->andReturn($output);
+        $repo->shouldReceive('getCaller')->andReturn($mockCaller);
     }
 
     protected function getMockCommand()
@@ -259,14 +260,10 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
     protected function getMockRepository()
     {
-        return $this->getMock(
-            'GitElephant\Repository',
-            array(),
-            array(
-                $this->repository->getPath(),
-                $this->getMockBinary()
-            )
-        );
+        $mock = m::mock('GitElephant\Repository');
+        $mock->shouldReceive('getCommandFactory')->andReturn(CommandFactory::create());
+        $mock->shouldReceive('getPath')->andReturn('.');
+        return $mock;
     }
 
     protected function getMockBinary()
