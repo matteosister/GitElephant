@@ -35,14 +35,6 @@ class SubmoduleCommand extends BaseCommand
     const SUBMODULE_OPTION_RECURSIVE = '--recursive';
 
     /**
-     * @return SubmoduleCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * add a submodule
      *
      * @param string $gitUrl git url of the submodule

@@ -29,14 +29,6 @@ class BranchCommand extends BaseCommand
     const BRANCH_COMMAND = 'branch';
 
     /**
-     * @return BranchCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * Locate branches that contain a reference
      *
      * @param string $reference reference

@@ -34,14 +34,6 @@ class LogCommand extends BaseCommand
     const GIT_LOG = 'log';
 
     /**
-     * @return LogCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * Build an object log command
      *
      * @param \GitElephant\Objects\Object             $obj    the Object to get the log for

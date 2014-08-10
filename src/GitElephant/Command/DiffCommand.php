@@ -31,14 +31,6 @@ class DiffCommand extends BaseCommand
     const DIFF_COMMAND = 'diff';
 
     /**
-     * @return DiffCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * build a diff command
      *
      * @param TreeishInterface      $of   the reference to diff

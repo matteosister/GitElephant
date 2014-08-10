@@ -33,14 +33,6 @@ class MergeCommand extends BaseCommand
     const MERGE_OPTION_NO_FF = '--no-ff';
 
     /**
-     * @return MergeCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * Generate a merge command
      *
      * @param \GitElephant\Objects\Branch $with    the branch to merge
