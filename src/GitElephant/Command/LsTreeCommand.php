@@ -33,14 +33,6 @@ class LsTreeCommand extends BaseCommand
     const LS_TREE_COMMAND = 'ls-tree';
 
     /**
-     * @return LsTreeCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * build a ls-tree command
      *
      * @param string|Branch $ref The reference to build the tree from

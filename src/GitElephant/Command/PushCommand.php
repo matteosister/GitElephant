@@ -31,14 +31,6 @@ class PushCommand extends BaseCommand
     const GIT_PUSH_COMMAND = 'push';
 
     /**
-     * @return PushCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * @param Remote|string $remote
      * @param Branch|string $branch
      *

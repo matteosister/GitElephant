@@ -40,14 +40,6 @@ class MainCommand extends BaseCommand
     const GIT_RESET    = 'reset';
 
     /**
-     * @return MainCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * Init the repository
      *
      * @param bool $bare

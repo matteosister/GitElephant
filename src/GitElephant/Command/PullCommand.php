@@ -31,14 +31,6 @@ class PullCommand extends BaseCommand
     const GIT_PULL_COMMAND = 'pull';
 
     /**
-     * @return PullCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * @param Remote|string $remote
      * @param Branch|string $branch
      * @param bool          $rebase

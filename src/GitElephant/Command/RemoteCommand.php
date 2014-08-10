@@ -37,16 +37,6 @@ class RemoteCommand extends BaseCommand
     const GIT_REMOTE_OPTION_VERBOSE_SHORT = '-v';
 
     /**
-     * Fetch an instance of RemoteCommand object
-     *
-     * @return RemoteCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * Build the remote command
      *
      * NOTE: git-remote is most useful when using its subcommands, therefore

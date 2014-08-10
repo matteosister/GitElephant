@@ -31,14 +31,6 @@ class MvCommand extends BaseCommand
     const MV_COMMAND = 'mv';
 
     /**
-     * @return MvCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * @param string|Object $source source name
      * @param string        $target dest name
      *

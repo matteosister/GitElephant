@@ -32,14 +32,6 @@ class FetchCommand extends BaseCommand
     const GIT_FETCH_OPTION_TAGS = '--tags';
 
     /**
-     * @return FetchCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * @param Remote|string $remote
      * @param Branch|string $branch
      * @param array         $options

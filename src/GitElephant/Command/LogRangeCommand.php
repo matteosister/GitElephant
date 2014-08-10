@@ -28,14 +28,6 @@ class LogRangeCommand extends BaseCommand
     const GIT_LOG = 'log';
 
     /**
-     * @return LogCommand
-     */
-    public static function getInstance()
-    {
-        return new self();
-    }
-
-    /**
      * Build a generic log command
      *
      * @param \GitElephant\Objects\TreeishInterface|string $refStart    the reference range start to build the log for
