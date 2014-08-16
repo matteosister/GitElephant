@@ -19,6 +19,8 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\Config\Config;
+use GitElephant\Command\ConfigCommand;
 use GitElephant\Command\FetchCommand;
 use GitElephant\Command\PullCommand;
 use GitElephant\Command\PushCommand;
@@ -640,9 +642,9 @@ class Repository
     public function getLastTag()
     {
         $finder = Finder::create()
-                  ->files()
-                  ->in(sprintf('%s/.git/refs/tags', $this->path))
-                  ->sortByChangedTime();
+            ->files()
+            ->in(sprintf('%s/.git/refs/tags', $this->path))
+            ->sortByChangedTime();
         if ($finder->count() == 0) {
             return null;
         }
@@ -956,6 +958,55 @@ class Repository
     public function push($to = null, $ref = null)
     {
         $this->caller->execute(PushCommand::getInstance()->push($to, $ref));
+    }
+
+    /**
+     * get a config from the git config command
+     * It's possible to read config from local, system and global context
+     *
+     * @link http://git-scm.com/docs/git-config
+     *
+     * @param Config|string $config
+     * @param string $context
+     *
+     * @return string
+     */
+    public function getConfig($config, $context = ConfigCommand::FILE_LOCATION_LOCAL)
+    {
+        return $this->caller->execute(ConfigCommand::getInstance($context)->get($config))->getOutputLines(true)[0];
+    }
+
+    /**
+     * get all configs from the git config command that match a key by the given regexp
+     * It's possible to read config from local, system and global context
+     *
+     * @link http://git-scm.com/docs/git-config
+     *
+     * @param Config|string $config
+     * @param string $context
+     *
+     * @return array
+     */
+    public function getConfigByRegexp($config, $context = ConfigCommand::FILE_LOCATION_LOCAL)
+    {
+        $lines = $this->caller->execute(ConfigCommand::getInstance($context)->getRegexp($config))->getOutputLines(true);
+        $out = array();
+        foreach ($lines as $line) {
+            $spacePos = strpos($line, ' ');
+            $key = substr($line, 0, $spacePos);
+            $value = substr($line, $spacePos + 1);
+            $out[$key] = $value;
+        }
+        return $out;
+    }
+
+    /**
+     * @param Config|string $config
+     * @param string $value
+     */
+    public function setConfig($config, $value)
+    {
+        $this->caller->execute(ConfigCommand::getInstance()->set($config, $value));
     }
 
     /**

@@ -13,6 +13,8 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\Config\Config;
+use GitElephant\Command\ConfigCommand;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\Object;
 use GitElephant\Objects\Tag;
@@ -324,11 +326,11 @@ class RepositoryTest extends TestCase
         $this->getRepository()->init();
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
+        $this->assertNull($this->getRepository()->getLastTag());
         $this->getRepository()->createTag('0.0.2');
-        sleep(1);
         $this->getRepository()->createTag('0.0.4');
-        sleep(1);
         $this->getRepository()->createTag('0.0.3');
+        // I need to wait or the file system is unable to sort by date
         sleep(1);
         $this->getRepository()->createTag('0.0.1');
         sleep(1);
@@ -840,5 +842,39 @@ class RepositoryTest extends TestCase
 
         $this->assertEquals('test commit', $r3->getLog()->last()->getMessage());
         $this->assertEquals($r1->getMainBranch()->getSha(), $r3->getLog()->last()->getSha());
+    }
+
+    public function test_setConfig()
+    {
+        $this->initRepository();
+        $r = $this->getRepository();
+        $r->init();
+        $r->setConfig('user.name', 'test user');
+        $this->assertEquals('test user', $r->getConfig('user.name'));
+    }
+
+    public function test_getConfig()
+    {
+        $this->initRepository();
+        $r = $this->getRepository();
+        $r->init();
+        $r->setConfig('user.name', 'test user');
+        $this->assertEquals('test user', $r->getConfig('user.name'));
+        $r->setConfig('user.name', 'test user 2');
+        $this->assertEquals('test user 2', $r->getConfig('user.name'));
+    }
+
+    public function test_getConfigByRegexp()
+    {
+        $this->initRepository();
+        $r = $this->getRepository();
+        $r->init();
+        $r->setConfig('user.name', 'test user');
+        $r->setConfig('user.email', 'test@test.com');
+        $res = $r->getConfigByRegexp('user.*');
+        $this->assertArrayHasKey('user.name', $res);
+        $this->assertArrayHasKey('user.email', $res);
+        $this->assertEquals('test user', $res['user.name']);
+        $this->assertEquals('test@test.com', $res['user.email']);
     }
 }
