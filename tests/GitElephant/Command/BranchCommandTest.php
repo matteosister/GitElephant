@@ -54,6 +54,19 @@ class BranchCommandTest extends TestCase
     }
 
     /**
+     * listBranches test
+     *
+     * @covers GitElephant\Command\BranchCommand::listBranches
+     */
+    public function testListBranches()
+    {
+        $branch = new BranchCommand();
+        $this->assertEquals($branch->listBranches(), "branch '-v' '--no-color' '--no-abbrev'");
+        $this->assertEquals($branch->listBranches(true), "branch '-v' '--no-color' '--no-abbrev' '-a'");
+        $this->assertEquals($branch->listBranches(false, true), "branch '--no-color' '--no-abbrev'");
+    }
+
+    /**
      * lists test
      *
      * @covers GitElephant\Command\BranchCommand::lists

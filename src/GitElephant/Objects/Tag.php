@@ -137,7 +137,7 @@ class Tag extends Object
      */
     private function createFromCommand()
     {
-        $command = TagCommand::getInstance()->lists();
+        $command = TagCommand::getInstance()->listTags();
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
