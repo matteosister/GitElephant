@@ -212,4 +212,15 @@ class CommitTest extends TestCase
         $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $diff);
         $this->assertCount(2, $diff);
     }
+
+    public function testRevParse()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->repository->stage();
+        $commit = Commit::create($this->repository, 'first commit', true);
+
+        $revParse = $commit->revParse();
+        $this->assertEquals($commit->getSha(), $revParse[0]);
+    }
 }

@@ -842,7 +842,7 @@ class RepositoryTest extends TestCase
         $this->assertEquals($r1->getMainBranch()->getSha(), $r3->getLog()->last()->getSha());
     }
 
-    public function testGetRevParse()
+    public function testRevParse()
     {
         $this->initRepository(null, 0);
         $r = $this->getRepository(0);
@@ -850,7 +850,22 @@ class RepositoryTest extends TestCase
         $this->addFile('test1', null, null, $r);
         $r->commit('test commit', true);
         $master = $r->getBranch('master');
-        $revParse = $r->getRevParse($master, array());
+        $revParse = $r->revParse($master, array());
         $this->assertEquals($master->getSha(), $revParse[0]);
+    }
+
+    public function testIsBare()
+    {
+        $this->initRepository(null, 0);
+        $r = $this->getRepository(0);
+        $r->init();
+
+        $this->assertEquals(false, $r->isBare());
+
+        $this->initRepository(null, 1);
+        $r = $this->getRepository(1);
+        $r->init(true);
+
+        $this->assertEquals(true, $r->isBare());
     }
 }

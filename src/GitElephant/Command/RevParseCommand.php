@@ -82,16 +82,16 @@ class RevParseCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function revParse($arg = null, $options = [])
+    public function revParse($arg = null, Array $options = array())
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_REV_PARSE_COMMAND);
         // if there are options add them.
         if (! is_null($options)) {
             foreach ($options as $option) {
-               $this->addCommandArgument($option);
+                $this->addCommandArgument($option);
             }
-        } 
+        }
         if (! is_null($arg)) {
             $this->addCommandSubject2($arg);
         }

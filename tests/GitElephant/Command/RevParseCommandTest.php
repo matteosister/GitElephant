@@ -33,4 +33,26 @@ class RevParseCommandTest extends TestCase
             RevParseCommand::OPTION_ABBREV_REF
         )));
     }
+
+    public function testRevParseIsBare()
+    {
+        $this->initRepository(null, 0);
+        $repo = $this->getRepository(0);
+        $repo->init();
+
+        $options = array(RevParseCommand::OPTION_IS_BARE_REPOSIORY);
+        $c = RevParseCommand::getInstance()->revParse(null, $options);
+
+        $caller = $repo->getCaller();
+        $caller->execute($c);
+        $this->assertEquals(array('false'), $caller->getOutputLines(true));
+
+        $this->initRepository(null, 1);
+        $repo = $this->getRepository(1);
+        $repo->init(true);
+
+        $caller = $repo->getCaller();
+        $caller->execute($c);
+        $this->assertEquals(array('true'), $caller->getOutputLines(true));
+    }
 }

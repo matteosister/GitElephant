@@ -22,6 +22,7 @@ namespace GitElephant\Objects;
 use GitElephant\Command\BranchCommand;
 use GitElephant\Command\MainCommand;
 use GitElephant\Command\RevListCommand;
+use GitElephant\Command\RevParseCommand;
 use GitElephant\Command\ShowCommand;
 use GitElephant\Objects\Commit\Message;
 use GitElephant\Repository;
@@ -383,5 +384,24 @@ class Commit implements TreeishInterface, \Countable
     public function getDatetimeCommitter()
     {
         return $this->datetimeCommitter;
+    }
+
+    /**
+     * rev-parse command - often used to return a commit tag.
+     *
+     * @param array         $options the options to apply to rev-parse
+     *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @return array
+     */
+    public function revParse(Array $options = array())
+    {
+        $c = RevParseCommand::getInstance()->revParse($this, $options);
+        $caller = $this->repository->getCaller();
+        $caller->execute($c);
+
+        return array_map('trim', $caller->getOutputLines(true));
     }
 }
