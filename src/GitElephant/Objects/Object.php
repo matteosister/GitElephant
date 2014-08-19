@@ -20,6 +20,7 @@
 namespace GitElephant\Objects;
 
 use GitElephant\Repository;
+use GitElephant\Command\RevParseCommand;
 
 /**
  * A Object instance represents a node in the git tree repository
@@ -320,5 +321,24 @@ class Object implements TreeishInterface
     {
         $log = $this->repository->getLog('HEAD', $this->getFullPath(), 1);
         return $log[0];
+    }
+
+    /**
+     * rev-parse command - often used to return a commit tag.
+     *
+     * @param array         $options the options to apply to rev-parse
+     *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @return array
+     */
+    public function revParse(Array $options = array())
+    {
+        $c = RevParseCommand::getInstance()->revParse($this, $options);
+        $caller = $this->repository->getCaller();
+        $caller->execute($c);
+
+        return array_map('trim', $caller->getOutputLines(true));
     }
 }

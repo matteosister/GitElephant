@@ -39,6 +39,7 @@ use GitElephant\Objects\TreeishInterface;
 use GitElephant\Command\MainCommand;
 use GitElephant\Command\BranchCommand;
 use GitElephant\Command\MergeCommand;
+use GitElephant\Command\RevParseCommand;
 use GitElephant\Command\TagCommand;
 use GitElephant\Command\LogCommand;
 use GitElephant\Command\CloneCommand;
@@ -274,6 +275,36 @@ class Repository
         }
 
         return $this;
+    }
+
+    /**
+     * rev-parse command - often used to return a commit tag.
+     *
+     * @param array                  $options the options to apply to rev-parse
+     * @param string|Object|Commit   $arg the argument (may be a branch head, etc)
+     *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @return array
+     */
+    public function revParse($arg = null, Array $options = array())
+    {
+        $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
+
+        return array_map('trim', $this->caller->getOutputLines(true));
+    }
+
+    /**
+     * Check if this is a bare repository
+     * @return boolean
+     */
+    public function isBare()
+    {
+        $options = array(RevParseCommand::OPTION_IS_BARE_REPOSIORY);
+        $this->caller->execute(RevParseCommand::getInstance()->revParse(null, $options));
+
+        return trim($this->caller->getOutput()) === 'true';
     }
 
     /**

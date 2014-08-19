@@ -50,4 +50,12 @@ class ObjectTest extends TestCase
         $this->assertInstanceOf('GitElephant\Objects\Commit', $tag->getLastCommit());
         $this->assertEquals('tag 2 commit', $tag->getLastCommit()->getMessage());
     }
+
+    public function testRevParse()
+    {
+        $master = $this->getRepository()->getBranch('master');
+
+        $revParse = $master->revParse();
+        $this->assertEquals($master->getSha(), $revParse[0]);
+    }
 }
