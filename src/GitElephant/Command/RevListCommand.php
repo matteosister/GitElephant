@@ -21,6 +21,7 @@ namespace GitElephant\Command;
 
 use GitElephant\Objects\Tag;
 use GitElephant\Objects\Commit;
+use GitElephant\Repository;
 
 /**
  * RevList Command generator
@@ -30,6 +31,17 @@ use GitElephant\Objects\Commit;
 class RevListCommand extends BaseCommand
 {
     const GIT_REVLIST = 'rev-list';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * get tag commit command via rev-list

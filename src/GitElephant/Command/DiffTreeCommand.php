@@ -20,6 +20,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Objects\Commit;
+use GitElephant\Repository;
 
 /**
  * DiffTreeCommand
@@ -31,6 +32,17 @@ use GitElephant\Objects\Commit;
 class DiffTreeCommand extends BaseCommand
 {
     const DIFF_TREE_COMMAND = 'diff-tree';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * get a diff of a root commit with the empty repository

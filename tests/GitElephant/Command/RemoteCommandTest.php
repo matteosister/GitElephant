@@ -45,9 +45,7 @@ class RemoteCommandTest extends TestCase
      */
     public function testRemoteNoArgs()
     {
-        /** @var RemoteCommand $cmdInstance */
-        $cmdInstance = $this->getRepository()->getCommandFactory()->get('remote');
-        $actual = $cmdInstance->remote();
+        $actual = RemoteCommand::getInstance()->remote();
         $expected = "remote";
         $this->assertEquals($expected, $actual, 'remote() without arguments is just the remote command');
     }
@@ -58,9 +56,7 @@ class RemoteCommandTest extends TestCase
     public function testShow()
     {
         $remotename = 'foobar';
-        /** @var RemoteCommand $cmdInstance */
-        $cmdInstance = $this->getRepository()->getCommandFactory()->get('remote');
-        $actual = $cmdInstance->show($remotename);
+        $actual = RemoteCommand::getInstance()->show($remotename);
         $expected = "remote show '$remotename'";
         $this->assertEquals($expected, $actual, 'show() builds remote command with show subcommand');
 

@@ -19,6 +19,8 @@
 
 namespace GitElephant\Command;
 
+use GitElephant\Repository;
+
 /**
  * Submodule command generator
  *
@@ -33,6 +35,17 @@ class SubmoduleCommand extends BaseCommand
     const SUBMODULE_OPTION_FORCE     = '--force';
     const SUBMODULE_OPTION_INIT      = '--init';
     const SUBMODULE_OPTION_RECURSIVE = '--recursive';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * add a submodule

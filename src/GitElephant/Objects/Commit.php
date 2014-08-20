@@ -130,7 +130,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public static function create(Repository $repository, $message, $stageAll = false, $author = null)
     {
-        $repository->getCaller()->execute(MainCommand::getInstance()->commit($message, $stageAll, $author));
+        $repository->getCaller()->execute(MainCommand::getInstance($this->getRepository())->commit($message, $stageAll, $author));
 
         return $repository->getCommit();
     }
@@ -176,9 +176,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public function createFromCommand()
     {
-        /** @var ShowCommand $cmdInstance */
-        $cmdInstance = $this->repository->getCommandFactory()->get('show');
-        $command = $cmdInstance->showCommit($this->ref);
+        $command = ShowCommand::getInstance($this->getRepository())->showCommit($this->ref);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
@@ -190,7 +188,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public function getContainedIn()
     {
-        $command = BranchCommand::getInstance()->contains($this->getSha());
+        $command = BranchCommand::getInstance($this->getRepository())->contains($this->getSha());
 
         return array_map('trim', (array)$this->getCaller()->execute($command)->getOutputLines(true));
     }
@@ -206,7 +204,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public function count()
     {
-        $command = RevListCommand::getInstance()->commitPath($this);
+        $command = RevListCommand::getInstance($this->getRepository())->commitPath($this);
 
         return count($this->getCaller()->execute($command)->getOutputLines(true));
     }

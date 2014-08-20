@@ -22,6 +22,7 @@ namespace GitElephant\Command;
 
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\Remote;
+use GitElephant\Repository;
 
 /**
  * Class PullCommand
@@ -29,6 +30,17 @@ use GitElephant\Objects\Remote;
 class PullCommand extends BaseCommand
 {
     const GIT_PULL_COMMAND = 'pull';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * @param Remote|string $remote

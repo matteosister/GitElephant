@@ -48,17 +48,16 @@ class FetchCommandTest extends TestCase
      */
     public function testFetch()
     {
-        /** @var FetchCommand $cmdInstance */
-        $cmdInstance = $this->getRepository()->getCommandFactory()->get('fetch');
-        $this->assertEquals("fetch", $cmdInstance->fetch());
-        $this->assertEquals("fetch 'github'", $cmdInstance->fetch('github'));
-        $this->assertEquals("fetch 'github' 'develop'", $cmdInstance->fetch('github', 'develop'));
+        $fc = FetchCommand::getInstance();
+        $this->assertEquals("fetch", $fc->fetch());
+        $this->assertEquals("fetch 'github'", $fc->fetch('github'));
+        $this->assertEquals("fetch 'github' 'develop'", $fc->fetch('github', 'develop'));
         $this->getRepository()->addRemote('test-remote', 'git@github.com:matteosister/GitElephant.git');
         $remote = m::mock('GitElephant\Objects\Remote')
             ->shouldReceive('getName')->andReturn('test-remote')->getMock();
-        $this->assertEquals("fetch 'test-remote' 'develop'", $cmdInstance->fetch($remote, 'develop'));
+        $this->assertEquals("fetch 'test-remote' 'develop'", $fc->fetch($remote, 'develop'));
         $branch = Branch::create($this->getRepository(), 'test-branch');
-        $this->assertEquals("fetch 'test-remote' 'test-branch'", $cmdInstance->fetch($remote, $branch));
-        $this->assertEquals("fetch '--tags' 'test-remote' 'test-branch'", $cmdInstance->fetch($remote, $branch, array('--tags')));
+        $this->assertEquals("fetch 'test-remote' 'test-branch'", $fc->fetch($remote, $branch));
+        $this->assertEquals("fetch '--tags' 'test-remote' 'test-branch'", $fc->fetch($remote, $branch, array('--tags')));
     }
 }

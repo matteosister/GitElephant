@@ -118,8 +118,7 @@ class Remote
     public function getVerboseOutput(RemoteCommand $remoteCmd = null)
     {
         if (!$remoteCmd) {
-            /** @var RemoteCommand $remoteCmd */
-            $remoteCmd = $this->repository->getCommandFactory()->get('remote');
+            $remoteCmd = RemoteCommand::getInstance($this->repository);
         }
         $command = $remoteCmd->verbose();
 
@@ -145,7 +144,7 @@ class Remote
     public function getShowOutput($name = null, RemoteCommand $remoteCmd = null, $queryRemotes = true)
     {
         if (!$remoteCmd) {
-            $remoteCmd = RemoteCommand::getInstance();
+            $remoteCmd = RemoteCommand::getInstance($this->repository);
         }
         $command = $remoteCmd->show($name, $queryRemotes);
 

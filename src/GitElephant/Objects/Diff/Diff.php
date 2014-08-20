@@ -109,15 +109,15 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
         }
         if ($commit2 === null) {
             if ($commit1->isRoot()) {
-                $command = DiffTreeCommand::getInstance()->rootDiff($commit1);
+                $command = DiffTreeCommand::getInstance($this->repository)->rootDiff($commit1);
             } else {
-                $command = DiffCommand::getInstance()->diff($commit1);
+                $command = DiffCommand::getInstance($this->repository)->diff($commit1);
             }
         } else {
             if (is_string($commit2)) {
                 $commit2 = $this->getRepository()->getCommit($commit2);
             }
-            $command = DiffCommand::getInstance()->diff($commit1, $commit2, $path);
+            $command = DiffCommand::getInstance($this->repository)->diff($commit1, $commit2, $path);
         }
         $outputLines = $this->getCaller()->execute($command)->getOutputLines();
         $this->parseOutputLines($outputLines);

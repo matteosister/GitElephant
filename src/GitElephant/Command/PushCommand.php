@@ -22,6 +22,7 @@ namespace GitElephant\Command;
 
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\Remote;
+use GitElephant\Repository;
 
 /**
  * Class PushCommand
@@ -29,6 +30,17 @@ use GitElephant\Objects\Remote;
 class PushCommand extends BaseCommand
 {
     const GIT_PUSH_COMMAND = 'push';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * @param Remote|string $remote

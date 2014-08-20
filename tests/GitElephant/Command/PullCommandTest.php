@@ -49,18 +49,17 @@ class PullCommandTest extends TestCase
      */
     public function testPull()
     {
-        /** @var PullCommand $cmdInstance */
-        $cmdInstance = $this->getRepository()->getCommandFactory()->get('pull');
-        $this->assertEquals("pull", $cmdInstance->pull());
-        $this->assertEquals("pull 'github'", $cmdInstance->pull('github'));
-        $this->assertEquals("pull 'github' 'develop'", $cmdInstance->pull('github', 'develop'));
+        $pc = PullCommand::getInstance();
+        $this->assertEquals("pull", $pc->pull());
+        $this->assertEquals("pull 'github'", $pc->pull('github'));
+        $this->assertEquals("pull 'github' 'develop'", $pc->pull('github', 'develop'));
         $this->getRepository()->addRemote('test-remote', 'git@github.com:matteosister/GitElephant.git');
         $remote = m::mock('GitElephant\Objects\Remote')
             ->shouldReceive('getName')->andReturn('test-remote')->getMock();
-        $this->assertEquals("pull 'test-remote' 'develop'", $cmdInstance->pull($remote, 'develop'));
+        $this->assertEquals("pull 'test-remote' 'develop'", $pc->pull($remote, 'develop'));
         $branch = Branch::create($this->getRepository(), 'test-branch');
-        $this->assertEquals("pull 'test-remote' 'test-branch'", $cmdInstance->pull($remote, $branch));
-        $this->assertEquals("pull '--rebase'", $cmdInstance->pull(null, null, true));
-        $this->assertEquals("pull '--rebase' 'test-remote' 'test-branch'", $cmdInstance->pull($remote, $branch, true));
+        $this->assertEquals("pull 'test-remote' 'test-branch'", $pc->pull($remote, $branch));
+        $this->assertEquals("pull '--rebase'", $pc->pull(null, null, true));
+        $this->assertEquals("pull '--rebase' 'test-remote' 'test-branch'", $pc->pull($remote, $branch, true));
     }
 }

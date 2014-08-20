@@ -41,10 +41,9 @@ class DiffTreeCommandTest extends TestCase
      */
     public function testRootDiff()
     {
-        /** @var DiffTreeCommand $cmdInstance */
-        $cmdInstance = $this->getRepository()->getCommandFactory()->get('diff_tree');
+        $dtc = DiffTreeCommand::getInstance();
         $commit = $this->getRepository()->getCommit();
-        $command = $cmdInstance->rootDiff($commit);
+        $command = $dtc->rootDiff($commit);
         $this->assertEquals(
             sprintf("diff-tree '--cc' '--root' '--dst-prefix=DST/' '--src-prefix=SRC/' '%s'", $commit),
             $command
@@ -52,6 +51,6 @@ class DiffTreeCommandTest extends TestCase
         $this->addFile('test');
         $this->getRepository()->commit('test commit', true);
         $this->setExpectedException('InvalidArgumentException');
-        $this->fail($cmdInstance->rootDiff($this->getRepository()->getCommit()));
+        $this->fail($dtc->rootDiff($this->getRepository()->getCommit()));
     }
 }

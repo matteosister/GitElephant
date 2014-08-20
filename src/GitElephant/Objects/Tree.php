@@ -96,9 +96,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      */
     private function createFromCommand()
     {
-        /** @var LsTreeCommand $cmdInstance */
-        $cmdInstance = $this->repository->getCommandFactory()->get('ls_tree');
-        $command = $cmdInstance->tree($this->ref, $this->subject);
+        $command = LsTreeCommand::getInstance($this->getRepository())->tree($this->ref, $this->subject);
         $outputLines = $this->getCaller()->execute($command)->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }
@@ -203,7 +201,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      */
     public function getBinaryData()
     {
-        $cmd = CatFileCommand::getInstance()->content($this->getSubject(), $this->ref);
+        $cmd = CatFileCommand::getInstance($this->getRepository())->content($this->getSubject(), $this->ref);
 
         return $this->getCaller()->execute($cmd)->getRawOutput();
     }
@@ -395,26 +393,6 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
         } else {
             return $this->getSubject();
         }
-    }
-
-    /**
-     * Repository setter
-     *
-     * @param \GitElephant\Repository $repository the repository variable
-     */
-    public function setRepository($repository)
-    {
-        $this->repository = $repository;
-    }
-
-    /**
-     * Repository getter
-     *
-     * @return \GitElephant\Repository
-     */
-    public function getRepository()
-    {
-        return $this->repository;
     }
 
     /**

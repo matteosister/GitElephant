@@ -64,9 +64,7 @@ class Tag extends Object
      */
     public static function create(Repository $repository, $name, $startPoint = null, $message = null)
     {
-        /** @var TagCommand $cmdInstance */
-        $cmdInstance = $repository->getCommandFactory()->get('tag');
-        $repository->getCaller()->execute($cmdInstance->create($name, $startPoint, $message));
+        $repository->getCaller()->execute(TagCommand::getInstance($this->getRepository())->create($name, $startPoint, $message));
 
         return $repository->getTag($name);
     }
@@ -129,7 +127,7 @@ class Tag extends Object
     {
         $this->repository
             ->getCaller()
-            ->execute(TagCommand::getInstance()->delete($this));
+            ->execute(TagCommand::getInstance($this->getRepository())->delete($this));
     }
 
     /**
@@ -139,9 +137,7 @@ class Tag extends Object
      */
     private function createFromCommand()
     {
-        /** @var TagCommand $cmdInstance */
-        $cmdInstance = $this->repository->getCommandFactory()->get('tag');
-        $command = $cmdInstance->listTags();
+        $command = TagCommand::getInstance($this->getRepository())->listTags();
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
@@ -164,10 +160,8 @@ class Tag extends Object
         foreach ($outputLines as $tagString) {
             if ($tagString != '') {
                 if ($this->name === trim($tagString)) {
-                    /** @var RevListCommand $cmdInstance */
-                    $cmdInstance = $this->repository->getCommandFactory()->get('rev_list');
                     $lines = $this->getCaller()
-                        ->execute($cmdInstance->getTagCommit($this))
+                        ->execute(RevListCommand::getInstance($this->getRepository())->getTagCommit($this))
                         ->getOutputLines();
                     $this->setSha($lines[0]);
                     $found = true;
@@ -196,26 +190,6 @@ class Tag extends Object
     private function getCaller()
     {
         return $this->getRepository()->getCaller();
-    }
-
-    /**
-     * Repository setter
-     *
-     * @param \GitElephant\Repository $repository the repository variable
-     */
-    public function setRepository($repository)
-    {
-        $this->repository = $repository;
-    }
-
-    /**
-     * Repository getter
-     *
-     * @return \GitElephant\Repository
-     */
-    public function getRepository()
-    {
-        return $this->repository;
     }
 
     /**

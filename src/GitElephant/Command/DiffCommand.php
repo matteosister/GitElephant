@@ -31,6 +31,17 @@ class DiffCommand extends BaseCommand
     const DIFF_COMMAND = 'diff';
 
     /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
+
+    /**
      * build a diff command
      *
      * @param TreeishInterface      $of   the reference to diff

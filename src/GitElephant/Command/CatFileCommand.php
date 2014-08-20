@@ -21,6 +21,7 @@ namespace GitElephant\Command;
 
 use GitElephant\Objects\Object;
 use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * cat-file command generator
@@ -30,6 +31,17 @@ use GitElephant\Objects\TreeishInterface;
 class CatFileCommand extends BaseCommand
 {
     const GIT_CAT_FILE = 'cat-file';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * command to show content of a Object at a given Treeish point

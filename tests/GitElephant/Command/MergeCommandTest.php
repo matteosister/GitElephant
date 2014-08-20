@@ -35,11 +35,10 @@ class MergeCommandTest extends TestCase
     public function testMerge()
     {
         $branch = $this->getRepository()->getBranch('test');
-        $cmdInstance = $this->getRepository()->getCommandFactory()->get('merge');
-        $this->assertEquals("merge 'refs/heads/test'", $cmdInstance->merge($branch));
-        $this->assertEquals("merge '-m' 'test msg' 'refs/heads/test'", $cmdInstance->merge($branch, "test msg"));
-        $this->assertEquals("merge '--ff-only' '-m' 'test msg' 'refs/heads/test'", $cmdInstance->merge($branch, "test msg", array('--ff-only')));
-        $this->assertEquals("merge '--no-ff' '-m' 'test msg' 'refs/heads/test'", $cmdInstance->merge($branch, "test msg", array('--no-ff')));
+        $this->assertEquals("merge 'refs/heads/test'", MergeCommand::getInstance()->merge($branch));
+        $this->assertEquals("merge '-m' 'test msg' 'refs/heads/test'", MergeCommand::getInstance()->merge($branch, "test msg"));
+        $this->assertEquals("merge '--ff-only' '-m' 'test msg' 'refs/heads/test'", MergeCommand::getInstance()->merge($branch, "test msg", array('--ff-only')));
+        $this->assertEquals("merge '--no-ff' '-m' 'test msg' 'refs/heads/test'", MergeCommand::getInstance()->merge($branch, "test msg", array('--no-ff')));
     }
 
     /**

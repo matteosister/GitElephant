@@ -22,6 +22,7 @@ namespace GitElephant\Command;
 
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\Remote;
+use GitElephant\Repository;
 
 /**
  * Class FetchCommand
@@ -30,6 +31,17 @@ class FetchCommand extends BaseCommand
 {
     const GIT_FETCH_COMMAND = 'fetch';
     const GIT_FETCH_OPTION_TAGS = '--tags';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * @param Remote|string $remote

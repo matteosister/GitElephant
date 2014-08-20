@@ -38,15 +38,14 @@ class CloneCommandTest extends TestCase
      */
     public function testCloneUrl()
     {
-        /** @var CloneCommand $cmdInstance */
-        $cmdInstance = $this->repository->getCommandFactory()->get('clone');
+        $cc = CloneCommand::getInstance();
         $this->assertEquals(
             "clone 'git://github.com/matteosister/GitElephant.git'",
-            $cmdInstance->cloneUrl('git://github.com/matteosister/GitElephant.git')
+            $cc->cloneUrl('git://github.com/matteosister/GitElephant.git')
         );
         $this->assertEquals(
             "clone 'git://github.com/matteosister/GitElephant.git' 'test'",
-            $cmdInstance->cloneUrl('git://github.com/matteosister/GitElephant.git', 'test')
+            $cc->cloneUrl('git://github.com/matteosister/GitElephant.git', 'test')
         );
     }
 }

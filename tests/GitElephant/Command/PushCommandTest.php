@@ -49,16 +49,15 @@ class PushCommandTest extends TestCase
      */
     public function testPush()
     {
-        /** @var PushCommand $cmdInstance */
-        $cmdInstance = $this->getRepository()->getCommandFactory()->get('push');
-        $this->assertEquals("push 'origin' 'master'", $cmdInstance->push());
-        $this->assertEquals("push 'github' 'master'", $cmdInstance->push('github'));
-        $this->assertEquals("push 'github' 'develop'", $cmdInstance->push('github', 'develop'));
+        $pc = PushCommand::getInstance();
+        $this->assertEquals("push 'origin' 'master'", $pc->push());
+        $this->assertEquals("push 'github' 'master'", $pc->push('github'));
+        $this->assertEquals("push 'github' 'develop'", $pc->push('github', 'develop'));
         $this->getRepository()->addRemote('test-remote', 'git@github.com:matteosister/GitElephant.git');
         $remote = m::mock('GitElephant\Objects\Remote')
             ->shouldReceive('getName')->andReturn('test-remote')->getMock();
-        $this->assertEquals("push 'test-remote' 'develop'", $cmdInstance->push($remote, 'develop'));
+        $this->assertEquals("push 'test-remote' 'develop'", $pc->push($remote, 'develop'));
         $branch = Branch::create($this->getRepository(), 'test-branch');
-        $this->assertEquals("push 'test-remote' 'test-branch'", $cmdInstance->push($remote, $branch));
+        $this->assertEquals("push 'test-remote' 'test-branch'", $pc->push($remote, $branch));
     }
 }

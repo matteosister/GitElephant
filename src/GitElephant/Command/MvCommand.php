@@ -20,6 +20,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Objects\Object;
+use GitElephant\Repository;
 
 /**
  * Class MvCommand
@@ -29,6 +30,17 @@ use GitElephant\Objects\Object;
 class MvCommand extends BaseCommand
 {
     const MV_COMMAND = 'mv';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * @param string|Object $source source name

@@ -22,6 +22,7 @@ namespace GitElephant\Command;
 use GitElephant\Objects\Author;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * Main command generator (init, status, add, commit, checkout)
@@ -38,6 +39,17 @@ class MainCommand extends BaseCommand
     const GIT_MOVE     = 'mv';
     const GIT_REMOVE   = 'rm';
     const GIT_RESET    = 'reset';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * Init the repository

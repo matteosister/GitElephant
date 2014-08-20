@@ -13,7 +13,6 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\CommandFactory;
 use GitElephant\Command\MvCommand;
 use GitElephant\Repository;
 use GitElephant\GitBinary;
@@ -239,12 +238,12 @@ class TestCase extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->getMockCommand()));
     }
 
-    protected function addOutputToMockRepo(m\MockInterface $repo, $output)
+    protected function addOutputToMockRepo(\PHPUnit_Framework_MockObject_MockObject $repo, $output)
     {
-        $mockCaller = m::mock('GitElephant\Command\Caller\Caller');
-        $mockCaller->shouldReceive('execute')->andReturnSelf();
-        $mockCaller->shouldReceive('getOutputLines')->andReturn($output);
-        $repo->shouldReceive('getCaller')->andReturn($mockCaller);
+        $repo
+            ->expects($this->any())
+            ->method('getCaller')
+            ->will($this->returnValue($this->getMockCaller('', $output)));
     }
 
     protected function getMockCommand()
@@ -260,10 +259,14 @@ class TestCase extends \PHPUnit_Framework_TestCase
 
     protected function getMockRepository()
     {
-        $mock = m::mock('GitElephant\Repository');
-        $mock->shouldReceive('getCommandFactory')->andReturn(CommandFactory::create());
-        $mock->shouldReceive('getPath')->andReturn('.');
-        return $mock;
+        return $this->getMock(
+            'GitElephant\Repository',
+            array(),
+            array(
+                $this->repository->getPath(),
+                $this->getMockBinary()
+            )
+        );
     }
 
     protected function getMockBinary()
@@ -297,31 +300,5 @@ class TestCase extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Datetime', $commit->getDatetimeCommitter());
         $this->assertEquals($datetimeCommitter, $commit->getDatetimeCommitter()->format('U'));
         $this->assertEquals($message, $commit->getMessage()->getShortMessage());
-    }
-
-    /**
-     * @param $class
-     * @param $methodName
-     * @return \ReflectionMethod
-     */
-    protected function getPrivateOrProtectedMethod($class, $methodName)
-    {
-        $refl = new \ReflectionClass($class);
-        $method = $refl->getMethod($methodName);
-        $method->setAccessible(true);
-        return $method;
-    }
-
-    /**
-     * @param $class
-     * @param $propertyName
-     * @return \ReflectionProperty
-     */
-    protected function getPrivateOrProtectedProperty($class, $propertyName)
-    {
-        $refl = new \ReflectionClass($class);
-        $property = $refl->getProperty($propertyName);
-        $property->setAccessible(true);
-        return $property;
     }
 }

@@ -108,7 +108,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      */
     private function createFromCommand($ref, $path, $limit, $offset, $firstParent)
     {
-        $command = LogCommand::getInstance()->showLog($ref, $path, $limit, $offset, $firstParent);
+        $command = LogCommand::getInstance($this->getRepository())->showLog($ref, $path, $limit, $offset, $firstParent);
         $outputLines = $this->getRepository()->getCaller()->execute($command)->getOutputLines(true);
         $this->parseOutputLines($outputLines);
     }
@@ -118,7 +118,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
         $this->commits = array();
         $commits = Utilities::pregSplitFlatArray($outputLines, '/^commit (\w+)$/');
         foreach ($commits as $commitOutputLines) {
-            $this->commits[] = Commit::createFromOutputLines($this->repository, $commitOutputLines);
+            $this->commits[] = Commit::createFromOutputLines($this->getRepository(), $commitOutputLines);
         }
     }
 

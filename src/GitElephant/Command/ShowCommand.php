@@ -19,6 +19,8 @@
 
 namespace GitElephant\Command;
 
+use GitElephant\Repository;
+
 /**
  * show command generator
  *
@@ -27,6 +29,17 @@ namespace GitElephant\Command;
 class ShowCommand extends BaseCommand
 {
     const GIT_SHOW = 'show';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * build the show command

@@ -19,6 +19,8 @@
 
 namespace GitElephant\Command;
 
+use GitElephant\Repository;
+
 /**
  * Branch command generator
  *
@@ -27,6 +29,17 @@ namespace GitElephant\Command;
 class BranchCommand extends BaseCommand
 {
     const BRANCH_COMMAND = 'branch';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * Locate branches that contain a reference

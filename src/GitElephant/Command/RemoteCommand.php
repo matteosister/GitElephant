@@ -21,6 +21,7 @@ namespace GitElephant\Command;
 
 use GitElephant\Command\Remote\AddSubCommand;
 use GitElephant\Command\Remote\ShowSubCommand;
+use GitElephant\Repository;
 
 /**
  * Class RemoteCommand
@@ -35,6 +36,17 @@ class RemoteCommand extends BaseCommand
     const GIT_REMOTE = 'remote';
     const GIT_REMOTE_OPTION_VERBOSE = '--verbose';
     const GIT_REMOTE_OPTION_VERBOSE_SHORT = '-v';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * Build the remote command

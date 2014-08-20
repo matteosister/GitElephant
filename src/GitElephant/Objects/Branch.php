@@ -80,9 +80,7 @@ class Branch extends Object implements TreeishInterface
      */
     public static function create(Repository $repository, $name, $startPoint = null)
     {
-        /** @var BranchCommand $cmdInstance */
-        $cmdInstance = $repository->getCommandFactory()->get('branch');
-        $repository->getCaller()->execute($cmdInstance->create($name, $startPoint));
+        $repository->getCaller()->execute(BranchCommand::getInstance($this->getRepository())->create($name, $startPoint));
 
         return new self($repository, $name);
     }
@@ -152,9 +150,7 @@ class Branch extends Object implements TreeishInterface
      */
     private function createFromCommand()
     {
-        /** @var BranchCommand $cmdInstance */
-        $cmdInstance = $this->repository->getCommandFactory()->get('branch');
-        $command = $cmdInstance->listBranches();
+        $command = BranchCommand::getInstance($this->repository$this->repository)->listBranches();
         $outputLines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
         foreach ($outputLines as $outputLine) {
             $matches = static::getMatches($outputLine);

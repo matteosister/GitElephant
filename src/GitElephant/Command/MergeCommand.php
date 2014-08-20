@@ -20,6 +20,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Objects\Branch;
+use GitElephant\Repository;
 
 /**
  * Merge command generator
@@ -31,6 +32,17 @@ class MergeCommand extends BaseCommand
     const MERGE_COMMAND = 'merge';
     const MERGE_OPTION_FF_ONLY = '--ff-only';
     const MERGE_OPTION_NO_FF = '--no-ff';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * Generate a merge command

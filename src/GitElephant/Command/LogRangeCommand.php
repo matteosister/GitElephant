@@ -15,6 +15,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * Log Range command generator
@@ -26,6 +27,17 @@ use GitElephant\Objects\TreeishInterface;
 class LogRangeCommand extends BaseCommand
 {
     const GIT_LOG = 'log';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * Build a generic log command

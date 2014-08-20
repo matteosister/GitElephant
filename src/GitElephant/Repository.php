@@ -19,7 +19,6 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\CommandFactory;
 use GitElephant\Command\FetchCommand;
 use GitElephant\Command\PullCommand;
 use GitElephant\Command\PushCommand;
@@ -86,9 +85,25 @@ class Repository
     private $name;
 
     /**
-     * @var CommandFactory
+     * A list of global configs to apply to every command
+     * 
+     * @var array
      */
-    private $commandFactory;
+    private $globalConfigs = array();
+
+    /**
+     * A list of global options to apply to every command
+     * 
+     * @var array
+     */
+    private $globalOptions = array();
+
+    /**
+     * A list of global arguments to apply to every command
+     * 
+     * @var array
+     */
+    private $globalCommandArguments = array();
 
     /**
      * Class constructor
@@ -110,7 +125,6 @@ class Repository
         $this->path = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
         $this->name = $name;
-        $this->commandFactory = CommandFactory::create();
     }
 
     /**
@@ -171,9 +185,7 @@ class Repository
      */
     public function init($bare = false)
     {
-        /** @var MainCommand $cmdInstance */
-        $cmdInstance = $this->commandFactory->get('main');
-        $this->caller->execute($cmdInstance->init($bare));
+        $this->caller->execute(MainCommand::getInstance($this)->init($bare));
 
         return $this;
     }
@@ -191,9 +203,7 @@ class Repository
      */
     public function stage($path = '.')
     {
-        /** @var MainCommand $cmdInstance */
-        $cmdInstance = $this->commandFactory->get('main');
-        $this->caller->execute($cmdInstance->add($path));
+        $this->caller->execute(MainCommand::getInstance($this)->add($path));
 
         return $this;
     }
@@ -211,7 +221,7 @@ class Repository
      */
     public function unstage($path)
     {
-        $this->caller->execute(MainCommand::getInstance()->unstage($path), true, null, array(0, 1));
+        $this->caller->execute(MainCommand::getInstance($this)->unstage($path), true, null, array(0, 1));
 
         return $this;
     }
@@ -231,7 +241,7 @@ class Repository
      */
     public function move($from, $to)
     {
-        $this->caller->execute(MainCommand::getInstance()->move($from, $to));
+        $this->caller->execute(MainCommand::getInstance($this)->move($from, $to));
 
         return $this;
     }
@@ -252,7 +262,7 @@ class Repository
      */
     public function remove($path, $recursive = false, $force = false)
     {
-        $this->caller->execute(MainCommand::getInstance()->remove($path, $recursive, $force));
+        $this->caller->execute(MainCommand::getInstance($this)->remove($path, $recursive, $force));
 
         return $this;
     }
@@ -280,9 +290,7 @@ class Repository
         if ($stageAll) {
             $this->stage();
         }
-        /** @var MainCommand $cmdInstance */
-        $cmdInstance = $this->commandFactory->get('main');
-        $this->caller->execute($cmdInstance->commit($message, $stageAll, $author, $allowEmpty));
+        $this->caller->execute(MainCommand::getInstance($this)->commit($message, $stageAll, $author, $allowEmpty));
         if ($ref != null) {
             $this->checkout($currentBranch);
         }
@@ -357,7 +365,7 @@ class Repository
      */
     public function getStatusOutput()
     {
-        $this->caller->execute(MainCommand::getInstance()->status());
+        $this->caller->execute(MainCommand::getInstance($this)->status());
 
         return array_map('trim', $this->caller->getOutputLines());
     }
@@ -394,7 +402,7 @@ class Repository
      */
     public function deleteBranch($name, $force = false)
     {
-        $this->caller->execute(BranchCommand::getInstance()->delete($name, $force));
+        $this->caller->execute(BranchCommand::getInstance($this)->delete($name, $force));
 
         return $this;
     }
@@ -416,7 +424,7 @@ class Repository
     {
         $branches = array();
         if ($namesOnly) {
-            $outputLines = $this->caller->execute(BranchCommand::getInstance()->listBranches($all, true))->getOutputLines(
+            $outputLines = $this->caller->execute(BranchCommand::getInstance($this)->listBranches($all, true))->getOutputLines(
                 true
             );
             $branches = array_map(
@@ -437,9 +445,7 @@ class Repository
                 }
             };
         } else {
-            /** @var BranchCommand $cmdInstance */
-            $cmdInstance = $this->commandFactory->get('branch');
-            $outputLines = $this->caller->execute($cmdInstance->listBranches($all))->getOutputLines(true);
+            $outputLines = $this->caller->execute(BranchCommand::getInstance($this)->listBranches($all))->getOutputLines(true);
             foreach ($outputLines as $branchLine) {
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
@@ -568,7 +574,7 @@ class Repository
                 break;
         }
 
-        $this->caller->execute(MergeCommand::getInstance()->merge($branch, $message, $options));
+        $this->caller->execute(MergeCommand::getInstance($this)->merge($branch, $message, $options));
 
         return $this;
     }
@@ -627,7 +633,7 @@ class Repository
      */
     public function addSubmodule($gitUrl, $path = null)
     {
-        $this->caller->execute(SubmoduleCommand::getInstance()->add($gitUrl, $path));
+        $this->caller->execute(SubmoduleCommand::getInstance($this)->add($gitUrl, $path));
 
         return $this;
     }
@@ -673,9 +679,7 @@ class Repository
     public function getTags()
     {
         $tags = array();
-        /** @var TagCommand $cmdInstance */
-        $cmdInstance = $this->commandFactory->get('tag');
-        $this->caller->execute($cmdInstance->listTags());
+        $this->caller->execute(TagCommand::getInstance($this)->listTags());
         foreach ($this->caller->getOutputLines() as $tagString) {
             if ($tagString != '') {
                 $tags[] = new Tag($this, trim($tagString));
@@ -747,7 +751,7 @@ class Repository
         if (in_array($name, $this->getBranches(true))) {
             return new Branch($this, $name);
         }
-        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance()->listTags())->getOutputLines(true);
+        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance($this)->listTags())->getOutputLines(true);
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
                 return new Tag($this, $name);
@@ -848,7 +852,7 @@ class Repository
      */
     public function getObjectLog(Object $obj, $branch = null, $limit = 1, $offset = null)
     {
-        $command = LogCommand::getInstance()->showObjectLog($obj, $branch, $limit, $offset);
+        $command = LogCommand::getInstance($this)->showObjectLog($obj, $branch, $limit, $offset);
 
         return Log::createFromOutputLines($this, $this->caller->execute($command)->getOutputLines());
     }
@@ -867,9 +871,7 @@ class Repository
      */
     public function checkout($ref)
     {
-        /** @var MainCommand $cmdInstance */
-        $cmdInstance = $this->commandFactory->get('main');
-        $this->caller->execute($cmdInstance->checkout($ref));
+        $this->caller->execute(MainCommand::getInstance($this)->checkout($ref));
 
         return $this;
     }
@@ -890,12 +892,9 @@ class Repository
     public function getTree($ref = 'HEAD', $path = null)
     {
         if (is_string($path) && '' !== $path) {
-            /** @var LsTreeCommand $cmdInstance */
-            $cmdInstance = $this->commandFactory->get('ls_tree');
-            $outputLines = $this
-                ->getCaller()
-                ->execute($cmdInstance->tree($ref, $path))
-                ->getOutputLines(true);
+            $outputLines = $this->getCaller()->execute(
+                LsTreeCommand::getInstance($this)->tree($ref, $path)
+            )->getOutputLines(true);
             $path = Object::createFromOutputLine($this, $outputLines[0]);
         }
 
@@ -932,7 +931,7 @@ class Repository
      */
     public function cloneFrom($url, $to = null)
     {
-        $this->caller->execute(CloneCommand::getInstance()->cloneUrl($url, $to));
+        $this->caller->execute(CloneCommand::getInstance($this)->cloneUrl($url, $to));
 
         return $this;
     }
@@ -949,9 +948,7 @@ class Repository
      */
     public function addRemote($name, $url)
     {
-        /** @var RemoteCommand $cmdInstance */
-        $cmdInstance = $this->commandFactory->get('remote');
-        $this->caller->execute($cmdInstance->add($name, $url));
+        $this->caller->execute(RemoteCommand::getInstance($this)->add($name, $url));
 
         return $this;
     }
@@ -980,9 +977,7 @@ class Repository
      */
     public function getRemotes($queryRemotes = true)
     {
-        /** @var RemoteCommand $cmdInstance */
-        $cmdInstance = $this->commandFactory->get('remote');
-        $remoteNames = $this->caller->execute($cmdInstance->show(null, $queryRemotes))
+        $remoteNames = $this->caller->execute(RemoteCommand::getInstance($this)->show(null, $queryRemotes))
           ->getOutputLines(true);
         $remotes = array();
         foreach ($remoteNames as $remoteName) {
@@ -1010,7 +1005,7 @@ class Repository
         if ($tags === true) {
             $options = array('--tags');
         }
-        $this->caller->execute(FetchCommand::getInstance()->fetch($from, $ref, $options));
+        $this->caller->execute(FetchCommand::getInstance($this)->fetch($from, $ref, $options));
     }
 
     /**
@@ -1026,7 +1021,7 @@ class Repository
      */
     public function pull($from = null, $ref = null, $rebase = true)
     {
-        $this->caller->execute(PullCommand::getInstance()->pull($from, $ref, $rebase));
+        $this->caller->execute(PullCommand::getInstance($this)->pull($from, $ref, $rebase));
     }
 
     /**
@@ -1041,7 +1036,7 @@ class Repository
      */
     public function push($to = null, $ref = null)
     {
-        $this->caller->execute(PushCommand::getInstance()->push($to, $ref));
+        $this->caller->execute(PushCommand::getInstance($this)->push($to, $ref));
     }
 
     /**
@@ -1072,7 +1067,7 @@ class Repository
      */
     public function outputContent(Object $obj, $treeish)
     {
-        $command = CatFileCommand::getInstance()->content($obj, $treeish);
+        $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
 
         return $this->caller->execute($command)->getOutputLines();
     }
@@ -1091,49 +1086,9 @@ class Repository
      */
     public function outputRawContent(Object $obj, $treeish)
     {
-        $command = CatFileCommand::getInstance()->content($obj, $treeish);
+        $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
 
         return $this->caller->execute($command)->getRawOutput();
-    }
-
-    /**
-     * add a new global argument that get proxied to every git call
-     *
-     * @param $argument
-     */
-    public function addGlobalArgument($argument)
-    {
-        $this->commandFactory->addArgument($argument);
-    }
-
-    /**
-     * add a new global config that get proxied to every git call
-     *
-     * @param $key
-     * @param $value
-     */
-    public function addGlobalConfig($key, $value)
-    {
-        $this->commandFactory->addConfig($key, $value);
-    }
-
-    /**
-     * add a new global option that get proxied to every git call
-     *
-     * @param $key
-     * @param $value
-     */
-    public function addGlobalOption($key, $value)
-    {
-        $this->commandFactory->addOption($key, $value);
-    }
-
-    /**
-     * @return CommandFactory
-     */
-    public function getCommandFactory()
-    {
-        return $this->commandFactory;
     }
 
     /**
@@ -1184,5 +1139,107 @@ class Repository
     public function getCaller()
     {
         return $this->caller;
+    }
+
+    /**
+     * get global config list
+     *
+     * @return array Global config list
+     */
+    public function getGlobalConfigs()
+    {
+        return $this->globalConfigs;
+    }
+
+    /**
+     * add a key/value pair to the global config list
+     *
+     * @param string $name  The config name
+     * @param string $value The config value
+     */
+    public function addGlobalConfig($name, $value)
+    {
+        $this->globalConfigs[$name] = $value;
+    }
+
+    /**
+     * remove an element form the global config list, identified by key
+     *
+     * @param  string $name The config name
+     */
+    public function removeGlobalConfig($name)
+    {
+        if (isset($this->globalConfigs[$name])) {
+            unset($this->globalConfigs[$name]);
+        }
+    }
+
+    /**
+     * get global options list
+     *
+     * @return array Global options list
+     */
+    public function getGlobalOptions()
+    {
+        return $this->globalOptions;
+    }
+
+    /**
+     * add a key/value pair to the global option list
+     *
+     * @param string $name  The option name
+     * @param string $value The option value
+     */
+    public function addGlobalOption($name, $value)
+    {
+        $this->globalOptions[$name] = $value;
+    }
+
+    /**
+     * remove an element form the global option list, identified by key
+     *
+     * @param  string $name The option name
+     */
+    public function removeGlobalOption($name)
+    {
+        if (isset($this->globalOptions[$name])) {
+            unset($this->globalOptions[$name]);
+        }
+    }
+
+    /**
+     * get global command arguments list
+     *
+     * @return array Global command arguments list
+     */
+    public function getGlobalCommandArguments()
+    {
+        return $this->globalCommandArguments;
+    }
+
+    /**
+     * add a value to the global command argument list
+     *
+     * @param string $value The command argument
+     */
+    public function addGlobalCommandArgument($value)
+    {
+        if (!in_array($value, $this->globalCommandArguments)) {
+            $this->globalCommandArguments[] = $value;
+        }
+    }
+
+    /**
+     * remove an element form the global command argument list, identified by 
+     * value
+     *
+     * @param  string $value The command argument
+     */
+    public function removeGlobalCommandArgument($value)
+    {
+        if (in_array($value, $this->globalCommandArguments)) {
+            $index = array_search($value, $this->globalCommandArguments);
+            unset($this->globalCommandArguments[$index]);
+        }
     }
 }

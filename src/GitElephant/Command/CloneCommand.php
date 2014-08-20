@@ -19,6 +19,8 @@
 
 namespace GitElephant\Command;
 
+use GitElephant\Repository;
+
 /**
  * CloneCommand generator
  *
@@ -27,6 +29,17 @@ namespace GitElephant\Command;
 class CloneCommand extends BaseCommand
 {
     const GIT_CLONE_COMMAND = 'clone';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * Command to clone a repository

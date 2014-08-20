@@ -34,12 +34,10 @@ class MvCommandTest extends TestCase
      */
     public function testRename()
     {
-        /** @var MvCommand $cmdInstance */
-        $cmdInstance = $this->getRepository()->getCommandFactory()->get('mv');
-        $this->assertEquals("mv '-k' 'a' 'b'", $cmdInstance->rename('a', 'b'));
+        $this->assertEquals("mv '-k' 'a' 'b'", MvCommand::getInstance()->rename('a', 'b'));
         $tree = $this->repository->getTree('HEAD', 'test');
-        $this->assertEquals("mv '-k' 'test' 'b'", $cmdInstance->rename($tree->getBlob(), 'b'));
+        $this->assertEquals("mv '-k' 'test' 'b'", MvCommand::getInstance()->rename($tree->getBlob(), 'b'));
         $tree = $this->repository->getTree('HEAD', 'test_folder/test2');
-        $this->assertEquals("mv '-k' 'test_folder/test2' 'b'", $cmdInstance->rename($tree->getBlob(), 'b'));
+        $this->assertEquals("mv '-k' 'test_folder/test2' 'b'", MvCommand::getInstance()->rename($tree->getBlob(), 'b'));
     }
 }
