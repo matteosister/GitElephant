@@ -403,7 +403,7 @@ class Repository
     {
         $branches = array();
         if ($namesOnly) {
-            $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all, true))->getOutputLines(
+            $outputLines = $this->caller->execute(BranchCommand::getInstance()->listBranches($all, true))->getOutputLines(
                 true
             );
             $branches = array_map(
@@ -424,7 +424,7 @@ class Repository
                 }
             };
         } else {
-            $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all))->getOutputLines(true);
+            $outputLines = $this->caller->execute(BranchCommand::getInstance()->listBranches($all))->getOutputLines(true);
             foreach ($outputLines as $branchLine) {
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
@@ -629,7 +629,7 @@ class Repository
     public function getTags()
     {
         $tags = array();
-        $this->caller->execute(TagCommand::getInstance()->lists());
+        $this->caller->execute(TagCommand::getInstance()->listTags());
         foreach ($this->caller->getOutputLines() as $tagString) {
             if ($tagString != '') {
                 $tags[] = new Tag($this, trim($tagString));
@@ -701,7 +701,7 @@ class Repository
         if (in_array($name, $this->getBranches(true))) {
             return new Branch($this, $name);
         }
-        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance()->lists())->getOutputLines(true);
+        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance()->listTags())->getOutputLines(true);
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
                 return new Tag($this, $name);

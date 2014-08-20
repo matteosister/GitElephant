@@ -59,16 +59,31 @@ class SubmoduleCommand extends BaseCommand
     }
 
     /**
-     * Lists tags
+     * Lists submodules
+     *
+     * @throws \RuntimeException
+     * @return string the command
+     */
+    public function listSubmodules()
+    {
+        $this->clearAll();
+        $this->addCommandName(self::SUBMODULE_COMMAND);
+
+        return $this->getCommand();
+    }
+
+    /**
+     * Lists submodules
+     *
+     * @deprecated This method uses an unconventional name but is being left in
+     *             place to remain compatible with existing code relying on it.
+     *             New code should be written to use listSubmodules().
      *
      * @throws \RuntimeException
      * @return string the command
      */
     public function lists()
     {
-        $this->clearAll();
-        $this->addCommandName(self::SUBMODULE_COMMAND);
-
-        return $this->getCommand();
+        return $this->listSubmodules();
     }
 }

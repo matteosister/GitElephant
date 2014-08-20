@@ -150,7 +150,7 @@ class Branch extends Object implements TreeishInterface
      */
     private function createFromCommand()
     {
-        $command = BranchCommand::getInstance()->lists();
+        $command = BranchCommand::getInstance()->listBranches();
         $outputLines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
         foreach ($outputLines as $outputLine) {
             $matches = static::getMatches($outputLine);

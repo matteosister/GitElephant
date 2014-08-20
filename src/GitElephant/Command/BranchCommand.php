@@ -84,7 +84,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function lists($all = false, $simple = false)
+    public function listBranches($all = false, $simple = false)
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -98,6 +98,24 @@ class BranchCommand extends BaseCommand
         }
 
         return $this->getCommand();
+    }
+
+    /**
+     * Lists branches
+     *
+     * @deprecated This method uses an unconventional name but is being left in
+     *             place to remain compatible with existing code relying on it.
+     *             New code should be written to use listBranches().
+     *
+     * @param bool $all    lists all remotes
+     * @param bool $simple list only branch names
+     *
+     * @throws \RuntimeException
+     * @return string the command
+     */
+    public function lists($all = false, $simple = false)
+    {
+        return $this->listBranches($all, $simple);
     }
 
     /**

@@ -72,12 +72,27 @@ class TagCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function lists()
+    public function listTags()
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
 
         return $this->getCommand();
+    }
+
+    /**
+     * Lists tags
+     *
+     * @deprecated This method uses an unconventional name but is being left in
+     *             place to remain compatible with existing code relying on it.
+     *             New code should be written to use listTags().
+     *
+     * @throws \RuntimeException
+     * @return string the command
+     */
+    public function lists()
+    {
+        return $this->listTags();
     }
 
     /**
