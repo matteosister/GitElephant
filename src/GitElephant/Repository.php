@@ -618,6 +618,35 @@ class Repository
     }
 
     /**
+     * initialize submodules
+     *
+     * @param  string $path init only submodules at the specified path
+     *
+     * @return Repository
+     */
+    public function initSubmodule($path = null)
+    {
+        $this->caller->execute(SubmoduleCommand::getInstance()->init($path));
+        return $this;
+    }
+
+    /**
+     * update submodules
+     *
+     * @param  bool   $recursive update recursively
+     * @param  bool   $init      init before update
+     * @param  bool   $force     force the checkout as part of update
+     * @param  string $path      update only a specific submodule path
+     *
+     * @return Repository
+     */
+    public function updateSubmodule($recursive = false, $init = false, $force = false, $path = null)
+    {
+        $this->caller->execute(SubmoduleCommand::getInstance()->update($path));
+        return $this;
+    }
+
+    /**
      * Gets an array of Tag objects
      *
      * @throws \RuntimeException
