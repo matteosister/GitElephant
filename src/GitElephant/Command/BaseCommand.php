@@ -101,14 +101,20 @@ class BaseCommand
      * should be called by all child classes' constructors to permit use of 
      * global configs, options and command arguments
      *
-     * @param \GitElephant\Repository $repo The repo object to read
+     * @param null|\GitElephant\Repository $repo The repo object to read
      */
     public function __construct(Repository $repo = null)
     {
         if (!is_null($repo)) {
             $this->addGlobalConfigs($repo->getGlobalConfigs());
             $this->addGlobalOptions($repo->getGlobalOptions());
-            $this->addGlobalCommandArguments($repo->getGlobalCommandArguments());
+            
+            $arguments = $repo->getGlobalCommandArguments();
+            if (!empty($arguments)) {
+                foreach ($arguments as $argument) {
+                    $this->addGlobalCommandArgument($argument);
+                }
+            }
         }
     }
 
@@ -158,7 +164,7 @@ class BaseCommand
      *
      * @param array|Map $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
      */
-    protected function addConfigs($configs)
+    public function addConfigs($configs)
     {
         foreach ($configs as $config => $value) {
             $this->configs[$config] = $value;
@@ -172,8 +178,10 @@ class BaseCommand
      */
     protected function addGlobalConfigs($configs)
     {
-        foreach ($configs as $config => $value) {
-            $this->globalConfigs[$config] = $value;
+        if (!empty($configs)) {
+            foreach ($configs as $config => $value) {
+                $this->globalConfigs[$config] = $value;
+            }
         }
     }
 
@@ -184,8 +192,10 @@ class BaseCommand
      */
     protected function addGlobalOptions($options)
     {
-        foreach ($options as $name => $value) {
-            $this->globalOptions[$name] = $value;
+        if (!empty($options)) {
+            foreach ($options as $name => $value) {
+                $this->globalOptions[$name] = $value;
+            }
         }
     }
 
@@ -194,7 +204,7 @@ class BaseCommand
      *
      * @return array
      */
-    protected function getConfigs()
+    public function getConfigs()
     {
         return $this->configs;
     }
@@ -216,7 +226,9 @@ class BaseCommand
      */
     protected function addGlobalCommandArgument($commandArgument)
     {
-        $this->globalCommandArguments[] = $commandArgument;
+        if (!empty($commandArgument)) {
+            $this->globalCommandArguments[] = $commandArgument;
+        }
     }
 
     /**
@@ -353,8 +365,12 @@ class BaseCommand
         $combinedConfigs = array_merge($this->globalConfigs, $this->configs);
         if (count($combinedConfigs)) {
             foreach ($combinedConfigs as $config => $value) {
-                $command .= escapeshellarg('-c');
-                $command .= sprintf(' %s=%s', escapeshellarg($config), escapeshellarg($value));
+                $command .= sprintf(
+                    ' %s %s=%s',
+                    escapeshellarg('-c'),
+                    escapeshellarg($config),
+                    escapeshellarg($value)
+                );
             }
         }
         return $command;

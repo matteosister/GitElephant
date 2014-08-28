@@ -64,7 +64,7 @@ class Tag extends Object
      */
     public static function create(Repository $repository, $name, $startPoint = null, $message = null)
     {
-        $repository->getCaller()->execute(TagCommand::getInstance($this->getRepository())->create($name, $startPoint, $message));
+        $repository->getCaller()->execute(TagCommand::getInstance($repository)->create($name, $startPoint, $message));
 
         return $repository->getTag($name);
     }

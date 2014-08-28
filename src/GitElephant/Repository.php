@@ -1224,7 +1224,7 @@ class Repository
      */
     public function addGlobalCommandArgument($value)
     {
-        if (!in_array($value, $this->globalCommandArguments)) {
+        if (!in_array($value, $this->globalCommandArguments, true)) {
             $this->globalCommandArguments[] = $value;
         }
     }
@@ -1237,7 +1237,7 @@ class Repository
      */
     public function removeGlobalCommandArgument($value)
     {
-        if (in_array($value, $this->globalCommandArguments)) {
+        if (in_array($value, $this->globalCommandArguments, true)) {
             $index = array_search($value, $this->globalCommandArguments);
             unset($this->globalCommandArguments[$index]);
         }

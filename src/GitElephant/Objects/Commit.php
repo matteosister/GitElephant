@@ -130,7 +130,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public static function create(Repository $repository, $message, $stageAll = false, $author = null)
     {
-        $repository->getCaller()->execute(MainCommand::getInstance($this->getRepository())->commit($message, $stageAll, $author));
+        $repository->getCaller()->execute(MainCommand::getInstance($repository)->commit($message, $stageAll, $author));
 
         return $repository->getCommit();
     }

@@ -20,6 +20,7 @@
 namespace GitElephant\Command;
 
 use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Repository;
 
 /**
  * Diff command generator
@@ -36,7 +37,7 @@ class DiffCommand extends BaseCommand
      * @param \GitElephant\Repository $repo The repository object this command 
      *                                      will interact with
      */
-    public function __construct(Repository $repo)
+    public function __construct(Repository $repo = null)
     {
         parent::__construct($repo);
     }

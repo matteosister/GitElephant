@@ -340,7 +340,9 @@ class Object implements TreeishInterface
         $caller->execute($c);
 
         return array_map('trim', $caller->getOutputLines(true));
+    }
 
+    /*
      * Repository setter
      *
      * @param \GitElephant\Repository $repository the repository variable

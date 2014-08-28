@@ -47,7 +47,7 @@ class AddSubCommand extends SubCommandCommand
      * @param \GitElephant\Repository $repo The repository object this command 
      *                                      will interact with
      */
-    public function __construct(Repository $repo)
+    public function __construct(Repository $repo = null)
     {
         parent::__construct($repo);
     }
