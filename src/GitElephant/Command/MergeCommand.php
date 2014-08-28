@@ -19,8 +19,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Branch;
-use GitElephant\Repository;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Repository;
 
 /**
  * Merge command generator

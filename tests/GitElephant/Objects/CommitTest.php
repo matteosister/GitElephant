@@ -13,11 +13,11 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\TestCase;
-use GitElephant\Objects\Commit;
-use GitElephant\Command\ShowCommand;
-use GitElephant\Command\MainCommand;
-use GitElephant\Command\CommandContainer;
+use \GitElephant\TestCase;
+use \GitElephant\Objects\Commit;
+use \GitElephant\Command\ShowCommand;
+use \GitElephant\Command\MainCommand;
+use \GitElephant\Command\CommandContainer;
 
 /**
  * CommitTest

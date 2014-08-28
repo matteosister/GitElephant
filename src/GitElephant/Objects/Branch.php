@@ -19,9 +19,9 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\BranchCommand;
-use GitElephant\Exception\InvalidBranchNameException;
-use GitElephant\Repository;
+use \GitElephant\Command\BranchCommand;
+use \GitElephant\Exception\InvalidBranchNameException;
+use \GitElephant\Repository;
 
 /**
  * An object representing a git branch
@@ -150,7 +150,7 @@ class Branch extends Object implements TreeishInterface
      */
     private function createFromCommand()
     {
-        $command = BranchCommand::getInstance($this->repository$this->repository)->listBranches();
+        $command = BranchCommand::getInstance($this->getRepository())->listBranches();
         $outputLines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
         foreach ($outputLines as $outputLine) {
             $matches = static::getMatches($outputLine);

@@ -19,10 +19,10 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Author;
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\TreeishInterface;
-use GitElephant\Repository;
+use \GitElephant\Objects\Author;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Repository;
 
 /**
  * Main command generator (init, status, add, commit, checkout)

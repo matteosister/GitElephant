@@ -19,8 +19,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Commit;
-use GitElephant\Repository;
+use \GitElephant\Objects\Commit;
+use \GitElephant\Repository;
 
 /**
  * DiffTreeCommand

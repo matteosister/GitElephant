@@ -19,9 +19,9 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Repository;
-use GitElephant\Command\LsTreeCommand;
-use GitElephant\Command\CatFileCommand;
+use \GitElephant\Repository;
+use \GitElephant\Command\LsTreeCommand;
+use \GitElephant\Command\CatFileCommand;
 
 /**
  * An abstraction of a git tree

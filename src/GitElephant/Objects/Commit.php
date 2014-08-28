@@ -19,13 +19,13 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\BranchCommand;
-use GitElephant\Command\MainCommand;
-use GitElephant\Command\RevListCommand;
-use GitElephant\Command\RevParseCommand;
-use GitElephant\Command\ShowCommand;
-use GitElephant\Objects\Commit\Message;
-use GitElephant\Repository;
+use \GitElephant\Command\BranchCommand;
+use \GitElephant\Command\MainCommand;
+use \GitElephant\Command\RevListCommand;
+use \GitElephant\Command\RevParseCommand;
+use \GitElephant\Command\ShowCommand;
+use \GitElephant\Objects\Commit\Message;
+use \GitElephant\Repository;
 
 /**
  * The Commit object represent a commit

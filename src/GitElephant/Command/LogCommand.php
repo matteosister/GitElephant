@@ -19,10 +19,10 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Object;
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\TreeishInterface;
-use GitElephant\Repository;
+use \GitElephant\Objects\Object;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Repository;
 
 /**
  * Log command generator

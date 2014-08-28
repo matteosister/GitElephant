@@ -20,9 +20,9 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\Remote;
-use GitElephant\Repository;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\Remote;
+use \GitElephant\Repository;
 
 /**
  * Class PushCommand

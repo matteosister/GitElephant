@@ -19,10 +19,10 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\TreeishInterface;
-use GitElephant\Objects\Object;
-use GitElephant\Repository;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Objects\Object;
+use \GitElephant\Repository;
 
 /**
  * ls-tree command generator

@@ -19,9 +19,9 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\Remote\AddSubCommand;
-use GitElephant\Command\Remote\ShowSubCommand;
-use GitElephant\Repository;
+use \GitElephant\Command\Remote\AddSubCommand;
+use \GitElephant\Command\Remote\ShowSubCommand;
+use \GitElephant\Repository;
 
 /**
  * Class RemoteCommand

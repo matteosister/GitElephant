@@ -14,8 +14,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\TreeishInterface;
-use GitElephant\Repository;
+use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Repository;
 
 /**
  * Log Range command generator

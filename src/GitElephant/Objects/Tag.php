@@ -19,9 +19,9 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Repository;
-use GitElephant\Command\TagCommand;
-use GitElephant\Command\RevListCommand;
+use \GitElephant\Repository;
+use \GitElephant\Command\TagCommand;
+use \GitElephant\Command\RevListCommand;
 
 /**
  * An object representing a git tag

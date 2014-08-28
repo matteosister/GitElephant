@@ -19,8 +19,8 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\RemoteCommand;
-use GitElephant\Repository;
+use \GitElephant\Command\RemoteCommand;
+use \GitElephant\Repository;
 
 /**
  * Class Remote

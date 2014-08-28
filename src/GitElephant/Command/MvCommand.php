@@ -19,8 +19,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Object;
-use GitElephant\Repository;
+use \GitElephant\Objects\Object;
+use \GitElephant\Repository;
 
 /**
  * Class MvCommand

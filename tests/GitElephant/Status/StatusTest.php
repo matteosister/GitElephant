@@ -8,7 +8,7 @@
 
 namespace GitElephant\Status;
 
-use GitElephant\TestCase;
+use \GitElephant\TestCase;
 
 /**
  * Class StatusTest

@@ -13,10 +13,10 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\TestCase;
-use GitElephant\GitBinary;
-use GitElephant\Command\Caller\Caller;
-use GitElephant\Repository;
+use \GitElephant\TestCase;
+use \GitElephant\GitBinary;
+use \GitElephant\Command\Caller\Caller;
+use \GitElephant\Repository;
 
 /**
  * TreeTest

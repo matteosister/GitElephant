@@ -19,7 +19,7 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Repository;
+use \GitElephant\Repository;
 
 /**
  * show command generator

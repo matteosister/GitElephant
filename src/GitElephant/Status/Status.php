@@ -19,9 +19,9 @@
 
 namespace GitElephant\Status;
 
-use GitElephant\Command\MainCommand;
-use GitElephant\Repository;
-use PhpCollection\Sequence;
+use \GitElephant\Command\MainCommand;
+use \GitElephant\Repository;
+use \PhpCollection\Sequence;
 
 /**
  * Class Status

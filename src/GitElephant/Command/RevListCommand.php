@@ -19,9 +19,9 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Tag;
-use GitElephant\Objects\Commit;
-use GitElephant\Repository;
+use \GitElephant\Objects\Tag;
+use \GitElephant\Objects\Commit;
+use \GitElephant\Repository;
 
 /**
  * RevList Command generator

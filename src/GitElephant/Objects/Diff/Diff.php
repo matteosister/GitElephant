@@ -19,10 +19,10 @@
 
 namespace GitElephant\Objects\Diff;
 
-use GitElephant\Utilities;
-use GitElephant\Repository;
-use GitElephant\Command\DiffTreeCommand;
-use GitElephant\Command\DiffCommand;
+use \GitElephant\Utilities;
+use \GitElephant\Repository;
+use \GitElephant\Command\DiffTreeCommand;
+use \GitElephant\Command\DiffCommand;
 
 /**
  * Represent a collection of diffs between two trees

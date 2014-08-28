@@ -13,9 +13,9 @@
 
 namespace GitElephant;
 
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\Object;
-use GitElephant\Objects\Tag;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\Object;
+use \GitElephant\Objects\Tag;
 
 /**
  * RepositoryTest

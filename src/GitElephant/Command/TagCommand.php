@@ -19,8 +19,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Tag;
-use GitElephant\Repository;
+use \GitElephant\Objects\Tag;
+use \GitElephant\Repository;
 
 /**
  * Tag command generator

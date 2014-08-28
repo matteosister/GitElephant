@@ -19,9 +19,9 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Repository;
-use GitElephant\Command\LogCommand;
-use GitElephant\Utilities;
+use \GitElephant\Repository;
+use \GitElephant\Command\LogCommand;
+use \GitElephant\Utilities;
 
 /**
  * Git log abstraction object

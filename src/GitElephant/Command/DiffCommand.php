@@ -19,7 +19,7 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\TreeishInterface;
+use \GitElephant\Objects\TreeishInterface;
 
 /**
  * Diff command generator

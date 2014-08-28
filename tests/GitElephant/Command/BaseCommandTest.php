@@ -10,7 +10,7 @@
 namespace GitElephant\Command;
 
 
-use GitElephant\TestCase;
+use \GitElephant\TestCase;
 
 /**
  * Class BaseCommandTest

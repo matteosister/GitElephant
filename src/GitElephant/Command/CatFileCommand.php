@@ -19,9 +19,9 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Object;
-use GitElephant\Objects\TreeishInterface;
-use GitElephant\Repository;
+use \GitElephant\Objects\Object;
+use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Repository;
 
 /**
  * cat-file command generator
