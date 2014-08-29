@@ -26,8 +26,13 @@ namespace GitElephant\Command;
  */
 class SubmoduleCommand extends BaseCommand
 {
-    const SUBMODULE_COMMAND = 'submodule';
-    const SUBMODULE_ADD_COMMAND = 'add';
+    const SUBMODULE_COMMAND          = 'submodule';
+    const SUBMODULE_ADD_COMMAND      = 'add';
+    const SUBMODULE_INIT_COMMAND     = 'init';
+    const SUBMODULE_UPDATE_COMMAND   = 'update';
+    const SUBMODULE_OPTION_FORCE     = '--force';
+    const SUBMODULE_OPTION_INIT      = '--init';
+    const SUBMODULE_OPTION_RECURSIVE = '--recursive';
 
     /**
      * @return SubmoduleCommand
@@ -53,6 +58,24 @@ class SubmoduleCommand extends BaseCommand
         $this->addCommandArgument($gitUrl);
         if (null !== $path) {
             $this->addCommandSubject($path);
+        }
+
+        return $this->getCommand();
+    }
+
+    /**
+     * initialize a repository's submodules
+     *
+     * @param  string $path init only submodules at the specified path
+     *
+     * @return string
+     */
+    public function init($path = null)
+    {
+        $this->clearAll();
+        $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_INIT_COMMAND));
+        if (null !== $path) {
+            $this->addPath($path);
         }
 
         return $this->getCommand();
@@ -85,5 +108,35 @@ class SubmoduleCommand extends BaseCommand
     public function lists()
     {
         return $this->listSubmodules();
+    }
+
+    /**
+     * update a repository's submodules
+     *
+     * @param  bool   $recursive update recursively
+     * @param  bool   $init      init before update
+     * @param  bool   $force     force the checkout as part of update
+     * @param  string $path      update only a specific submodule path
+     *
+     * @return string
+     */
+    public function update($recursive = false, $init = false, $force = false, $path = null)
+    {
+        $this->clearAll();
+        $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_UPDATE_COMMAND));
+        if ($recursive === true) {
+            $this->addCommandArgument(self::SUBMODULE_OPTION_RECURSIVE);
+        }
+        if ($init == true) {
+            $this->addCommandArgument(self::SUBMODULE_OPTION_INIT);
+        }
+        if ($force === true) {
+            $this->addCommandArgument(self::SUBMODULE_OPTION_FORCE);
+        }
+        if ($path !== null) {
+            $this->addPath($path);
+        }
+
+        return $this->getCommand();
     }
 }
