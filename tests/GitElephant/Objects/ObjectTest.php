@@ -5,7 +5,8 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\TestCase;
+use \GitElephant\Objects\Object;
+use \GitElephant\TestCase;
 
 class ObjectTest extends TestCase
 {
@@ -49,5 +50,33 @@ class ObjectTest extends TestCase
         $tag = $this->getRepository()->getTag('test-tag-2');
         $this->assertInstanceOf('GitElephant\Objects\Commit', $tag->getLastCommit());
         $this->assertEquals('tag 2 commit', $tag->getLastCommit()->getMessage());
+    }
+
+    public function testRevParse()
+    {
+        $master = $this->getRepository()->getBranch('master');
+
+        $revParse = $master->revParse();
+        $this->assertEquals($master->getSha(), $revParse[0]);
+    }
+
+    /**
+     * test repository getter and setter
+     *
+     * @covers Object::getRepository
+     * @covers Object::setRepository
+     */
+    public function testGetSetRepository()
+    {
+        $this->initRepository('object1', 1);
+        $repo1 = $this->getRepository(1);
+
+        $this->initRepository('object2', 2);
+        $repo2 = $this->getRepository(2);
+
+        $object = new Object($repo1, 'permissions', 'type', 'sha', 'size', 'name', 'path'); // dummy params
+        $this->assertSame($repo1, $object->getRepository());
+        $object->setRepository($repo2);
+        $this->assertSame($repo2, $object->getRepository());
     }
 }

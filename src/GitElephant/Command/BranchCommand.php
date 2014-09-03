@@ -19,6 +19,8 @@
 
 namespace GitElephant\Command;
 
+use \GitElephant\Repository;
+
 /**
  * Branch command generator
  *
@@ -29,11 +31,14 @@ class BranchCommand extends BaseCommand
     const BRANCH_COMMAND = 'branch';
 
     /**
-     * @return BranchCommand
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
      */
-    public static function getInstance()
+    public function __construct(Repository $repo = null)
     {
-        return new self();
+        parent::__construct($repo);
     }
 
     /**
@@ -84,7 +89,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function lists($all = false, $simple = false)
+    public function listBranches($all = false, $simple = false)
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -101,6 +106,24 @@ class BranchCommand extends BaseCommand
     }
 
     /**
+     * Lists branches
+     *
+     * @deprecated This method uses an unconventional name but is being left in
+     *             place to remain compatible with existing code relying on it.
+     *             New code should be written to use listBranches().
+     *
+     * @param bool $all    lists all remotes
+     * @param bool $simple list only branch names
+     *
+     * @throws \RuntimeException
+     * @return string the command
+     */
+    public function lists($all = false, $simple = false)
+    {
+        return $this->listBranches($all, $simple);
+    }
+
+    /**
      * get info about a single branch
      *
      * @param string $name    The branch name
@@ -110,7 +133,6 @@ class BranchCommand extends BaseCommand
      *
      * @throws \RuntimeException
      * @return string
-     * @deprecated there is a problem with the --list command, as it is available from git >= 1.7.8
      */
     public function singleInfo($name, $all = false, $simple = false, $verbose = false)
     {
@@ -136,16 +158,18 @@ class BranchCommand extends BaseCommand
     /**
      * Delete a branch by its name
      *
-     * @param string $name The branch to delete
+     * @param string $name  The branch to delete
+     * @param bool   $force Force the delete
      *
      * @throws \RuntimeException
      * @return string the command
      */
-    public function delete($name)
+    public function delete($name, $force = false)
     {
+        $arg = ($force === true) ? '-D' : '-d';
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
-        $this->addCommandArgument('-d');
+        $this->addCommandArgument($arg);
         $this->addCommandSubject($name);
 
         return $this->getCommand();

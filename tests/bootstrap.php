@@ -29,3 +29,5 @@ spl_autoload_register(function ($class) {
 });
 
 echo exec('git --version')."\n";
+
+date_default_timezone_set('UTC');

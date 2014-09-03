@@ -13,9 +13,9 @@
 
 namespace GitElephant;
 
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\Object;
-use GitElephant\Objects\Tag;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\Object;
+use \GitElephant\Objects\Tag;
 
 /**
  * RepositoryTest
@@ -176,9 +176,15 @@ class RepositoryTest extends TestCase
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->getRepository()->createBranch('branch2');
-        $this->assertEquals(2, count($this->getRepository()->getBranches()));
+        $this->assertEquals(2, count($this->getRepository()->getBranches(true)));
         $this->getRepository()->deleteBranch('branch2');
-        $this->assertEquals(1, count($this->getRepository()->getBranches()));
+        $this->assertEquals(1, count($this->getRepository()->getBranches(true)));
+        $this->addFile('test-file2');
+        $this->getRepository()->commit('test2', true);
+        $this->getRepository()->createBranch('branch3');
+        $this->assertEquals(2, count($this->getRepository()->getBranches(true)));
+        $this->getRepository()->deleteBranch('branch3', true);
+        $this->assertEquals(1, count($this->getRepository()->getBranches(true)));
     }
 
     /**
@@ -262,6 +268,32 @@ class RepositoryTest extends TestCase
         $this->assertEquals(1, count($this->getRepository()->getTree()));
         $this->getRepository()->merge($this->getRepository()->getBranch('branch2'));
         $this->assertEquals(2, count($this->getRepository()->getTree()));
+
+        // attempt to merge a different branch by forcing a 3-way merge and verify the merge commit message
+        $this->getRepository()->createBranch('branch3');
+        $this->getRepository()->checkout('branch3');
+        $this->addFile('file3');
+        $this->getRepository()->commit('test3', true);
+        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        $this->getRepository()->checkout('master');
+        $this->assertEquals(2, count($this->getRepository()->getTree()));
+        $this->getRepository()->merge($this->getRepository()->getBranch('branch3'), 'test msg', 'no-ff');
+        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        $this->assertEquals('test msg', $this->getRepository()->getCommit()->getMessage()->getFullMessage());
+
+        // attempt a fast forward merge where a 3-way is necessary and trap the resulting exception
+        $this->getRepository()->checkout('branch2');
+        $this->addFile('file4');
+        $this->getRepository()->commit('test4', true);
+        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        $this->getRepository()->checkout('master');
+        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        try {
+            $this->getRepository()->merge($this->getRepository()->getBranch('branch2'), '', 'ff-only');
+        } catch (\RuntimeException $e) {
+            return;
+        }
+        $this->fail("Merge should have produced a runtime exception.");
     }
 
     /**
@@ -749,12 +781,18 @@ class RepositoryTest extends TestCase
         $r1->init();
         $this->addFile('test1', null, null, $r1);
         $r1->commit('test commit', true);
+        $r1->createBranch('tag-test');
+        $this->addFile('test2', null, null, $r1);
+        $r1->commit('another test commit', true);
+        $r1->createTag('test-tag');
         $r2 = $this->getRepository(1);
         $r2->init();
         $r2->addRemote('origin', $r1->getPath());
         $this->assertEmpty($r2->getBranches(true, true));
         $r2->fetch();
         $this->assertNotEmpty($r2->getBranches(true, true));
+        $r2->fetch(null, null, true);
+        $this->assertNotNull($r2->getTag('test-tag'));
     }
 
     /**
@@ -802,5 +840,120 @@ class RepositoryTest extends TestCase
 
         $this->assertEquals('test commit', $r3->getLog()->last()->getMessage());
         $this->assertEquals($r1->getMainBranch()->getSha(), $r3->getLog()->last()->getSha());
+    }
+
+    public function testRevParse()
+    {
+        $this->initRepository(null, 0);
+        $r = $this->getRepository(0);
+        $r->init();
+        $this->addFile('test1', null, null, $r);
+        $r->commit('test commit', true);
+        $master = $r->getBranch('master');
+        $revParse = $r->revParse($master, array());
+        $this->assertEquals($master->getSha(), $revParse[0]);
+    }
+
+    public function testIsBare()
+    {
+        $this->initRepository(null, 0);
+        $r = $this->getRepository(0);
+        $r->init();
+
+        $this->assertEquals(false, $r->isBare());
+
+        $this->initRepository(null, 1);
+        $r = $this->getRepository(1);
+        $r->init(true);
+
+        $this->assertEquals(true, $r->isBare());
+
+    }
+
+    /**
+     * test add, remove and get global configs
+     *
+     * @covers Repository::addGlobalConfig
+     * @covers Repository::getGlobalConfigs
+     * @covers Repository::removeGlobalConfig
+     */
+    public function testGlobalConfigs()
+    {
+        $repo = $this->getRepository();
+
+        $configs = array(
+            'test1' => true,
+            'test2' => 1,
+            'test3' => 'value',
+        );
+        $this->assertEmpty($repo->getGlobalConfigs());
+
+        foreach ($configs as $configName => $configValue) {
+            $repo->addGlobalConfig($configName, $configValue);
+        }
+        $this->assertSame($configs, $repo->getGlobalConfigs());
+
+        foreach ($configs as $configName => $configValue) {
+            $repo->removeGlobalConfig($configName, $configValue);
+        }
+        $this->assertEmpty($repo->getGlobalConfigs());
+    }
+
+    /**
+     * test add, remove and get global options
+     *
+     * @covers Repository::addGlobalOption
+     * @covers Repository::getGlobalOptions
+     * @covers Repository::removeGlobalOption
+     */
+    public function testGlobalOptions()
+    {
+        $repo = $this->getRepository();
+
+        $options = array(
+            'test1' => true,
+            'test2' => 1,
+            'test3' => 'value',
+        );
+        $this->assertEmpty($repo->getGlobalOptions());
+
+        foreach ($options as $configName => $configValue) {
+            $repo->addGlobalOption($configName, $configValue);
+        }
+        $this->assertSame($options, $repo->getGlobalOptions());
+
+        foreach ($options as $configName => $configValue) {
+            $repo->removeGlobalOption($configName, $configValue);
+        }
+        $this->assertEmpty($repo->getGlobalOptions());
+    }
+
+    /**
+     * test add, remove and get global command arguments
+     *
+     * @covers Repository::addGlobalCommandArgument
+     * @covers Repository::getGlobalCommandArguments
+     * @covers Repository::removeGlobalCommandArgument
+     */
+    public function testGlobalCommandArguments()
+    {
+        $repo = $this->getRepository();
+
+        $args = array(
+            true,
+            1,
+            'value',
+        );
+        $this->assertEmpty($repo->getGlobalCommandArguments());
+
+        foreach ($args as $configValue) {
+            $repo->addGlobalCommandArgument($configValue);
+        }
+        $this->assertSame($args, $repo->getGlobalCommandArguments());
+
+        foreach ($args as $configValue) {
+            $repo->removeGlobalCommandArgument($configValue);
+        }
+        $this->assertEmpty($repo->getGlobalCommandArguments());
     }
 }

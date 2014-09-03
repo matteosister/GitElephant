@@ -19,38 +19,39 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\FetchCommand;
-use GitElephant\Command\PullCommand;
-use GitElephant\Command\PushCommand;
-use GitElephant\Command\RemoteCommand;
-use GitElephant\Exception\InvalidRepositoryPathException;
-use GitElephant\Command\Caller\Caller;
-use GitElephant\Objects\Author;
-use GitElephant\Objects\Remote;
-use GitElephant\Objects\Tree;
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\Tag;
-use GitElephant\Objects\Object;
-use GitElephant\Objects\Diff\Diff;
-use GitElephant\Objects\Commit;
-use GitElephant\Objects\Log;
-use GitElephant\Objects\LogRange;
-use GitElephant\Objects\TreeishInterface;
-use GitElephant\Command\MainCommand;
-use GitElephant\Command\BranchCommand;
-use GitElephant\Command\MergeCommand;
-use GitElephant\Command\TagCommand;
-use GitElephant\Command\LogCommand;
-use GitElephant\Command\CloneCommand;
-use GitElephant\Command\CatFileCommand;
-use GitElephant\Command\LsTreeCommand;
-use GitElephant\Command\SubmoduleCommand;
-use GitElephant\Status\Status;
-use GitElephant\Status\StatusIndex;
-use GitElephant\Status\StatusWorkingTree;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
+use \GitElephant\Command\FetchCommand;
+use \GitElephant\Command\PullCommand;
+use \GitElephant\Command\PushCommand;
+use \GitElephant\Command\RemoteCommand;
+use \GitElephant\Exception\InvalidRepositoryPathException;
+use \GitElephant\Command\Caller\Caller;
+use \GitElephant\Objects\Author;
+use \GitElephant\Objects\Remote;
+use \GitElephant\Objects\Tree;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\Tag;
+use \GitElephant\Objects\Object;
+use \GitElephant\Objects\Diff\Diff;
+use \GitElephant\Objects\Commit;
+use \GitElephant\Objects\Log;
+use \GitElephant\Objects\LogRange;
+use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Command\MainCommand;
+use \GitElephant\Command\BranchCommand;
+use \GitElephant\Command\MergeCommand;
+use \GitElephant\Command\RevParseCommand;
+use \GitElephant\Command\TagCommand;
+use \GitElephant\Command\LogCommand;
+use \GitElephant\Command\CloneCommand;
+use \GitElephant\Command\CatFileCommand;
+use \GitElephant\Command\LsTreeCommand;
+use \GitElephant\Command\SubmoduleCommand;
+use \GitElephant\Status\Status;
+use \GitElephant\Status\StatusIndex;
+use \GitElephant\Status\StatusWorkingTree;
+use \Symfony\Component\Filesystem\Filesystem;
+use \Symfony\Component\Finder\Finder;
+use \Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Repository
@@ -82,6 +83,27 @@ class Repository
      * @var string $name the repository name
      */
     private $name;
+
+    /**
+     * A list of global configs to apply to every command
+     * 
+     * @var array
+     */
+    private $globalConfigs = array();
+
+    /**
+     * A list of global options to apply to every command
+     * 
+     * @var array
+     */
+    private $globalOptions = array();
+
+    /**
+     * A list of global arguments to apply to every command
+     * 
+     * @var array
+     */
+    private $globalCommandArguments = array();
 
     /**
      * Class constructor
@@ -163,7 +185,7 @@ class Repository
      */
     public function init($bare = false)
     {
-        $this->caller->execute(MainCommand::getInstance()->init($bare));
+        $this->caller->execute(MainCommand::getInstance($this)->init($bare));
 
         return $this;
     }
@@ -181,7 +203,7 @@ class Repository
      */
     public function stage($path = '.')
     {
-        $this->caller->execute(MainCommand::getInstance()->add($path));
+        $this->caller->execute(MainCommand::getInstance($this)->add($path));
 
         return $this;
     }
@@ -199,7 +221,7 @@ class Repository
      */
     public function unstage($path)
     {
-        $this->caller->execute(MainCommand::getInstance()->unstage($path), true, null, array(0, 1));
+        $this->caller->execute(MainCommand::getInstance($this)->unstage($path), true, null, array(0, 1));
 
         return $this;
     }
@@ -219,7 +241,7 @@ class Repository
      */
     public function move($from, $to)
     {
-        $this->caller->execute(MainCommand::getInstance()->move($from, $to));
+        $this->caller->execute(MainCommand::getInstance($this)->move($from, $to));
 
         return $this;
     }
@@ -240,7 +262,7 @@ class Repository
      */
     public function remove($path, $recursive = false, $force = false)
     {
-        $this->caller->execute(MainCommand::getInstance()->remove($path, $recursive, $force));
+        $this->caller->execute(MainCommand::getInstance($this)->remove($path, $recursive, $force));
 
         return $this;
     }
@@ -268,12 +290,42 @@ class Repository
         if ($stageAll) {
             $this->stage();
         }
-        $this->caller->execute(MainCommand::getInstance()->commit($message, $stageAll, $author, $allowEmpty));
+        $this->caller->execute(MainCommand::getInstance($this)->commit($message, $stageAll, $author, $allowEmpty));
         if ($ref != null) {
             $this->checkout($currentBranch);
         }
 
         return $this;
+    }
+
+    /**
+     * rev-parse command - often used to return a commit tag.
+     *
+     * @param array                  $options the options to apply to rev-parse
+     * @param string|Object|Commit   $arg the argument (may be a branch head, etc)
+     *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @return array
+     */
+    public function revParse($arg = null, Array $options = array())
+    {
+        $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
+
+        return array_map('trim', $this->caller->getOutputLines(true));
+    }
+
+    /**
+     * Check if this is a bare repository
+     * @return boolean
+     */
+    public function isBare()
+    {
+        $options = array(RevParseCommand::OPTION_IS_BARE_REPOSIORY);
+        $this->caller->execute(RevParseCommand::getInstance()->revParse(null, $options));
+
+        return trim($this->caller->getOutput()) === 'true';
     }
 
     /**
@@ -313,7 +365,7 @@ class Repository
      */
     public function getStatusOutput()
     {
-        $this->caller->execute(MainCommand::getInstance()->status());
+        $this->caller->execute(MainCommand::getInstance($this)->status());
 
         return array_map('trim', $this->caller->getOutputLines());
     }
@@ -339,7 +391,8 @@ class Repository
      * Delete a branch by its name
      * This function change the state of the repository on the filesystem
      *
-     * @param string $name The branch to delete
+     * @param string $name  The branch to delete
+     * @param bool   $force Force the delete
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -347,9 +400,9 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function deleteBranch($name)
+    public function deleteBranch($name, $force = false)
     {
-        $this->caller->execute(BranchCommand::getInstance()->delete($name));
+        $this->caller->execute(BranchCommand::getInstance($this)->delete($name, $force));
 
         return $this;
     }
@@ -371,7 +424,7 @@ class Repository
     {
         $branches = array();
         if ($namesOnly) {
-            $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all, true))->getOutputLines(
+            $outputLines = $this->caller->execute(BranchCommand::getInstance($this)->listBranches($all, true))->getOutputLines(
                 true
             );
             $branches = array_map(
@@ -392,7 +445,7 @@ class Repository
                 }
             };
         } else {
-            $outputLines = $this->caller->execute(BranchCommand::getInstance()->lists($all))->getOutputLines(true);
+            $outputLines = $this->caller->execute(BranchCommand::getInstance($this)->listBranches($all))->getOutputLines(true);
             foreach ($outputLines as $branchLine) {
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
@@ -490,7 +543,9 @@ class Repository
     /**
      * Merge a Branch in the current checked out branch
      *
-     * @param Objects\Branch $branch The branch to merge in the current checked out branch
+     * @param Objects\Branch $branch  The branch to merge in the current checked out branch
+     * @param string         $message The message for the merge commit, if merge is 3-way
+     * @param string         $mode    The merge mode: ff-only, no-ff or auto
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -498,9 +553,28 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function merge(Branch $branch)
+    public function merge(Branch $branch, $message = '', $mode = 'auto')
     {
-        $this->caller->execute(MergeCommand::getInstance()->merge($branch));
+        $valid_modes = array(
+            'auto',    // deafult git behavior
+            'ff-only', // force fast forward merge
+            'no-ff',   // force 3-way merge
+        );
+        if (!in_array($mode, $valid_modes)) {
+            throw new \Symfony\Component\Process\Exception\InvalidArgumentException("Invalid merge mode: $mode.");
+        }
+
+        $options = array();
+        switch ($mode) {
+            case 'ff-only':
+                $options[] = MergeCommand::MERGE_OPTION_FF_ONLY;
+                break;
+            case 'no-ff':
+                $options[] = MergeCommand::MERGE_OPTION_NO_FF;
+                break;
+        }
+
+        $this->caller->execute(MergeCommand::getInstance($this)->merge($branch, $message, $options));
 
         return $this;
     }
@@ -559,8 +633,37 @@ class Repository
      */
     public function addSubmodule($gitUrl, $path = null)
     {
-        $this->caller->execute(SubmoduleCommand::getInstance()->add($gitUrl, $path));
+        $this->caller->execute(SubmoduleCommand::getInstance($this)->add($gitUrl, $path));
 
+        return $this;
+    }
+
+    /**
+     * initialize submodules
+     *
+     * @param  string $path init only submodules at the specified path
+     *
+     * @return Repository
+     */
+    public function initSubmodule($path = null)
+    {
+        $this->caller->execute(SubmoduleCommand::getInstance()->init($path));
+        return $this;
+    }
+
+    /**
+     * update submodules
+     *
+     * @param  bool   $recursive update recursively
+     * @param  bool   $init      init before update
+     * @param  bool   $force     force the checkout as part of update
+     * @param  string $path      update only a specific submodule path
+     *
+     * @return Repository
+     */
+    public function updateSubmodule($recursive = false, $init = false, $force = false, $path = null)
+    {
+        $this->caller->execute(SubmoduleCommand::getInstance()->update($path));
         return $this;
     }
 
@@ -576,7 +679,7 @@ class Repository
     public function getTags()
     {
         $tags = array();
-        $this->caller->execute(TagCommand::getInstance()->lists());
+        $this->caller->execute(TagCommand::getInstance($this)->listTags());
         foreach ($this->caller->getOutputLines() as $tagString) {
             if ($tagString != '') {
                 $tags[] = new Tag($this, trim($tagString));
@@ -648,7 +751,7 @@ class Repository
         if (in_array($name, $this->getBranches(true))) {
             return new Branch($this, $name);
         }
-        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance()->lists())->getOutputLines(true);
+        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance($this)->listTags())->getOutputLines(true);
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
                 return new Tag($this, $name);
@@ -749,7 +852,7 @@ class Repository
      */
     public function getObjectLog(Object $obj, $branch = null, $limit = 1, $offset = null)
     {
-        $command = LogCommand::getInstance()->showObjectLog($obj, $branch, $limit, $offset);
+        $command = LogCommand::getInstance($this)->showObjectLog($obj, $branch, $limit, $offset);
 
         return Log::createFromOutputLines($this, $this->caller->execute($command)->getOutputLines());
     }
@@ -768,7 +871,7 @@ class Repository
      */
     public function checkout($ref)
     {
-        $this->caller->execute(MainCommand::getInstance()->checkout($ref));
+        $this->caller->execute(MainCommand::getInstance($this)->checkout($ref));
 
         return $this;
     }
@@ -790,7 +893,7 @@ class Repository
     {
         if (is_string($path) && '' !== $path) {
             $outputLines = $this->getCaller()->execute(
-                LsTreeCommand::getInstance()->tree($ref, $path)
+                LsTreeCommand::getInstance($this)->tree($ref, $path)
             )->getOutputLines(true);
             $path = Object::createFromOutputLine($this, $outputLines[0]);
         }
@@ -828,7 +931,7 @@ class Repository
      */
     public function cloneFrom($url, $to = null)
     {
-        $this->caller->execute(CloneCommand::getInstance()->cloneUrl($url, $to));
+        $this->caller->execute(CloneCommand::getInstance($this)->cloneUrl($url, $to));
 
         return $this;
     }
@@ -845,23 +948,26 @@ class Repository
      */
     public function addRemote($name, $url)
     {
-        $this->caller->execute(RemoteCommand::getInstance()->add($name, $url));
+        $this->caller->execute(RemoteCommand::getInstance($this)->add($name, $url));
 
         return $this;
     }
 
     /**
-     * @param string $name remote name
+     * @param string $name         remote name
+     * @param bool   $queryRemotes Fetch new information from remotes
      *
      * @return \GitElephant\Objects\Remote
      */
-    public function getRemote($name)
+    public function getRemote($name, $queryRemotes = true)
     {
-        return Remote::pick($this, $name);
+        return Remote::pick($this, $name, $queryRemotes);
     }
 
     /**
      * gets a list of remote objects
+     *
+     * @param bool $queryRemotes Fetch new information from remotes
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -869,12 +975,13 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getRemotes()
+    public function getRemotes($queryRemotes = true)
     {
-        $remoteNames = $this->caller->execute(RemoteCommand::getInstance()->show())->getOutputLines(true);
+        $remoteNames = $this->caller->execute(RemoteCommand::getInstance($this)->show(null, $queryRemotes))
+          ->getOutputLines(true);
         $remotes = array();
         foreach ($remoteNames as $remoteName) {
-            $remotes[] = $this->getRemote($remoteName);
+            $remotes[] = $this->getRemote($remoteName, $queryRemotes);
         }
 
         return $remotes;
@@ -885,15 +992,20 @@ class Repository
      *
      * @param string $from
      * @param string $ref
+     * @param bool   $tags
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function fetch($from = null, $ref = null)
+    public function fetch($from = null, $ref = null, $tags = false)
     {
-        $this->caller->execute(FetchCommand::getInstance()->fetch($from, $ref));
+        $options = array();
+        if ($tags === true) {
+            $options = array('--tags');
+        }
+        $this->caller->execute(FetchCommand::getInstance($this)->fetch($from, $ref, $options));
     }
 
     /**
@@ -909,7 +1021,7 @@ class Repository
      */
     public function pull($from = null, $ref = null, $rebase = true)
     {
-        $this->caller->execute(PullCommand::getInstance()->pull($from, $ref, $rebase));
+        $this->caller->execute(PullCommand::getInstance($this)->pull($from, $ref, $rebase));
     }
 
     /**
@@ -924,7 +1036,7 @@ class Repository
      */
     public function push($to = null, $ref = null)
     {
-        $this->caller->execute(PushCommand::getInstance()->push($to, $ref));
+        $this->caller->execute(PushCommand::getInstance($this)->push($to, $ref));
     }
 
     /**
@@ -955,7 +1067,7 @@ class Repository
      */
     public function outputContent(Object $obj, $treeish)
     {
-        $command = CatFileCommand::getInstance()->content($obj, $treeish);
+        $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
 
         return $this->caller->execute($command)->getOutputLines();
     }
@@ -974,7 +1086,7 @@ class Repository
      */
     public function outputRawContent(Object $obj, $treeish)
     {
-        $command = CatFileCommand::getInstance()->content($obj, $treeish);
+        $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
 
         return $this->caller->execute($command)->getRawOutput();
     }
@@ -1027,5 +1139,107 @@ class Repository
     public function getCaller()
     {
         return $this->caller;
+    }
+
+    /**
+     * get global config list
+     *
+     * @return array Global config list
+     */
+    public function getGlobalConfigs()
+    {
+        return $this->globalConfigs;
+    }
+
+    /**
+     * add a key/value pair to the global config list
+     *
+     * @param string $name  The config name
+     * @param string $value The config value
+     */
+    public function addGlobalConfig($name, $value)
+    {
+        $this->globalConfigs[$name] = $value;
+    }
+
+    /**
+     * remove an element form the global config list, identified by key
+     *
+     * @param  string $name The config name
+     */
+    public function removeGlobalConfig($name)
+    {
+        if (isset($this->globalConfigs[$name])) {
+            unset($this->globalConfigs[$name]);
+        }
+    }
+
+    /**
+     * get global options list
+     *
+     * @return array Global options list
+     */
+    public function getGlobalOptions()
+    {
+        return $this->globalOptions;
+    }
+
+    /**
+     * add a key/value pair to the global option list
+     *
+     * @param string $name  The option name
+     * @param string $value The option value
+     */
+    public function addGlobalOption($name, $value)
+    {
+        $this->globalOptions[$name] = $value;
+    }
+
+    /**
+     * remove an element form the global option list, identified by key
+     *
+     * @param  string $name The option name
+     */
+    public function removeGlobalOption($name)
+    {
+        if (isset($this->globalOptions[$name])) {
+            unset($this->globalOptions[$name]);
+        }
+    }
+
+    /**
+     * get global command arguments list
+     *
+     * @return array Global command arguments list
+     */
+    public function getGlobalCommandArguments()
+    {
+        return $this->globalCommandArguments;
+    }
+
+    /**
+     * add a value to the global command argument list
+     *
+     * @param string $value The command argument
+     */
+    public function addGlobalCommandArgument($value)
+    {
+        if (!in_array($value, $this->globalCommandArguments, true)) {
+            $this->globalCommandArguments[] = $value;
+        }
+    }
+
+    /**
+     * remove an element form the global command argument list, identified by 
+     * value
+     *
+     * @param  string $value The command argument
+     */
+    public function removeGlobalCommandArgument($value)
+    {
+        if (in_array($value, $this->globalCommandArguments, true)) {
+            $index = array_search($value, $this->globalCommandArguments);
+            unset($this->globalCommandArguments[$index]);
+        }
     }
 }

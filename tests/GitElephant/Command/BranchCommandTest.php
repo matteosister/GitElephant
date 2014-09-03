@@ -13,8 +13,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BranchCommand;
-use GitElephant\TestCase;
+use \GitElephant\Command\BranchCommand;
+use \GitElephant\TestCase;
 
 /**
  * BranchTest
@@ -51,6 +51,19 @@ class BranchCommandTest extends TestCase
         $this->getCaller()->execute($branch->create('test2'));
         $this->assertEquals(3, count($this->getRepository()->getBranches()), 'three branches after add branch command');
         $this->assertEquals("branch 'test' 'master'", $branch->create('test', 'master'));
+    }
+
+    /**
+     * listBranches test
+     *
+     * @covers GitElephant\Command\BranchCommand::listBranches
+     */
+    public function testListBranches()
+    {
+        $branch = new BranchCommand();
+        $this->assertEquals($branch->listBranches(), "branch '-v' '--no-color' '--no-abbrev'");
+        $this->assertEquals($branch->listBranches(true), "branch '-v' '--no-color' '--no-abbrev' '-a'");
+        $this->assertEquals($branch->listBranches(false, true), "branch '--no-color' '--no-abbrev'");
     }
 
     /**
@@ -98,9 +111,7 @@ class BranchCommandTest extends TestCase
     public function testDelete()
     {
         $branch = new BranchCommand();
-        $this->assertEquals("branch '-d' 'test-branch'", $branch->delete('test-branch'), 'list branch command');
-        $this->getCaller()->execute($branch->create('test'));
-        $this->getCaller()->execute($branch->delete('test'));
-        $this->assertEquals(1, count($this->getRepository()->getBranches()), 'two branches after add branch command');
+        $this->assertEquals("branch '-d' 'test-branch'", $branch->delete('test-branch'),       'list branch command without force');
+        $this->assertEquals("branch '-D' 'test-branch'", $branch->delete('test-branch', true), 'list branch command with force');
     }
 }

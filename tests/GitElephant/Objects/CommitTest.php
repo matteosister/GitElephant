@@ -13,11 +13,11 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\TestCase;
-use GitElephant\Objects\Commit;
-use GitElephant\Command\ShowCommand;
-use GitElephant\Command\MainCommand;
-use GitElephant\Command\CommandContainer;
+use \GitElephant\TestCase;
+use \GitElephant\Objects\Commit;
+use \GitElephant\Command\ShowCommand;
+use \GitElephant\Command\MainCommand;
+use \GitElephant\Command\CommandContainer;
 
 /**
  * CommitTest
@@ -211,5 +211,16 @@ class CommitTest extends TestCase
         $diff = $commit->getDiff();
         $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $diff);
         $this->assertCount(2, $diff);
+    }
+
+    public function testRevParse()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->repository->stage();
+        $commit = Commit::create($this->repository, 'first commit', true);
+
+        $revParse = $commit->revParse();
+        $this->assertEquals($commit->getSha(), $revParse[0]);
     }
 }

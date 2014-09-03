@@ -19,8 +19,8 @@
 
 namespace GitElephant\Command\Caller;
 
-use GitElephant\GitBinary;
-use Symfony\Component\Process\Process;
+use \GitElephant\GitBinary;
+use \Symfony\Component\Process\Process;
 
 /**
  * Caller

@@ -19,6 +19,8 @@
 
 namespace GitElephant\Command;
 
+use \GitElephant\Repository;
+
 /**
  * Submodule command generator
  *
@@ -26,15 +28,23 @@ namespace GitElephant\Command;
  */
 class SubmoduleCommand extends BaseCommand
 {
-    const SUBMODULE_COMMAND = 'submodule';
-    const SUBMODULE_ADD_COMMAND = 'add';
+    const SUBMODULE_COMMAND          = 'submodule';
+    const SUBMODULE_ADD_COMMAND      = 'add';
+    const SUBMODULE_INIT_COMMAND     = 'init';
+    const SUBMODULE_UPDATE_COMMAND   = 'update';
+    const SUBMODULE_OPTION_FORCE     = '--force';
+    const SUBMODULE_OPTION_INIT      = '--init';
+    const SUBMODULE_OPTION_RECURSIVE = '--recursive';
 
     /**
-     * @return SubmoduleCommand
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
      */
-    public static function getInstance()
+    public function __construct(Repository $repo = null)
     {
-        return new self();
+        parent::__construct($repo);
     }
 
     /**
@@ -59,15 +69,78 @@ class SubmoduleCommand extends BaseCommand
     }
 
     /**
-     * Lists tags
+     * initialize a repository's submodules
+     *
+     * @param  string $path init only submodules at the specified path
+     *
+     * @return string
+     */
+    public function init($path = null)
+    {
+        $this->clearAll();
+        $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_INIT_COMMAND));
+        if (null !== $path) {
+            $this->addPath($path);
+        }
+
+        return $this->getCommand();
+    }
+
+    /**
+     * Lists submodules
+     *
+     * @throws \RuntimeException
+     * @return string the command
+     */
+    public function listSubmodules()
+    {
+        $this->clearAll();
+        $this->addCommandName(self::SUBMODULE_COMMAND);
+
+        return $this->getCommand();
+    }
+
+    /**
+     * Lists submodules
+     *
+     * @deprecated This method uses an unconventional name but is being left in
+     *             place to remain compatible with existing code relying on it.
+     *             New code should be written to use listSubmodules().
      *
      * @throws \RuntimeException
      * @return string the command
      */
     public function lists()
     {
+        return $this->listSubmodules();
+    }
+
+    /**
+     * update a repository's submodules
+     *
+     * @param  bool   $recursive update recursively
+     * @param  bool   $init      init before update
+     * @param  bool   $force     force the checkout as part of update
+     * @param  string $path      update only a specific submodule path
+     *
+     * @return string
+     */
+    public function update($recursive = false, $init = false, $force = false, $path = null)
+    {
         $this->clearAll();
-        $this->addCommandName(self::SUBMODULE_COMMAND);
+        $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_UPDATE_COMMAND));
+        if ($recursive === true) {
+            $this->addCommandArgument(self::SUBMODULE_OPTION_RECURSIVE);
+        }
+        if ($init == true) {
+            $this->addCommandArgument(self::SUBMODULE_OPTION_INIT);
+        }
+        if ($force === true) {
+            $this->addCommandArgument(self::SUBMODULE_OPTION_FORCE);
+        }
+        if ($path !== null) {
+            $this->addPath($path);
+        }
 
         return $this->getCommand();
     }

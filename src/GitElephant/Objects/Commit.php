@@ -19,12 +19,13 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\BranchCommand;
-use GitElephant\Command\MainCommand;
-use GitElephant\Command\RevListCommand;
-use GitElephant\Command\ShowCommand;
-use GitElephant\Objects\Commit\Message;
-use GitElephant\Repository;
+use \GitElephant\Command\BranchCommand;
+use \GitElephant\Command\MainCommand;
+use \GitElephant\Command\RevListCommand;
+use \GitElephant\Command\RevParseCommand;
+use \GitElephant\Command\ShowCommand;
+use \GitElephant\Objects\Commit\Message;
+use \GitElephant\Repository;
 
 /**
  * The Commit object represent a commit
@@ -129,7 +130,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public static function create(Repository $repository, $message, $stageAll = false, $author = null)
     {
-        $repository->getCaller()->execute(MainCommand::getInstance()->commit($message, $stageAll, $author));
+        $repository->getCaller()->execute(MainCommand::getInstance($repository)->commit($message, $stageAll, $author));
 
         return $repository->getCommit();
     }
@@ -175,7 +176,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public function createFromCommand()
     {
-        $command = ShowCommand::getInstance()->showCommit($this->ref);
+        $command = ShowCommand::getInstance($this->getRepository())->showCommit($this->ref);
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
@@ -187,7 +188,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public function getContainedIn()
     {
-        $command = BranchCommand::getInstance()->contains($this->getSha());
+        $command = BranchCommand::getInstance($this->getRepository())->contains($this->getSha());
 
         return array_map('trim', (array)$this->getCaller()->execute($command)->getOutputLines(true));
     }
@@ -203,7 +204,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public function count()
     {
-        $command = RevListCommand::getInstance()->commitPath($this);
+        $command = RevListCommand::getInstance($this->getRepository())->commitPath($this);
 
         return count($this->getCaller()->execute($command)->getOutputLines(true));
     }
@@ -383,5 +384,24 @@ class Commit implements TreeishInterface, \Countable
     public function getDatetimeCommitter()
     {
         return $this->datetimeCommitter;
+    }
+
+    /**
+     * rev-parse command - often used to return a commit tag.
+     *
+     * @param array         $options the options to apply to rev-parse
+     *
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @return array
+     */
+    public function revParse(Array $options = array())
+    {
+        $c = RevParseCommand::getInstance()->revParse($this, $options);
+        $caller = $this->repository->getCaller();
+        $caller->execute($c);
+
+        return array_map('trim', $caller->getOutputLines(true));
     }
 }
