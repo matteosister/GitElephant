@@ -19,7 +19,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Branch;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Repository;
 
 /**
  * Merge command generator
@@ -33,11 +34,14 @@ class MergeCommand extends BaseCommand
     const MERGE_OPTION_NO_FF = '--no-ff';
 
     /**
-     * @return MergeCommand
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
      */
-    public static function getInstance()
+    public function __construct(Repository $repo = null)
     {
-        return new self();
+        parent::__construct($repo);
     }
 
     /**

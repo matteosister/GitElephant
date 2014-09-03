@@ -8,7 +8,7 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\TestCase;
+use \GitElephant\TestCase;
 
 /**
  * Class MvCommandTest
@@ -34,10 +34,11 @@ class MvCommandTest extends TestCase
      */
     public function testRename()
     {
-        $this->assertEquals("mv '-k' 'a' 'b'", MvCommand::getInstance()->rename('a', 'b'));
+        $mc = MvCommand::getInstance();
+        $this->assertEquals("mv '-k' 'a' 'b'", $mc->rename('a', 'b'));
         $tree = $this->repository->getTree('HEAD', 'test');
-        $this->assertEquals("mv '-k' 'test' 'b'", MvCommand::getInstance()->rename($tree->getBlob(), 'b'));
+        $this->assertEquals("mv '-k' 'test' 'b'", $mc->rename($tree->getBlob(), 'b'));
         $tree = $this->repository->getTree('HEAD', 'test_folder/test2');
-        $this->assertEquals("mv '-k' 'test_folder/test2' 'b'", MvCommand::getInstance()->rename($tree->getBlob(), 'b'));
+        $this->assertEquals("mv '-k' 'test_folder/test2' 'b'", $mc->rename($tree->getBlob(), 'b'));
     }
 }

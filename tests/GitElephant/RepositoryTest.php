@@ -13,9 +13,9 @@
 
 namespace GitElephant;
 
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\Object;
-use GitElephant\Objects\Tag;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\Object;
+use \GitElephant\Objects\Tag;
 
 /**
  * RepositoryTest
@@ -867,5 +867,93 @@ class RepositoryTest extends TestCase
         $r->init(true);
 
         $this->assertEquals(true, $r->isBare());
+
+    }
+
+    /**
+     * test add, remove and get global configs
+     *
+     * @covers Repository::addGlobalConfig
+     * @covers Repository::getGlobalConfigs
+     * @covers Repository::removeGlobalConfig
+     */
+    public function testGlobalConfigs()
+    {
+        $repo = $this->getRepository();
+
+        $configs = array(
+            'test1' => true,
+            'test2' => 1,
+            'test3' => 'value',
+        );
+        $this->assertEmpty($repo->getGlobalConfigs());
+
+        foreach ($configs as $configName => $configValue) {
+            $repo->addGlobalConfig($configName, $configValue);
+        }
+        $this->assertSame($configs, $repo->getGlobalConfigs());
+
+        foreach ($configs as $configName => $configValue) {
+            $repo->removeGlobalConfig($configName, $configValue);
+        }
+        $this->assertEmpty($repo->getGlobalConfigs());
+    }
+
+    /**
+     * test add, remove and get global options
+     *
+     * @covers Repository::addGlobalOption
+     * @covers Repository::getGlobalOptions
+     * @covers Repository::removeGlobalOption
+     */
+    public function testGlobalOptions()
+    {
+        $repo = $this->getRepository();
+
+        $options = array(
+            'test1' => true,
+            'test2' => 1,
+            'test3' => 'value',
+        );
+        $this->assertEmpty($repo->getGlobalOptions());
+
+        foreach ($options as $configName => $configValue) {
+            $repo->addGlobalOption($configName, $configValue);
+        }
+        $this->assertSame($options, $repo->getGlobalOptions());
+
+        foreach ($options as $configName => $configValue) {
+            $repo->removeGlobalOption($configName, $configValue);
+        }
+        $this->assertEmpty($repo->getGlobalOptions());
+    }
+
+    /**
+     * test add, remove and get global command arguments
+     *
+     * @covers Repository::addGlobalCommandArgument
+     * @covers Repository::getGlobalCommandArguments
+     * @covers Repository::removeGlobalCommandArgument
+     */
+    public function testGlobalCommandArguments()
+    {
+        $repo = $this->getRepository();
+
+        $args = array(
+            true,
+            1,
+            'value',
+        );
+        $this->assertEmpty($repo->getGlobalCommandArguments());
+
+        foreach ($args as $configValue) {
+            $repo->addGlobalCommandArgument($configValue);
+        }
+        $this->assertSame($args, $repo->getGlobalCommandArguments());
+
+        foreach ($args as $configValue) {
+            $repo->removeGlobalCommandArgument($configValue);
+        }
+        $this->assertEmpty($repo->getGlobalCommandArguments());
     }
 }

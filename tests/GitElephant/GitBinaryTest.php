@@ -13,7 +13,7 @@
 
 namespace GitElephant;
 
-use GitElephant\GitBinary;
+use \GitElephant\GitBinary;
 
 /**
  * GitBinary Test

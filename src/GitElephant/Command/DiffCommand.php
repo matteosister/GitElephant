@@ -19,7 +19,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\TreeishInterface;
+use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Repository;
 
 /**
  * Diff command generator
@@ -31,11 +32,14 @@ class DiffCommand extends BaseCommand
     const DIFF_COMMAND = 'diff';
 
     /**
-     * @return DiffCommand
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
      */
-    public static function getInstance()
+    public function __construct(Repository $repo = null)
     {
-        return new self();
+        parent::__construct($repo);
     }
 
     /**

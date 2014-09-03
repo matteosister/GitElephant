@@ -19,7 +19,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Tag;
+use \GitElephant\Objects\Tag;
+use \GitElephant\Repository;
 
 /**
  * Tag command generator
@@ -31,11 +32,14 @@ class TagCommand extends BaseCommand
     const TAG_COMMAND = 'tag';
 
     /**
-     * @return TagCommand
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
      */
-    public static function getInstance()
+    public function __construct(Repository $repo = null)
     {
-        return new self();
+        parent::__construct($repo);
     }
 
     /**

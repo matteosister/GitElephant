@@ -19,6 +19,8 @@
 
 namespace GitElephant\Command;
 
+use \GitElephant\Repository;
+
 /**
  * SubCommandCommand
  *
@@ -35,6 +37,17 @@ class SubCommandCommand extends BaseCommand
      * Subjects to a subcommand name
      */
     private $orderedSubjects = array();
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo = null)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * Clear all previous variables

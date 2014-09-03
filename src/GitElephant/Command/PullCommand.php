@@ -20,8 +20,9 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\Remote;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\Remote;
+use \GitElephant\Repository;
 
 /**
  * Class PullCommand
@@ -31,11 +32,14 @@ class PullCommand extends BaseCommand
     const GIT_PULL_COMMAND = 'pull';
 
     /**
-     * @return PullCommand
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
      */
-    public static function getInstance()
+    public function __construct(Repository $repo = null)
     {
-        return new self();
+        parent::__construct($repo);
     }
 
     /**

@@ -19,8 +19,8 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Command\RemoteCommand;
-use GitElephant\Repository;
+use \GitElephant\Command\RemoteCommand;
+use \GitElephant\Repository;
 
 /**
  * Class Remote
@@ -118,7 +118,7 @@ class Remote
     public function getVerboseOutput(RemoteCommand $remoteCmd = null)
     {
         if (!$remoteCmd) {
-            $remoteCmd = RemoteCommand::getInstance();
+            $remoteCmd = RemoteCommand::getInstance($this->repository);
         }
         $command = $remoteCmd->verbose();
 
@@ -144,7 +144,7 @@ class Remote
     public function getShowOutput($name = null, RemoteCommand $remoteCmd = null, $queryRemotes = true)
     {
         if (!$remoteCmd) {
-            $remoteCmd = RemoteCommand::getInstance();
+            $remoteCmd = RemoteCommand::getInstance($this->repository);
         }
         $command = $remoteCmd->show($name, $queryRemotes);
 

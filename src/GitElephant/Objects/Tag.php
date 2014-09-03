@@ -19,9 +19,9 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Repository;
-use GitElephant\Command\TagCommand;
-use GitElephant\Command\RevListCommand;
+use \GitElephant\Repository;
+use \GitElephant\Command\TagCommand;
+use \GitElephant\Command\RevListCommand;
 
 /**
  * An object representing a git tag
@@ -64,7 +64,7 @@ class Tag extends Object
      */
     public static function create(Repository $repository, $name, $startPoint = null, $message = null)
     {
-        $repository->getCaller()->execute(TagCommand::getInstance()->create($name, $startPoint, $message));
+        $repository->getCaller()->execute(TagCommand::getInstance($repository)->create($name, $startPoint, $message));
 
         return $repository->getTag($name);
     }
@@ -127,7 +127,7 @@ class Tag extends Object
     {
         $this->repository
             ->getCaller()
-            ->execute(TagCommand::getInstance()->delete($this));
+            ->execute(TagCommand::getInstance($this->getRepository())->delete($this));
     }
 
     /**
@@ -137,7 +137,7 @@ class Tag extends Object
      */
     private function createFromCommand()
     {
-        $command = TagCommand::getInstance()->listTags();
+        $command = TagCommand::getInstance($this->getRepository())->listTags();
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
@@ -161,7 +161,7 @@ class Tag extends Object
             if ($tagString != '') {
                 if ($this->name === trim($tagString)) {
                     $lines = $this->getCaller()
-                        ->execute(RevListCommand::getInstance()->getTagCommit($this))
+                        ->execute(RevListCommand::getInstance($this->getRepository())->getTagCommit($this))
                         ->getOutputLines();
                     $this->setSha($lines[0]);
                     $found = true;
@@ -190,26 +190,6 @@ class Tag extends Object
     private function getCaller()
     {
         return $this->getRepository()->getCaller();
-    }
-
-    /**
-     * Repository setter
-     *
-     * @param \GitElephant\Repository $repository the repository variable
-     */
-    public function setRepository($repository)
-    {
-        $this->repository = $repository;
-    }
-
-    /**
-     * Repository getter
-     *
-     * @return \GitElephant\Repository
-     */
-    public function getRepository()
-    {
-        return $this->repository;
     }
 
     /**

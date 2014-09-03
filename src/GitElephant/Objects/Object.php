@@ -19,8 +19,8 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Repository;
-use GitElephant\Command\RevParseCommand;
+use \GitElephant\Command\RevParseCommand;
+use \GitElephant\Repository;
 
 /**
  * A Object instance represents a node in the git tree repository
@@ -340,5 +340,25 @@ class Object implements TreeishInterface
         $caller->execute($c);
 
         return array_map('trim', $caller->getOutputLines(true));
+    }
+
+    /*
+     * Repository setter
+     *
+     * @param \GitElephant\Repository $repository the repository variable
+     */
+    public function setRepository(Repository $repository)
+    {
+        $this->repository = $repository;
+    }
+
+    /**
+     * Repository getter
+     *
+     * @return \GitElephant\Repository
+     */
+    public function getRepository()
+    {
+        return $this->repository;
     }
 }

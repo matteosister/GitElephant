@@ -19,9 +19,10 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Author;
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\TreeishInterface;
+use \GitElephant\Objects\Author;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Repository;
 
 /**
  * Main command generator (init, status, add, commit, checkout)
@@ -40,11 +41,14 @@ class MainCommand extends BaseCommand
     const GIT_RESET    = 'reset';
 
     /**
-     * @return MainCommand
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
      */
-    public static function getInstance()
+    public function __construct(Repository $repo = null)
     {
-        return new self();
+        parent::__construct($repo);
     }
 
     /**

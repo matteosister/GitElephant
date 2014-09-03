@@ -12,8 +12,8 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\TestCase;
-use GitElephant\Objects\Remote;
+use \GitElephant\TestCase;
+use \GitElephant\Objects\Remote;
 
 /**
  * Class RemoteTest

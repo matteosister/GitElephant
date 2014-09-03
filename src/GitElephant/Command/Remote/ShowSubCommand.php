@@ -19,7 +19,8 @@
 
 namespace GitElephant\Command\Remote;
 
-use GitElephant\Command\SubCommandCommand;
+use \GitElephant\Command\SubCommandCommand;
+use \GitElephant\Repository;
 
 /**
  * Class ShowRemoteCommand
@@ -33,6 +34,17 @@ use GitElephant\Command\SubCommandCommand;
 class ShowSubCommand extends SubCommandCommand
 {
     const GIT_REMOTE_SHOW = 'show';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo = null)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * build show sub command

@@ -19,9 +19,10 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\TreeishInterface;
-use GitElephant\Objects\Object;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Objects\Object;
+use \GitElephant\Repository;
 
 /**
  * ls-tree command generator
@@ -33,11 +34,14 @@ class LsTreeCommand extends BaseCommand
     const LS_TREE_COMMAND = 'ls-tree';
 
     /**
-     * @return LsTreeCommand
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
      */
-    public static function getInstance()
+    public function __construct(Repository $repo = null)
     {
-        return new self();
+        parent::__construct($repo);
     }
 
     /**

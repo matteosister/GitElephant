@@ -12,9 +12,9 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Branch;
-use GitElephant\Repository;
-use GitElephant\TestCase;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Repository;
+use \GitElephant\TestCase;
 
 /**
  * Class RevParseCommandTest
