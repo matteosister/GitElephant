@@ -700,10 +700,10 @@ class Repository
      */
     public function getTag($name)
     {
-        foreach ($this->getTags() as $tag) {
-            /** @var $tag Tag */
-            if ($name === $tag->getName()) {
-                return $tag;
+        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance()->listTags())->getOutputLines(true);
+        foreach ($tagFinderOutput as $line) {
+            if ($line === $name) {
+                return new Tag($this, $name);
             }
         }
 
