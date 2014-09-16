@@ -424,9 +424,9 @@ class Repository
     {
         $branches = array();
         if ($namesOnly) {
-            $outputLines = $this->caller->execute(BranchCommand::getInstance($this)->listBranches($all, true))->getOutputLines(
-                true
-            );
+            $outputLines = $this->caller->execute(
+                BranchCommand::getInstance($this)->listBranches($all, true)
+            )->getOutputLines(true);
             $branches = array_map(
                 function ($v) {
                     return ltrim($v, '* ');
@@ -434,30 +434,24 @@ class Repository
                 $outputLines
             );
             $sorter = function ($a, $b) {
-                if ($a == 'master') {
+                if ('master' === $a) {
                     return -1;
                 } else {
-                    if ($b == 'master') {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
+                    return 'master' === $b ? 1 : -1;
                 }
             };
         } else {
-            $outputLines = $this->caller->execute(BranchCommand::getInstance($this)->listBranches($all))->getOutputLines(true);
+            $outputLines = $this->caller->execute(
+                BranchCommand::getInstance($this)->listBranches($all)
+            )->getOutputLines(true);
             foreach ($outputLines as $branchLine) {
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
             $sorter = function (Branch $a, Branch $b) {
-                if ($a->getName() == 'master') {
+                if ('master' === $a->getName()) {
                     return -1;
                 } else {
-                    if ($b->getName() == 'master') {
-                        return 1;
-                    } else {
-                        return 0;
-                    }
+                    return 'master' === $b->getName() ? 1 : -1;
                 }
             };
         }

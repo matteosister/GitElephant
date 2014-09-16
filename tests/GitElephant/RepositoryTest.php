@@ -660,10 +660,10 @@ class RepositoryTest extends TestCase
         $this->getRepository()->createBranch('branch2');
         $this->getRepository()->createBranch('branch3');
         $this->getRepository()->createBranch('branch4');
-        $arrayNames = array();
-        foreach ($this->getRepository()->getBranches() as $branch) {
-            $arrayNames[] = $branch->getName();
-        }
+        $branches = $this->getRepository()->getBranches();
+        $arrayNames = array_map(function(Branch $b) {
+            return $b->getName();
+        }, $branches);
         $this->assertEquals(array('master', 'branch4', 'branch3', 'branch2', 'branch1'), $arrayNames);
     }
 
