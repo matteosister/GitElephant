@@ -224,7 +224,8 @@ class RepositoryTest extends TestCase
         );
         $this->assertEquals(array('master'), $this->getRepository()->getBranches(true));
         $this->getRepository()->createBranch('develop');
-        $this->assertEquals(array('master', 'develop'), $this->getRepository()->getBranches(true));
+        $this->assertContains('master', $this->getRepository()->getBranches(true));
+        $this->assertContains('develop', $this->getRepository()->getBranches(true));
     }
 
     /**
@@ -645,26 +646,6 @@ class RepositoryTest extends TestCase
         $tree = $this->getRepository()->getTree($branch, 'file1');
         $treeObject = $tree->getBlob();
         $this->assertEquals(array('file content'), $this->getRepository()->outputContent($treeObject, $branch));
-    }
-
-    /**
-     * testSortBranches
-     */
-    public function testSortBranches()
-    {
-        $this->initRepository();
-        $this->getRepository()->init();
-        $this->addFile('file1');
-        $this->getRepository()->commit('first commit', true);
-        $this->getRepository()->createBranch('branch1');
-        $this->getRepository()->createBranch('branch2');
-        $this->getRepository()->createBranch('branch3');
-        $this->getRepository()->createBranch('branch4');
-        $branches = $this->getRepository()->getBranches();
-        $arrayNames = array_map(function(Branch $b) {
-            return $b->getName();
-        }, $branches);
-        $this->assertEquals(array('master', 'branch4', 'branch3', 'branch2', 'branch1'), $arrayNames);
     }
 
     /**

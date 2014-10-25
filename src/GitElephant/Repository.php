@@ -433,13 +433,6 @@ class Repository
                 },
                 $outputLines
             );
-            $sorter = function ($a, $b) {
-                if ('master' === $a) {
-                    return -1;
-                } else {
-                    return 'master' === $b ? 1 : -1;
-                }
-            };
         } else {
             $outputLines = $this->caller->execute(
                 BranchCommand::getInstance($this)->listBranches($all)
@@ -447,15 +440,7 @@ class Repository
             foreach ($outputLines as $branchLine) {
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
-            $sorter = function (Branch $a, Branch $b) {
-                if ('master' === $a->getName()) {
-                    return -1;
-                } else {
-                    return 'master' === $b->getName() ? 1 : -1;
-                }
-            };
         }
-        usort($branches, $sorter);
 
         return $branches;
     }
