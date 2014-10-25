@@ -283,7 +283,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
             return ($a->getName() == $names[0]) ? -1 : 1;
         }
 
-        return $a->getType() == Object::TYPE_TREE && $b->getType() == Object::TYPE_BLOB ? -1 : 1;
+        return $a->getType() == Object::TYPE_TREE || $b->getType() == Object::TYPE_BLOB ? -1 : 1;
     }
 
     /**
