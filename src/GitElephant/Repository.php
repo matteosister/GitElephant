@@ -46,6 +46,7 @@ use \GitElephant\Command\CloneCommand;
 use \GitElephant\Command\CatFileCommand;
 use \GitElephant\Command\LsTreeCommand;
 use \GitElephant\Command\SubmoduleCommand;
+use GitElephant\Objects\TreeObject;
 use \GitElephant\Status\Status;
 use \GitElephant\Status\StatusIndex;
 use \GitElephant\Status\StatusWorkingTree;
@@ -874,7 +875,7 @@ class Repository
             $outputLines = $this->getCaller()->execute(
                 LsTreeCommand::getInstance($this)->tree($ref, $path)
             )->getOutputLines(true);
-            $path = Object::createFromOutputLine($this, $outputLines[0]);
+            $path = TreeObject::createFromOutputLine($this, $outputLines[0]);
         }
 
         return new Tree($this, $ref, $path);

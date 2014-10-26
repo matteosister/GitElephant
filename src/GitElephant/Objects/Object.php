@@ -103,7 +103,7 @@ class Object implements TreeishInterface
             $name = substr($fullPath, $pos + 1);
         }
 
-        return new self(
+        return new static(
             $repository,
             $slices['permissions'],
             $slices['type'],

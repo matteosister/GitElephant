@@ -321,7 +321,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
             }
             if (!in_array($name, $this->pathChildren)) {
                 $path                 = rtrim(rtrim($slices['fullPath'], $name), '/');
-                $treeObject           = new Object(
+                $treeObject           = new TreeObject(
                     $this->repository,
                     $slices['permissions'],
                     $slices['type'],
