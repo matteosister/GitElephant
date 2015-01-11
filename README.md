@@ -63,8 +63,6 @@ How to use
 ----------
 
 ``` php
-<?php
-
 use GitElephant\Repository;
 $repo = new Repository('/path/to/git/repository');
 // or the factory method
@@ -174,7 +172,6 @@ You could also use GitElephant to manage your git repositories via PHP.
 Your web server user (like www-data) needs to have access to the folder of the git repository
 
 ``` php
-<?php
 $repo->init(); // init
 $repo->cloneFrom("git://github.com/matteosister/GitElephant.git"); // clone
 
@@ -213,8 +210,6 @@ $repo->createTag($repo->getCommit());
 If you need to access remote repository you have to install the [ssh2 extension](http://www.php.net/manual/en/book.ssh2.php) and pass a new *Caller* to the repository. *this is a new feature...consider this in a testing phase*
 
 ``` php
-<?php
-
 $repo = new Repository('/path/to/git/repository');
 $connection = ssh_connect('host', 'port');
 // authorize the connection with the method you want
@@ -233,7 +228,6 @@ a tree representation of the repository, at a given point in history.
 **Tree class**
 
 ``` php
-<?php
 $tree = $repo->getTree(); // retrieve the actual *HEAD* tree
 $tree = $repo->getTree($repo->getCommit('1ac370d')); // retrieve a tree for a given commit
 $tree = $repo->getTree('master', 'lib/vendor'); // retrieve a tree for a given path
@@ -246,7 +240,6 @@ The Tree class implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
 You can use it as an array of git objects.
 
 ``` php
-<?php
 foreach ($tree as $treeObject) {
     echo $treeObject;
 }
@@ -255,7 +248,6 @@ foreach ($tree as $treeObject) {
 A Object instance is a php representation of a node in a git tree
 
 ``` php
-<?php
 echo $treeObject; // the name of the object (folder, file or link)
 $treeObject->getType(); // one class constant of Object::TYPE_BLOB, Object::TYPE_TREE and Object::TYPE_LINK
 $treeObject->getSha();
@@ -268,7 +260,6 @@ $treeObject->getPath();
 You can also pass a tree object to the repository to get its subtree
 
 ``` php
-<?php
 $subtree = $repo->getTree('master', $treeObject);
 ```
 
@@ -278,7 +269,6 @@ Diffs
 If you want to check a Diff between two commits the Diff class comes in
 
 ``` php
-<?php
 // get the diff between the given commit and it parent
 $diff = $repo->getDiff($repo->getCommit());
 // get the diff between two commits
@@ -300,7 +290,6 @@ The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
 You can iterate over DiffObject
 
 ``` php
-<?php
 foreach ($diff as $diffObject) {
     // mode is a constant of the DiffObject class
     // DiffObject::MODE_INDEX an index change
@@ -323,7 +312,6 @@ Every DiffObject can have multiple chunks of changes. For example:
 You can iterate over DiffObject to get DiffChunks. DiffChunks are the last steps of the Diff process, they are a collection of DiffChunkLine Objects
 
 ``` php
-<?php
 foreach ($diffObject as $diffChunk) {
     if (count($diffChunk) > 0) {
         echo "change detected from line ".$diffChunk->getDestStartLine()." to ".$diffChunk->getDestEndLine();
