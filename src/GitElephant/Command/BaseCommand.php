@@ -125,10 +125,7 @@ class BaseCommand
     {
         $this->commandName            = null;
         $this->configs                = array();
-        $this->globalConfigs          = array();
-        $this->globalOptions          = array();
         $this->commandArguments       = array();
-        $this->globalCommandArguments = array();
         $this->commandSubject         = null;
         $this->commandSubject2        = null;
         $this->path                   = null;
