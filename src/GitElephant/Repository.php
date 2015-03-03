@@ -643,7 +643,7 @@ class Repository
      */
     public function updateSubmodule($recursive = false, $init = false, $force = false, $path = null)
     {
-        $this->caller->execute(SubmoduleCommand::getInstance()->update($path));
+        $this->caller->execute(SubmoduleCommand::getInstance()->update($recursive, $init, $force, $path));
         return $this;
     }
 
