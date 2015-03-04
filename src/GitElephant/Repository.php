@@ -627,7 +627,7 @@ class Repository
      */
     public function initSubmodule($path = null)
     {
-        $this->caller->execute(SubmoduleCommand::getInstance()->init($path));
+        $this->caller->execute(SubmoduleCommand::getInstance($this)->init($path));
         return $this;
     }
 
@@ -643,7 +643,7 @@ class Repository
      */
     public function updateSubmodule($recursive = false, $init = false, $force = false, $path = null)
     {
-        $this->caller->execute(SubmoduleCommand::getInstance()->update($recursive, $init, $force, $path));
+        $this->caller->execute(SubmoduleCommand::getInstance($this)->update($recursive, $init, $force, $path));
         return $this;
     }
 
