@@ -13,10 +13,10 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\TestCase;
-use GitElephant\Command\Caller\Caller;
-use GitElephant\GitBinary;
-use GitElephant\Command\MainCommand;
+use \GitElephant\TestCase;
+use \GitElephant\Command\Caller\Caller;
+use \GitElephant\GitBinary;
+use \GitElephant\Command\MainCommand;
 
 /**
  * CallerTest

@@ -19,7 +19,8 @@
 
 namespace GitElephant\Command\Remote;
 
-use GitElephant\Command\SubCommandCommand;
+use \GitElephant\Command\SubCommandCommand;
+use \GitElephant\Repository;
 
 /**
  * Class ShowRemoteCommand
@@ -35,16 +36,28 @@ class ShowSubCommand extends SubCommandCommand
     const GIT_REMOTE_SHOW = 'show';
 
     /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo = null)
+    {
+        parent::__construct($repo);
+    }
+
+    /**
      * build show sub command
      *
      * NOTE: for technical reasons $name is optional, however under normal
      * implementation it SHOULD be passed!
      *
      * @param string $name
+     * @param bool   $queryRemotes Fetch new information from remotes
      *
      * @return ShowSubCommand
      */
-    public function prepare($name = null)
+    public function prepare($name = null, $queryRemotes = true)
     {
         $this->addCommandName(self::GIT_REMOTE_SHOW);
         /**
@@ -55,6 +68,10 @@ class ShowSubCommand extends SubCommandCommand
          */
         if ($name) {
             $this->addCommandSubject($name);
+        }
+
+        if (!$queryRemotes) {
+            $this->addCommandArgument('-n');
         }
 
         return $this;

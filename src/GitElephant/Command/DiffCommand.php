@@ -19,7 +19,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\TreeishInterface;
+use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Repository;
 
 /**
  * Diff command generator
@@ -31,11 +32,14 @@ class DiffCommand extends BaseCommand
     const DIFF_COMMAND = 'diff';
 
     /**
-     * @return DiffCommand
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
      */
-    public static function getInstance()
+    public function __construct(Repository $repo = null)
     {
-        return new self();
+        parent::__construct($repo);
     }
 
     /**
@@ -52,8 +56,13 @@ class DiffCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::DIFF_COMMAND);
+        // Instead of the first handful of characters, show the full pre- and post-image blob object names on the
+        // "index" line when generating patch format output
         $this->addCommandArgument('--full-index');
         $this->addCommandArgument('--no-color');
+        // Disallow external diff drivers
+        $this->addCommandArgument('--no-ext-diff');
+        // Detect renames
         $this->addCommandArgument('-M');
         $this->addCommandArgument('--dst-prefix=DST/');
         $this->addCommandArgument('--src-prefix=SRC/');

@@ -19,7 +19,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Commit;
+use \GitElephant\Objects\Commit;
+use \GitElephant\Repository;
 
 /**
  * DiffTreeCommand
@@ -33,11 +34,14 @@ class DiffTreeCommand extends BaseCommand
     const DIFF_TREE_COMMAND = 'diff-tree';
 
     /**
-     * @return DiffTreeCommand
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
      */
-    public static function getInstance()
+    public function __construct(Repository $repo = null)
     {
-        return new self();
+        parent::__construct($repo);
     }
 
     /**

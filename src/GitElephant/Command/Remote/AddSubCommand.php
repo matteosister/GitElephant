@@ -19,7 +19,8 @@
 
 namespace GitElephant\Command\Remote;
 
-use GitElephant\Command\SubCommandCommand;
+use \GitElephant\Command\SubCommandCommand;
+use \GitElephant\Repository;
 
 /**
  * Class AddRemoteCommand
@@ -39,6 +40,17 @@ class AddSubCommand extends SubCommandCommand
     const GIT_REMOTE_ADD_OPTION_MIRROR = '--mirror';
     const GIT_REMOTE_ADD_OPTION_SETHEAD = '-m';
     const GIT_REMOTE_ADD_OPTION_TRACK = '-t';
+
+    /**
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
+     */
+    public function __construct(Repository $repo = null)
+    {
+        parent::__construct($repo);
+    }
 
     /**
      * Valid options for remote command that require an associated value

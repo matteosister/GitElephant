@@ -19,6 +19,10 @@
 
 namespace GitElephant\Command;
 
+use \GitElephant\Repository;
+use \PhpCollection\Map;
+use \PhpCollection\Sequence;
+
 /**
  * BaseCommand
  *
@@ -33,14 +37,28 @@ class BaseCommand
      *
      * @var string
      */
-    private $commandName;
+    private $commandName = null;
 
     /**
-     * an array of config options
+     * config options
      *
      * @var array
      */
-    private $configs;
+    private $configs = array();
+
+    /**
+     * global configs
+     *
+     * @var array
+     */
+    private $globalConfigs = array();
+
+    /**
+     * global options
+     *
+     * @var array
+     */
+    private $globalOptions = array();
 
     /**
      * the command arguments
@@ -50,36 +68,72 @@ class BaseCommand
     private $commandArguments = array();
 
     /**
+     * the global command arguments
+     *
+     * @var array
+     */
+    private $globalCommandArguments = array();
+
+    /**
      * the command subject
      *
      * @var string|SubCommandCommand
      */
-    private $commandSubject;
+    private $commandSubject = null;
 
     /**
      * the command second subject (i.e. for branch)
      *
      * @var string|SubCommandCommand
      */
-    private $commandSubject2;
+    private $commandSubject2 = null;
 
     /**
      * the path
      *
      * @var string
      */
-    private $path;
+    private $path = null;
+
+    /**
+     * constructor
+     *
+     * should be called by all child classes' constructors to permit use of 
+     * global configs, options and command arguments
+     *
+     * @param null|\GitElephant\Repository $repo The repo object to read
+     */
+    public function __construct(Repository $repo = null)
+    {
+        if (!is_null($repo)) {
+            $this->addGlobalConfigs($repo->getGlobalConfigs());
+            $this->addGlobalOptions($repo->getGlobalOptions());
+            
+            $arguments = $repo->getGlobalCommandArguments();
+            if (!empty($arguments)) {
+                foreach ($arguments as $argument) {
+                    $this->addGlobalCommandArgument($argument);
+                }
+            }
+        }
+    }
 
     /**
      * Clear all previous variables
      */
     public function clearAll()
     {
-        $this->commandName      = null;
-        $this->commandArguments = null;
-        $this->commandSubject   = null;
-        $this->commandSubject2  = null;
-        $this->path             = null;
+        $this->commandName            = null;
+        $this->configs                = array();
+        $this->commandArguments       = array();
+        $this->commandSubject         = null;
+        $this->commandSubject2        = null;
+        $this->path                   = null;
+    }
+
+    public static function getInstance(Repository $repo = null)
+    {
+        return new static($repo);
     }
 
     /**
@@ -105,12 +159,40 @@ class BaseCommand
     /**
      * Set Configs
      *
-     * @param array $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
+     * @param array|Map $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
      */
     public function addConfigs($configs)
     {
         foreach ($configs as $config => $value) {
             $this->configs[$config] = $value;
+        }
+    }
+
+    /**
+     * Set global configs
+     *
+     * @param array|Map $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
+     */
+    protected function addGlobalConfigs($configs)
+    {
+        if (!empty($configs)) {
+            foreach ($configs as $config => $value) {
+                $this->globalConfigs[$config] = $value;
+            }
+        }
+    }
+
+    /**
+     * Set global option
+     *
+     * @param array|Map $options a global option
+     */
+    protected function addGlobalOptions($options)
+    {
+        if (!empty($options)) {
+            foreach ($options as $name => $value) {
+                $this->globalOptions[$name] = $value;
+            }
         }
     }
 
@@ -132,6 +214,18 @@ class BaseCommand
     protected function addCommandArgument($commandArgument)
     {
         $this->commandArguments[] = $commandArgument;
+    }
+
+    /**
+     * Add a global command argument
+     *
+     * @param string $commandArgument the command argument
+     */
+    protected function addGlobalCommandArgument($commandArgument)
+    {
+        if (!empty($commandArgument)) {
+            $this->globalCommandArguments[] = $commandArgument;
+        }
     }
 
     /**
@@ -215,66 +309,125 @@ class BaseCommand
      */
     public function getCommand()
     {
-        if ($this->commandName == null) {
+        if (is_null($this->commandName)) {
             throw new \RuntimeException("You should pass a commandName to execute a command");
         }
-        $command = '';
-        $this->configs($command);
-        $command .= $this->commandName;
-        $command .= ' ';
-        if (count($this->commandArguments) > 0) {
-            $command .= implode(' ', array_map('escapeshellarg', $this->commandArguments));
-            $command .= ' ';
-        }
-        $this->subjects($command);
-        if (null !== $this->path) {
-            $command .= sprintf(' -- %s', escapeshellarg($this->path));
-        }
+
+        $command  = '';
+        $command .= $this->getCLIConfigs();
+        $command .= $this->getCLIGlobalOptions();
+        $command .= $this->getCLICommandName();
+        $command .= $this->getCLICommandArguments();
+        $command .= $this->getCLISubjects();
+        $command .= $this->getCLIPath();
+
         $command = preg_replace('/\\s{2,}/', ' ', $command);
 
         return trim($command);
     }
 
     /**
-     * add configs
+     * get a string of CLI-formatted command arguments
      *
-     * @param string &$command
+     * @return string The command argument string
      */
-    private function configs(&$command)
+    private function getCLICommandArguments()
     {
-        if (count($this->configs)) {
-            foreach ($this->configs as $config => $value) {
-                $command .= escapeshellarg('-c');
-                $command .= sprintf(' %s=%s', escapeshellarg($config), escapeshellarg($value));
-            }
-            $command .= ' ';
+        $command = '';
+        $combinedArguments = array_merge($this->globalCommandArguments, $this->commandArguments);
+        if (count($combinedArguments) > 0) {
+            $command .= ' ' . implode(' ', array_map('escapeshellarg', $combinedArguments));
         }
+        return $command;
     }
 
     /**
-     * add subjects
+     * get a string of CLI-formatted command name
      *
-     * @param string &$command
+     * @return string The command name string
+     */
+    private function getCLICommandName()
+    {
+        return ' ' . $this->commandName;
+    }
+
+    /**
+     * get a string of CLI-formatted configs
+     *
+     * @return string The config string
+     */
+    private function getCLIConfigs()
+    {
+        $command = '';
+        $combinedConfigs = array_merge($this->globalConfigs, $this->configs);
+        if (count($combinedConfigs)) {
+            foreach ($combinedConfigs as $config => $value) {
+                $command .= sprintf(
+                    ' %s %s=%s',
+                    escapeshellarg('-c'),
+                    escapeshellarg($config),
+                    escapeshellarg($value)
+                );
+            }
+        }
+        return $command;
+    }
+
+    /**
+     * get a string of CLI-formatted global options
+     *
+     * @return string The global options string
+     */
+    private function getCLIGlobalOptions()
+    {
+        $command = '';
+        if (count($this->globalOptions) > 0) {
+            foreach ($this->globalOptions as $name => $value) {
+                $command .= sprintf(' %s=%s', escapeshellarg($name), escapeshellarg($value));
+            }
+        }
+        return $command;
+    }
+
+    /**
+     * get a string of CLI-formatted path
+     *
+     * @return string The path string
+     */
+    private function getCLIPath()
+    {
+        $command = '';
+        if (!is_null($this->path)) {
+            $command .= sprintf(' -- %s', escapeshellarg($this->path));
+        }
+        return $command;
+    }
+
+    /**
+     * get a string of CLI-formatted subjects
      *
      * @throws \RuntimeException
+     * @return string The subjects string
      */
-    private function subjects(&$command)
+    private function getCLISubjects()
     {
-        if (null !== $this->commandSubject) {
+        $command = '';
+        if (!is_null($this->commandSubject)) {
+            $command .= ' ';
             if ($this->commandSubject instanceof SubCommandCommand) {
                 $command .= $this->commandSubject->getCommand();
             } else {
                 $command .= escapeshellarg($this->commandSubject);
             }
-            $command .= ' ';
         }
-        if (null !== $this->commandSubject2) {
+        if (!is_null($this->commandSubject2)) {
+            $command .= ' ';
             if ($this->commandSubject2 instanceof SubCommandCommand) {
                 $command .= $this->commandSubject2->getCommand();
             } else {
                 $command .= escapeshellarg($this->commandSubject2);
             }
-            $command .= ' ';
         }
+        return $command;
     }
 }

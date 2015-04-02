@@ -19,8 +19,9 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Object;
-use GitElephant\Objects\TreeishInterface;
+use \GitElephant\Objects\Object;
+use \GitElephant\Objects\TreeishInterface;
+use \GitElephant\Repository;
 
 /**
  * cat-file command generator
@@ -32,11 +33,14 @@ class CatFileCommand extends BaseCommand
     const GIT_CAT_FILE = 'cat-file';
 
     /**
-     * @return CatFileCommand
+     * constructor
+     *
+     * @param \GitElephant\Repository $repo The repository object this command 
+     *                                      will interact with
      */
-    public static function getInstance()
+    public function __construct(Repository $repo = null)
     {
-        return new self();
+        parent::__construct($repo);
     }
 
     /**

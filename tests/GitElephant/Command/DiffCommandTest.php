@@ -13,8 +13,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\DiffCommand;
-use GitElephant\TestCase;
+use \GitElephant\Command\DiffCommand;
+use \GitElephant\TestCase;
 
 /**
  * DiffCommandTest
@@ -46,18 +46,18 @@ class DiffCommandTest extends TestCase
      */
     public function testDiff()
     {
-        $commit = $this->getRepository()->getCommit();
+        $commit = $this->getRepository()->init()->getCommit();
         $this->assertEquals(
-            DiffCommand::DIFF_COMMAND . " '--full-index' '--no-color' '-M' '--dst-prefix=DST/' '--src-prefix=SRC/' 'HEAD^..HEAD'",
+            DiffCommand::DIFF_COMMAND . " '--full-index' '--no-color' '--no-ext-diff' '-M' '--dst-prefix=DST/' '--src-prefix=SRC/' 'HEAD^..HEAD'",
             $this->diffCommand->diff('HEAD')
         );
         $this->assertEquals(
-            DiffCommand::DIFF_COMMAND . " '--full-index' '--no-color' '-M' '--dst-prefix=DST/' '--src-prefix=SRC/' 'branch2..HEAD' -- 'foo'",
+            DiffCommand::DIFF_COMMAND . " '--full-index' '--no-color' '--no-ext-diff' '-M' '--dst-prefix=DST/' '--src-prefix=SRC/' 'branch2..HEAD' -- 'foo'",
             $this->diffCommand->diff('HEAD', 'branch2', 'foo')
         );
         $this->assertEquals(
             sprintf(
-                DiffCommand::DIFF_COMMAND . " '--full-index' '--no-color' '-M' '--dst-prefix=DST/' '--src-prefix=SRC/' '%s^..%s'",
+                DiffCommand::DIFF_COMMAND . " '--full-index' '--no-color' '--no-ext-diff' '-M' '--dst-prefix=DST/' '--src-prefix=SRC/' '%s^..%s'",
                 $commit->getSha(),
                 $commit->getSha()
             ),

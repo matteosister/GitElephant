@@ -15,8 +15,8 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Repository;
-use GitElephant\Command\LogRangeCommand;
+use \GitElephant\Repository;
+use \GitElephant\Command\LogRangeCommand;
 
 /**
  * Git range log abstraction object
@@ -92,7 +92,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      */
     private function createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent)
     {
-        $command = LogRangeCommand::getInstance()->showLog($refStart, $refEnd, $path, $limit, $offset, $firstParent);
+        $command = LogRangeCommand::getInstance($this->getRepository())->showLog($refStart, $refEnd, $path, $limit, $offset, $firstParent);
         $outputLines = $this->getRepository()->getCaller()->execute(
             $command,
             true,
@@ -108,14 +108,14 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
         foreach ($outputLines as $line) {
             if (preg_match('/^commit (\w+)$/', $line) > 0) {
                 if (null !== $commitLines) {
-                    $this->rangeCommits[] = Commit::createFromOutputLines($this->repository, $commitLines);
+                    $this->rangeCommits[] = Commit::createFromOutputLines($this->getRepository(), $commitLines);
                 }
                 $commitLines = array();
             }
             $commitLines[] = $line;
         }
         if (null !== $commitLines && count($commitLines) > 0) {
-            $this->rangeCommits[] = Commit::createFromOutputLines($this->repository, $commitLines);
+            $this->rangeCommits[] = Commit::createFromOutputLines($this->getRepository(), $commitLines);
         }
     }
 

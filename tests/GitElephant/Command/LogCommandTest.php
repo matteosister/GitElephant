@@ -13,8 +13,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\LogCommand;
-use GitElephant\TestCase;
+use \GitElephant\Command\LogCommand;
+use \GitElephant\TestCase;
 
 /**
  * DiffTreeCommandTest

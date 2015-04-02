@@ -4,11 +4,12 @@ php:
   - 5.3
   - 5.4
   - 5.5
-#  - hhvm
+  - 5.6
+  - hhvm
 
-#matrix:
-#  allow_failures:
-#    - hhvm
+matrix:
+  allow_failures:
+    - hhvm
 
 branches:
   only:
@@ -24,9 +25,5 @@ before_script:
   - git --version
 
 script:
-  #- vendor/bin/phpunit --coverage-clover "clover"
   - vendor/bin/phpunit
-
-#after_success:
-#  - curl -sL https://bit.ly/artifact-uploader | php
   

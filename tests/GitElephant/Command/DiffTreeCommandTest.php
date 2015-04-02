@@ -13,9 +13,9 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\DiffTreeCommand;
-use GitElephant\TestCase;
-use GitElephant\Objects\Commit;
+use \GitElephant\Command\DiffTreeCommand;
+use \GitElephant\TestCase;
+use \GitElephant\Objects\Commit;
 
 /**
  * DiffTreeCommandTest

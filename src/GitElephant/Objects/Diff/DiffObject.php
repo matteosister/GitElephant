@@ -19,7 +19,7 @@
 
 namespace GitElephant\Objects\Diff;
 
-use GitElephant\Utilities;
+use \GitElephant\Utilities;
 
 /**
  * Represent a diff for a single object in the repository

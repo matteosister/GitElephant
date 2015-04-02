@@ -13,10 +13,10 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\TestCase;
-use GitElephant\GitBinary;
-use GitElephant\Command\Caller\Caller;
-use GitElephant\Repository;
+use \GitElephant\TestCase;
+use \GitElephant\GitBinary;
+use \GitElephant\Command\Caller\Caller;
+use \GitElephant\Repository;
 
 /**
  * TreeTest
@@ -97,7 +97,7 @@ class TreeTest extends TestCase
         $tree = $repository->getTree();
         $this->assertContains('.gitmodules', $tree);
         $this->assertContains($this->repository->getHumanishName(), $tree);
-        $submodule = $tree[1];
+        $submodule = $tree[0];
         $this->assertEquals(Object::TYPE_LINK, $submodule->getType());
     }
 

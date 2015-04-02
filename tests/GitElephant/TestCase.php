@@ -13,14 +13,14 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\MvCommand;
-use GitElephant\Repository;
-use GitElephant\GitBinary;
-use GitElephant\Command\Caller\Caller;
-use GitElephant\Objects\Commit;
-use Symfony\Component\Finder\Finder;
-use Symfony\Component\Filesystem\Filesystem;
-use Mockery as m;
+use \GitElephant\Command\MvCommand;
+use \GitElephant\Repository;
+use \GitElephant\GitBinary;
+use \GitElephant\Command\Caller\Caller;
+use \GitElephant\Objects\Commit;
+use \Symfony\Component\Finder\Finder;
+use \Symfony\Component\Filesystem\Filesystem;
+use \Mockery as m;
 
 /**
  * Class TestCase

@@ -19,7 +19,7 @@
 
 namespace GitElephant\Status;
 
-use PhpCollection\Sequence;
+use \PhpCollection\Sequence;
 
 /**
  * Class StatusIndex
