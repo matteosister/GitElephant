@@ -108,4 +108,13 @@ class CallerTest extends TestCase
         $caller->execute('status');
         $this->assertRegExp('/master/', $caller->getRawOutput($caller->getRawOutput()));
     }
+
+    /**
+     * @expectedException \GitElephant\Exception\InvalidRepositoryPathException
+     */
+    public function testRepositoryValidation()
+    {
+        $binary = new GitBinary();
+        $caller = new Caller($binary, 'someinvalidpath');
+    }
 }
