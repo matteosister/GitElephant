@@ -63,6 +63,8 @@ class Caller implements CallerInterface
      *
      * @param \GitElephant\GitBinary $binary         the binary
      * @param string                 $repositoryPath the physical base path for the repository
+     *
+     * @throws InvalidRepositoryPathException
      */
     public function __construct(GitBinary $binary, $repositoryPath)
     {

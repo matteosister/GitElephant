@@ -43,4 +43,11 @@ interface CallerInterface
      * @return array
      */
     public function getOutputLines($stripBlankLines = false);
+
+    /**
+     * Returns the Raw, unprocessed output of the last command
+     *
+     * @return string
+     */
+    public function getRawOutput();
 }
