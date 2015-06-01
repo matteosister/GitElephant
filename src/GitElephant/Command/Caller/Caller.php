@@ -19,6 +19,7 @@
 
 namespace GitElephant\Command\Caller;
 
+use GitElephant\Exception\InvalidRepositoryPathException;
 use \GitElephant\GitBinary;
 use \Symfony\Component\Process\Process;
 
@@ -66,6 +67,11 @@ class Caller implements CallerInterface
     public function __construct(GitBinary $binary, $repositoryPath)
     {
         $this->binary         = $binary;
+
+        if (!is_dir($repositoryPath)) {
+            throw new InvalidRepositoryPathException($repositoryPath);
+        }
+
         $this->repositoryPath = $repositoryPath;
     }
 

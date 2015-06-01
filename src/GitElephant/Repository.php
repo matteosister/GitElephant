@@ -120,9 +120,7 @@ class Repository
         if ($binary == null) {
             $binary = new GitBinary();
         }
-        if (!is_dir($repositoryPath)) {
-            throw new InvalidRepositoryPathException($repositoryPath);
-        }
+
         $this->path = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
         $this->name = $name;
