@@ -57,6 +57,10 @@ class RepositoryTest extends TestCase
     {
         $this->getRepository()->init();
         $match = false;
+
+        // Force US/EN locale
+        putenv('LANG=en_US.UTF-8');
+
         foreach ($this->getRepository()->getStatusOutput() as $line) {
             if (preg_match('/nothing to commit?(.*)/', $line)) {
                 $match = true;
