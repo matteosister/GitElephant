@@ -878,7 +878,12 @@ class Repository
             $outputLines = $this->getCaller()->execute(
                 LsTreeCommand::getInstance($this)->tree($ref, $path)
             )->getOutputLines(true);
-            $path = TreeObject::createFromOutputLine($this, $outputLines[0]);
+
+            if (!empty($outputLines)) {
+                $path = TreeObject::createFromOutputLine($this, $outputLines[0]);
+            } else {
+                throw new Exception\InvalidPathException(sprintf("Not able to fetch tree for path '%s'", $path));
+            }
         }
 
         return new Tree($this, $ref, $path);
