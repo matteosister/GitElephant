@@ -63,8 +63,8 @@ class ObjectTest extends TestCase
     /**
      * test repository getter and setter
      *
-     * @covers Object::getRepository
-     * @covers Object::setRepository
+     * @covers \GitElephant\Objects\Object::getRepository
+     * @covers \GitElephant\Objects\Object::setRepository
      */
     public function testGetSetRepository()
     {

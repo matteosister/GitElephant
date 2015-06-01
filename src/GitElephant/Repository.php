@@ -19,11 +19,11 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\Caller\CallerInterface;
 use \GitElephant\Command\FetchCommand;
 use \GitElephant\Command\PullCommand;
 use \GitElephant\Command\PushCommand;
 use \GitElephant\Command\RemoteCommand;
-use \GitElephant\Exception\InvalidRepositoryPathException;
 use \GitElephant\Command\Caller\Caller;
 use \GitElephant\Objects\Author;
 use \GitElephant\Objects\Remote;
@@ -109,35 +109,40 @@ class Repository
     /**
      * Class constructor
      *
-     * @param string         $repositoryPath the path of the git repository
-     * @param GitBinary|null $binary         the GitBinary instance that calls the commands
-     * @param string         $name           a repository name
-     *
-     * @throws Exception\InvalidRepositoryPathException
+     * @param string                $repositoryPath the path of the git repository
+     * @param GitBinary|null        $binary         the GitBinary instance that calls the commands
+     * @param CallerInterface|null  $caller         A caller that is being used to executes git commands
+     * @param string                $name           a repository name
      */
-    public function __construct($repositoryPath, GitBinary $binary = null, $name = null)
+    public function __construct($repositoryPath, GitBinary $binary = null, CallerInterface $caller = null, $name = null)
     {
         if ($binary == null) {
             $binary = new GitBinary();
         }
 
         $this->path = $repositoryPath;
-        $this->caller = new Caller($binary, $repositoryPath);
+        if ($caller === null) {
+            $this->caller = new Caller($binary, $repositoryPath);
+        } else {
+            $this->caller = $caller;
+        }
+
         $this->name = $name;
     }
 
     /**
      * Factory method
      *
-     * @param string         $repositoryPath the path of the git repository
-     * @param GitBinary|null $binary         the GitBinary instance that calls the commands
-     * @param string         $name           a repository name
+     * @param string                $repositoryPath the path of the git repository
+     * @param GitBinary|null        $binary         the GitBinary instance that calls the commands
+     * @param CallerInterface|null  $caller         A caller that is being used to executes git commands
+     * @param string                $name           a repository name
      *
      * @return \GitElephant\Repository
      */
-    public static function open($repositoryPath, GitBinary $binary = null, $name = null)
+    public static function open($repositoryPath, GitBinary $binary = null, CallerInterface $caller = null, $name = null)
     {
-        return new self($repositoryPath, $binary, $name);
+        return new self($repositoryPath, $binary, $caller, $name);
     }
 
     /**
