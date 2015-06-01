@@ -13,6 +13,7 @@
 
 namespace GitElephant\Command;
 
+use GitElephant\Repository;
 use \GitElephant\TestCase;
 use \GitElephant\Command\Caller\Caller;
 use \GitElephant\GitBinary;
@@ -39,7 +40,8 @@ class CallerTest extends TestCase
     public function testConstructor()
     {
         $binary = new GitBinary();
-        $caller = new Caller($binary, $this->getRepository()->getPath());
+        $caller = new Caller($binary);
+        $caller->setRepository($this->repository);
         $this->assertNotEmpty($caller->execute('--version'));
     }
 
@@ -49,8 +51,9 @@ class CallerTest extends TestCase
     public function testGetBinaryPath()
     {
         $binary = new GitBinary();
-        $c = new Caller($binary, $this->repository->getPath());
-        $this->assertEquals(exec('which git'), $c->getBinaryPath());
+        $caller = new Caller($binary);
+        $caller->setRepository($this->repository);
+        $this->assertEquals(exec('which git'), $caller->getBinaryPath());
     }
 
     /**
@@ -59,7 +62,8 @@ class CallerTest extends TestCase
     public function testGetError()
     {
         $binary = new GitBinary();
-        $caller = new Caller($binary, $this->getRepository()->getPath());
+        $caller = new Caller($binary);
+        $caller->setRepository($this->repository);
         $mainCommand = new MainCommand();
         $caller->execute('foo');
     }
@@ -70,7 +74,8 @@ class CallerTest extends TestCase
     public function testGetOutput()
     {
         $binary = new GitBinary();
-        $caller = new Caller($binary, $this->getRepository()->getPath());
+        $caller = new Caller($binary);
+        $caller->setRepository($this->repository);
         $mainCommand = new MainCommand();
         $caller->execute($mainCommand->init());
         $this->assertRegExp(
@@ -85,7 +90,8 @@ class CallerTest extends TestCase
     public function testOutputLines()
     {
         $binary = new GitBinary();
-        $caller = new Caller($binary, $this->getRepository()->getPath());
+        $caller = new Caller($binary);
+        $caller->setRepository($this->repository);
         $this->getRepository()->init();
         for ($i = 1; $i <= 50; $i++) {
             $this->addFile('test'.$i, null, 'this is the content');
@@ -104,7 +110,8 @@ class CallerTest extends TestCase
     {
         $binary = new GitBinary();
         $this->getRepository()->init();
-        $caller = new Caller($binary, $this->getRepository()->getPath());
+        $caller = new Caller($binary);
+        $caller->setRepository($this->repository);
         $caller->execute('status');
         $this->assertRegExp('/master/', $caller->getRawOutput($caller->getRawOutput()));
     }
@@ -115,6 +122,8 @@ class CallerTest extends TestCase
     public function testRepositoryValidation()
     {
         $binary = new GitBinary();
-        $caller = new Caller($binary, 'someinvalidpath');
+        $repository = new Repository('someinvalidpath');
+        $caller = new Caller($binary);
+        $caller->setRepository($repository);
     }
 }

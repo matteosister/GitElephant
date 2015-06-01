@@ -21,6 +21,7 @@ namespace GitElephant\Command\Caller;
 
 use GitElephant\Exception\InvalidRepositoryPathException;
 use \GitElephant\GitBinary;
+use GitElephant\Repository;
 use \Symfony\Component\Process\Process;
 
 /**
@@ -66,15 +67,9 @@ class Caller implements CallerInterface
      *
      * @throws InvalidRepositoryPathException
      */
-    public function __construct(GitBinary $binary, $repositoryPath)
+    public function __construct(GitBinary $binary)
     {
         $this->binary         = $binary;
-
-        if (!is_dir($repositoryPath)) {
-            throw new InvalidRepositoryPathException($repositoryPath);
-        }
-
-        $this->repositoryPath = $repositoryPath;
     }
 
     /**
@@ -167,5 +162,20 @@ class Caller implements CallerInterface
     public function getRawOutput()
     {
         return $this->rawOutput;
+    }
+
+    /**
+     * Set the associated repository
+     *
+     * @param Repository $repository
+     *
+     */
+    public function setRepository(Repository $repository)
+    {
+        if (!is_dir($repository->getPath())) {
+            throw new InvalidRepositoryPathException($repository->getPath());
+        }
+
+        $this->repositoryPath = $repository->getPath();
     }
 }

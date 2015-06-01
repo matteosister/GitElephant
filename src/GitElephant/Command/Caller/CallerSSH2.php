@@ -19,6 +19,8 @@
 
 namespace GitElephant\Command\Caller;
 
+use GitElephant\Repository;
+
 /**
  * Caller via ssh2 PECL extension
  *
@@ -37,6 +39,11 @@ class CallerSSH2 implements CallerInterface
     private $gitPath;
 
     /**
+     * @var Repository
+     */
+    private $repository;
+
+    /**
      * the output lines of the command
      *
      * @var array
@@ -51,23 +58,16 @@ class CallerSSH2 implements CallerInterface
     private $rawOutput = '';
 
     /**
-     * The path on the remote, that is being used as Working Directory, if none else is specified when running a command
-     * @var string
-     */
-    private $pathOnRemote = '';
-
-    /**
      * @param resource $resource
      * @param string   $gitPath path of the git executable on the remote host
      *
      * @internal param string $host remote host
      * @internal param int $port remote port
      */
-    public function __construct($resource, $pathOnRemote, $gitPath = '/usr/bin/git')
+    public function __construct($resource,  $gitPath = '/usr/bin/git')
     {
         $this->resource     = $resource;
         $this->gitPath      = $gitPath;
-        $this->pathOnRemote = $pathOnRemote;
     }
 
     /**
@@ -82,7 +82,7 @@ class CallerSSH2 implements CallerInterface
     public function execute($cmd, $git = true, $cwd = null)
     {
         if ($cwd == null) {
-            $cwd = $this->pathOnRemote;
+            $cwd = $this->repository->getPath();
         }
 
         $tmpCmd = 'cd ' . escapeshellarg($cwd) . ' && ';
@@ -134,5 +134,16 @@ class CallerSSH2 implements CallerInterface
     public function getRawOutput()
     {
         return $this->rawOutput;
+    }
+
+    /**
+     * Set the associated repository
+     *
+     * @param Repository $repository
+     *
+     */
+    public function setRepository(Repository $repository)
+    {
+        $this->repository = $repository;
     }
 }

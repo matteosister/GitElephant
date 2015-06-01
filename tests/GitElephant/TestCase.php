@@ -92,17 +92,27 @@ class TestCase extends \PHPUnit_Framework_TestCase
         @unlink($this->path);
         $fs = new Filesystem();
         $fs->mkdir($this->path);
-        $this->caller = new Caller(new GitBinary(), $this->path);
+
         if (is_null($index)) {
             $this->repository = Repository::open($this->path);
             $this->assertInstanceOf('GitElephant\Repository', $this->repository);
+
+            $this->caller = new Caller(new GitBinary());
+            $this->caller->setRepository($this->repository);
+
         } else {
             if (!is_array($this->repository)) {
                 $this->repository = array();
             }
             $this->repository[$index] = Repository::open($this->path);
+
+            $this->caller = new Caller(new GitBinary());
+            $this->caller->setRepository($this->repository[$index]);
+
             $this->assertInstanceOf('GitElephant\Repository', $this->repository[$index]);
         }
+
+
     }
 
     protected function tearDown()

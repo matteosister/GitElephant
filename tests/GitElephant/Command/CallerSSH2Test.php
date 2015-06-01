@@ -30,10 +30,16 @@ namespace GitElephant\Command {
 
     class CallerSSH2Test extends TestCase {
 
+        public function setUp()
+        {
+            $this->initRepository();
+        }
+
         public function testCallerSSH2WithGitBinary()
         {
             $gitBin = 'git';
-            $caller = new CallerSSH2('fakeResource', $this->path, $gitBin);
+            $caller = new CallerSSH2('fakeResource', $gitBin);
+            $caller->setRepository($this->repository);
             $caller->execute('foobar');
             $expectedCommand = 'cd ' . escapeshellarg($this->path) . ' && ' . $gitBin . ' foobar';
             $this->assertEquals($expectedCommand, $caller->getRawOutput());
@@ -45,7 +51,8 @@ namespace GitElephant\Command {
         public function testCallerSSH2WithoutGitBinary()
         {
             $gitBin = '/usr/bin/git';
-            $caller = new CallerSSH2('fakeResource', $this->path);
+            $caller = new CallerSSH2('fakeResource', $gitBin);
+            $caller->setRepository($this->repository);
             $caller->execute('foobar');
             $expectedCommand = 'cd ' . escapeshellarg($this->path) . ' && ' . $gitBin . ' foobar';
             $this->assertEquals($expectedCommand, $caller->getRawOutput());
@@ -56,7 +63,8 @@ namespace GitElephant\Command {
 
         public function testCallerWithNonGitCommand()
         {
-            $caller = new CallerSSH2('fakeResource', $this->path);
+            $caller = new CallerSSH2('fakeResource');
+            $caller->setRepository($this->repository);
             $caller->execute('foobar', false);
             $expectedCommand = 'cd ' . escapeshellarg($this->path) . ' && foobar';
             $this->assertEquals($expectedCommand, $caller->getRawOutput());
@@ -64,7 +72,8 @@ namespace GitElephant\Command {
 
         public function testEmptyLineStrip()
         {
-            $caller = new CallerSSH2('fakeResource', $this->path);
+            $caller = new CallerSSH2('fakeResource');
+            $caller->setRepository($this->repository);
             $caller->execute('baz');
 
             $lines = $caller->getOutputLines(true);

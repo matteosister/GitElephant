@@ -122,9 +122,9 @@ class Repository
 
         $this->path = $repositoryPath;
         if ($caller === null) {
-            $this->caller = new Caller($binary, $repositoryPath);
+            $this->setCaller(new Caller($binary));
         } else {
-            $this->caller = $caller;
+            $this->setCaller($caller);
         }
 
         $this->name = $name;
@@ -1107,11 +1107,12 @@ class Repository
     /**
      * Caller setter
      *
-     * @param \GitElephant\Command\Caller\Caller $caller the caller variable
+     * @param \GitElephant\Command\Caller\CallerInterface $caller the caller variable
      */
-    public function setCaller($caller)
+    public function setCaller(CallerInterface $caller)
     {
         $this->caller = $caller;
+        $this->caller->setRepository($this);
     }
 
     /**
