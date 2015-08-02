@@ -19,11 +19,6 @@ Some parts are (or will be) implemented by reading directly inside the .git fold
 
 The api is completely transparent to the end user. You don't have to worry about which method is used.
 
-API Reference
--------------
-
-Here you can find [the complete reference](http://gitelephantdocs.cypresslab.net) for master, and for any tags.
-
 Requirements
 ------------
 

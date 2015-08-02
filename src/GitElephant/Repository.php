@@ -120,9 +120,7 @@ class Repository
         if ($binary == null) {
             $binary = new GitBinary();
         }
-        if (!is_dir($repositoryPath)) {
-            throw new InvalidRepositoryPathException($repositoryPath);
-        }
+
         $this->path = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
         $this->name = $name;
@@ -353,6 +351,26 @@ class Repository
     public function getIndexStatus()
     {
         return StatusIndex::get($this);
+    }
+    
+    /**
+     * isClean Return true if the repository is not dirty.
+     * 
+     * @return boolean
+     */
+    public function isClean()
+    {
+        return $this->getStatus()->all()->isEmpty();
+    }
+    
+    /**
+     * isDirty Return true if the repository has some modified files.
+     * 
+     * @return boolean
+     */
+    public function isDirty()
+    {
+        return !$this->isClean();
     }
 
     /**
