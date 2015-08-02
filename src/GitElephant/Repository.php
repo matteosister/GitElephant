@@ -352,6 +352,26 @@ class Repository
     {
         return StatusIndex::get($this);
     }
+    
+    /**
+     * isClean Return true if the repository is not dirty.
+     * 
+     * @return boolean
+     */
+    public function isClean()
+    {
+        return $this->getStatus()->all()->isEmpty();
+    }
+    
+    /**
+     * isDirty Return true if the repository has some modified files.
+     * 
+     * @return boolean
+     */
+    public function isDirty()
+    {
+        return !$this->isClean();
+    }
 
     /**
      * Get the repository status as a string
