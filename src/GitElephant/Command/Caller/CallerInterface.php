@@ -19,6 +19,8 @@
 
 namespace GitElephant\Command\Caller;
 
+use GitElephant\Repository;
+
 /**
  * interface for the git command caller
  */
@@ -43,4 +45,19 @@ interface CallerInterface
      * @return array
      */
     public function getOutputLines($stripBlankLines = false);
+
+    /**
+     * Returns the Raw, unprocessed output of the last command
+     *
+     * @return string
+     */
+    public function getRawOutput();
+
+    /**
+     * Set the associated repository
+     *
+     * @param Repository $repository
+     *
+     */
+    public function setRepository(Repository $repository);
 }

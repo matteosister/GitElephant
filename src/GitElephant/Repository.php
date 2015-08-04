@@ -19,11 +19,11 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\Caller\CallerInterface;
 use \GitElephant\Command\FetchCommand;
 use \GitElephant\Command\PullCommand;
 use \GitElephant\Command\PushCommand;
 use \GitElephant\Command\RemoteCommand;
-use \GitElephant\Exception\InvalidRepositoryPathException;
 use \GitElephant\Command\Caller\Caller;
 use \GitElephant\Objects\Author;
 use \GitElephant\Objects\Remote;
@@ -109,35 +109,40 @@ class Repository
     /**
      * Class constructor
      *
-     * @param string         $repositoryPath the path of the git repository
-     * @param GitBinary|null $binary         the GitBinary instance that calls the commands
-     * @param string         $name           a repository name
-     *
-     * @throws Exception\InvalidRepositoryPathException
+     * @param string                $repositoryPath the path of the git repository
+     * @param GitBinary|null        $binary         the GitBinary instance that calls the commands
+     * @param CallerInterface|null  $caller         A caller that is being used to executes git commands
+     * @param string                $name           a repository name
      */
-    public function __construct($repositoryPath, GitBinary $binary = null, $name = null)
+    public function __construct($repositoryPath, GitBinary $binary = null, CallerInterface $caller = null, $name = null)
     {
         if ($binary == null) {
             $binary = new GitBinary();
         }
 
         $this->path = $repositoryPath;
-        $this->caller = new Caller($binary, $repositoryPath);
+        if ($caller === null) {
+            $this->setCaller(new Caller($binary));
+        } else {
+            $this->setCaller($caller);
+        }
+
         $this->name = $name;
     }
 
     /**
      * Factory method
      *
-     * @param string         $repositoryPath the path of the git repository
-     * @param GitBinary|null $binary         the GitBinary instance that calls the commands
-     * @param string         $name           a repository name
+     * @param string                $repositoryPath the path of the git repository
+     * @param GitBinary|null        $binary         the GitBinary instance that calls the commands
+     * @param CallerInterface|null  $caller         A caller that is being used to executes git commands
+     * @param string                $name           a repository name
      *
      * @return \GitElephant\Repository
      */
-    public static function open($repositoryPath, GitBinary $binary = null, $name = null)
+    public static function open($repositoryPath, GitBinary $binary = null, CallerInterface $caller = null, $name = null)
     {
-        return new self($repositoryPath, $binary, $name);
+        return new self($repositoryPath, $binary, $caller, $name);
     }
 
     /**
@@ -893,7 +898,12 @@ class Repository
             $outputLines = $this->getCaller()->execute(
                 LsTreeCommand::getInstance($this)->tree($ref, $path)
             )->getOutputLines(true);
-            $path = TreeObject::createFromOutputLine($this, $outputLines[0]);
+
+            if (!empty($outputLines)) {
+                $path = TreeObject::createFromOutputLine($this, $outputLines[0]);
+            } else {
+                throw new Exception\InvalidPathException(sprintf("Not able to fetch tree for path '%s'", $path));
+            }
         }
 
         return new Tree($this, $ref, $path);
@@ -1122,11 +1132,12 @@ class Repository
     /**
      * Caller setter
      *
-     * @param \GitElephant\Command\Caller\Caller $caller the caller variable
+     * @param \GitElephant\Command\Caller\CallerInterface $caller the caller variable
      */
-    public function setCaller($caller)
+    public function setCaller(CallerInterface $caller)
     {
         $this->caller = $caller;
+        $this->caller->setRepository($this);
     }
 
     /**

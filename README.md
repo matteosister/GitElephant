@@ -204,14 +204,32 @@ $repo->createTag($repo->getCommit());
 
 If you need to access remote repository you have to install the [ssh2 extension](http://www.php.net/manual/en/book.ssh2.php) and pass a new *Caller* to the repository. *this is a new feature...consider this in a testing phase*
 
+Usage with simple user/password authentication
+
 ``` php
-$repo = new Repository('/path/to/git/repository');
-$connection = ssh_connect('host', 'port');
+$connection = ssh2_connect('host', 'port');
 // authorize the connection with the method you want
 ssh2_auth_password($connection, 'user', 'password');
-$caller = new CallerSSH2($connection, '/path/to/git/binary/on/server');
-$repo = Repository::open('/path/to/git/repository');
-$repo->setCaller($caller);
+$caller = new CallerSSH2($connection,'/path/to/git/binary/on/server');
+$repo = Repository::open('/path/to/git/repository', null, $caller);
+```
+
+Usage with private / public key authentication
+
+``` php
+$connection = ssh2_connect('host', 22, array('hostkey'=>'ssh-rsa'));
+
+// authorize the connection with the method you want
+ssh2_auth_pubkey_file(
+    $connection,
+    'username',
+    '/path/to/public/key/file',
+    '/path/to/private/key/file',
+    'passphrase'
+);
+
+$caller = new CallerSSH2($connection, 'git');
+$repo = Repository::open('/path/to/git/repository', null, $caller);
 ```
 
 A versioned tree of files

@@ -13,6 +13,7 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\Caller\Caller;
 use \GitElephant\Objects\Branch;
 use \GitElephant\Objects\Object;
 use \GitElephant\Objects\Tag;
@@ -44,11 +45,44 @@ class RepositoryTest extends TestCase
         $this->assertEquals($this->getRepository()->getPath(), $this->path);
 
         $this->setExpectedException('GitElephant\Exception\InvalidRepositoryPathException');
-        $repo = new Repository('non-existent-path');
+        new Repository('non-existent-path');
 
+        $repo =  new Repository($this->path);
+        $this->assertInstanceOf('GitElephant\Command\Caller\CallerInterface', $repo->getCaller());
+        $this->assertInstanceOf('GitElephant\Repository', $repo);
+
+    }
+
+    public function testConstructWithCaller()
+    {
+        $binary = new GitBinary();
+        $caller = new Caller($binary, $this->path);
+        $repo = new Repository($this->path, $binary, $caller);
+
+        $this->assertInstanceOf('GitElephant\Repository', $repo);
+        $this->assertInstanceOf('GitElephant\Command\Caller\CallerInterface', $repo->getCaller());
+        $this->assertEquals($caller, $repo->getCaller());
+    }
+
+
+    public function testOpen()
+    {
+        $binary = new GitBinary();
+        $caller = new Caller($binary, $this->path);
+        $repo = Repository::open($this->path, $binary, $caller);
+        $this->assertInstanceOf('GitElephant\Repository', $repo);
+        $this->assertInstanceOf('GitElephant\Command\Caller\CallerInterface', $repo->getCaller());
+        $this->assertEquals($caller, $repo->getCaller());
+
+    }
+
+    public function testOpenNoCaller()
+    {
         $repo = Repository::open($this->path);
         $this->assertInstanceOf('GitElephant\Repository', $repo);
+        $this->assertInstanceOf('GitElephant\Command\Caller\CallerInterface', $repo->getCaller());
     }
+
 
     /**
      * @covers GitElephant\Repository::init
@@ -858,9 +892,9 @@ class RepositoryTest extends TestCase
     /**
      * test add, remove and get global configs
      *
-     * @covers Repository::addGlobalConfig
-     * @covers Repository::getGlobalConfigs
-     * @covers Repository::removeGlobalConfig
+     * @covers GitElephant\Repository::addGlobalConfig
+     * @covers GitElephant\Repository::getGlobalConfigs
+     * @covers GitElephant\Repository::removeGlobalConfig
      */
     public function testGlobalConfigs()
     {
@@ -887,9 +921,9 @@ class RepositoryTest extends TestCase
     /**
      * test add, remove and get global options
      *
-     * @covers Repository::addGlobalOption
-     * @covers Repository::getGlobalOptions
-     * @covers Repository::removeGlobalOption
+     * @covers GitElephant\Repository::addGlobalOption
+     * @covers GitElephant\Repository::getGlobalOptions
+     * @covers GitElephant\Repository::removeGlobalOption
      */
     public function testGlobalOptions()
     {
@@ -916,9 +950,9 @@ class RepositoryTest extends TestCase
     /**
      * test add, remove and get global command arguments
      *
-     * @covers Repository::addGlobalCommandArgument
-     * @covers Repository::getGlobalCommandArguments
-     * @covers Repository::removeGlobalCommandArgument
+     * @covers GitElephant\Repository::addGlobalCommandArgument
+     * @covers GitElephant\Repository::getGlobalCommandArguments
+     * @covers GitElephant\Repository::removeGlobalCommandArgument
      */
     public function testGlobalCommandArguments()
     {

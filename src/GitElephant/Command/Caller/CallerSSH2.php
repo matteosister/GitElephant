@@ -19,6 +19,8 @@
 
 namespace GitElephant\Command\Caller;
 
+use GitElephant\Repository;
+
 /**
  * Caller via ssh2 PECL extension
  *
@@ -37,11 +39,23 @@ class CallerSSH2 implements CallerInterface
     private $gitPath;
 
     /**
+     * @var Repository
+     */
+    private $repository;
+
+    /**
      * the output lines of the command
      *
      * @var array
      */
     private $outputLines = array();
+
+    /**
+     * Raw Output of the last executed command
+     *
+     * @var string
+     */
+    private $rawOutput = '';
 
     /**
      * @param resource $resource
@@ -50,10 +64,10 @@ class CallerSSH2 implements CallerInterface
      * @internal param string $host remote host
      * @internal param int $port remote port
      */
-    public function __construct($resource, $gitPath = '/usr/bin/git')
+    public function __construct($resource,  $gitPath = '/usr/bin/git')
     {
-        $this->resource = $resource;
-        $this->gitPath = $gitPath;
+        $this->resource     = $resource;
+        $this->gitPath      = $gitPath;
     }
 
     /**
@@ -67,17 +81,25 @@ class CallerSSH2 implements CallerInterface
      */
     public function execute($cmd, $git = true, $cwd = null)
     {
-        if ($git) {
-            $cmd = $this->gitPath . ' ' . $cmd;
+        if ($cwd == null) {
+            $cwd = $this->repository->getPath();
         }
-        $stream = ssh2_exec($this->resource, $cmd);
+
+        $tmpCmd = 'cd ' . escapeshellarg($cwd) . ' && ';
+        if ($git) {
+            $tmpCmd .= $this->gitPath . ' ' . $cmd;
+        } else {
+            $tmpCmd .=  $cmd;
+        }
+
+        $stream = ssh2_exec($this->resource, $tmpCmd);
         stream_set_blocking($stream, 1);
         $data = stream_get_contents($stream);
+        $this->rawOutput = $data;
         fclose($stream);
         // rtrim values
         $values = array_map('rtrim', explode(PHP_EOL, $data));
         $this->outputLines = $values;
-
         return $this;
     }
 
@@ -102,5 +124,26 @@ class CallerSSH2 implements CallerInterface
         }
 
         return $this->outputLines;
+    }
+
+    /**
+     * Returns the Raw, unprocessed output of the last command
+     *
+     * @return string
+     */
+    public function getRawOutput()
+    {
+        return $this->rawOutput;
+    }
+
+    /**
+     * Set the associated repository
+     *
+     * @param Repository $repository
+     *
+     */
+    public function setRepository(Repository $repository)
+    {
+        $this->repository = $repository;
     }
 }
