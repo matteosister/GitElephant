@@ -1,5 +1,0 @@
-#!/bin/bash
-# assume composer install already done and autoload.php presents...
-docker run -v $PWD:/tests git-1.9.2
-docker run -v $PWD:/tests git-1.8.5.3
-

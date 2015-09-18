@@ -141,7 +141,7 @@ class MainCommand extends BaseCommand
     public function commit($message, $stageAll = false, $author = null, $allowEmpty = false)
     {
         $this->clearAll();
-        if (trim($message) == '' || $message == null) {
+        if (trim($message) === '' || is_null($message)) {
             throw new \InvalidArgumentException(sprintf('You can\'t commit without message'));
         }
         $this->addCommandName(self::GIT_COMMIT);

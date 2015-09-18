@@ -106,7 +106,7 @@ class Caller implements CallerInterface
             $cmd = $this->binary->getPath() . ' ' . $cmd;
         }
 
-        $process = new Process($cmd, $cwd == null ? $this->repositoryPath : $cwd);
+        $process = new Process($cmd, is_null($cwd) ? $this->repositoryPath : $cwd);
         $process->setTimeout(15000);
         $process->run();
         if (!in_array($process->getExitCode(), $acceptedExitCodes)) {

@@ -23,7 +23,7 @@ class BaseCommandTest extends TestCase
     /**
      * test class constructor
      *
-     * @covers BaseCommand::__construct
+     * @covers GitElephant\Command\BaseCommand::__construct
      */
     public function testConstructor()
     {
@@ -59,7 +59,7 @@ class BaseCommandTest extends TestCase
     /**
      * test static factory
      *
-     * @covers BaseCommand::getInstance
+     * @covers GitElephant\Command\BaseCommand::getInstance
      */
     public function testGetInstance()
     {

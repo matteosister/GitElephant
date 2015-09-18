@@ -56,7 +56,7 @@ class TagCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
-        if (null != $message) {
+        if (null !== $message) {
             $this->addCommandArgument('-m');
             $this->addCommandArgument($message);
         }

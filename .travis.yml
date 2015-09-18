@@ -1,29 +1,23 @@
 language: php
 
 php:
-  - 5.3
-  - 5.4
-  - 5.5
-  - 5.6
-  - hhvm
-
-matrix:
-  allow_failures:
+    - 5.3
+    - 5.4
+    - 5.5
+    - 5.6
     - hhvm
 
-branches:
-  only:
-    - master
-    - develop
-
 before_script:
-  - curl -s https://getcomposer.org/installer | php
-  - $(which php) composer.phar --dev install
-  - git --version
-  - git config --global user.email "test@travis-ci.org"
-  - git config --global user.name "Travis"
-  - git --version
+    - curl -s https://getcomposer.org/installer | php
+    - $(which php) composer.phar --dev install
+    - git --version
+    - git config --global user.email "test@travis-ci.org"
+    - git config --global user.name "Travis"
+    - git --version
 
 script:
-  - vendor/bin/phpunit
-  
+    - vendor/bin/phpunit --coverage-clover=coverage.clover
+
+after_success:
+    - wget https://scrutinizer-ci.com/ocular.phar
+    - php ocular.phar code-coverage:upload --format=php-clover coverage.clover

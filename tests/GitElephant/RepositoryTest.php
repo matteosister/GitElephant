@@ -858,9 +858,9 @@ class RepositoryTest extends TestCase
     /**
      * test add, remove and get global configs
      *
-     * @covers Repository::addGlobalConfig
-     * @covers Repository::getGlobalConfigs
-     * @covers Repository::removeGlobalConfig
+     * @covers GitElephant\Repository::addGlobalConfig
+     * @covers GitElephant\Repository::getGlobalConfigs
+     * @covers GitElephant\Repository::removeGlobalConfig
      */
     public function testGlobalConfigs()
     {
@@ -887,9 +887,9 @@ class RepositoryTest extends TestCase
     /**
      * test add, remove and get global options
      *
-     * @covers Repository::addGlobalOption
-     * @covers Repository::getGlobalOptions
-     * @covers Repository::removeGlobalOption
+     * @covers GitElephant\Repository::addGlobalOption
+     * @covers GitElephant\Repository::getGlobalOptions
+     * @covers GitElephant\Repository::removeGlobalOption
      */
     public function testGlobalOptions()
     {
@@ -916,9 +916,9 @@ class RepositoryTest extends TestCase
     /**
      * test add, remove and get global command arguments
      *
-     * @covers Repository::addGlobalCommandArgument
-     * @covers Repository::getGlobalCommandArguments
-     * @covers Repository::removeGlobalCommandArgument
+     * @covers GitElephant\Repository::addGlobalCommandArgument
+     * @covers GitElephant\Repository::getGlobalCommandArguments
+     * @covers GitElephant\Repository::removeGlobalCommandArgument
      */
     public function testGlobalCommandArguments()
     {

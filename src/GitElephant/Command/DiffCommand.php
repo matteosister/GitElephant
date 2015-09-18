@@ -69,13 +69,13 @@ class DiffCommand extends BaseCommand
 
         $subject = '';
 
-        if ($with == null) {
+        if (is_null($with)) {
             $subject .= $of.'^..'.$of;
         } else {
             $subject .= $with.'..'.$of;
         }
 
-        if ($path != null) {
+        if (! is_null($path)) {
             if (!is_string($path)) {
                 /** @var Object $path */
                 $path = $path->getPath();

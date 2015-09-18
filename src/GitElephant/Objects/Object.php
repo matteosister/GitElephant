@@ -202,7 +202,7 @@ class Object implements TreeishInterface
     public function getExtension()
     {
         $pos = strrpos($this->name, '.');
-        if ($pos == false) {
+        if ($pos === false) {
             return null;
         } else {
             return substr($this->name, $pos+1);
