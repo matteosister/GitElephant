@@ -117,7 +117,7 @@ class Repository
      */
     public function __construct($repositoryPath, GitBinary $binary = null, $name = null)
     {
-        if ($binary == null) {
+        if (is_null($binary)) {
             $binary = new GitBinary();
         }
 
@@ -282,7 +282,7 @@ class Repository
     public function commit($message, $stageAll = false, $ref = null, $author = null, $allowEmpty = false)
     {
         $currentBranch = null;
-        if ($ref != null) {
+        if (! is_null($ref)) {
             $currentBranch = $this->getMainBranch();
             $this->checkout($ref);
         }
@@ -290,7 +290,7 @@ class Repository
             $this->stage();
         }
         $this->caller->execute(MainCommand::getInstance($this)->commit($message, $stageAll, $author, $allowEmpty));
-        if ($ref != null) {
+        if (! is_null($ref)) {
             $this->checkout($currentBranch);
         }
 

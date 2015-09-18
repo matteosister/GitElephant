@@ -110,7 +110,7 @@ class LsTreeCommand extends BaseCommand
      */
     public function listAll($ref = null)
     {
-        if ($ref == null) {
+        if (is_null($ref)) {
             $ref = 'HEAD';
         }
         $this->clearAll();

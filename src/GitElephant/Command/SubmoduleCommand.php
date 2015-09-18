@@ -132,7 +132,7 @@ class SubmoduleCommand extends BaseCommand
         if ($recursive === true) {
             $this->addCommandArgument(self::SUBMODULE_OPTION_RECURSIVE);
         }
-        if ($init == true) {
+        if ($init === true) {
             $this->addCommandArgument(self::SUBMODULE_OPTION_INIT);
         }
         if ($force === true) {

@@ -21,7 +21,6 @@ namespace GitElephant\Command;
 
 use \GitElephant\Repository;
 use \PhpCollection\Map;
-use \PhpCollection\Sequence;
 
 /**
  * BaseCommand
