@@ -521,7 +521,7 @@ class RepositoryTest extends TestCase
             $this->getRepository()->commit('test commit ' . $i, true);
         }
 
-        $log = $this->getRepository()->getLog(['test-branch', '^master']);
+        $log = $this->getRepository()->getLog(array('test-branch', '^master'));
         $this->assertInstanceOf('GitElephant\Objects\Log', $this->getRepository()->getLog());
         $this->assertEquals(2, $log->count());
     }
