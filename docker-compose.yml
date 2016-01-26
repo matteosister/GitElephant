@@ -1,4 +1,0 @@
-php:
-    build: .
-    volumes:
-        - ".:/app"
