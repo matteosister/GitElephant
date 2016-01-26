@@ -793,11 +793,11 @@ class Repository
     /**
      * Get a log for a ref
      *
-     * @param string|TreeishInterface $ref         the treeish to check
-     * @param string|Object           $path        the physical path to the tree relative to the repository root
-     * @param int|null                $limit       limit to n entries
-     * @param int|null                $offset      skip n entries
-     * @param boolean|false           $firstParent skip commits brought in to branch by a merge
+     * @param string|TreeishInterface|array $ref         the treeish to check, as a string, as an object or as an array
+     * @param string|Object                 $path        the physical path to the tree relative to the repository root
+     * @param int|null                      $limit       limit to n entries
+     * @param int|null                      $offset      skip n entries
+     * @param boolean|false                 $firstParent skip commits brought in to branch by a merge
      *
      * @return \GitElephant\Objects\Log
      */
@@ -816,7 +816,6 @@ class Repository
      * @param int|null      $offset      skip n entries
      * @param boolean|false $firstParent skip commits brought in to branch by a merge
      *
-     * @internal param \GitElephant\Objects\TreeishInterface|string $ref the treeish to check
      * @return \GitElephant\Objects\LogRange
      */
     public function getLogRange($refStart, $refEnd, $path = null, $limit = 10, $offset = null, $firstParent = false)
@@ -859,7 +858,8 @@ class Repository
      * Checkout a branch
      * This function change the state of the repository on the filesystem
      *
-     * @param string|TreeishInterface $ref the reference to checkout
+     * @param string|TreeishInterface $ref    the reference to checkout
+     * @param bool                    $create like -b on the command line
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -867,8 +867,11 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function checkout($ref)
+    public function checkout($ref, $create = false)
     {
+        if ($create && is_null($this->getBranch($ref))) {
+            $this->createBranch($ref);
+        }
         $this->caller->execute(MainCommand::getInstance($this)->checkout($ref));
 
         return $this;

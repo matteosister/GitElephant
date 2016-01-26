@@ -416,7 +416,11 @@ class BaseCommand
             if ($this->commandSubject instanceof SubCommandCommand) {
                 $command .= $this->commandSubject->getCommand();
             } else {
-                $command .= escapeshellarg($this->commandSubject);
+                if (is_array($this->commandSubject)) {
+                    $command .= implode(' ', array_map('escapeshellarg', $this->commandSubject));
+                } else {
+                    $command .= escapeshellarg($this->commandSubject);
+                }
             }
         }
         if (!is_null($this->commandSubject2)) {
@@ -424,7 +428,11 @@ class BaseCommand
             if ($this->commandSubject2 instanceof SubCommandCommand) {
                 $command .= $this->commandSubject2->getCommand();
             } else {
-                $command .= escapeshellarg($this->commandSubject2);
+                if (is_array($this->commandSubject2)) {
+                    $command .= implode(' ', array_map('escapeshellarg', $this->commandSubject2));
+                } else {
+                    $command .= escapeshellarg($this->commandSubject2);
+                }
             }
         }
         return $command;

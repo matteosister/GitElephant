@@ -59,7 +59,6 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @internal param string $ref treeish reference
      */
     public function __construct(
         Repository $repository,

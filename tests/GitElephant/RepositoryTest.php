@@ -507,6 +507,26 @@ class RepositoryTest extends TestCase
     }
 
     /**
+     * @covers GitElephant\Repository::getLog
+     */
+    public function testGetLog_for_a_branch()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test file 0');
+        $this->getRepository()->commit('first commit', true);
+        $this->getRepository()->checkout('test-branch', true);
+
+        for ($i = 1; $i <= 2; $i++) {
+            $this->addFile('test file ' . $i);
+            $this->getRepository()->commit('test commit ' . $i, true);
+        }
+
+        $log = $this->getRepository()->getLog(array('test-branch', '^master'));
+        $this->assertInstanceOf('GitElephant\Objects\Log', $this->getRepository()->getLog());
+        $this->assertEquals(2, $log->count());
+    }
+
+    /**
      * @covers GitElephant\Repository::checkout
      */
     public function testCheckout()
