@@ -13,6 +13,7 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\ResetCommand;
 use \GitElephant\Objects\Branch;
 use \GitElephant\Objects\Object;
 use \GitElephant\Objects\Tag;
@@ -902,6 +903,50 @@ class RepositoryTest extends TestCase
             $repo->removeGlobalConfig($configName, $configValue);
         }
         $this->assertEmpty($repo->getGlobalConfigs());
+    }
+
+    /**
+     * test reset
+     */
+    public function testResetHard()
+    {
+        $this->initRepository();
+        $repo=$this->getRepository();
+        $repo->init();
+        $this->addFile('file1');
+        $repo->stage();
+        $repo->commit('message1');
+        $headCommit=$repo->getCommit();
+        $this->addFile('file2');
+        $repo->stage();
+        $repo->commit('message2');
+
+        $this->assertEquals(2,$repo->countCommits());
+        $repo->reset($headCommit,[ResetCommand::OPTION_HARD]);
+        $this->assertEquals(1,$repo->countCommits());
+        $this->assertEmpty($repo->getIndexStatus()->added());
+    }
+
+    /**
+     * test reset
+     */
+    public function testResetSoft()
+    {
+        $this->initRepository();
+        $repo=$this->getRepository();
+        $repo->init();
+        $this->addFile('file1');
+        $repo->stage();
+        $repo->commit('message1');
+        $headCommit=$repo->getCommit();
+        $this->addFile('file2');
+        $repo->stage();
+        $repo->commit('message2');
+
+        $this->assertEquals(2,$repo->countCommits());
+        $repo->reset($headCommit,[ResetCommand::OPTION_SOFT]);
+        $this->assertEquals(1,$repo->countCommits());
+        $this->assertNotEmpty($repo->getIndexStatus()->added());
     }
 
     /**

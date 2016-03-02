@@ -23,6 +23,7 @@ use \GitElephant\Command\FetchCommand;
 use \GitElephant\Command\PullCommand;
 use \GitElephant\Command\PushCommand;
 use \GitElephant\Command\RemoteCommand;
+use GitElephant\Command\ResetCommand;
 use \GitElephant\Exception\InvalidRepositoryPathException;
 use \GitElephant\Command\Caller\Caller;
 use \GitElephant\Objects\Author;
@@ -325,6 +326,15 @@ class Repository
         $this->caller->execute(RevParseCommand::getInstance()->revParse(null, $options));
 
         return trim($this->caller->getOutput()) === 'true';
+    }
+
+    /**
+     * @param TreeishInterface|Commit|string $arg
+     * @param array $options
+     */
+    public function reset($arg,$options)
+    {
+        $this->caller->execute(ResetCommand::getInstance()->reset($arg,$options));
     }
 
     /**
