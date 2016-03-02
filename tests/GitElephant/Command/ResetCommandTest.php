@@ -27,7 +27,7 @@ class ResetCommandTest extends TestCase
 
     public function testResetHard()
     {
-        $rstc = ResetCommand::getInstance($this->getRepository());
+        $rstc = ResetCommand::getInstance();
         $this->assertEquals("reset '--hard' 'dbeac'",$rstc->reset('dbeac',array(ResetCommand::OPTION_HARD)));
     }
 }

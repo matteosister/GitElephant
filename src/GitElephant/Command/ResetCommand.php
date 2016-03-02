@@ -60,7 +60,7 @@ class ResetCommand extends BaseCommand
      * @param Repository $repository
      * @return ResetCommand
      */
-    public static function getInstance(Repository $repository)
+    public static function getInstance(Repository $repository=null)
     {
         return new self($repository);
     }

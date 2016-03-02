@@ -922,7 +922,7 @@ class RepositoryTest extends TestCase
         $repo->commit('message2');
 
         $this->assertEquals(2,$repo->countCommits());
-        $repo->reset($headCommit,[ResetCommand::OPTION_HARD]);
+        $repo->reset($headCommit,array(ResetCommand::OPTION_HARD));
         $this->assertEquals(1,$repo->countCommits());
         $this->assertEmpty($repo->getIndexStatus()->added());
     }
@@ -944,7 +944,7 @@ class RepositoryTest extends TestCase
         $repo->commit('message2');
 
         $this->assertEquals(2,$repo->countCommits());
-        $repo->reset($headCommit,[ResetCommand::OPTION_SOFT]);
+        $repo->reset($headCommit,array(ResetCommand::OPTION_SOFT));
         $this->assertEquals(1,$repo->countCommits());
         $this->assertNotEmpty($repo->getIndexStatus()->added());
     }
