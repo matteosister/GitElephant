@@ -39,7 +39,7 @@ class ResetCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function reset($arg = null, Array $options = array())
+    public function reset($arg = null, array $options = array())
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_RESET_COMMAND);
