@@ -1035,18 +1035,18 @@ class Repository
     }
 
     /**
-     * Fetch from and merge with another repository or a local branch
+     * Push changes to remote repository
      *
-     * @param string $to
-     * @param string $ref
+     * @param string $remote
+     * @param string $branch
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function push($to = null, $ref = null)
+    public function push($origin = null, $branch = null)
     {
-        $this->caller->execute(PushCommand::getInstance($this)->push($to, $ref));
+        $this->caller->execute(PushCommand::getInstance($this)->push($origin, $branch));
     }
 
     /**
