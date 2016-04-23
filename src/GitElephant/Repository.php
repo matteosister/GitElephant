@@ -1037,7 +1037,7 @@ class Repository
     /**
      * Push changes to remote repository
      *
-     * @param string $remote
+     * @param string $origin
      * @param string $branch
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
