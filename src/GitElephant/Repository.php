@@ -1035,7 +1035,7 @@ class Repository
     }
 
     /**
-     * Fetch from and merge with another repository or a local branch
+     * Push changes to remote repository
      *
      * @param string $to
      * @param string $ref
