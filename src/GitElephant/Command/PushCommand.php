@@ -49,7 +49,7 @@ class PushCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function push($remote = 'origin', $branch = 'master')
+    public function push($remote = 'origin', $branch = 'master', $args = null)
     {
         if ($remote instanceof Remote) {
             $remote = $remote->getName();
@@ -61,6 +61,10 @@ class PushCommand extends BaseCommand
         $this->addCommandName(self::GIT_PUSH_COMMAND);
         $this->addCommandSubject($remote);
         $this->addCommandSubject2($branch);
+
+        if(!is_null($args)) {
+            $this->addCommandArgument($args);
+        }
 
         return $this->getCommand();
     }
