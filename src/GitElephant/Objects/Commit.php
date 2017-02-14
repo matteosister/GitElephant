@@ -406,4 +406,42 @@ class Commit implements TreeishInterface, \Countable
 
         return array_map('trim', $caller->getOutputLines(true));
     }
+
+    /**
+     * Is the commit tagged?
+     *
+     * return true if some tag of repository point to this commit
+     * return false otherwise
+     *
+     * @return bool
+     */
+    public function tagged()
+    {
+        $result = false;
+        foreach ($this->repository->getTags() as $tag) {
+            if ($tag->getSha() == $this->getSha()) {
+                $result = true;
+                break;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return Tags that point to this commit
+     *
+     * @return Tag[]
+     */
+    public function getTags()
+    {
+        $currentCommitTags = [];
+        foreach ($this->repository->getTags() as $tag) {
+            if ($tag->getSha() == $this->getSha()) {
+                $currentCommitTags[] = $tag;
+            }
+        }
+
+        return $currentCommitTags;
+    }
 }
