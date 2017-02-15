@@ -242,7 +242,8 @@ class CommitTest extends TestCase
         Tag::create($this->repository, '1.0.0');
         $this->assertTrue($commit->tagged());
         $this->assertCount(1, $commit->getTags());
-        $this->assertEquals('1.0.0', reset($commit->getTags())->getName());
+        $commitTags = $commit->getTags();
+        $this->assertEquals('1.0.0', $commitTags[0]->getName());
     }
 
 }
