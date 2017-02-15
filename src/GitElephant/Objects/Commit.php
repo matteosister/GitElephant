@@ -435,7 +435,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public function getTags()
     {
-        $currentCommitTags = [];
+        $currentCommitTags = array();
         foreach ($this->repository->getTags() as $tag) {
             if ($tag->getSha() == $this->getSha()) {
                 $currentCommitTags[] = $tag;
