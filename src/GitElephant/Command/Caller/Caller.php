@@ -59,6 +59,13 @@ class Caller implements CallerInterface
      */
     private $rawOutput;
 
+	/**
+	 * Callback for real-time output yielding
+	 *
+	 * @var callable
+	 */
+    private $callback;
+
     /**
      * Class constructor
      *
@@ -109,19 +116,29 @@ class Caller implements CallerInterface
 
         $process = new Process($cmd, is_null($cwd) ? $this->repositoryPath : $cwd);
         $process->setTimeout(15000);
-        $process->run();
-        if (!in_array($process->getExitCode(), $acceptedExitCodes)) {
-            $text = 'Exit code: ' . $process->getExitCode();
-            $text .= ' while executing: "' . $cmd;
-            $text .= '" with reason: ' . $process->getErrorOutput();
-            $text .= "\n" . $process->getOutput();
-            throw new \RuntimeException($text);
+
+        if(is_callable($this->callback)) {
+        	$callback = $this->callback;
+
+	        $process->run(function ($type, $buffer) use($callback) {
+		        $callback($type, $buffer);
+	        });
+        }else{
+	        $process->run();
         }
-        $this->rawOutput = $process->getOutput();
+
+	    if(!in_array($process->getExitCode(), $acceptedExitCodes)){
+		    $text = 'Exit code: ' . $process->getExitCode();
+		    $text .= ' while executing: "' . $cmd;
+		    $text .= '" with reason: ' . $process->getErrorOutput();
+		    $text .= "\n" . $process->getOutput();
+		    throw new \RuntimeException($text);
+	    }
+	    $this->rawOutput = $process->getOutput();
 
 	    $separator = Utilities::isWindows() ? "\n" : PHP_EOL;
-        $values = array_map('rtrim', explode($separator, $process->getOutput()));
-        $this->outputLines = $values;
+	    $values = array_map('rtrim', explode($separator, $process->getOutput()));
+	    $this->outputLines = $values;
 
         return $this;
     }
@@ -167,5 +184,14 @@ class Caller implements CallerInterface
     public function getRawOutput()
     {
         return $this->rawOutput;
+    }
+
+	/**
+	 * @param callable $callback
+	 * @return $this
+	 */
+    public function setExecuteCallback(callable $callback){
+    	$this->callback = $callback;
+    	return $this;
     }
 }

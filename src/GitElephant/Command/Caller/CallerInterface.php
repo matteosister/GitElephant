@@ -43,4 +43,12 @@ interface CallerInterface
      * @return array
      */
     public function getOutputLines($stripBlankLines = false);
+
+	/**
+	 * Set a callback to yield real-time process output
+	 *
+	 * @param callable $callback
+	 * @return string
+	 */
+    public function setExecuteCallback(callable $callback);
 }
