@@ -394,15 +394,16 @@ class Repository
      */
     public function getStatusOutput() {
 
-    	$cacheKey = $this->getName().'_getStatusOutput';
-		if(Cache::has($cacheKey)) {
+    	$cacheKey = 'getStatusOutput';
+	    $cacheTag = 'repo_'.$this->getName();
+		if(Cache::tags($cacheTag)->has($cacheKey)) {
 
-			return Cache::get($cacheKey);
+			return Cache::tags($cacheTag)->get($cacheKey);
 		}
 
         $this->caller->execute(MainCommand::getInstance($this)->status());
 		$outputLines = array_map('trim', $this->caller->getOutputLines());
-		Cache::put($cacheKey, $outputLines, 15);
+		Cache::tags($cacheTag)->put($cacheKey, $outputLines, 15);
 
         return $outputLines;
     }
@@ -459,10 +460,11 @@ class Repository
      */
     public function getBranches($namesOnly = false, $all = false)
     {
-    	$cacheKey = $this->getName().'_getBranches_'.var_export($namesOnly, true).var_export($all, true);
-    	if(Cache::has($cacheKey)) {
+    	$cacheKey = 'getBranches_'.var_export($namesOnly, true).var_export($all, true);
+    	$cacheTag = 'repo_'.$this->getName();
+    	if(Cache::tags($cacheTag)->has($cacheKey)) {
 
-    		return Cache::get($cacheKey);
+    		return Cache::tags($cacheTag)->get($cacheKey);
 	    }
 
         $branches = array();
@@ -485,7 +487,7 @@ class Repository
             }
         }
 
-	    Cache::put($cacheKey, $branches, 15);
+	    Cache::tags($cacheTag)->put($cacheKey, $branches, 15);
         return $branches;
     }
 
@@ -499,10 +501,11 @@ class Repository
      */
     public function getMainBranch()
     {
-    	$cacheKey = $this->getName().'_getMainBranch';
-	    if(Cache::has($cacheKey)) {
+    	$cacheKey = 'getMainBranch';
+	    $cacheTag = 'repo_'.$this->getName();
+	    if(Cache::tags($cacheTag)->has($cacheKey)) {
 
-	    	return Cache::get($cacheKey);
+	    	return Cache::tags($cacheTag)->get($cacheKey);
 	    }
 
         $filtered = array_filter(
@@ -513,7 +516,7 @@ class Repository
         );
         sort($filtered);
 
-        Cache::put($cacheKey, $filtered[0], 15);
+        Cache::tags($cacheTag)->put($cacheKey, $filtered[0], 15);
         return $filtered[0];
     }
 
@@ -905,6 +908,9 @@ class Repository
             $this->createBranch($ref);
         }
         $this->caller->execute(MainCommand::getInstance($this)->checkout($ref));
+
+	    $cacheTag = 'repo_'.$this->getName();
+	    Cache::tags($cacheTag)->flush();
 
         return $this;
     }
