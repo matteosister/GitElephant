@@ -19,6 +19,8 @@
 
 namespace GitElephant;
 
+use \GitElephant\Utilities;
+
 /**
  * Git binary
  * It contains the reference to the system git binary

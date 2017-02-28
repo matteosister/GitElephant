@@ -21,7 +21,7 @@ namespace GitElephant\Command\Caller;
 
 use GitElephant\Exception\InvalidRepositoryPathException;
 use \GitElephant\GitBinary;
-use GitElephant\Utilities;
+use \GitElephant\Utilities;
 use \Symfony\Component\Process\Process;
 
 /**
