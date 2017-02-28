@@ -46,6 +46,11 @@ class GitBinary
         if (is_null($path)) {
         	$cmd = (Utilities::isWindows() ? "where" : "which") . " git";
             $path = exec($cmd);
+
+	        // Escape spaces in the binary path for windows
+	        if(Utilities::isWindows()) {
+		        $path = '"'.$path.'"';
+	        }
         }
         $this->setPath($path);
     }
