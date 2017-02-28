@@ -21,6 +21,7 @@ namespace GitElephant\Command\Caller;
 
 use GitElephant\Exception\InvalidRepositoryPathException;
 use \GitElephant\GitBinary;
+use GitElephant\Utilities;
 use \Symfony\Component\Process\Process;
 
 /**
@@ -117,8 +118,9 @@ class Caller implements CallerInterface
             throw new \RuntimeException($text);
         }
         $this->rawOutput = $process->getOutput();
-        // rtrim values
-        $values = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
+
+	    $separator = Utilities::isWindows() ? "\n" : PHP_EOL;
+        $values = array_map('rtrim', explode($separator, $process->getOutput()));
         $this->outputLines = $values;
 
         return $this;

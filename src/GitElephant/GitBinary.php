@@ -42,8 +42,8 @@ class GitBinary
     public function __construct($path = null)
     {
         if (is_null($path)) {
-            // unix only!
-            $path = exec('which git');
+        	$cmd = (Utilities::isWindows() ? "where" : "which") . " git";
+            $path = exec($cmd);
         }
         $this->setPath($path);
     }

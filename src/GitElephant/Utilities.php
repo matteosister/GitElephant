@@ -108,4 +108,14 @@ class Utilities
     {
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
+
+	/**
+	 * Returns true if we are running on windows
+	 *
+	 * @return bool
+	 */
+	public static function isWindows()
+	{
+		return strncasecmp(PHP_OS, 'WIN', 3) == 0;
+	}
 }
