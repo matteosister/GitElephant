@@ -1002,6 +1002,7 @@ class Repository
      *
      * @param string $from
      * @param string $ref
+     * @param array $args
      * @param bool   $tags
      *
      * @throws \RuntimeException
@@ -1009,12 +1010,17 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function fetch($from = null, $ref = null, $tags = false)
+    public function fetch($from = null, $ref = null, $args = [], $tags = false)
     {
         $options = array();
         if ($tags === true) {
             $options = array('--tags');
         }
+
+        if(is_array($args)) {
+        	$options = array_merge($options, $args);
+        }
+
         $this->caller->execute(FetchCommand::getInstance($this)->fetch($from, $ref, $options));
     }
 
