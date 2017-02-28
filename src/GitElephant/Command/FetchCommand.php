@@ -31,6 +31,7 @@ class FetchCommand extends BaseCommand
 {
     const GIT_FETCH_COMMAND = 'fetch';
     const GIT_FETCH_OPTION_TAGS = '--tags';
+    const GIT_FETCH_OPTION_ALL = '--all';
 
     /**
      * constructor
@@ -87,6 +88,7 @@ class FetchCommand extends BaseCommand
     {
         return array(
             self::GIT_FETCH_OPTION_TAGS => self::GIT_FETCH_OPTION_TAGS,
+            self::GIT_FETCH_OPTION_ALL => self::GIT_FETCH_OPTION_ALL,
         );
     }
 }
