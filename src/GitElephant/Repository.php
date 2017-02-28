@@ -53,6 +53,7 @@ use \GitElephant\Status\StatusWorkingTree;
 use \Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
 use \Symfony\Component\Finder\SplFileInfo;
+use Illuminate\Support\Facades\Cache;
 
 /**
  * Repository
@@ -391,11 +392,19 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getStatusOutput()
-    {
-        $this->caller->execute(MainCommand::getInstance($this)->status());
+    public function getStatusOutput() {
 
-        return array_map('trim', $this->caller->getOutputLines());
+    	$cacheKey = $this->getName().'_getStatusOutput';
+		if(Cache::has($cacheKey)) {
+
+			return Cache::get($cacheKey);
+		}
+
+        $this->caller->execute(MainCommand::getInstance($this)->status());
+		$outputLines = array_map('trim', $this->caller->getOutputLines());
+		Cache::put($cacheKey, $outputLines, 15);
+
+        return $outputLines;
     }
 
     /**
@@ -450,6 +459,12 @@ class Repository
      */
     public function getBranches($namesOnly = false, $all = false)
     {
+    	$cacheKey = $this->getName().'_getBranches_'.var_export($namesOnly, true).var_export($all, true);
+    	if(Cache::has($cacheKey)) {
+
+    		return Cache::get($cacheKey);
+	    }
+
         $branches = array();
         if ($namesOnly) {
             $outputLines = $this->caller->execute(
@@ -470,6 +485,7 @@ class Repository
             }
         }
 
+	    Cache::put($cacheKey, $branches, 15);
         return $branches;
     }
 
@@ -483,6 +499,12 @@ class Repository
      */
     public function getMainBranch()
     {
+    	$cacheKey = $this->getName().'_getMainBranch';
+	    if(Cache::has($cacheKey)) {
+
+	    	return Cache::get($cacheKey);
+	    }
+
         $filtered = array_filter(
             $this->getBranches(),
             function (Branch $branch) {
@@ -491,6 +513,7 @@ class Repository
         );
         sort($filtered);
 
+        Cache::put($cacheKey, $filtered[0], 15);
         return $filtered[0];
     }
 
