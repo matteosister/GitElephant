@@ -394,8 +394,8 @@ class Repository
      */
     public function getStatusOutput() {
 
-    	$cacheKey = 'getStatusOutput';
-	    $cacheTag = 'repo_'.$this->getName();
+    	$cacheKey = $this->getCacheKey();
+	    $cacheTag = $this->getCacheTag();
 		if(Cache::tags($cacheTag)->has($cacheKey)) {
 
 			return Cache::tags($cacheTag)->get($cacheKey);
@@ -460,8 +460,8 @@ class Repository
      */
     public function getBranches($namesOnly = false, $all = false)
     {
-    	$cacheKey = 'getBranches_'.var_export($namesOnly, true).var_export($all, true);
-    	$cacheTag = 'repo_'.$this->getName();
+    	$cacheKey = $this->getCacheKey();
+    	$cacheTag = $this->getCacheTag();
     	if(Cache::tags($cacheTag)->has($cacheKey)) {
 
     		return Cache::tags($cacheTag)->get($cacheKey);
@@ -501,8 +501,8 @@ class Repository
      */
     public function getMainBranch()
     {
-    	$cacheKey = 'getMainBranch';
-	    $cacheTag = 'repo_'.$this->getName();
+    	$cacheKey = $this->getCacheKey();
+	    $cacheTag = $this->getCacheTag();
 	    if(Cache::tags($cacheTag)->has($cacheKey)) {
 
 	    	return Cache::tags($cacheTag)->get($cacheKey);
@@ -909,9 +909,7 @@ class Repository
         }
         $this->caller->execute(MainCommand::getInstance($this)->checkout($ref));
 
-	    $cacheTag = 'repo_'.$this->getName();
-	    Cache::tags($cacheTag)->flush();
-
+	    $this->flushCache();
         return $this;
     }
 
@@ -1286,5 +1284,28 @@ class Repository
             $index = array_search($value, $this->globalCommandArguments);
             unset($this->globalCommandArguments[$index]);
         }
+    }
+
+	/**
+	 * Return the cache tag for this repository
+	 *
+	 * @return string
+	 */
+	private function getCacheTag() {
+
+    	return 'repo_'.strtolower($this->getName());
+	}
+
+	private function getCacheKey() {
+		$args = array_map('strtolower', debug_backtrace()[1]['args']);
+		return strtolower(debug_backtrace()[1]['function']).'_'.implode("", $args);
+	}
+
+	/**
+	 * Flush the cache for this repository
+	 */
+    public function flushCache() {
+    	$cacheTag = $this->getCacheTag();
+    	Cache::tags($cacheTag)->flush();
     }
 }
