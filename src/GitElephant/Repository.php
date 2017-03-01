@@ -1036,6 +1036,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
+     * @return string
      */
     public function fetch($from = null, $ref = null, $args = [], $tags = false)
     {
@@ -1049,6 +1050,9 @@ class Repository
         }
 
         $this->caller->execute(FetchCommand::getInstance($this)->fetch($from, $ref, $options));
+        $this->flushCache();
+
+        return $this->caller->getOutput();
     }
 
     /**
