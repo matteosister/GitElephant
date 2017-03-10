@@ -223,4 +223,27 @@ class CommitTest extends TestCase
         $revParse = $commit->revParse();
         $this->assertEquals($commit->getSha(), $revParse[0]);
     }
+
+    public function testCommitWithoutTag()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->repository->stage();
+        $commit = Commit::create($this->repository, 'first commit', true);
+        $this->assertFalse($commit->tagged());
+    }
+
+    public function testCommitWithTag()
+    {
+        $this->getRepository()->init();
+        $this->addFile('test');
+        $this->repository->stage();
+        $commit = Commit::create($this->repository, 'first commit', true);
+        Tag::create($this->repository, '1.0.0');
+        $this->assertTrue($commit->tagged());
+        $this->assertCount(1, $commit->getTags());
+        $commitTags = $commit->getTags();
+        $this->assertEquals('1.0.0', $commitTags[0]->getName());
+    }
+
 }
