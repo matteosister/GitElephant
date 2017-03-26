@@ -185,7 +185,6 @@ class MainCommand extends BaseCommand
         }
 
         $this->addCommandName(self::GIT_CHECKOUT);
-        $this->addCommandArgument('-q');
         $this->addCommandSubject($what);
 
         return $this->getCommand();

@@ -19,6 +19,8 @@
 
 namespace GitElephant;
 
+use \GitElephant\Utilities;
+
 /**
  * Git binary
  * It contains the reference to the system git binary
@@ -42,8 +44,13 @@ class GitBinary
     public function __construct($path = null)
     {
         if (is_null($path)) {
-            // unix only!
-            $path = exec('which git');
+        	$cmd = (Utilities::isWindows() ? "where" : "which") . " git";
+            $path = exec($cmd);
+
+	        // Escape spaces in the binary path for windows
+	        if(Utilities::isWindows()) {
+		        $path = '"'.$path.'"';
+	        }
         }
         $this->setPath($path);
     }

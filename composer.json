@@ -15,7 +15,10 @@
         "symfony/process": "~2.0|~3.0",
         "symfony/filesystem": "~2.0|~3.0",
         "symfony/finder": "~2.0|~3.0",
-        "phpcollection/phpcollection": "~0.4"
+        "phpcollection/phpcollection": "~0.4",
+        "illuminate/cache": "~5.4",
+        "illuminate/filesystem": "~5.4",
+        "illuminate/redis": "~5.4"
     },
     "require-dev": {
         "phpunit/phpunit": "~4.8",
@@ -26,10 +29,5 @@
         "psr-0": {
             "GitElephant": "src/"
         }
-    },
-    "config": {
-      "platform": {
-        "php": "5.3.3"
-      }
     }
 }
