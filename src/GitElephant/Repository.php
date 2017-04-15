@@ -719,9 +719,9 @@ class Repository
     public function getLastTag()
     {
         $finder = Finder::create()
-                  ->files()
-                  ->in(sprintf('%s/.git/refs/tags', $this->path))
-                  ->sortByChangedTime();
+            ->files()
+            ->in(sprintf('%s/.git/refs/tags', $this->path))
+            ->sortByChangedTime();
         if ($finder->count() == 0) {
             return null;
         }
