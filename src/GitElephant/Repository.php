@@ -23,7 +23,7 @@ use \GitElephant\Command\FetchCommand;
 use \GitElephant\Command\PullCommand;
 use \GitElephant\Command\PushCommand;
 use \GitElephant\Command\RemoteCommand;
-use \GitElephant\Exception\InvalidRepositoryPathException;
+use GitElephant\Command\ResetCommand;
 use \GitElephant\Command\Caller\Caller;
 use \GitElephant\Objects\Author;
 use \GitElephant\Objects\Remote;
@@ -325,6 +325,15 @@ class Repository
         $this->caller->execute(RevParseCommand::getInstance()->revParse(null, $options));
 
         return trim($this->caller->getOutput()) === 'true';
+    }
+
+    /**
+     * @param TreeishInterface|Commit|string $arg
+     * @param array $options
+     */
+    public function reset($arg,$options)
+    {
+        $this->caller->execute(ResetCommand::getInstance($this)->reset($arg,$options));
     }
 
     /**
@@ -1026,7 +1035,7 @@ class Repository
     }
 
     /**
-     * Fetch from and merge with another repository or a local branch
+     * Push changes to remote repository
      *
      * @param string $to
      * @param string $ref
