@@ -221,7 +221,7 @@ class Commit implements TreeishInterface, \Countable
      */
     private function parseOutputLines($outputLines)
     {
-        $message = '';
+        $message = array();
         foreach ($outputLines as $line) {
             $matches = array();
             if (preg_match('/^commit (\w+)$/', $line, $matches) > 0) {
