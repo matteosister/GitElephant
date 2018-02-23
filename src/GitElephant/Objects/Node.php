@@ -23,12 +23,12 @@ use \GitElephant\Command\RevParseCommand;
 use \GitElephant\Repository;
 
 /**
- * A Object instance represents a node in the git tree repository
+ * A Node instance represents a node in the git tree repository
  * It could be a file or a folder, as well as a submodule (a "link" in the git language)
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class Object implements TreeishInterface
+class Node implements TreeishInterface
 {
     const TYPE_BLOB = 'blob';
     const TYPE_TREE = 'tree';
@@ -127,14 +127,14 @@ class Object implements TreeishInterface
         $permissions = $matches[1];
         $type        = null;
         switch ($matches[2]) {
-            case Object::TYPE_TREE:
-                $type = Object::TYPE_TREE;
+            case Node::TYPE_TREE:
+                $type = Node::TYPE_TREE;
                 break;
-            case Object::TYPE_BLOB:
-                $type = Object::TYPE_BLOB;
+            case Node::TYPE_BLOB:
+                $type = Node::TYPE_BLOB;
                 break;
-            case Object::TYPE_LINK:
-                $type = Object::TYPE_LINK;
+            case Node::TYPE_LINK:
+                $type = Node::TYPE_LINK;
                 break;
         }
         $sha      = $matches[3];

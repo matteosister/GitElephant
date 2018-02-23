@@ -28,7 +28,7 @@ use \GitElephant\Repository;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class Branch extends Object implements TreeishInterface
+class Branch extends Node implements TreeishInterface
 {
     /**
      * current checked out branch
