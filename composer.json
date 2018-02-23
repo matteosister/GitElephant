@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.3.3 <7.2.0",
         "symfony/process": "~2.0|~3.0",
         "symfony/filesystem": "~2.0|~3.0",
         "symfony/finder": "~2.0|~3.0",
