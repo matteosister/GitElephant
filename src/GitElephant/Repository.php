@@ -310,7 +310,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function revParse($arg = null, Array $options = array())
+    public function revParse($arg = null, array $options = array())
     {
         $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
 
@@ -333,7 +333,7 @@ class Repository
      * @param TreeishInterface|Commit|string $arg
      * @param array $options
      */
-    public function reset($arg,$options)
+    public function reset($arg, $options)
     {
         $this->caller->execute(ResetCommand::getInstance($this)->reset($arg,$options));
     }

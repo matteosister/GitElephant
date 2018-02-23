@@ -53,7 +53,7 @@ class StashCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' save');
-        if ($message) {
+        if (!is_null($message)) {
             $this->addCommandSubject($message);
         }
 
