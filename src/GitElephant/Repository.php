@@ -25,7 +25,6 @@ use \GitElephant\Command\PushCommand;
 use \GitElephant\Command\RemoteCommand;
 use GitElephant\Command\ResetCommand;
 use \GitElephant\Command\Caller\Caller;
-use GitElephant\Command\StashCommand;
 use \GitElephant\Objects\Author;
 use \GitElephant\Objects\Remote;
 use \GitElephant\Objects\Tree;
@@ -62,7 +61,6 @@ use \Symfony\Component\Finder\SplFileInfo;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  * @author Dhaval Patel <tech.dhaval@gmail.com>
- * @author Kirk Madera <kmadera@robofirm.com>
  */
 class Repository
 {
@@ -89,21 +87,21 @@ class Repository
 
     /**
      * A list of global configs to apply to every command
-     *
+     * 
      * @var array
      */
     private $globalConfigs = array();
 
     /**
      * A list of global options to apply to every command
-     *
+     * 
      * @var array
      */
     private $globalOptions = array();
 
     /**
      * A list of global arguments to apply to every command
-     *
+     * 
      * @var array
      */
     private $globalCommandArguments = array();
@@ -310,7 +308,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function revParse($arg = null, array $options = array())
+    public function revParse($arg = null, Array $options = array())
     {
         $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
 
@@ -333,7 +331,7 @@ class Repository
      * @param TreeishInterface|Commit|string $arg
      * @param array $options
      */
-    public function reset($arg, $options)
+    public function reset($arg,$options)
     {
         $this->caller->execute(ResetCommand::getInstance($this)->reset($arg,$options));
     }
@@ -363,20 +361,20 @@ class Repository
     {
         return StatusIndex::get($this);
     }
-
+    
     /**
      * isClean Return true if the repository is not dirty.
-     *
+     * 
      * @return boolean
      */
     public function isClean()
     {
         return $this->getStatus()->all()->isEmpty();
     }
-
+    
     /**
      * isDirty Return true if the repository has some modified files.
-     *
+     * 
      * @return boolean
      */
     public function isDirty()
@@ -1242,7 +1240,7 @@ class Repository
     }
 
     /**
-     * remove an element form the global command argument list, identified by
+     * remove an element form the global command argument list, identified by 
      * value
      *
      * @param  string $value The command argument
@@ -1253,116 +1251,5 @@ class Repository
             $index = array_search($value, $this->globalCommandArguments);
             unset($this->globalCommandArguments[$index]);
         }
-    }
-
-    /**
-     *  Save your local modifications to a new stash, and run git reset --hard to revert them.
-     *
-     * @param string|null $message
-     * @param boolean $includeUntracked
-     * @param boolean $keepIndex
-     */
-    public function stash($message = null, $includeUntracked = false, $keepIndex = false)
-    {
-        $command = (StashCommand::getInstance($this))->save($message, $includeUntracked, $keepIndex);
-        $this->caller->execute($command);
-    }
-
-    /**
-     * Shows stash list
-     *
-     * @param array|null $options
-     *
-     * @return array
-     */
-    public function stashList(array $options = null)
-    {
-        $command = (StashCommand::getInstance($this))->list($options);
-        $this->caller->execute($command);
-        return array_map('trim', $this->caller->getOutputLines(true));
-    }
-
-    /**
-     * Shows details for a stash
-     *
-     * @param string $stash
-     *
-     * @return string
-     */
-    public function stashShow($stash)
-    {
-        $command = (StashCommand::getInstance($this))->show($stash);
-        $this->caller->execute($command);
-        return $this->caller->getOutput();
-    }
-
-    /**
-     * Drops a stash
-     *
-     * @param string $stash
-     */
-    public function stashDrop($stash)
-    {
-        $command = (StashCommand::getInstance($this))->drop($stash);
-        $this->caller->execute($command);
-    }
-
-    /**
-     * Applies a stash
-     *
-     * @param string $stash
-     * @param boolean $index
-     */
-    public function stashApply($stash, $index = false)
-    {
-        $command = (StashCommand::getInstance($this))->apply($stash, $index);
-        $this->caller->execute($command);
-    }
-
-    /**
-     *  Applies a stash, then removes it from the stash
-     *
-     * @param string $stash
-     * @param boolean $index
-     */
-    public function stashPop($stash, $index = false)
-    {
-        $command = (StashCommand::getInstance($this))->pop($stash, $index);
-        $this->caller->execute($command);
-    }
-
-    /**
-     *  Creates and checks out a new branch named <branchname> starting from the commit at which the <stash> was originally created
-     *
-     * @param string $branch
-     * @param string $stash
-     */
-    public function stashBranch($branch, $stash)
-    {
-        $command = (StashCommand::getInstance($this))->branch($branch, $stash);
-        $this->caller->execute($command);
-    }
-
-    /**
-     *  Save your local modifications to a new stash, and run git reset --hard to revert them.
-     *
-     */
-    public function stashClear()
-    {
-        $command = (StashCommand::getInstance($this))->clear();
-        $this->caller->execute($command);
-    }
-
-    /**
-     *  Create a stash (which is a regular commit object) and return its object name, without storing it anywhere in the
-     *  ref namespace.
-     *
-     * @return string
-     */
-    public function stashCreate()
-    {
-        $command = (StashCommand::getInstance($this))->clear();
-        $this->caller->execute($command);
-        return $this->caller->getOutput();
     }
 }
