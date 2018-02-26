@@ -33,8 +33,8 @@ class StashCommandTest extends TestCase
     public function testList()
     {
         $command = StashCommand::getInstance();
-        $this->assertEquals("stash list", $command->list());
-        $this->assertEquals("stash list '-p'", $command->list(['-p']));
+        $this->assertEquals("stash list", $command->listStashes());
+        $this->assertEquals("stash list '-p'", $command->listStashes(array('-p')));
     }
 
     /**

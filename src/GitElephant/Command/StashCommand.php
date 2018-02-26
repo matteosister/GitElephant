@@ -48,6 +48,8 @@ class StashCommand extends BaseCommand
      * @param string|null $message
      * @param boolean $includeUntracked
      * @param boolean $keepIndex
+     *
+     * @return string
      */
     public function save($message = null, $includeUntracked = false, $keepIndex = false)
     {
@@ -75,7 +77,7 @@ class StashCommand extends BaseCommand
      *
      * @return string
      */
-    public function list(array $options = null)
+    public function listStashes(array $options = null)
     {
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' list');
@@ -162,6 +164,8 @@ class StashCommand extends BaseCommand
      *
      * @param string $branch
      * @param string $stash
+     *
+     * @return string
      */
     public function branch($branch, $stash)
     {

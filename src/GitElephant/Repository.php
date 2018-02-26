@@ -54,6 +54,7 @@ use \GitElephant\Status\StatusWorkingTree;
 use \Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
 use \Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Process\Exception\InvalidArgumentException;
 
 /**
  * Repository
@@ -180,7 +181,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -198,7 +199,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -216,7 +217,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -236,7 +237,7 @@ class Repository
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \InvalidArgumentException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -257,7 +258,7 @@ class Repository
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \InvalidArgumentException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -271,10 +272,11 @@ class Repository
     /**
      * Commit content to the repository, eventually staging all unstaged content
      *
-     * @param string        $message  the commit message
-     * @param bool          $stageAll whether to stage on not everything before commit
-     * @param string|null   $ref      the reference to commit to (checkout -> commit -> checkout previous)
-     * @param string|Author $author   override the author for this commit
+     * @param string        $message    the commit message
+     * @param bool          $stageAll   whether to stage on not everything before commit
+     * @param string|null   $ref        the reference to commit to (checkout -> commit -> checkout previous)
+     * @param string|Author $author     override the author for this commit
+     * @param bool          $allowEmpty override the author for this commit
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
@@ -349,7 +351,7 @@ class Repository
     }
 
     /**
-     * @return StatusWorkingTree
+     * @return Status
      */
     public function getWorkingTreeStatus()
     {
@@ -357,7 +359,7 @@ class Repository
     }
 
     /**
-     * @return StatusIndex
+     * @return Status
      */
     public function getIndexStatus()
     {
@@ -389,7 +391,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
@@ -426,7 +428,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -444,7 +446,7 @@ class Repository
      * @param bool $all       lists also remote branches
      *
      * @throws \RuntimeException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
@@ -558,7 +560,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -570,7 +572,7 @@ class Repository
             'no-ff',   // force 3-way merge
         );
         if (!in_array($mode, $valid_modes)) {
-            throw new \Symfony\Component\Process\Exception\InvalidArgumentException("Invalid merge mode: $mode.");
+            throw new InvalidArgumentException("Invalid merge mode: $mode.");
         }
 
         $options = array();
@@ -636,7 +638,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -681,7 +683,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
@@ -792,7 +794,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return int|void
+     * @return int
      */
     public function countCommits($start = 'HEAD')
     {
@@ -827,7 +829,7 @@ class Repository
      * @param int|null      $offset      skip n entries
      * @param boolean|false $firstParent skip commits brought in to branch by a merge
      *
-     * @return \GitElephant\Objects\LogRange
+     * @return \GitElephant\Objects\LogRange|\GitElephant\Objects\Log
      */
     public function getLogRange($refStart, $refEnd, $path = null, $limit = 10, $offset = null, $firstParent = false)
     {
@@ -854,11 +856,11 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Log
      */
-    public function getObjectLog(Object $obj, $branch = null, $limit = 1, $offset = null)
+    public function getObjectLog(\GitElephant\Objects\Object $obj, $branch = null, $limit = 1, $offset = null)
     {
         $command = LogCommand::getInstance($this)->showObjectLog($obj, $branch, $limit, $offset);
 
@@ -874,7 +876,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -897,7 +899,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Objects\Tree
      */
@@ -937,7 +939,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -954,7 +956,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -983,7 +985,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
@@ -1008,7 +1010,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
     public function fetch($from = null, $ref = null, $tags = false)
@@ -1028,7 +1030,7 @@ class Repository
      * @param bool   $rebase
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
     public function pull($from = null, $ref = null, $rebase = true)
@@ -1043,7 +1045,7 @@ class Repository
      * @param string $ref
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
     public function push($to = null, $ref = null)
@@ -1073,11 +1075,11 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function outputContent(Object $obj, $treeish)
+    public function outputContent(\GitElephant\Objects\Object $obj, $treeish)
     {
         $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
 
@@ -1092,11 +1094,11 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return string
      */
-    public function outputRawContent(Object $obj, $treeish)
+    public function outputRawContent(\GitElephant\Objects\Object $obj, $treeish)
     {
         $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
 
@@ -1277,7 +1279,7 @@ class Repository
      */
     public function stashList(array $options = null)
     {
-        $command = (StashCommand::getInstance($this))->list($options);
+        $command = (StashCommand::getInstance($this))->listStashes($options);
         $this->caller->execute($command);
         return array_map('trim', $this->caller->getOutputLines(true));
     }

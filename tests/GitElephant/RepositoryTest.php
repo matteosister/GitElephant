@@ -37,22 +37,22 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::__construct
-     * @covers GitElephant\Repository::getPath
+     * @covers \GitElephant\Repository::__construct
+     * @covers \GitElephant\Repository::getPath
      */
     public function testConstruct()
     {
         $this->assertEquals($this->getRepository()->getPath(), $this->path);
 
         $this->setExpectedException('GitElephant\Exception\InvalidRepositoryPathException');
-        $repo = new Repository('non-existent-path');
+        new Repository('non-existent-path');
 
         $repo = Repository::open($this->path);
         $this->assertInstanceOf('GitElephant\Repository', $repo);
     }
 
     /**
-     * @covers GitElephant\Repository::init
+     * @covers \GitElephant\Repository::init
      */
     public function testInit()
     {
@@ -80,7 +80,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::stage
+     * @covers \GitElephant\Repository::stage
      */
     public function testStage()
     {
@@ -97,7 +97,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::unstage
+     * @covers \GitElephant\Repository::unstage
      */
     public function testUnstage()
     {
@@ -116,8 +116,8 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::commit
-     * @covers GitElephant\Repository::getStatusOutput
+     * @covers \GitElephant\Repository::commit
+     * @covers \GitElephant\Repository::getStatusOutput
      */
     public function testCommit()
     {
@@ -146,7 +146,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getStatusOutput
+     * @covers \GitElephant\Repository::getStatusOutput
      */
     public function testGetStatus()
     {
@@ -161,7 +161,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::createBranch
+     * @covers \GitElephant\Repository::createBranch
      */
     public function testCreateBranch()
     {
@@ -173,7 +173,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::deleteBranch
+     * @covers \GitElephant\Repository::deleteBranch
      */
     public function testDeleteBranch()
     {
@@ -193,7 +193,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getBranches
+     * @covers \GitElephant\Repository::getBranches
      */
     public function testGetBranches()
     {
@@ -209,10 +209,11 @@ class RepositoryTest extends TestCase
         $this->getRepository()->createBranch('test-branch');
         $this->assertCount(2, $this->getRepository()->getBranches(), 'two branches expected');
         $branches = $this->getRepository()->getBranches();
-        $this->assertEquals('master', $branches[0]->getName());
+        /** @var Branch $branch */
+        $branch = $branches[0];
+        $this->assertEquals('master', $branch->getName());
         $this->getRepository()->deleteBranch('test-branch');
         $this->assertCount(1, $this->getRepository()->getBranches(), 'one branch expected');
-        $mainBranch = $this->getRepository()->getMainBranch();
         $this->assertInstanceOf(
             'GitElephant\Objects\Branch',
             $this->getRepository()->getMainBranch(),
@@ -234,7 +235,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getMainBranch
+     * @covers \GitElephant\Repository::getMainBranch
      */
     public function testGetMainBranch()
     {
@@ -245,7 +246,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getBranch
+     * @covers \GitElephant\Repository::getBranch
      */
     public function testGetBranch()
     {
@@ -257,7 +258,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::merge
+     * @covers \GitElephant\Repository::merge
      */
     public function testMerge()
     {
@@ -303,10 +304,10 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getTags
-     * @covers GitElephant\Repository::getTag
-     * @covers GitElephant\Repository::createTag
-     * @covers GitElephant\Repository::deleteTag
+     * @covers \GitElephant\Repository::getTags
+     * @covers \GitElephant\Repository::getTag
+     * @covers \GitElephant\Repository::createTag
+     * @covers \GitElephant\Repository::deleteTag
      */
     public function testTags()
     {
@@ -346,7 +347,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getCommit
+     * @covers \GitElephant\Repository::getCommit
      */
     public function testGetCommit()
     {
@@ -369,7 +370,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getObjectLog
+     * @covers \GitElephant\Repository::getObjectLog
      */
     public function testGetObjectLog()
     {
@@ -410,7 +411,7 @@ class RepositoryTest extends TestCase
     /**
      * Test logs on different tree objects
      *
-     * @covers GitElephant\Repository::getObjectLog
+     * @covers \GitElephant\Repository::getObjectLog
      */
     public function testGetObjectLogFolders()
     {
@@ -451,7 +452,7 @@ class RepositoryTest extends TestCase
     /**
      * Test logs on different branches
      *
-     * @covers GitElephant\Repository::getObjectLog
+     * @covers \GitElephant\Repository::getObjectLog
      */
     public function testGetObjectLogBranches()
     {
@@ -491,7 +492,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getLog
+     * @covers \GitElephant\Repository::getLog
      */
     public function testGetLog()
     {
@@ -508,7 +509,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getLog
+     * @covers \GitElephant\Repository::getLog
      */
     public function testGetLog_for_a_branch()
     {
@@ -528,7 +529,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::checkout
+     * @covers \GitElephant\Repository::checkout
      */
     public function testCheckout()
     {
@@ -542,7 +543,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::checkout
+     * @covers \GitElephant\Repository::checkout
      */
     public function testCheckoutTag()
     {
@@ -563,8 +564,8 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getTree
-     * @covers GitElephant\Objects\Tree
+     * @covers \GitElephant\Repository::getTree
+     * @covers \GitElephant\Objects\Tree
      */
     public function testGetTree()
     {
@@ -622,7 +623,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::getDiff
+     * @covers \GitElephant\Repository::getDiff
      */
     public function testGetDiff()
     {
@@ -735,7 +736,6 @@ class RepositoryTest extends TestCase
     /**
      * testCreateFromRemote
      *
-     * @return null
      */
     public function testCreateFromRemote()
     {
@@ -879,9 +879,9 @@ class RepositoryTest extends TestCase
     /**
      * test add, remove and get global configs
      *
-     * @covers GitElephant\Repository::addGlobalConfig
-     * @covers GitElephant\Repository::getGlobalConfigs
-     * @covers GitElephant\Repository::removeGlobalConfig
+     * @covers \GitElephant\Repository::addGlobalConfig
+     * @covers \GitElephant\Repository::getGlobalConfigs
+     * @covers \GitElephant\Repository::removeGlobalConfig
      */
     public function testGlobalConfigs()
     {
@@ -900,7 +900,7 @@ class RepositoryTest extends TestCase
         $this->assertSame($configs, $repo->getGlobalConfigs());
 
         foreach ($configs as $configName => $configValue) {
-            $repo->removeGlobalConfig($configName, $configValue);
+            $repo->removeGlobalConfig($configName);
         }
         $this->assertEmpty($repo->getGlobalConfigs());
     }
@@ -952,9 +952,9 @@ class RepositoryTest extends TestCase
     /**
      * test add, remove and get global options
      *
-     * @covers GitElephant\Repository::addGlobalOption
-     * @covers GitElephant\Repository::getGlobalOptions
-     * @covers GitElephant\Repository::removeGlobalOption
+     * @covers \GitElephant\Repository::addGlobalOption
+     * @covers \GitElephant\Repository::getGlobalOptions
+     * @covers \GitElephant\Repository::removeGlobalOption
      */
     public function testGlobalOptions()
     {
@@ -973,7 +973,7 @@ class RepositoryTest extends TestCase
         $this->assertSame($options, $repo->getGlobalOptions());
 
         foreach ($options as $configName => $configValue) {
-            $repo->removeGlobalOption($configName, $configValue);
+            $repo->removeGlobalOption($configName);
         }
         $this->assertEmpty($repo->getGlobalOptions());
     }
@@ -981,9 +981,9 @@ class RepositoryTest extends TestCase
     /**
      * test add, remove and get global command arguments
      *
-     * @covers GitElephant\Repository::addGlobalCommandArgument
-     * @covers GitElephant\Repository::getGlobalCommandArguments
-     * @covers GitElephant\Repository::removeGlobalCommandArgument
+     * @covers \GitElephant\Repository::addGlobalCommandArgument
+     * @covers \GitElephant\Repository::getGlobalCommandArguments
+     * @covers \GitElephant\Repository::removeGlobalCommandArgument
      */
     public function testGlobalCommandArguments()
     {
@@ -1008,19 +1008,19 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::stash
+     * @covers \GitElephant\Repository::stash
      */
     public function testStashThrowsExceptionIfNoCommits()
     {
         $this->getRepository()->init();
         $this->addFile('test');
 
-        $this->setExpectedException(\RuntimeException::class);
+        $this->setExpectedException('RuntimeException');
         $this->getRepository()->stash('My stash', true);
     }
 
     /**
-     * @covers GitElephant\Repository::stash
+     * @covers \GitElephant\Repository::stash
      */
     public function testStash()
     {
@@ -1030,11 +1030,12 @@ class RepositoryTest extends TestCase
         $this->addFile('test2');
         $this->getRepository()->stash('My stash', true);
         $this->assertTrue($this->getRepository()->isClean());
-        $this->assertEquals(1, preg_match('%My stash%', $this->getRepository()->stashList()[0]));
+        $stashList = $this->getRepository()->stashList();
+        $this->assertEquals(1, preg_match('%My stash%', $stashList[0]));
     }
 
     /**
-     * @covers GitElephant\Repository::stashList
+     * @covers \GitElephant\Repository::stashList
      */
     public function testStashList()
     {
@@ -1047,7 +1048,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::stashShow
+     * @covers \GitElephant\Repository::stashShow
      */
     public function testStashShow()
     {
@@ -1060,7 +1061,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::stashDrop
+     * @covers \GitElephant\Repository::stashDrop
      */
     public function testStashDrop()
     {
@@ -1074,7 +1075,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::stashPop
+     * @covers \GitElephant\Repository::stashPop
      */
     public function testStashPop()
     {
@@ -1089,7 +1090,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::stashApply
+     * @covers \GitElephant\Repository::stashApply
      */
     public function testStashApply()
     {
@@ -1104,7 +1105,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::stashBranch
+     * @covers \GitElephant\Repository::stashBranch
      */
     public function testStashBranch()
     {
@@ -1118,7 +1119,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::stashCreate
+     * @covers \GitElephant\Repository::stashCreate
      */
     public function testStashCreate()
     {
@@ -1130,7 +1131,7 @@ class RepositoryTest extends TestCase
     }
 
     /**
-     * @covers GitElephant\Repository::stashCreate
+     * @covers \GitElephant\Repository::stashCreate
      */
     public function testStashClear()
     {
