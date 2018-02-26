@@ -1266,7 +1266,8 @@ class Repository
      */
     public function stash($message = null, $includeUntracked = false, $keepIndex = false)
     {
-        $command = (StashCommand::getInstance($this))->save($message, $includeUntracked, $keepIndex);
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->save($message, $includeUntracked, $keepIndex);
         $this->caller->execute($command);
     }
 
@@ -1279,7 +1280,8 @@ class Repository
      */
     public function stashList(array $options = null)
     {
-        $command = (StashCommand::getInstance($this))->listStashes($options);
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->listStashes($options);
         $this->caller->execute($command);
         return array_map('trim', $this->caller->getOutputLines(true));
     }
@@ -1293,7 +1295,8 @@ class Repository
      */
     public function stashShow($stash)
     {
-        $command = (StashCommand::getInstance($this))->show($stash);
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->show($stash);
         $this->caller->execute($command);
         return $this->caller->getOutput();
     }
@@ -1305,7 +1308,8 @@ class Repository
      */
     public function stashDrop($stash)
     {
-        $command = (StashCommand::getInstance($this))->drop($stash);
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->drop($stash);
         $this->caller->execute($command);
     }
 
@@ -1317,7 +1321,8 @@ class Repository
      */
     public function stashApply($stash, $index = false)
     {
-        $command = (StashCommand::getInstance($this))->apply($stash, $index);
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->apply($stash, $index);
         $this->caller->execute($command);
     }
 
@@ -1329,7 +1334,8 @@ class Repository
      */
     public function stashPop($stash, $index = false)
     {
-        $command = (StashCommand::getInstance($this))->pop($stash, $index);
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->pop($stash, $index);
         $this->caller->execute($command);
     }
 
@@ -1341,7 +1347,8 @@ class Repository
      */
     public function stashBranch($branch, $stash)
     {
-        $command = (StashCommand::getInstance($this))->branch($branch, $stash);
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->branch($branch, $stash);
         $this->caller->execute($command);
     }
 
@@ -1351,7 +1358,8 @@ class Repository
      */
     public function stashClear()
     {
-        $command = (StashCommand::getInstance($this))->clear();
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->clear();
         $this->caller->execute($command);
     }
 
@@ -1363,7 +1371,8 @@ class Repository
      */
     public function stashCreate()
     {
-        $command = (StashCommand::getInstance($this))->clear();
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->clear();
         $this->caller->execute($command);
         return $this->caller->getOutput();
     }
