@@ -31,7 +31,7 @@ use \GitElephant\Command\CatFileCommand;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
+class Tree extends Node implements \ArrayAccess, \Countable, \Iterator
 {
     /**
      * @var string
@@ -69,7 +69,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
     /**
      * the blob of the actual tree
      *
-     * @var \GitElephant\Objects\Object
+     * @var \GitElephant\Objects\Node
      */
     private $blob;
 
@@ -113,7 +113,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @internal param \GitElephant\Objects\Object|string $treeObject Object instance
+     * @internal param \GitElephant\Objects\Node|string $treeObject Node instance
      */
     public function __construct(Repository $repository, $ref = 'HEAD', $subject = null)
     {
@@ -187,7 +187,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      */
     public function isBinary()
     {
-        return $this->isRoot() ? false : Object::TYPE_BLOB === $this->subject->getType();
+        return $this->isRoot() ? false : Node::TYPE_BLOB === $this->subject->getType();
     }
 
     /**
@@ -258,7 +258,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
             return;
         }
         if (1 === count($outputLines)) {
-            $treeObject = Object::createFromOutputLine($this->repository, $outputLines[0]);
+            $treeObject = Node::createFromOutputLine($this->repository, $outputLines[0]);
             if ($treeObject->getSha() === $this->subject->getSha()) {
                 $this->blob = $treeObject;
             }
@@ -269,12 +269,12 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
      * Reorder children of the tree
      * Tree first (alphabetically) and then blobs (alphabetically)
      *
-     * @param \GitElephant\Objects\Object $a the first object
-     * @param \GitElephant\Objects\Object $b the second object
+     * @param \GitElephant\Objects\Node $a the first object
+     * @param \GitElephant\Objects\Node $b the second object
      *
      * @return int
      */
-    private function sortChildren(Object $a, Object $b)
+    private function sortChildren(Node $a, Node $b)
     {
         if ($a->getType() == $b->getType()) {
             $names = array($a->getName(), $b->getName());
@@ -283,7 +283,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
             return ($a->getName() == $names[0]) ? -1 : 1;
         }
 
-        return $a->getType() == Object::TYPE_TREE || $b->getType() == Object::TYPE_BLOB ? -1 : 1;
+        return $a->getType() == Node::TYPE_TREE || $b->getType() == Node::TYPE_BLOB ? -1 : 1;
     }
 
     /**
@@ -298,7 +298,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
         if ($line == '') {
             return;
         }
-        $slices = Object::getLineSlices($line);
+        $slices = Node::getLineSlices($line);
         if ($this->isBlob()) {
             $this->pathChildren[] = $this->blob->getName();
         } else {
@@ -384,7 +384,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
     /**
      * get the tree object for this tree
      *
-     * @return \GitElephant\Objects\Object
+     * @return \GitElephant\Objects\Node
      */
     public function getObject()
     {
@@ -398,7 +398,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
     /**
      * Blob getter
      *
-     * @return \GitElephant\Objects\Object
+     * @return \GitElephant\Objects\Node
      */
     public function getBlob()
     {
@@ -408,7 +408,7 @@ class Tree extends Object implements \ArrayAccess, \Countable, \Iterator
     /**
      * Get Subject
      *
-     * @return \GitElephant\Objects\Object
+     * @return \GitElephant\Objects\Node
      */
     public function getSubject()
     {

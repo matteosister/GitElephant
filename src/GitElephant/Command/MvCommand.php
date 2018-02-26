@@ -19,7 +19,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Object;
+use \GitElephant\Objects\Node;
 use \GitElephant\Repository;
 
 /**
@@ -34,7 +34,7 @@ class MvCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -43,7 +43,7 @@ class MvCommand extends BaseCommand
     }
 
     /**
-     * @param string|Object $source source name
+     * @param string|Node $source source name
      * @param string        $target dest name
      *
      * @throws \RuntimeException
@@ -52,7 +52,7 @@ class MvCommand extends BaseCommand
      */
     public function rename($source, $target)
     {
-        if ($source instanceof Object) {
+        if ($source instanceof Node) {
             if (!$source->isBlob()) {
                 throw new \InvalidArgumentException("The given object is not a blob, it couldn't be renamed");
             }

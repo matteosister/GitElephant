@@ -21,7 +21,7 @@ namespace GitElephant\Command;
 
 use \GitElephant\Objects\Branch;
 use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Objects\Object;
+use \GitElephant\Objects\Node;
 use \GitElephant\Repository;
 
 /**
@@ -36,7 +36,7 @@ class LsTreeCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -73,15 +73,15 @@ class LsTreeCommand extends BaseCommand
     /**
      * tree of a given path
      *
-     * @param string        $ref  reference
-     * @param string|Object $path path
+     * @param string      $ref  reference
+     * @param string|Node $path path
      *
      * @throws \RuntimeException
      * @return string
      */
     public function tree($ref = 'HEAD', $path = null)
     {
-        if ($path instanceof Object) {
+        if ($path instanceof Node) {
             $subjectPath = $path->getFullPath() . ($path->isTree() ? '/' : '');
         } else {
             $subjectPath = $path;

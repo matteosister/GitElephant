@@ -58,9 +58,9 @@ class TreeTest extends TestCase
         $tree = $this->repository->getTree('HEAD');
         $this->assertCount(3, $tree);
         $treeObj1 = $tree[0];
-        $this->assertEquals(Object::TYPE_TREE, $treeObj1->getType());
+        $this->assertEquals(Node::TYPE_TREE, $treeObj1->getType());
         $treeObj2 = $tree[1];
-        $this->assertEquals(Object::TYPE_BLOB, $treeObj2->getType());
+        $this->assertEquals(Node::TYPE_BLOB, $treeObj2->getType());
     }
 
     /**
@@ -75,7 +75,7 @@ class TreeTest extends TestCase
         $this->assertInstanceOf('Countable', $tree);
         $this->assertCount(3, $tree);
         $treeObjChild = $tree[0];
-        $this->assertEquals(Object::TYPE_TREE, $treeObjChild->getType());
+        $this->assertEquals(Node::TYPE_TREE, $treeObjChild->getType());
         $tree = $this->repository->getTree('HEAD', $treeObjChild);
         $this->assertCount(1, $tree);
     }
@@ -99,7 +99,7 @@ class TreeTest extends TestCase
         $this->assertContains('.gitmodules', $tree);
         $this->assertContains($this->repository->getHumanishName(), $tree);
         $submodule = $tree[0];
-        $this->assertEquals(Object::TYPE_LINK, $submodule->getType());
+        $this->assertEquals(Node::TYPE_LINK, $submodule->getType());
     }
 
     /**
@@ -125,8 +125,8 @@ class TreeTest extends TestCase
         $this->assertNull($tree->getObject());
         $tree = $this->getRepository()->getTree('HEAD', 'test');
         $this->assertNotNull($tree->getObject());
-        $this->assertEquals(Object::TYPE_TREE, $tree->getObject()->getType());
+        $this->assertEquals(Node::TYPE_TREE, $tree->getObject()->getType());
         $tree = $this->getRepository()->getTree('HEAD', 'test/1');
-        $this->assertEquals(Object::TYPE_BLOB, $tree->getObject()->getType());
+        $this->assertEquals(Node::TYPE_BLOB, $tree->getObject()->getType());
     }
 }

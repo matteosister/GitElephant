@@ -28,7 +28,7 @@ use \GitElephant\Command\RevListCommand;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class Tag extends Object
+class Tag extends Node
 {
     /**
      * tag name
