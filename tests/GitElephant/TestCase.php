@@ -27,7 +27,7 @@ use \Mockery as m;
  *
  * @package GitElephant
  */
-class TestCase extends \PHPUnit_Framework_TestCase
+class TestCase extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \GitElephant\Command\Caller\CallerInterface
@@ -202,12 +202,25 @@ class TestCase extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @param $classname
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject
+     */
+    protected function getMock($classname)
+    {
+        return $this
+            ->getMockBuilder($classname)
+            ->disableOriginalConstructor()
+            ->getMock();
+    }
+
+    /**
      * mock the caller
      *
      * @param string $command command
      * @param string $output  output
      *
-     * @return \PHPUnit_Framework_MockObject_MockObject
+     * @return \PHPUnit\Framework\MockObject\MockObject
      */
     protected function getMockCaller($command, $output)
     {
@@ -229,7 +242,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
         return $this->getMock('GitElephant\Command\CommandContainer');
     }
 
-    protected function addCommandToMockContainer(\PHPUnit_Framework_MockObject_MockObject $container, $commandName)
+    protected function addCommandToMockContainer(\PHPUnit\Framework\MockObject\MockObject $container, $commandName)
     {
         $container
             ->expects($this->any())
@@ -238,7 +251,7 @@ class TestCase extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($this->getMockCommand()));
     }
 
-    protected function addOutputToMockRepo(\PHPUnit_Framework_MockObject_MockObject $repo, $output)
+    protected function addOutputToMockRepo(\PHPUnit\Framework\MockObject\MockObject $repo, $output)
     {
         $repo
             ->expects($this->any())

@@ -30,7 +30,7 @@ use \GitElephant\Objects\Remote;
 use \GitElephant\Objects\Tree;
 use \GitElephant\Objects\Branch;
 use \GitElephant\Objects\Tag;
-use \GitElephant\Objects\Object;
+use \GitElephant\Objects\NodeObject;
 use \GitElephant\Objects\Diff\Diff;
 use \GitElephant\Objects\Commit;
 use \GitElephant\Objects\Log;
@@ -192,7 +192,7 @@ class Repository
     /**
      * Stage the working tree content
      *
-     * @param string|Object $path the path to store
+     * @param string|NodeObject $path the path to store
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -210,7 +210,7 @@ class Repository
     /**
      * Unstage a tree content
      *
-     * @param string|Object $path the path to unstage
+     * @param string|NodeObject $path the path to unstage
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -228,8 +228,8 @@ class Repository
     /**
      * Move a file/directory
      *
-     * @param string|Object $from source path
-     * @param string|Object $to   destination path
+     * @param string|NodeObject $from source path
+     * @param string|NodeObject $to   destination path
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -248,9 +248,9 @@ class Repository
     /**
      * Remove a file/directory
      *
-     * @param string|Object $path      the path to remove
-     * @param bool          $recursive recurse
-     * @param bool          $force     force
+     * @param string|NodeObject $path      the path to remove
+     * @param bool              $recursive recurse
+     * @param bool              $force     force
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -300,8 +300,8 @@ class Repository
     /**
      * rev-parse command - often used to return a commit tag.
      *
-     * @param array                  $options the options to apply to rev-parse
-     * @param string|Object|Commit   $arg the argument (may be a branch head, etc)
+     * @param array                    $options the options to apply to rev-parse
+     * @param string|NodeObject|Commit $arg     the argument (may be a branch head, etc)
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
@@ -803,7 +803,7 @@ class Repository
      * Get a log for a ref
      *
      * @param string|TreeishInterface|array $ref         the treeish to check, as a string, as an object or as an array
-     * @param string|Object                 $path        the physical path to the tree relative to the repository root
+     * @param string|NodeObject             $path        the physical path to the tree relative to the repository root
      * @param int|null                      $limit       limit to n entries
      * @param int|null                      $offset      skip n entries
      * @param boolean|false                 $firstParent skip commits brought in to branch by a merge
@@ -818,12 +818,12 @@ class Repository
     /**
      * Get a log for a range ref
      *
-     * @param string        $refStart
-     * @param string        $refEnd
-     * @param string|Object $path        the physical path to the tree relative to the repository root
-     * @param int|null      $limit       limit to n entries
-     * @param int|null      $offset      skip n entries
-     * @param boolean|false $firstParent skip commits brought in to branch by a merge
+     * @param string            $refStart
+     * @param string            $refEnd
+     * @param string|NodeObject $path        the physical path to the tree relative to the repository root
+     * @param int|null          $limit       limit to n entries
+     * @param int|null          $offset      skip n entries
+     * @param boolean|false     $firstParent skip commits brought in to branch by a merge
      *
      * @return \GitElephant\Objects\LogRange
      */
@@ -845,7 +845,7 @@ class Repository
     /**
      * Get a log for an object
      *
-     * @param \GitElephant\Objects\Object             $obj    The Object instance
+     * @param \GitElephant\Objects\NodeObject         $obj    The Object instance
      * @param null|string|\GitElephant\Objects\Branch $branch The branch to read from
      * @param int                                     $limit  Limit to n entries
      * @param int|null                                $offset Skip n entries
@@ -856,7 +856,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Log
      */
-    public function getObjectLog(Object $obj, $branch = null, $limit = 1, $offset = null)
+    public function getObjectLog(NodeObject $obj, $branch = null, $limit = 1, $offset = null)
     {
         $command = LogCommand::getInstance($this)->showObjectLog($obj, $branch, $limit, $offset);
 
@@ -891,7 +891,7 @@ class Repository
      * Tree Object is Countable, Iterable and has ArrayAccess for easy manipulation
      *
      * @param string|TreeishInterface $ref  the treeish to check
-     * @param string|Object           $path Object or null for root
+     * @param string|NodeObject       $path Object or null for root
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -916,7 +916,7 @@ class Repository
      *
      * @param \GitElephant\Objects\Commit|string      $commit1 A TreeishInterface instance
      * @param \GitElephant\Objects\Commit|string|null $commit2 A TreeishInterface instance
-     * @param null|string|Object                      $path    The path to get the diff for or a Object instance
+     * @param null|string|NodeObject                  $path    The path to get the diff for or a Object instance
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
@@ -1066,7 +1066,7 @@ class Repository
     /**
      * output a node content as an array of lines
      *
-     * @param \GitElephant\Objects\Object                  $obj     The Object of type BLOB
+     * @param \GitElephant\Objects\NodeObject              $obj     The Object of type BLOB
      * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
      * @throws \RuntimeException
@@ -1075,7 +1075,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function outputContent(Object $obj, $treeish)
+    public function outputContent(NodeObject $obj, $treeish)
     {
         $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
 
@@ -1085,7 +1085,7 @@ class Repository
     /**
      * output a node raw content
      *
-     * @param \GitElephant\Objects\Object                  $obj     The Object of type BLOB
+     * @param \GitElephant\Objects\NodeObject              $obj     The Object of type BLOB
      * @param \GitElephant\Objects\TreeishInterface|string $treeish A treeish object
      *
      * @throws \RuntimeException
@@ -1094,7 +1094,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return string
      */
-    public function outputRawContent(Object $obj, $treeish)
+    public function outputRawContent(NodeObject $obj, $treeish)
     {
         $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
 

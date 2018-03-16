@@ -50,7 +50,7 @@ class DiffTreeCommandTest extends TestCase
         );
         $this->addFile('test');
         $this->getRepository()->commit('test commit', true);
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $this->fail($dtc->rootDiff($this->getRepository()->getCommit()));
     }
 }

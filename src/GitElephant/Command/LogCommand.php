@@ -19,7 +19,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Object;
+use \GitElephant\Objects\NodeObject;
 use \GitElephant\Objects\Branch;
 use \GitElephant\Objects\TreeishInterface;
 use \GitElephant\Repository;
@@ -48,7 +48,7 @@ class LogCommand extends BaseCommand
     /**
      * Build an object log command
      *
-     * @param \GitElephant\Objects\Object             $obj    the Object to get the log for
+     * @param \GitElephant\Objects\NodeObject         $obj    the Object to get the log for
      * @param \GitElephant\Objects\Branch|string|null $branch the branch to consider
      * @param int|null                                $limit  limit to n entries
      * @param int|null                                $offset skip n entries
@@ -56,7 +56,7 @@ class LogCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function showObjectLog(Object $obj, $branch = null, $limit = null, $offset = null)
+    public function showObjectLog(NodeObject $obj, $branch = null, $limit = null, $offset = null)
     {
         $subject = null;
         if (null !== $branch) {
