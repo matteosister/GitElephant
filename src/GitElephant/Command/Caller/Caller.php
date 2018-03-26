@@ -59,6 +59,20 @@ class Caller implements CallerInterface
     private $rawOutput;
 
     /**
+     * the output lines of the command
+     *
+     * @var array
+     */
+    private $errorLines = array();
+
+    /**
+     * raw output
+     *
+     * @var string
+     */
+    private $rawErrorOutput;
+
+    /**
      * Class constructor
      *
      * @param \GitElephant\GitBinary $binary         the binary
@@ -165,5 +179,48 @@ class Caller implements CallerInterface
     public function getRawOutput()
     {
         return $this->rawOutput;
+    }
+
+    /**
+     * returns the error output of the last executed command
+     *
+     * @return string
+     */
+    public function getErrorOutput()
+    {
+        return implode("\n", $this->errorLines);
+    }
+
+    /**
+     * returns the error output of the last executed command as an array of lines
+     *
+     * @param bool $stripBlankLines remove the blank lines
+     *
+     * @return array
+     */
+    public function getErrorLines($stripBlankLines = false)
+    {
+        if ($stripBlankLines) {
+            $output = array();
+            foreach ($this->errorLines as $line) {
+                if ('' !== $line) {
+                    $output[] = $line;
+                }
+            }
+
+            return $output;
+        }
+
+        return $this->errorLines;
+    }
+
+    /**
+     * Get RawErrorOutput
+     *
+     * @return string
+     */
+    public function getRawErrorOutput()
+    {
+        return $this->rawErrorOutput;
     }
 }
