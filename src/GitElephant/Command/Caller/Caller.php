@@ -125,13 +125,13 @@ class Caller implements CallerInterface
     }
 
     /**
-     * returns the raw output of the last executed command
+     * returns the output of the last executed command
      *
      * @return string
      */
     public function getOutput()
     {
-        return implode(" ", $this->outputLines);
+        return implode("\n", $this->outputLines);
     }
 
     /**
