@@ -1039,14 +1039,15 @@ class Repository
      *
      * @param string $to
      * @param string $ref
+     * @param string $args
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function push($to = null, $ref = null)
+    public function push($to = null, $ref = null, $args = null)
     {
-        $this->caller->execute(PushCommand::getInstance($this)->push($to, $ref));
+        $this->caller->execute(PushCommand::getInstance($this)->push($to, $ref, $args));
     }
 
     /**
