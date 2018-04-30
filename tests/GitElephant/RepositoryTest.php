@@ -1015,7 +1015,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->init();
         $this->addFile('test');
 
-        $this->setExpectedException('RuntimeException');
+        $this->expectException('RuntimeException');
         $this->getRepository()->stash('My stash', true);
     }
 
