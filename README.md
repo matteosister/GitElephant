@@ -22,7 +22,7 @@ The api is completely transparent to the end user. You don't have to worry about
 Requirements
 ------------
 
-- php >= 5.3.0
+- php >= 7.0.0
 - *nix system with git installed
 
 I work on linux, but the lib should work well with every unix system, as far as a git binary is available.

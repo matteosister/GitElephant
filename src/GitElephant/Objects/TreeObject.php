@@ -2,6 +2,6 @@
 
 namespace GitElephant\Objects;
 
-class TreeObject extends Object
+class TreeObject extends NodeObject
 {
 }

@@ -15,7 +15,7 @@ namespace GitElephant;
 
 use GitElephant\Command\ResetCommand;
 use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\Object;
+use \GitElephant\Objects\NodeObject;
 use \GitElephant\Objects\Tag;
 
 /**
@@ -44,7 +44,7 @@ class RepositoryTest extends TestCase
     {
         $this->assertEquals($this->getRepository()->getPath(), $this->path);
 
-        $this->setExpectedException('GitElephant\Exception\InvalidRepositoryPathException');
+        $this->expectException('GitElephant\Exception\InvalidRepositoryPathException');
         $repo = new Repository('non-existent-path');
 
         $repo = Repository::open($this->path);
@@ -433,7 +433,7 @@ class RepositoryTest extends TestCase
 
         $tree = $repo->getTree();
 
-        /* @var $treeObj Object */
+        /* @var $treeObj NodeObject */
         foreach ($tree as $treeObj) {
             $name = $treeObj->getName();
             $log = $repo->getObjectLog($treeObj, null, null, null);
@@ -582,7 +582,7 @@ class RepositoryTest extends TestCase
         $this->assertCount(2, $tree, 'One file in the repository');
         $firstNode = $tree[0];
         $this->assertInstanceOf(
-            'GitElephant\Objects\Object',
+            'GitElephant\Objects\NodeObject',
             $firstNode,
             'array access on tree should give always a node type'
         );
@@ -593,24 +593,24 @@ class RepositoryTest extends TestCase
         );
         $secondNode = $tree[1];
         $this->assertInstanceOf(
-            'GitElephant\Objects\Object',
+            'GitElephant\Objects\NodeObject',
             $secondNode,
             'array access on tree should give always a node type'
         );
         $this->assertEquals(
-            Object::TYPE_BLOB,
+            NodeObject::TYPE_BLOB,
             $secondNode->getType(),
             'second node should be of type tree'
         );
         $subtree = $this->getRepository()->getTree('master', 'test-folder');
         $subnode = $subtree[0];
         $this->assertInstanceOf(
-            'GitElephant\Objects\Object',
+            'GitElephant\Objects\NodeObject',
             $subnode,
             'array access on tree should give always a node type'
         );
         $this->assertEquals(
-            Object::TYPE_BLOB,
+            NodeObject::TYPE_BLOB,
             $subnode->getType(),
             'subnode should be of type blob'
         );

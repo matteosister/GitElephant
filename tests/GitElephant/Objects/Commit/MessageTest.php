@@ -18,7 +18,7 @@ namespace GitElephant\Objects\Commit;
  *
  * @author Mathias Geat <mathias@ailoo.net>
  */
-class MessageTest extends \PHPUnit_Framework_TestCase
+class MessageTest extends \PHPUnit\Framework\TestCase
 {
     protected $shortMsg;
     protected $longMsg;

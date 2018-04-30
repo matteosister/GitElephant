@@ -11,14 +11,14 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "symfony/process": "~2.0|~3.0",
-        "symfony/filesystem": "~2.0|~3.0",
-        "symfony/finder": "~2.0|~3.0",
+        "php": ">=7.0.0",
+        "symfony/process": "~2.0|~3.0|~4.0",
+        "symfony/filesystem": "~2.0|~3.0|~4.0",
+        "symfony/finder": "~2.0|~3.0|~4.0",
         "phpcollection/phpcollection": "~0.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.8",
+        "phpunit/phpunit": "~6.0",
         "mockery/mockery": "~0.9"
     },
     "minimum-stability": "stable",
@@ -26,10 +26,5 @@
         "psr-0": {
             "GitElephant": "src/"
         }
-    },
-    "config": {
-      "platform": {
-        "php": "5.3.3"
-      }
     }
 }

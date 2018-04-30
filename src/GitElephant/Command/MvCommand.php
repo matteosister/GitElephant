@@ -19,7 +19,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Object;
+use \GitElephant\Objects\NodeObject;
 use \GitElephant\Repository;
 
 /**
@@ -43,8 +43,8 @@ class MvCommand extends BaseCommand
     }
 
     /**
-     * @param string|Object $source source name
-     * @param string        $target dest name
+     * @param string|NodeObject $source source name
+     * @param string            $target dest name
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
@@ -52,7 +52,7 @@ class MvCommand extends BaseCommand
      */
     public function rename($source, $target)
     {
-        if ($source instanceof Object) {
+        if ($source instanceof NodeObject) {
             if (!$source->isBlob()) {
                 throw new \InvalidArgumentException("The given object is not a blob, it couldn't be renamed");
             }
