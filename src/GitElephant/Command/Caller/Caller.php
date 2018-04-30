@@ -106,6 +106,9 @@ class Caller implements CallerInterface
             $cmd = $this->binary->getPath() . ' ' . $cmd;
         }
 
+        // We rely on the C locale in all output we parse.
+        $cmd = 'LC_ALL=C ' . $cmd;
+
         $process = new Process($cmd, is_null($cwd) ? $this->repositoryPath : $cwd);
         $process->setTimeout(15000);
         $process->run();
