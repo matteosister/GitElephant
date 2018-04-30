@@ -6,10 +6,8 @@
  * Just for fun...
  */
 
-
 namespace GitElephant\Command;
 
-use \GitElephant\Command\BaseCommand;
 use \GitElephant\TestCase;
 use \ReflectionClass;
 
@@ -41,7 +39,7 @@ class BaseCommandTest extends TestCase
         foreach ($arguments as                  $argumentValue) { $repo->addGlobalCommandArgument($argumentValue);   }
 
         $bc2    = new BaseCommand($repo);
-        $ref_bc = new ReflectionClass($bc2);
+        $ref_bc = new \ReflectionClass($bc2);
 
         $ref_bc_cfg_prop = $ref_bc->getProperty('globalConfigs');
         $ref_bc_cfg_prop->setAccessible(true);
@@ -70,7 +68,7 @@ class BaseCommandTest extends TestCase
     public function testAddGlobalConfigs() {
         $configs = array('one' => 1, 'two' => 2, 'three' => 3);
         $bc      = BaseCommand::getInstance();
-        $ref_bc  = new ReflectionClass($bc);
+        $ref_bc  = new \ReflectionClass($bc);
 
         $ref_bc_cfg_prop = $ref_bc->getProperty('globalConfigs');
         $ref_bc_cfg_prop->setAccessible(true);
@@ -85,7 +83,7 @@ class BaseCommandTest extends TestCase
     public function testAddGlobalOptions() {
         $options = array('one' => 1, 'two' => 2, 'three' => 3);
         $bc      = BaseCommand::getInstance();
-        $ref_bc  = new ReflectionClass($bc);
+        $ref_bc  = new \ReflectionClass($bc);
 
         $ref_bc_opt_prop = $ref_bc->getProperty('globalOptions');
         $ref_bc_opt_prop->setAccessible(true);
@@ -100,7 +98,7 @@ class BaseCommandTest extends TestCase
     public function testAddGlobalCommandArguments() {
         $arguments = array('one', 'two', 'three');
         $bc        = BaseCommand::getInstance();
-        $ref_bc    = new ReflectionClass($bc);
+        $ref_bc    = new \ReflectionClass($bc);
 
         $ref_bc_arg_prop = $ref_bc->getProperty('globalCommandArguments');
         $ref_bc_arg_prop->setAccessible(true);
@@ -117,7 +115,7 @@ class BaseCommandTest extends TestCase
     public function testGetCommand() {
         $name   = 'command';
         $bc     = BaseCommand::getInstance();
-        $ref_bc = new ReflectionClass($bc);
+        $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_arg_prop = $ref_bc->getProperty('commandName');
         $ref_bc_arg_prop->setAccessible(true);
@@ -137,14 +135,14 @@ class BaseCommandTest extends TestCase
     public function testGetCommandException()
     {
         $bc = BaseCommand::getInstance();
-        $this->setExpectedException('RuntimeException');
+        $this->expectException('RuntimeException');
         $this->fail($bc->getCommand());
     }
 
     public function testGetCLICommandArguments() {
         $args   = array('--first', '--second', '--third');
         $bc     = BaseCommand::getInstance();
-        $ref_bc = new ReflectionClass($bc);
+        $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_arg_prop = $ref_bc->getProperty('globalCommandArguments');
         $ref_bc_arg_prop->setAccessible(true);
@@ -164,7 +162,7 @@ class BaseCommandTest extends TestCase
     public function testGetCLICommandName() {
         $name   = 'command';
         $bc     = BaseCommand::getInstance();
-        $ref_bc = new ReflectionClass($bc);
+        $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_arg_prop = $ref_bc->getProperty('commandName');
         $ref_bc_arg_prop->setAccessible(true);
@@ -184,7 +182,7 @@ class BaseCommandTest extends TestCase
         $configs = array_merge($globals, $locals);
 
         $bc     = BaseCommand::getInstance();
-        $ref_bc = new ReflectionClass($bc);
+        $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_glob_cfg_prop = $ref_bc->getProperty('globalConfigs');
         $ref_bc_glob_cfg_prop->setAccessible(true);
@@ -208,7 +206,7 @@ class BaseCommandTest extends TestCase
     public function testGetCLIGlobalOptions() {
         $options = array('first' => 'a', 'second' => 'b', 'third' => 'c');
         $bc      = BaseCommand::getInstance();
-        $ref_bc  = new ReflectionClass($bc);
+        $ref_bc  = new \ReflectionClass($bc);
 
         $ref_bc_opt_prop = $ref_bc->getProperty('globalOptions');
         $ref_bc_opt_prop->setAccessible(true);
@@ -228,7 +226,7 @@ class BaseCommandTest extends TestCase
     public function testGetCLIPath() {
         $path   = '/path/to/something';
         $bc     = BaseCommand::getInstance();
-        $ref_bc = new ReflectionClass($bc);
+        $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_path_prop = $ref_bc->getProperty('path');
         $ref_bc_path_prop->setAccessible(true);
@@ -246,7 +244,7 @@ class BaseCommandTest extends TestCase
         $subject1 = 'first';
         $subject2 = 'second';
         $bc       = BaseCommand::getInstance();
-        $ref_bc   = new ReflectionClass($bc);
+        $ref_bc   = new \ReflectionClass($bc);
 
         $ref_bc_subj1_prop = $ref_bc->getProperty('commandSubject');
         $ref_bc_subj1_prop->setAccessible(true);

@@ -5,10 +5,10 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Objects\Object;
+use \GitElephant\Objects\NodeObject;
 use \GitElephant\TestCase;
 
-class ObjectTest extends TestCase
+class NodeObjectTest extends TestCase
 {
     public function setUp()
     {
@@ -63,8 +63,8 @@ class ObjectTest extends TestCase
     /**
      * test repository getter and setter
      *
-     * @covers GitElephant\Objects\Object::getRepository
-     * @covers GitElephant\Objects\Object::setRepository
+     * @covers GitElephant\Objects\NodeObject::getRepository
+     * @covers GitElephant\Objects\NodeObject::setRepository
      */
     public function testGetSetRepository()
     {
@@ -74,7 +74,7 @@ class ObjectTest extends TestCase
         $this->initRepository('object2', 2);
         $repo2 = $this->getRepository(2);
 
-        $object = new Object($repo1, 'permissions', 'type', 'sha', 'size', 'name', 'path'); // dummy params
+        $object = new NodeObject($repo1, 'permissions', 'type', 'sha', 'size', 'name', 'path'); // dummy params
         $this->assertSame($repo1, $object->getRepository());
         $object->setRepository($repo2);
         $this->assertSame($repo2, $object->getRepository());

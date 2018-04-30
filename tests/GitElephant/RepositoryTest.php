@@ -13,8 +13,9 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\ResetCommand;
 use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\Object;
+use \GitElephant\Objects\NodeObject;
 use \GitElephant\Objects\Tag;
 
 /**
@@ -43,7 +44,7 @@ class RepositoryTest extends TestCase
     {
         $this->assertEquals($this->getRepository()->getPath(), $this->path);
 
-        $this->setExpectedException('GitElephant\Exception\InvalidRepositoryPathException');
+        $this->expectException('GitElephant\Exception\InvalidRepositoryPathException');
         $repo = new Repository('non-existent-path');
 
         $repo = Repository::open($this->path);
@@ -432,7 +433,7 @@ class RepositoryTest extends TestCase
 
         $tree = $repo->getTree();
 
-        /* @var $treeObj Object */
+        /* @var $treeObj NodeObject */
         foreach ($tree as $treeObj) {
             $name = $treeObj->getName();
             $log = $repo->getObjectLog($treeObj, null, null, null);
@@ -581,7 +582,7 @@ class RepositoryTest extends TestCase
         $this->assertCount(2, $tree, 'One file in the repository');
         $firstNode = $tree[0];
         $this->assertInstanceOf(
-            'GitElephant\Objects\Object',
+            'GitElephant\Objects\NodeObject',
             $firstNode,
             'array access on tree should give always a node type'
         );
@@ -592,24 +593,24 @@ class RepositoryTest extends TestCase
         );
         $secondNode = $tree[1];
         $this->assertInstanceOf(
-            'GitElephant\Objects\Object',
+            'GitElephant\Objects\NodeObject',
             $secondNode,
             'array access on tree should give always a node type'
         );
         $this->assertEquals(
-            Object::TYPE_BLOB,
+            NodeObject::TYPE_BLOB,
             $secondNode->getType(),
             'second node should be of type tree'
         );
         $subtree = $this->getRepository()->getTree('master', 'test-folder');
         $subnode = $subtree[0];
         $this->assertInstanceOf(
-            'GitElephant\Objects\Object',
+            'GitElephant\Objects\NodeObject',
             $subnode,
             'array access on tree should give always a node type'
         );
         $this->assertEquals(
-            Object::TYPE_BLOB,
+            NodeObject::TYPE_BLOB,
             $subnode->getType(),
             'subnode should be of type blob'
         );
@@ -902,6 +903,50 @@ class RepositoryTest extends TestCase
             $repo->removeGlobalConfig($configName, $configValue);
         }
         $this->assertEmpty($repo->getGlobalConfigs());
+    }
+
+    /**
+     * test reset
+     */
+    public function testResetHard()
+    {
+        $this->initRepository();
+        $repo=$this->getRepository();
+        $repo->init();
+        $this->addFile('file1');
+        $repo->stage();
+        $repo->commit('message1');
+        $headCommit=$repo->getCommit();
+        $this->addFile('file2');
+        $repo->stage();
+        $repo->commit('message2');
+
+        $this->assertEquals(2,$repo->countCommits());
+        $repo->reset($headCommit,array(ResetCommand::OPTION_HARD));
+        $this->assertEquals(1,$repo->countCommits());
+        $this->assertEmpty($repo->getIndexStatus()->added());
+    }
+
+    /**
+     * test reset
+     */
+    public function testResetSoft()
+    {
+        $this->initRepository();
+        $repo=$this->getRepository();
+        $repo->init();
+        $this->addFile('file1');
+        $repo->stage();
+        $repo->commit('message1');
+        $headCommit=$repo->getCommit();
+        $this->addFile('file2');
+        $repo->stage();
+        $repo->commit('message2');
+
+        $this->assertEquals(2,$repo->countCommits());
+        $repo->reset($headCommit,array(ResetCommand::OPTION_SOFT));
+        $this->assertEquals(1,$repo->countCommits());
+        $this->assertNotEmpty($repo->getIndexStatus()->added());
     }
 
     /**

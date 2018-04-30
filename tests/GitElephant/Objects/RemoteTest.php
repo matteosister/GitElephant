@@ -17,9 +17,9 @@ use \GitElephant\Objects\Remote;
 
 /**
  * Class RemoteTest
- * 
+ *
  * Remote Object Test
- * 
+ *
  * @package GitElephant\Command
  * @author  David Neimeyer <davidneimeyer@gmail.com>
  */
@@ -27,12 +27,14 @@ class RemoteTest extends TestCase
 {
     /**
      * test double branch name
+     *
      * @var string
      */
     protected $startBranchName = 'test_branch';
 
     /**
      * test double tag name
+     *
      * @var string
      */
     protected $startTagName = 'test_start_tag';
@@ -54,6 +56,7 @@ class RemoteTest extends TestCase
 
     /**
      * return sample output of git-remote --verbose
+     *
      * @return string
      */
     public function sampleRemoteVerbose()
@@ -72,6 +75,7 @@ EOM;
 
     /**
      * test double fetch URL
+     *
      * @return string
      */
     public function sampleRemoteShowFetchURL()
@@ -81,6 +85,7 @@ EOM;
 
     /**
      * test double push URL
+     *
      * @return string
      */
     public function sampleRemoteShowPushURL()
@@ -90,6 +95,7 @@ EOM;
 
     /**
      * test double remote name
+     *
      * @return string
      */
     public function sampleRemoteShowRemoteName()
@@ -99,6 +105,7 @@ EOM;
 
     /**
      * test double remote HEAD branch
+     *
      * @return string
      */
     public function sampleRemoteShowRemoteHEAD()
@@ -107,7 +114,8 @@ EOM;
     }
 
     /**
-     * sample output of git-remote show <remoteName> 
+     * sample output of git-remote show <remoteName>
+     *
      * @return string
      */
     public function sampleRemoteShow()
@@ -148,51 +156,52 @@ EOM;
     /**
      * expected branch structure produced when
      * parsing the sample output of git-remote show <remoteName>
+     *
      * @return array
      */
     public function sampleRemoteShowAsArray()
     {
-        return array(
-                '11.30' => array(
-                        'pushes_to' => '11.30',
-                        'local_state' => '(local out of date)',
-                ),
-                '11.30.6' => array(
-                        'pushes_to' => '11.30.6',
-                        'local_state' => '(up to date)',
-                        'merges_with' => '11.30.6',
-                        'local_relationship' => 'tracked',
-                ),
-                '11.32.0' => array(
-                        'pushes_to' => '11.32.0',
-                        'local_state' => '(up to date)',
-                        'merges_with' => '11.32.0',
-                        'local_relationship' => 'tracked',
-                ),
-                '11.32' => array(
-                        'pushes_to' => '11.32',
-                        'local_state' => '(local out of date)',
-                        'local_relationship' => 'tracked',
-                ),
-                '11.40' => array(
-                        'pushes_to' => '11.40',
-                        'merges_with' => '11.40',
-                        'local_state' => '(local out of date)',
-                        'local_relationship' => 'tracked',
-                ),
-                'master' => array(
-                        'pushes_to' => 'master',
-                        'local_state' => '(up to date)',
-                        'merges_with' => 'master',
-                        'local_relationship' => 'tracked',
-                ),
-                'pbi_4371' => array(
-                        'local_relationship' => 'tracked',
-                ),
-                'refs/remotes/upstream/58120-squashed' => array(
-                        'local_relationship' => 'stale',
-                ),
-        );
+        return [
+            '11.30'                                => [
+                'pushes_to'   => '11.30',
+                'local_state' => '(local out of date)',
+            ],
+            '11.30.6'                              => [
+                'pushes_to'          => '11.30.6',
+                'local_state'        => '(up to date)',
+                'merges_with'        => '11.30.6',
+                'local_relationship' => 'tracked',
+            ],
+            '11.32.0'                              => [
+                'pushes_to'          => '11.32.0',
+                'local_state'        => '(up to date)',
+                'merges_with'        => '11.32.0',
+                'local_relationship' => 'tracked',
+            ],
+            '11.32'                                => [
+                'pushes_to'          => '11.32',
+                'local_state'        => '(local out of date)',
+                'local_relationship' => 'tracked',
+            ],
+            '11.40'                                => [
+                'pushes_to'          => '11.40',
+                'merges_with'        => '11.40',
+                'local_state'        => '(local out of date)',
+                'local_relationship' => 'tracked',
+            ],
+            'master'                               => [
+                'pushes_to'          => 'master',
+                'local_state'        => '(up to date)',
+                'merges_with'        => 'master',
+                'local_relationship' => 'tracked',
+            ],
+            'pbi_4371'                             => [
+                'local_relationship' => 'tracked',
+            ],
+            'refs/remotes/upstream/58120-squashed' => [
+                'local_relationship' => 'stale',
+            ],
+        ];
     }
 
     /**
@@ -327,13 +336,13 @@ EOM;
 
     /**
      * helper for getting a mock Remote object
-     * 
+     *
      * the returned test double will provide the sample output
      * defined in other methods of this test class
-     * 
+     *
      * NOTE: this will do an assertion in the hope to ensure
      * sanity of the test double
-     * 
+     *
      * @return \GitElephant\Objects\Remote
      */
     public function getMockRemote()
@@ -343,13 +352,10 @@ EOM;
         $sample = $this->sampleRemoteVerbose();
         $verboseOutput = explode("\n", $sample);
 
-        $mockRemote = $this->getMock(
-            '\\GitElephant\\Objects\\Remote', //class
-            array('getShowOutput', 'getVerboseOutput'), //methods to mock
-            array(), //original constructor args
-            '', //class for test double
-            false //call constructor
-        );
+        $mockRemote = $this->getMockBuilder(Remote::class)
+                        ->disableOriginalConstructor()
+                        ->setMethods(['getShowOutput', 'getVerboseOutput'])
+                        ->getMock();
 
         $mockRemote->expects($this->any())
             ->method('getShowOutput')
@@ -371,7 +377,7 @@ EOM;
 
     /**
      * verify object
-     * 
+     *
      * NOTE: this is actually verifying the mock object and
      * could be useless if the helper that makes the double
      * is flawed.  However, it should do the trick so other tests
@@ -380,7 +386,7 @@ EOM;
     public function testConstructor()
     {
         $obj = $this->getMockRemote();
-        $this->assertInstanceOf('\\GitElephant\\Objects\\Remote', $obj);
+        $this->assertInstanceOf(Remote::class, $obj);
     }
 
     /**
@@ -391,7 +397,7 @@ EOM;
         $obj = $this->getMockRemote();
         $this->assertEquals(
             $this->sampleRemoteShowRemoteName(),
-            (string) $obj,
+            (string)$obj,
             'magic to string method provides the remote name'
         );
     }

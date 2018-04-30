@@ -28,7 +28,7 @@ use \GitElephant\Repository;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class Object implements TreeishInterface
+class NodeObject implements TreeishInterface
 {
     const TYPE_BLOB = 'blob';
     const TYPE_TREE = 'tree';
@@ -88,7 +88,7 @@ class Object implements TreeishInterface
      * @param string                  $outputLine output from ls-tree command
      *
      * @see LsTreeCommand::tree
-     * @return Object
+     * @return NodeObject
      */
     public static function createFromOutputLine(Repository $repository, $outputLine)
     {
@@ -127,14 +127,14 @@ class Object implements TreeishInterface
         $permissions = $matches[1];
         $type        = null;
         switch ($matches[2]) {
-            case Object::TYPE_TREE:
-                $type = Object::TYPE_TREE;
+            case NodeObject::TYPE_TREE:
+                $type = NodeObject::TYPE_TREE;
                 break;
-            case Object::TYPE_BLOB:
-                $type = Object::TYPE_BLOB;
+            case NodeObject::TYPE_BLOB:
+                $type = NodeObject::TYPE_BLOB;
                 break;
-            case Object::TYPE_LINK:
-                $type = Object::TYPE_LINK;
+            case NodeObject::TYPE_LINK:
+                $type = NodeObject::TYPE_LINK;
                 break;
         }
         $sha      = $matches[3];

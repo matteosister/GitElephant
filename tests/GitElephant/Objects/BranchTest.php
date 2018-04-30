@@ -74,7 +74,7 @@ class BranchTest extends TestCase
         $this->assertEquals('develop', $b->getName());
         $this->assertEquals('test commit', $b->getComment());
         $this->assertFalse($b->getCurrent());
-        $this->setExpectedException('GitElephant\Exception\InvalidBranchNameException');
+        $this->expectException('GitElephant\Exception\InvalidBranchNameException');
         $this->fail(Branch::checkout($this->getRepository(), 'non-existent'));
     }
 

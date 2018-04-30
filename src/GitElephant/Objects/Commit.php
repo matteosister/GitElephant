@@ -221,7 +221,7 @@ class Commit implements TreeishInterface, \Countable
      */
     private function parseOutputLines($outputLines)
     {
-        $message = '';
+        $message = array();
         foreach ($outputLines as $line) {
             $matches = array();
             if (preg_match('/^commit (\w+)$/', $line, $matches) > 0) {
@@ -405,5 +405,43 @@ class Commit implements TreeishInterface, \Countable
         $caller->execute($c);
 
         return array_map('trim', $caller->getOutputLines(true));
+    }
+
+    /**
+     * Is the commit tagged?
+     *
+     * return true if some tag of repository point to this commit
+     * return false otherwise
+     *
+     * @return bool
+     */
+    public function tagged()
+    {
+        $result = false;
+        foreach ($this->repository->getTags() as $tag) {
+            if ($tag->getSha() == $this->getSha()) {
+                $result = true;
+                break;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Return Tags that point to this commit
+     *
+     * @return Tag[]
+     */
+    public function getTags()
+    {
+        $currentCommitTags = array();
+        foreach ($this->repository->getTags() as $tag) {
+            if ($tag->getSha() == $this->getSha()) {
+                $currentCommitTags[] = $tag;
+            }
+        }
+
+        return $currentCommitTags;
     }
 }

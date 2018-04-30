@@ -19,7 +19,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Object;
+use \GitElephant\Objects\NodeObject;
 use \GitElephant\Objects\TreeishInterface;
 use \GitElephant\Repository;
 
@@ -46,13 +46,13 @@ class CatFileCommand extends BaseCommand
     /**
      * command to show content of a Object at a given Treeish point
      *
-     * @param \GitElephant\Objects\Object                  $object  a Object instance
+     * @param \GitElephant\Objects\NodeObject              $object  a Object instance
      * @param \GitElephant\Objects\TreeishInterface|string $treeish an object with TreeishInterface interface
      *
      * @throws \RuntimeException
      * @return string
      */
-    public function content(Object $object, $treeish)
+    public function content(NodeObject $object, $treeish)
     {
         $this->clearAll();
         if ($treeish instanceof TreeishInterface) {
