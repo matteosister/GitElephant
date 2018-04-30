@@ -7,3 +7,5 @@ composer.phar
 build/
 cache/
 deploy_docs.sh
+.vscode/
+composer.lock
