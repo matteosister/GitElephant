@@ -25,6 +25,7 @@ use \GitElephant\Command\PushCommand;
 use \GitElephant\Command\RemoteCommand;
 use GitElephant\Command\ResetCommand;
 use \GitElephant\Command\Caller\Caller;
+use GitElephant\Command\StashCommand;
 use \GitElephant\Objects\Author;
 use \GitElephant\Objects\Remote;
 use \GitElephant\Objects\Tree;
@@ -53,6 +54,7 @@ use \GitElephant\Status\StatusWorkingTree;
 use \Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
 use \Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Process\Exception\InvalidArgumentException;
 
 /**
  * Repository
@@ -61,6 +63,7 @@ use \Symfony\Component\Finder\SplFileInfo;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  * @author Dhaval Patel <tech.dhaval@gmail.com>
+ * @author Kirk Madera <kmadera@robofirm.com>
  */
 class Repository
 {
@@ -87,21 +90,21 @@ class Repository
 
     /**
      * A list of global configs to apply to every command
-     * 
+     *
      * @var array
      */
     private $globalConfigs = array();
 
     /**
      * A list of global options to apply to every command
-     * 
+     *
      * @var array
      */
     private $globalOptions = array();
 
     /**
      * A list of global arguments to apply to every command
-     * 
+     *
      * @var array
      */
     private $globalCommandArguments = array();
@@ -178,7 +181,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -196,7 +199,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -214,7 +217,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -234,7 +237,7 @@ class Repository
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \InvalidArgumentException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -255,7 +258,7 @@ class Repository
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \InvalidArgumentException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -269,10 +272,11 @@ class Repository
     /**
      * Commit content to the repository, eventually staging all unstaged content
      *
-     * @param string        $message  the commit message
-     * @param bool          $stageAll whether to stage on not everything before commit
-     * @param string|null   $ref      the reference to commit to (checkout -> commit -> checkout previous)
-     * @param string|Author $author   override the author for this commit
+     * @param string        $message    the commit message
+     * @param bool          $stageAll   whether to stage on not everything before commit
+     * @param string|null   $ref        the reference to commit to (checkout -> commit -> checkout previous)
+     * @param string|Author $author     override the author for this commit
+     * @param bool          $allowEmpty override the author for this commit
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
@@ -308,7 +312,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function revParse($arg = null, Array $options = array())
+    public function revParse($arg = null, array $options = array())
     {
         $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
 
@@ -331,7 +335,7 @@ class Repository
      * @param TreeishInterface|Commit|string $arg
      * @param array $options
      */
-    public function reset($arg,$options)
+    public function reset($arg, $options)
     {
         $this->caller->execute(ResetCommand::getInstance($this)->reset($arg,$options));
     }
@@ -347,7 +351,7 @@ class Repository
     }
 
     /**
-     * @return StatusWorkingTree
+     * @return Status
      */
     public function getWorkingTreeStatus()
     {
@@ -355,26 +359,26 @@ class Repository
     }
 
     /**
-     * @return StatusIndex
+     * @return Status
      */
     public function getIndexStatus()
     {
         return StatusIndex::get($this);
     }
-    
+
     /**
      * isClean Return true if the repository is not dirty.
-     * 
+     *
      * @return boolean
      */
     public function isClean()
     {
         return $this->getStatus()->all()->isEmpty();
     }
-    
+
     /**
      * isDirty Return true if the repository has some modified files.
-     * 
+     *
      * @return boolean
      */
     public function isDirty()
@@ -387,7 +391,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
@@ -424,7 +428,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -442,7 +446,7 @@ class Repository
      * @param bool $all       lists also remote branches
      *
      * @throws \RuntimeException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
@@ -556,7 +560,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -568,7 +572,7 @@ class Repository
             'no-ff',   // force 3-way merge
         );
         if (!in_array($mode, $valid_modes)) {
-            throw new \Symfony\Component\Process\Exception\InvalidArgumentException("Invalid merge mode: $mode.");
+            throw new InvalidArgumentException("Invalid merge mode: $mode.");
         }
 
         $options = array();
@@ -634,7 +638,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -679,7 +683,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
@@ -790,7 +794,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return int|void
+     * @return int
      */
     public function countCommits($start = 'HEAD')
     {
@@ -825,7 +829,7 @@ class Repository
      * @param int|null          $offset      skip n entries
      * @param boolean|false     $firstParent skip commits brought in to branch by a merge
      *
-     * @return \GitElephant\Objects\LogRange
+     * @return \GitElephant\Objects\LogRange|\GitElephant\Objects\Log
      */
     public function getLogRange($refStart, $refEnd, $path = null, $limit = 10, $offset = null, $firstParent = false)
     {
@@ -852,7 +856,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Log
      */
@@ -872,7 +876,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -895,7 +899,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Objects\Tree
      */
@@ -935,7 +939,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -952,7 +956,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
@@ -981,7 +985,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
@@ -1006,7 +1010,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
     public function fetch($from = null, $ref = null, $tags = false)
@@ -1026,7 +1030,7 @@ class Repository
      * @param bool   $rebase
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
     public function pull($from = null, $ref = null, $rebase = true)
@@ -1042,7 +1046,7 @@ class Repository
      * @param string $args
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
     public function push($to = null, $ref = null, $args = null)
@@ -1072,7 +1076,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
@@ -1091,7 +1095,7 @@ class Repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return string
      */
@@ -1241,7 +1245,7 @@ class Repository
     }
 
     /**
-     * remove an element form the global command argument list, identified by 
+     * remove an element form the global command argument list, identified by
      * value
      *
      * @param  string $value The command argument
@@ -1252,5 +1256,125 @@ class Repository
             $index = array_search($value, $this->globalCommandArguments);
             unset($this->globalCommandArguments[$index]);
         }
+    }
+
+    /**
+     *  Save your local modifications to a new stash, and run git reset --hard to revert them.
+     *
+     * @param string|null $message
+     * @param boolean $includeUntracked
+     * @param boolean $keepIndex
+     */
+    public function stash($message = null, $includeUntracked = false, $keepIndex = false)
+    {
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->save($message, $includeUntracked, $keepIndex);
+        $this->caller->execute($command);
+    }
+
+    /**
+     * Shows stash list
+     *
+     * @param array|null $options
+     *
+     * @return array
+     */
+    public function stashList(array $options = null)
+    {
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->listStashes($options);
+        $this->caller->execute($command);
+        return array_map('trim', $this->caller->getOutputLines(true));
+    }
+
+    /**
+     * Shows details for a stash
+     *
+     * @param string $stash
+     *
+     * @return string
+     */
+    public function stashShow($stash)
+    {
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->show($stash);
+        $this->caller->execute($command);
+        return $this->caller->getOutput();
+    }
+
+    /**
+     * Drops a stash
+     *
+     * @param string $stash
+     */
+    public function stashDrop($stash)
+    {
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->drop($stash);
+        $this->caller->execute($command);
+    }
+
+    /**
+     * Applies a stash
+     *
+     * @param string $stash
+     * @param boolean $index
+     */
+    public function stashApply($stash, $index = false)
+    {
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->apply($stash, $index);
+        $this->caller->execute($command);
+    }
+
+    /**
+     *  Applies a stash, then removes it from the stash
+     *
+     * @param string $stash
+     * @param boolean $index
+     */
+    public function stashPop($stash, $index = false)
+    {
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->pop($stash, $index);
+        $this->caller->execute($command);
+    }
+
+    /**
+     *  Creates and checks out a new branch named <branchname> starting from the commit at which the <stash> was originally created
+     *
+     * @param string $branch
+     * @param string $stash
+     */
+    public function stashBranch($branch, $stash)
+    {
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->branch($branch, $stash);
+        $this->caller->execute($command);
+    }
+
+    /**
+     *  Save your local modifications to a new stash, and run git reset --hard to revert them.
+     *
+     */
+    public function stashClear()
+    {
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->clear();
+        $this->caller->execute($command);
+    }
+
+    /**
+     *  Create a stash (which is a regular commit object) and return its object name, without storing it anywhere in the
+     *  ref namespace.
+     *
+     * @return string
+     */
+    public function stashCreate()
+    {
+        $stashCommand = StashCommand::getInstance($this);
+        $command = $stashCommand->clear();
+        $this->caller->execute($command);
+        return $this->caller->getOutput();
     }
 }

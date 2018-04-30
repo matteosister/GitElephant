@@ -240,7 +240,7 @@ class BaseCommand
     /**
      * Add a command subject
      *
-     * @param string $commandSubject the command subject
+     * @param SubCommandCommand|array|string $commandSubject the command subject
      */
     protected function addCommandSubject($commandSubject)
     {
@@ -250,7 +250,7 @@ class BaseCommand
     /**
      * Add a second command subject
      *
-     * @param string $commandSubject2 the second command subject
+     * @param SubCommandCommand|array|string $commandSubject2 the second command subject
      */
     protected function addCommandSubject2($commandSubject2)
     {
