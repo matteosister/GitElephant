@@ -57,14 +57,14 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @var array
      */
-    private $children = array();
+    private $children = [];
 
     /**
      * tree path children
      *
      * @var array
      */
-    private $pathChildren = array();
+    private $pathChildren = [];
 
     /**
      * the blob of the actual tree
@@ -79,9 +79,9 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      * @param \GitElephant\Repository $repository  repo
      * @param array                   $outputLines output lines from command.log
      *
-     * @return \GitElephant\Objects\Log
+     * @return \GitElephant\Objects\Tree
      */
-    public static function createFromOutputLines(Repository $repository, $outputLines)
+    public static function createFromOutputLines(Repository $repository, array $outputLines)
     {
         $tree = new self($repository);
         $tree->parseOutputLines($outputLines);
@@ -115,9 +115,9 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @internal param \GitElephant\Objects\Object|string $treeObject Object instance
      */
-    public function __construct(Repository $repository, $ref = 'HEAD', $subject = null)
+    public function __construct(Repository $repository, $ref = 'HEAD', NodeObject $subject = null)
     {
-        $this->position   = 0;
+        $this->position = 0;
         $this->repository = $repository;
         $this->ref = $ref;
         $this->subject = $subject;
@@ -129,12 +129,12 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @param array $outputLines output lines
      */
-    private function parseOutputLines($outputLines)
+    private function parseOutputLines(array $outputLines)
     {
         foreach ($outputLines as $line) {
             $this->parseLine($line);
         }
-        usort($this->children, array($this, 'sortChildren'));
+        usort($this->children, [$this, 'sortChildren']);
         $this->scanPathsForBlob($outputLines);
     }
 
@@ -219,17 +219,17 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      */
     public function getBreadcrumb()
     {
-        $bc = array();
+        $bc = [];
         if (!$this->isRoot()) {
             $arrayNames = explode('/', $this->subject->getFullPath());
             $pathString = '';
             foreach ($arrayNames as $i => $name) {
-                if ($this->isBlob() && $name == $this->blob->getName()) {
-                    $bc[$i]['path']  = $pathString . $name;
+                if ($this->isBlob() and $name === $this->blob->getName()) {
+                    $bc[$i]['path'] = $pathString . $name;
                     $bc[$i]['label'] = $this->blob;
                     $pathString .= $name . '/';
                 } else {
-                    $bc[$i]['path']  = $pathString . $name;
+                    $bc[$i]['path'] = $pathString . $name;
                     $bc[$i]['label'] = $name;
                     $pathString .= $name . '/';
                 }
@@ -247,16 +247,18 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @return mixed
      */
-    private function scanPathsForBlob($outputLines)
+    private function scanPathsForBlob(array $outputLines)
     {
         // no children, empty folder or blob!
         if (count($this->children) > 0) {
             return;
         }
+
         // root, no blob
         if ($this->isRoot()) {
             return;
         }
+
         if (1 === count($outputLines)) {
             $treeObject = NodeObject::createFromOutputLine($this->repository, $outputLines[0]);
             if ($treeObject->getSha() === $this->subject->getSha()) {
@@ -277,10 +279,10 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     private function sortChildren(NodeObject $a, NodeObject $b)
     {
         if ($a->getType() == $b->getType()) {
-            $names = array($a->getName(), $b->getName());
+            $names = [$a->getName(), $b->getName()];
             sort($names);
 
-            return ($a->getName() == $names[0]) ? -1 : 1;
+            return ($a->getName() === $names[0]) ? -1 : 1;
         }
 
         return $a->getType() == NodeObject::TYPE_TREE || $b->getType() == NodeObject::TYPE_BLOB ? -1 : 1;
@@ -298,13 +300,14 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
         if ($line == '') {
             return;
         }
+
         $slices = NodeObject::getLineSlices($line);
         if ($this->isBlob()) {
             $this->pathChildren[] = $this->blob->getName();
         } else {
             if ($this->isRoot()) {
                 // if is root check for first children
-                $pattern     = '/(\w+)\/(.*)/';
+                $pattern = '/(\w+)\/(.*)/';
                 $replacement = '$1';
             } else {
                 // filter by the children of the path
@@ -312,16 +315,18 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
                 if (!preg_match(sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/')), $slices['fullPath'])) {
                     return;
                 }
-                $pattern     = sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/'));
+                $pattern = sprintf('/^%s\/(\w*)/', preg_quote($actualPath, '/'));
                 $replacement = '$1';
             }
+
             $name = preg_replace($pattern, $replacement, $slices['fullPath']);
             if (strpos($name, '/') !== false) {
                 return;
             }
+
             if (!in_array($name, $this->pathChildren)) {
-                $path                 = rtrim(rtrim($slices['fullPath'], $name), '/');
-                $treeObject           = new TreeObject(
+                $path = rtrim(rtrim($slices['fullPath'], $name), '/');
+                $treeObject = new TreeObject(
                     $this->repository,
                     $slices['permissions'],
                     $slices['type'],
@@ -330,7 +335,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
                     $name,
                     $path
                 );
-                $this->children[]     = $treeObject;
+                $this->children[] = $treeObject;
                 $this->pathChildren[] = $name;
             }
         }
@@ -388,11 +393,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      */
     public function getObject()
     {
-        if ($this->isRoot()) {
-            return null;
-        } else {
-            return $this->getSubject();
-        }
+        return $this->isRoot() ? null : $this->getSubject();
     }
 
     /**
@@ -478,7 +479,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * Countable interface
      *
-     * @return int|void
+     * @return int
      */
     public function count()
     {

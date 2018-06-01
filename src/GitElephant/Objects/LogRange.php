@@ -37,7 +37,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      *
      * @var array
      */
-    private $rangeCommits  = array();
+    private $rangeCommits = [];
 
     /**
      * the cursor position
@@ -65,10 +65,11 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
         $refStart,
         $refEnd,
         $path = null,
-        $limit = 15,
-        $offset = null,
-        $firstParent = false
-    ) {
+        int $limit = 15,
+        int $offset = null,
+        bool $firstParent = false
+    )
+    {
         $this->repository = $repository;
         $this->createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent);
     }
@@ -89,30 +90,46 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent)
+    private function createFromCommand(
+        $refStart,
+        $refEnd,
+        $path = null,
+        int $limit = 15,
+        int $offset = null,
+        bool $firstParent = false
+    )
     {
-        $command = LogRangeCommand::getInstance($this->getRepository())->showLog($refStart, $refEnd, $path, $limit, $offset, $firstParent);
-        $outputLines = $this->getRepository()->getCaller()->execute(
-            $command,
-            true,
-            $this->getRepository()->getPath()
-        )->getOutputLines(true);
+        $command = LogRangeCommand::getInstance($this->getRepository())->showLog(
+            $refStart,
+            $refEnd,
+            $path,
+            $limit,
+            $offset,
+            $firstParent
+        );
+
+        $outputLines = $this->getRepository()
+            ->getCaller()
+            ->execute($command, true, $this->getRepository()->getPath())
+            ->getOutputLines(true);
+
         $this->parseOutputLines($outputLines);
     }
 
-    private function parseOutputLines($outputLines)
+    private function parseOutputLines(array $outputLines)
     {
         $commitLines = null;
-        $this->rangeCommits = array();
+        $this->rangeCommits = [];
         foreach ($outputLines as $line) {
             if (preg_match('/^commit (\w+)$/', $line) > 0) {
                 if (null !== $commitLines) {
                     $this->rangeCommits[] = Commit::createFromOutputLines($this->getRepository(), $commitLines);
                 }
-                $commitLines = array();
+                $commitLines = [];
             }
             $commitLines[] = $line;
         }
+
         if (null !== $commitLines && count($commitLines) > 0) {
             $this->rangeCommits[] = Commit::createFromOutputLines($this->getRepository(), $commitLines);
         }
@@ -155,7 +172,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      *
      * @return Commit|null
      */
-    public function index($index)
+    public function index(int $index)
     {
         return $this->offsetGet($index);
     }
@@ -270,7 +287,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      *
      * @param \GitElephant\Repository $repository the repository variable
      */
-    public function setRepository($repository)
+    public function setRepository(Repository $repository)
     {
         $this->repository = $repository;
     }

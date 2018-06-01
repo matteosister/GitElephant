@@ -48,7 +48,7 @@ class Status
      */
     private function __construct(Repository $repository)
     {
-        $this->files = array();
+        $this->files = [];
         $this->repository = $repository;
         $this->createFromCommand();
     }
@@ -150,7 +150,7 @@ class Status
      *
      * @param array $lines
      */
-    private function parseOutputLines($lines)
+    private function parseOutputLines(array $lines)
     {
         foreach ($lines as $line) {
             preg_match('/([MADRCU\? ])?([MADRCU\? ])?\ "?(\S+)"? ?( -> )?(\S+)?/', $line, $matches);
@@ -167,7 +167,7 @@ class Status
      *
      * @return mixed
      */
-    protected function splitStatusLine($line)
+    protected function splitStatusLine(string $line)
     {
         preg_match('/([MADRCU\?])?([MADRCU\?])?\ "?(\S+)"? ?( -> )?(\S+)?/', $line, $matches);
 
@@ -181,14 +181,19 @@ class Status
      *
      * @return Sequence
      */
-    protected function filterByType($type)
+    protected function filterByType(string $type)
     {
         if (!$this->files) {
             return new Sequence();
         }
 
-        return new Sequence(array_filter($this->files, function (StatusFile $statusFile) use ($type) {
-            return $type === $statusFile->getWorkingTreeStatus() || $type === $statusFile->getIndexStatus();
-        }));
+        return new Sequence(
+            array_filter(
+                $this->files,
+                function (StatusFile $statusFile) use ($type) {
+                    return $type === $statusFile->getWorkingTreeStatus() || $type === $statusFile->getIndexStatus();
+                }
+            )
+        );
     }
 }

@@ -90,7 +90,7 @@ class NodeObject implements TreeishInterface
      * @see LsTreeCommand::tree
      * @return NodeObject
      */
-    public static function createFromOutputLine(Repository $repository, $outputLine)
+    public static function createFromOutputLine(Repository $repository, string $outputLine)
     {
         $slices = static::getLineSlices($outputLine);
         $fullPath = $slices['fullPath'];
@@ -121,11 +121,11 @@ class NodeObject implements TreeishInterface
      *
      * @return array
      */
-    public static function getLineSlices($line)
+    public static function getLineSlices(string $line)
     {
         preg_match('/^(\d+) (\w+) ([a-z0-9]+) +(\d+|-)\t(.*)$/', $line, $matches);
         $permissions = $matches[1];
-        $type        = null;
+        $type = null;
         switch ($matches[2]) {
             case NodeObject::TYPE_TREE:
                 $type = NodeObject::TYPE_TREE;
@@ -137,17 +137,17 @@ class NodeObject implements TreeishInterface
                 $type = NodeObject::TYPE_LINK;
                 break;
         }
-        $sha      = $matches[3];
-        $size     = $matches[4];
+        $sha = $matches[3];
+        $size = $matches[4];
         $fullPath = $matches[5];
 
-        return array(
+        return [
             'permissions' => $permissions,
             'type'        => $type,
             'sha'         => $sha,
             'size'        => $size,
-            'fullPath'    => $fullPath
-        );
+            'fullPath'    => $fullPath,
+        ];
     }
 
     /**
@@ -161,15 +161,23 @@ class NodeObject implements TreeishInterface
      * @param string                  $name        node name
      * @param string                  $path        node path
      */
-    public function __construct(Repository $repository, $permissions, $type, $sha, $size, $name, $path)
+    public function __construct(
+        Repository $repository,
+        string $permissions,
+        string $type,
+        string $sha,
+        string $size,
+        string $name,
+        string $path
+    )
     {
-        $this->repository  = $repository;
+        $this->repository = $repository;
         $this->permissions = $permissions;
-        $this->type        = $type;
-        $this->sha         = $sha;
-        $this->size        = $size;
-        $this->name        = $name;
-        $this->path        = $path;
+        $this->type = $type;
+        $this->sha = $sha;
+        $this->size = $size;
+        $this->name = $name;
+        $this->path = $path;
     }
 
     /**
@@ -179,7 +187,7 @@ class NodeObject implements TreeishInterface
      */
     public function __toString()
     {
-        return (string) $this->name;
+        return (string)$this->name;
     }
 
     /**
@@ -189,7 +197,7 @@ class NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getMimeType($basePath)
+    public function getMimeType(string $basePath)
     {
         return mime_content_type($basePath . DIRECTORY_SEPARATOR . $this->path);
     }
@@ -205,7 +213,7 @@ class NodeObject implements TreeishInterface
         if ($pos === false) {
             return null;
         } else {
-            return substr($this->name, $pos+1);
+            return substr($this->name, $pos + 1);
         }
     }
 
@@ -247,7 +255,7 @@ class NodeObject implements TreeishInterface
     public function getFullPath()
     {
         return rtrim(
-            '' == $this->path ? $this->name : $this->path.DIRECTORY_SEPARATOR.$this->name,
+            '' == $this->path ? $this->name : $this->path . DIRECTORY_SEPARATOR . $this->name,
             DIRECTORY_SEPARATOR
         );
     }
@@ -320,20 +328,21 @@ class NodeObject implements TreeishInterface
     public function getLastCommit()
     {
         $log = $this->repository->getLog('HEAD', $this->getFullPath(), 1);
+
         return $log[0];
     }
 
     /**
      * rev-parse command - often used to return a commit tag.
      *
-     * @param array         $options the options to apply to rev-parse
+     * @param array $options the options to apply to rev-parse
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function revParse(Array $options = array())
+    public function revParse(array $options = [])
     {
         $c = RevParseCommand::getInstance()->revParse($this, $options);
         $caller = $this->repository->getCaller();

@@ -49,7 +49,7 @@ class PushCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function push($remote = 'origin', $branch = 'master', $args = null)
+    public function push($remote = 'origin', $branch = 'master', string $args = null)
     {
         if ($remote instanceof Remote) {
             $remote = $remote->getName();

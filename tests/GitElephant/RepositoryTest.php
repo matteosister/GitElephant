@@ -15,6 +15,7 @@ namespace GitElephant;
 
 use GitElephant\Command\ResetCommand;
 use \GitElephant\Objects\Branch;
+use GitElephant\Objects\Log;
 use \GitElephant\Objects\NodeObject;
 use \GitElephant\Objects\Tag;
 
@@ -25,7 +26,6 @@ use \GitElephant\Objects\Tag;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class RepositoryTest extends TestCase
 {
     /**
@@ -228,7 +228,7 @@ class RepositoryTest extends TestCase
             $this->getRepository()->getMainBranch()->getName(),
             'main branch should be named "master"'
         );
-        $this->assertEquals(array('master'), $this->getRepository()->getBranches(true));
+        $this->assertEquals(['master'], $this->getRepository()->getBranches(true));
         $this->getRepository()->createBranch('develop');
         $this->assertContains('master', $this->getRepository()->getBranches(true));
         $this->assertContains('develop', $this->getRepository()->getBranches(true));
@@ -297,7 +297,8 @@ class RepositoryTest extends TestCase
         $this->assertEquals(3, count($this->getRepository()->getTree()));
         try {
             $this->getRepository()->merge($this->getRepository()->getBranch('branch2'), '', 'ff-only');
-        } catch (\RuntimeException $e) {
+        }
+        catch (\RuntimeException $e) {
             return;
         }
         $this->fail("Merge should have produced a runtime exception.");
@@ -340,8 +341,10 @@ class RepositoryTest extends TestCase
         $this->getRepository()->createTag('0.0.1');
         sleep(1);
         $this->assertEquals(Tag::pick($this->getRepository(), '0.0.1'), $this->getRepository()->getLastTag());
+
         $this->getRepository()->createTag('0.0.05');
         $this->assertEquals(Tag::pick($this->getRepository(), '0.0.05'), $this->getRepository()->getLastTag());
+
         $this->getRepository()->deleteTag(Tag::pick($this->getRepository(), '0.0.05'));
         $this->assertEquals(Tag::pick($this->getRepository(), '0.0.1'), $this->getRepository()->getLastTag());
     }
@@ -398,10 +401,10 @@ class RepositoryTest extends TestCase
         $obj = $tree[0];
 
         $log = $this->getRepository()->getObjectLog($obj);
-        $this->assertInstanceOf('GitElephant\Objects\Log', $log);
+        $this->assertInstanceOf(Log::class, $log);
         $this->assertEquals(1, $log->count());
 
-        $log = $this->getRepository()->getObjectLog($obj, null, null, null);
+        $log = $this->getRepository()->getObjectLog($obj, null, 10);
         $this->assertEquals(5, $log->count());
 
         $this->assertEquals('added E.txt', $log->first()->getMessage()->toString());
@@ -437,7 +440,7 @@ class RepositoryTest extends TestCase
         /* @var $treeObj NodeObject */
         foreach ($tree as $treeObj) {
             $name = $treeObj->getName();
-            $log = $repo->getObjectLog($treeObj, null, null, null);
+            $log = $repo->getObjectLog($treeObj, null, 10);
 
             $this->assertEquals(2, $log->count());
 
@@ -476,7 +479,7 @@ class RepositoryTest extends TestCase
         $repo->checkout('master');
         $tree = $repo->getTree();
         $dir = $tree[0];
-        $log = $repo->getObjectLog($dir, null, null, null);
+        $log = $repo->getObjectLog($dir, null, 10);
 
         $this->assertEquals(2, $log->count());
         $this->assertEquals('A/A2', $log->first()->getMessage()->toString());
@@ -485,7 +488,7 @@ class RepositoryTest extends TestCase
         $repo->checkout('test-branch');
         $tree = $repo->getTree();
         $dir = $tree[0];
-        $log = $repo->getObjectLog($dir, null, null, null);
+        $log = $repo->getObjectLog($dir, null, 10);
 
         $this->assertEquals(3, $log->count());
         $this->assertEquals('A/A3', $log->first()->getMessage()->toString());
@@ -523,7 +526,7 @@ class RepositoryTest extends TestCase
             $this->getRepository()->commit('test commit ' . $i, true);
         }
 
-        $log = $this->getRepository()->getLog(array('test-branch', '^master'));
+        $log = $this->getRepository()->getLog(['test-branch', '^master']);
         $this->assertInstanceOf('GitElephant\Objects\Log', $this->getRepository()->getLog());
         $this->assertEquals(2, $log->count());
     }
@@ -671,7 +674,7 @@ class RepositoryTest extends TestCase
         $branch = $this->getRepository()->getBranch('master');
         $tree = $this->getRepository()->getTree($branch, 'file1');
         $treeObject = $tree->getBlob();
-        $this->assertEquals(array('file content'), $this->getRepository()->outputContent($treeObject, $branch));
+        $this->assertEquals(['file content'], $this->getRepository()->outputContent($treeObject, $branch));
     }
 
     /**
@@ -856,7 +859,7 @@ class RepositoryTest extends TestCase
         $this->addFile('test1', null, null, $r);
         $r->commit('test commit', true);
         $master = $r->getBranch('master');
-        $revParse = $r->revParse($master, array());
+        $revParse = $r->revParse($master, []);
         $this->assertEquals($master->getSha(), $revParse[0]);
     }
 
@@ -887,11 +890,11 @@ class RepositoryTest extends TestCase
     {
         $repo = $this->getRepository();
 
-        $configs = array(
+        $configs = [
             'test1' => true,
             'test2' => 1,
             'test3' => 'value',
-        );
+        ];
         $this->assertEmpty($repo->getGlobalConfigs());
 
         foreach ($configs as $configName => $configValue) {
@@ -911,19 +914,19 @@ class RepositoryTest extends TestCase
     public function testResetHard()
     {
         $this->initRepository();
-        $repo=$this->getRepository();
+        $repo = $this->getRepository();
         $repo->init();
         $this->addFile('file1');
         $repo->stage();
         $repo->commit('message1');
-        $headCommit=$repo->getCommit();
+        $headCommit = $repo->getCommit();
         $this->addFile('file2');
         $repo->stage();
         $repo->commit('message2');
 
-        $this->assertEquals(2,$repo->countCommits());
-        $repo->reset($headCommit,array(ResetCommand::OPTION_HARD));
-        $this->assertEquals(1,$repo->countCommits());
+        $this->assertEquals(2, $repo->countCommits());
+        $repo->reset($headCommit, [ResetCommand::OPTION_HARD]);
+        $this->assertEquals(1, $repo->countCommits());
         $this->assertEmpty($repo->getIndexStatus()->added());
     }
 
@@ -933,19 +936,19 @@ class RepositoryTest extends TestCase
     public function testResetSoft()
     {
         $this->initRepository();
-        $repo=$this->getRepository();
+        $repo = $this->getRepository();
         $repo->init();
         $this->addFile('file1');
         $repo->stage();
         $repo->commit('message1');
-        $headCommit=$repo->getCommit();
+        $headCommit = $repo->getCommit();
         $this->addFile('file2');
         $repo->stage();
         $repo->commit('message2');
 
-        $this->assertEquals(2,$repo->countCommits());
-        $repo->reset($headCommit,array(ResetCommand::OPTION_SOFT));
-        $this->assertEquals(1,$repo->countCommits());
+        $this->assertEquals(2, $repo->countCommits());
+        $repo->reset($headCommit, [ResetCommand::OPTION_SOFT]);
+        $this->assertEquals(1, $repo->countCommits());
         $this->assertNotEmpty($repo->getIndexStatus()->added());
     }
 
@@ -960,11 +963,11 @@ class RepositoryTest extends TestCase
     {
         $repo = $this->getRepository();
 
-        $options = array(
+        $options = [
             'test1' => true,
             'test2' => 1,
             'test3' => 'value',
-        );
+        ];
         $this->assertEmpty($repo->getGlobalOptions());
 
         foreach ($options as $configName => $configValue) {
@@ -989,11 +992,11 @@ class RepositoryTest extends TestCase
     {
         $repo = $this->getRepository();
 
-        $args = array(
+        $args = [
             true,
             1,
             'value',
-        );
+        ];
         $this->assertEmpty($repo->getGlobalCommandArguments());
 
         foreach ($args as $configValue) {

@@ -68,13 +68,18 @@ class TreeTest extends TestCase
      */
     public function testWithPath()
     {
+        /** @var Tree $tree */
         $tree = $this->repository->getTree('HEAD');
         $treeObj1 = $tree[0];
+
         $tree = $this->repository->getTree('HEAD', $treeObj1);
+
         $this->assertInstanceOf('Traversable', $tree);
         $this->assertInstanceOf('Countable', $tree);
         $this->assertCount(3, $tree);
+
         $treeObjChild = $tree[0];
+
         $this->assertEquals(NodeObject::TYPE_TREE, $treeObjChild->getType());
         $tree = $this->repository->getTree('HEAD', $treeObjChild);
         $this->assertCount(1, $tree);

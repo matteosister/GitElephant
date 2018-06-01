@@ -25,6 +25,8 @@ Requirements
 - php >= 7.0.0
 - *nix system with git installed
 
+*For php 5.x please use GitElephant version 1.x.*
+
 I work on linux, but the lib should work well with every unix system, as far as a git binary is available.
 I don't have a windows installation to test...if someone want to help...
 

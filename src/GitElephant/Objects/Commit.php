@@ -104,13 +104,13 @@ class Commit implements TreeishInterface, \Countable
      * Class constructor
      *
      * @param \GitElephant\Repository $repository the repository
-     * @param string                  $treeish    a treeish reference
+     * @param TreeishInterface|string $treeish    a treeish reference
      */
     private function __construct(Repository $repository, $treeish = 'HEAD')
     {
         $this->repository = $repository;
         $this->ref = $treeish;
-        $this->parents = array();
+        $this->parents = [];
     }
 
     /**
@@ -128,7 +128,7 @@ class Commit implements TreeishInterface, \Countable
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Commit
      */
-    public static function create(Repository $repository, $message, $stageAll = false, $author = null)
+    public static function create(Repository $repository, string $message, bool $stageAll = false, $author = null)
     {
         $repository->getCaller()->execute(MainCommand::getInstance($repository)->commit($message, $stageAll, $author));
 
@@ -161,7 +161,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @return Commit
      */
-    public static function createFromOutputLines(Repository $repository, $outputLines)
+    public static function createFromOutputLines(Repository $repository, array $outputLines)
     {
         $commit = new self($repository);
         $commit->parseOutputLines($outputLines);
@@ -200,7 +200,7 @@ class Commit implements TreeishInterface, \Countable
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return int|void
+     * @return int
      */
     public function count()
     {
@@ -221,18 +221,21 @@ class Commit implements TreeishInterface, \Countable
      */
     private function parseOutputLines($outputLines)
     {
-        $message = array();
+        $message = [];
         foreach ($outputLines as $line) {
-            $matches = array();
+            $matches = [];
             if (preg_match('/^commit (\w+)$/', $line, $matches) > 0) {
                 $this->sha = $matches[1];
             }
+
             if (preg_match('/^tree (\w+)$/', $line, $matches) > 0) {
                 $this->tree = $matches[1];
             }
+
             if (preg_match('/^parent (\w+)$/', $line, $matches) > 0) {
                 $this->parents[] = $matches[1];
             }
+
             if (preg_match('/^author (.*) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
                 $author = new Author();
                 $author->setName($matches[1]);
@@ -242,6 +245,7 @@ class Commit implements TreeishInterface, \Countable
                 $date->modify($date->getOffset() . ' seconds');
                 $this->datetimeAuthor = $date;
             }
+
             if (preg_match('/^committer (.*) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
                 $committer = new Author();
                 $committer->setName($matches[1]);
@@ -251,10 +255,12 @@ class Commit implements TreeishInterface, \Countable
                 $date->modify($date->getOffset() . ' seconds');
                 $this->datetimeCommitter = $date;
             }
+
             if (preg_match('/^    (.*)$/', $line, $matches)) {
                 $message[] = $matches[1];
             }
         }
+
         $this->message = new Message($message);
     }
 
@@ -353,7 +359,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @return mixed
      */
-    public function getSha($short = false)
+    public function getSha(bool $short = false)
     {
         return $short ? substr($this->sha, 0, 7) : $this->sha;
     }
@@ -391,14 +397,14 @@ class Commit implements TreeishInterface, \Countable
     /**
      * rev-parse command - often used to return a commit tag.
      *
-     * @param array         $options the options to apply to rev-parse
+     * @param array $options the options to apply to rev-parse
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function revParse(Array $options = array())
+    public function revParse(array $options = [])
     {
         $c = RevParseCommand::getInstance()->revParse($this, $options);
         $caller = $this->repository->getCaller();
@@ -418,8 +424,10 @@ class Commit implements TreeishInterface, \Countable
     public function tagged()
     {
         $result = false;
+
+        /** @var Tag $tag */
         foreach ($this->repository->getTags() as $tag) {
-            if ($tag->getSha() == $this->getSha()) {
+            if ($tag->getSha() === $this->getSha()) {
                 $result = true;
                 break;
             }
@@ -435,9 +443,11 @@ class Commit implements TreeishInterface, \Countable
      */
     public function getTags()
     {
-        $currentCommitTags = array();
+        $currentCommitTags = [];
+
+        /** @var Tag $tag */
         foreach ($this->repository->getTags() as $tag) {
-            if ($tag->getSha() == $this->getSha()) {
+            if ($tag->getSha() === $this->getSha()) {
                 $currentCommitTags[] = $tag;
             }
         }

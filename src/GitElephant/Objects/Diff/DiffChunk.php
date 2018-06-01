@@ -82,7 +82,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      *
      * @throws \Exception
      */
-    public function __construct($lines)
+    public function __construct(array $lines)
     {
         $this->position = 0;
 
@@ -97,7 +97,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      *
      * @throws \Exception
      */
-    private function parseLines($lines)
+    private function parseLines(array $lines)
     {
         $originUnchanged = $this->originStartLine;
         $destUnchanged = $this->destStartLine;
@@ -108,21 +108,15 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
             if (preg_match('/^\+(.*)/', $line)) {
                 $this->lines[] = new DiffChunkLineAdded($new++, preg_replace('/\+(.*)/', ' $1', $line));
                 $destUnchanged++;
-            } else {
-                if (preg_match('/^-(.*)/', $line)) {
-                    $this->lines[] = new DiffChunkLineDeleted($deleted++, preg_replace('/-(.*)/', ' $1', $line));
-                    $originUnchanged++;
-                } else {
-                    if (preg_match('/^ (.*)/', $line) || $line == '') {
-                        $this->lines[] = new DiffChunkLineUnchanged($originUnchanged++, $destUnchanged++, $line);
-                        $deleted++;
-                        $new++;
-                    } else {
-                        if (!preg_match('/\\ No newline at end of file/', $line)) {
-                            throw new \Exception(sprintf('GitElephant was unable to parse the line %s', $line));
-                        }
-                    }
-                }
+            } else if (preg_match('/^-(.*)/', $line)) {
+                $this->lines[] = new DiffChunkLineDeleted($deleted++, preg_replace('/-(.*)/', ' $1', $line));
+                $originUnchanged++;
+            } else if (preg_match('/^ (.*)/', $line) || $line == '') {
+                $this->lines[] = new DiffChunkLineUnchanged($originUnchanged++, $destUnchanged++, $line);
+                $deleted++;
+                $new++;
+            } else if (!preg_match('/\\ No newline at end of file/', $line)) {
+                throw new \Exception(sprintf('GitElephant was unable to parse the line %s', $line));
             }
         }
     }
@@ -132,21 +126,22 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      *
      * @param string $line a single line
      */
-    private function getLinesNumbers($line)
+    private function getLinesNumbers(string $line)
     {
-        $matches = array();
+        $matches = [];
         preg_match('/@@ -(.*) \+(.*) @@?(.*)/', $line, $matches);
         if (!strpos($matches[1], ',')) {
             // one line
             $this->originStartLine = $matches[1];
-            $this->originEndLine   = $matches[1];
+            $this->originEndLine = $matches[1];
         } else {
             list($this->originStartLine, $this->originEndLine) = explode(',', $matches[1]);
         }
+
         if (!strpos($matches[2], ',')) {
             // one line
             $this->destStartLine = $matches[2];
-            $this->destEndLine   = $matches[2];
+            $this->destEndLine = $matches[2];
         } else {
             list($this->destStartLine, $this->destEndLine) = explode(',', $matches[2]);
         }
@@ -193,14 +188,14 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
-    * Get hunk header line
-    *
-    * @return string
-    */
+     * Get hunk header line
+     *
+     * @return string
+     */
     public function getHeaderLine()
     {
         if (null === $this->headerLine) {
-            $line  = '@@';
+            $line = '@@';
             $line .= ' -' . $this->getOriginStartLine() . ',' . $this->getOriginEndLine();
             $line .= ' +' . $this->getDestStartLine() . ',' . $this->getDestEndLine();
             $line .= ' @@';
