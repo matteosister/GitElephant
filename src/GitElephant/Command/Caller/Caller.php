@@ -134,6 +134,7 @@ class Caller implements CallerInterface
             throw new \RuntimeException($text);
         }
         $this->rawOutput = $process->getOutput();
+
         // rtrim values
         $values = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
         $this->outputLines = $values;

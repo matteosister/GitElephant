@@ -39,7 +39,7 @@ class GitBinary
      *
      * @param null $path the physical path to the git binary
      */
-    public function __construct($path = null)
+    public function __construct(string $path = null)
     {
         if (is_null($path)) {
             // unix only!
@@ -64,7 +64,7 @@ class GitBinary
      *
      * @param string $path the path to the system git binary
      */
-    public function setPath($path)
+    public function setPath(string $path)
     {
         $this->path = $path;
     }

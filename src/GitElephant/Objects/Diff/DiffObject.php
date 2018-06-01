@@ -28,11 +28,11 @@ use \GitElephant\Utilities;
  */
 class DiffObject implements \ArrayAccess, \Countable, \Iterator
 {
-    const MODE_INDEX        = 'index';
-    const MODE_MODE         = 'mode';
-    const MODE_NEW_FILE     = 'new_file';
+    const MODE_INDEX = 'index';
+    const MODE_MODE = 'mode';
+    const MODE_NEW_FILE = 'new_file';
     const MODE_DELETED_FILE = 'deleted_file';
-    const MODE_RENAMED      = 'renamed_file';
+    const MODE_RENAMED = 'renamed_file';
 
     /**
      * the cursor position
@@ -83,10 +83,10 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @throws \InvalidArgumentException
      */
-    public function __construct($lines)
+    public function __construct(array $lines)
     {
         $this->position = 0;
-        $this->chunks   = array();
+        $this->chunks = [];
 
         $this->findPath($lines[0]);
 
@@ -103,7 +103,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
             $this->findMode($lines[1]);
         }
 
-        if ($this->mode == self::MODE_INDEX || $this->mode == self::MODE_NEW_FILE) {
+        if ($this->mode === self::MODE_INDEX || $this->mode === self::MODE_NEW_FILE) {
             $lines = array_slice($lines, $sliceIndex);
             if (!empty($lines)) {
                 $this->findChunks($lines);
@@ -125,9 +125,10 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      * Find the diff chunks
      *
      * @param array $lines output lines for the diff
+     *
      * @throws \InvalidArgumentException
      */
-    private function findChunks($lines)
+    private function findChunks(array $lines)
     {
         $arrayChunks = Utilities::pregSplitArray(
             $lines,
@@ -143,11 +144,11 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @param string $line line content
      */
-    private function findPath($line)
+    private function findPath(string $line)
     {
-        $matches = array();
+        $matches = [];
         if (preg_match('/^diff --git SRC\/(.*) DST\/(.*)$/', $line, $matches)) {
-            $this->originalPath    = $matches[1];
+            $this->originalPath = $matches[1];
             $this->destinationPath = $matches[2];
         }
     }
@@ -157,17 +158,20 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @param string $line line content
      */
-    private function findMode($line)
+    private function findMode(string $line)
     {
         if (preg_match('/^index (.*)\.\.(.*) (.*)$/', $line)) {
             $this->mode = self::MODE_INDEX;
         }
+
         if (preg_match('/^mode (.*)\.\.(.*) (.*)$/', $line)) {
             $this->mode = self::MODE_MODE;
         }
+
         if (preg_match('/^new file mode (.*)/', $line)) {
             $this->mode = self::MODE_NEW_FILE;
         }
+
         if (preg_match('/^deleted file mode (.*)/', $line)) {
             $this->mode = self::MODE_DELETED_FILE;
         }
@@ -178,9 +182,9 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @param string $line line content
      */
-    private function findSimilarityIndex($line)
+    private function findSimilarityIndex(string $line)
     {
-        $matches = array();
+        $matches = [];
         if (preg_match('/^similarity index (.*)\%$/', $line, $matches)) {
             $this->similarityIndex = $matches[1];
         }

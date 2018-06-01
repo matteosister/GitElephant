@@ -49,7 +49,7 @@ class DiffChunkLineUnchanged extends DiffChunkLine
      *
      * @internal param int $number line number
      */
-    public function __construct($originNumber, $destinationNumber, $content)
+    public function __construct(int $originNumber, int $destinationNumber, string $content)
     {
         $this->setOriginNumber($originNumber);
         $this->setDestNumber($destinationNumber);
@@ -62,7 +62,7 @@ class DiffChunkLineUnchanged extends DiffChunkLine
      *
      * @param int $number line number
      */
-    public function setOriginNumber($number)
+    public function setOriginNumber(int $number)
     {
         $this->originNumber = $number;
     }
@@ -82,7 +82,7 @@ class DiffChunkLineUnchanged extends DiffChunkLine
      *
      * @param int $number line number
      */
-    public function setDestNumber($number)
+    public function setDestNumber(int $number)
     {
         $this->destNumber = $number;
     }

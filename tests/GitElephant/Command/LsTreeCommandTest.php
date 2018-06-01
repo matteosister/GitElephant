@@ -23,7 +23,6 @@ use \GitElephant\TestCase;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class LsTreeCommandTest extends TestCase
 {
     /**

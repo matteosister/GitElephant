@@ -43,9 +43,14 @@ class StatusIndex extends Status
      */
     public function all()
     {
-        return new Sequence(array_filter($this->files, function (StatusFile $statusFile) {
-            return $statusFile->getIndexStatus() && '?' !== $statusFile->getIndexStatus();
-        }));
+        return new Sequence(
+            array_filter(
+                $this->files,
+                function (StatusFile $statusFile) {
+                    return $statusFile->getIndexStatus() && '?' !== $statusFile->getIndexStatus();
+                }
+            )
+        );
     }
 
     /**
@@ -55,14 +60,19 @@ class StatusIndex extends Status
      *
      * @return Sequence
      */
-    protected function filterByType($type)
+    protected function filterByType(string $type)
     {
         if (!$this->files) {
             return new Sequence();
         }
 
-        return new Sequence(array_filter($this->files, function (StatusFile $statusFile) use ($type) {
-            return $type === $statusFile->getIndexStatus();
-        }));
+        return new Sequence(
+            array_filter(
+                $this->files,
+                function (StatusFile $statusFile) use ($type) {
+                    return $type === $statusFile->getIndexStatus();
+                }
+            )
+        );
     }
 }

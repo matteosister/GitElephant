@@ -36,7 +36,7 @@ class LsTreeCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -83,9 +83,11 @@ class LsTreeCommand extends BaseCommand
     {
         if ($path instanceof NodeObject) {
             $subjectPath = $path->getFullPath() . ($path->isTree() ? '/' : '');
-        } else {
+        }
+        else {
             $subjectPath = $path;
         }
+
         $what = $ref;
         if ($ref instanceof TreeishInterface) {
             $what = $ref->getSha();

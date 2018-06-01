@@ -43,8 +43,8 @@ class Message
         if (is_array($message)) {
             $this->message = $message;
         } else {
-            $this->message = array();
-            $this->message = (string) $message;
+            $this->message = [];
+            $this->message = (string)$message;
         }
     }
 
@@ -75,7 +75,7 @@ class Message
      *
      * @return string|null
      */
-    public function toString($full = false)
+    public function toString(bool $full = false)
     {
         if (count($this->message) == 0) {
             return null;

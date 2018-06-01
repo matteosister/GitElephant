@@ -24,7 +24,7 @@ namespace GitElephant\Exception;
  *
  * @package GitElephant\Exception
  */
-class InvalidBranchNameException extends \Exception
+class InvalidBranchNameException extends \InvalidArgumentException
 {
     protected $message = 'The name provided is not a valid branch name';
 }

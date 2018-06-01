@@ -60,11 +60,18 @@ class Tag extends NodeObject
      * @param string                  $message    tag message
      *
      * @throws \RuntimeException
-     * @return \GitElephant\Objects\Branch
+     * @return \GitElephant\Objects\Tag
      */
-    public static function create(Repository $repository, $name, $startPoint = null, $message = null)
+    public static function create(
+        Repository $repository,
+        string $name,
+        $startPoint = null,
+        string $message = null
+    )
     {
-        $repository->getCaller()->execute(TagCommand::getInstance($repository)->create($name, $startPoint, $message));
+        $repository
+            ->getCaller()
+            ->execute(TagCommand::getInstance($repository)->create($name, $startPoint, $message));
 
         return $repository->getTag($name);
     }
@@ -79,9 +86,9 @@ class Tag extends NodeObject
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return Commit
+     * @return Tag
      */
-    public static function createFromOutputLines(Repository $repository, $outputLines, $name)
+    public static function createFromOutputLines(Repository $repository, array $outputLines, string $name)
     {
         $tag = new self($repository, $name);
         $tag->parseOutputLines($outputLines);
@@ -99,10 +106,10 @@ class Tag extends NodeObject
      * @throws \InvalidArgumentException
      * @internal param string $line a single tag line from the git binary
      */
-    public function __construct(Repository $repository, $name)
+    public function __construct(Repository $repository, string $name)
     {
         $this->repository = $repository;
-        $this->name    = $name;
+        $this->name = $name;
         $this->fullRef = 'refs/tags/' . $this->name;
         $this->createFromCommand();
     }
@@ -115,7 +122,7 @@ class Tag extends NodeObject
      *
      * @return \GitElephant\Objects\Tag
      */
-    public static function pick(Repository $repository, $name)
+    public static function pick(Repository $repository, string $name)
     {
         return new self($repository, $name);
     }
@@ -154,21 +161,20 @@ class Tag extends NodeObject
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return void
      */
-    private function parseOutputLines($outputLines)
+    private function parseOutputLines(array $outputLines)
     {
         $found = false;
         foreach ($outputLines as $tagString) {
-            if ($tagString != '') {
-                if ($this->name === trim($tagString)) {
-                    $lines = $this->getCaller()
-                        ->execute(RevListCommand::getInstance($this->getRepository())->getTagCommit($this))
-                        ->getOutputLines();
-                    $this->setSha($lines[0]);
-                    $found = true;
-                    break;
-                }
+            if ($tagString != '' and $this->name === trim($tagString)) {
+                $lines = $this->getCaller()
+                    ->execute(RevListCommand::getInstance($this->getRepository())->getTagCommit($this))
+                    ->getOutputLines();
+                $this->setSha($lines[0]);
+                $found = true;
+                break;
             }
         }
+
         if (!$found) {
             throw new \InvalidArgumentException(sprintf('the tag %s doesn\'t exists', $this->name));
         }
@@ -217,7 +223,7 @@ class Tag extends NodeObject
      *
      * @param string $sha sha
      */
-    public function setSha($sha)
+    public function setSha(string $sha)
     {
         $this->sha = $sha;
     }
