@@ -33,28 +33,28 @@ class Utilities
      *
      * @return mixed
      */
-    public static function normalizeDirectorySeparator($path)
+    public static function normalizeDirectorySeparator(string $path)
     {
         return str_replace(DIRECTORY_SEPARATOR, '/', $path);
     }
 
     /**
-    * explode an array by lines that match a regular expression
-    *
-    * @param array  $array  the original array, should be a non-associative array
-    * @param string $regexp the regular expression
-    *
-    * @return array an array of array pieces
-    * @throws \InvalidArgumentException
-    */
-    public static function pregSplitArray($array, $regexp)
+     * explode an array by lines that match a regular expression
+     *
+     * @param array  $list   the original array, should be a non-associative array
+     * @param string $regexp the regular expression
+     *
+     * @return array an array of array pieces
+     * @throws \InvalidArgumentException
+     */
+    public static function pregSplitArray(array $list, string $regexp)
     {
-        if (static::isAssociative($array)) {
+        if (static::isAssociative($list)) {
             throw new \InvalidArgumentException('pregSplitArray only accepts non-associative arrays.');
         }
-        $lineNumbers = array();
-        $arrOut      = array();
-        foreach ($array as $i => $line) {
+        $lineNumbers = [];
+        $arrOut = [];
+        foreach ($list as $i => $line) {
             if (preg_match($regexp, $line)) {
                 $lineNumbers[] = $i;
             }
@@ -62,9 +62,9 @@ class Utilities
 
         foreach ($lineNumbers as $i => $lineNum) {
             if (isset($lineNumbers[$i + 1])) {
-                $arrOut[] = array_slice($array, $lineNum, $lineNumbers[$i + 1] - $lineNum);
+                $arrOut[] = array_slice($list, $lineNum, $lineNumbers[$i + 1] - $lineNum);
             } else {
-                $arrOut[] = array_slice($array, $lineNum);
+                $arrOut[] = array_slice($list, $lineNum);
             }
         }
 
@@ -72,21 +72,21 @@ class Utilities
     }
 
     /**
-     * @param array  $array  a flat array
+     * @param array  $list   a flat array
      * @param string $regexp a regular expression
      *
      * @return array
      */
-    public static function pregSplitFlatArray($array, $regexp)
+    public static function pregSplitFlatArray(array $list, string $regexp)
     {
         $index = 0;
-        $slices = array();
-        $slice = array();
-        foreach ($array as $val) {
+        $slices = [];
+        $slice = [];
+        foreach ($list as $val) {
             if (preg_match($regexp, $val) && !empty($slice)) {
                 $slices[$index] = $slice;
                 ++$index;
-                $slice = array();
+                $slice = [];
             }
             $slice[] = $val;
         }
@@ -100,12 +100,12 @@ class Utilities
     /**
      * Tell if an array is associative
      *
-     * @param array $arr an array
+     * @param array $list an array
      *
      * @return bool
      */
-    public static function isAssociative($arr)
+    public static function isAssociative(array $list)
     {
-        return array_keys($arr) !== range(0, count($arr) - 1);
+        return array_keys($list) !== range(0, count($list) - 1);
     }
 }

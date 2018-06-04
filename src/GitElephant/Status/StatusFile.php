@@ -72,7 +72,7 @@ class StatusFile
      * @param string $name    file name
      * @param string $renamed new file name (if renamed)
      */
-    private function __construct($x, $y, $name, $renamed)
+    private function __construct(string $x, string $y, string $name, string $renamed = null)
     {
         $this->x = ' ' === $x ? null : $x;
         $this->y = ' ' === $y ? null : $y;
@@ -89,7 +89,7 @@ class StatusFile
      *
      * @return StatusFile
      */
-    public static function create($x, $y, $name, $renamed)
+    public static function create(string $x, string $y, string $name, string $renamed = null)
     {
         return new self($x, $y, $name, $renamed);
     }
@@ -139,28 +139,28 @@ class StatusFile
      */
     public function calculateDescription()
     {
-        $status = $this->x.$this->y;
-        $matching = array(
-            '/ [MD]/' => 'not updated',
-            '/M[MD]/' => 'updated in index',
-            '/A[MD]/' => 'added to index',
-            '/D[M]/' => 'deleted from index',
-            '/R[MD]/' => 'renamed in index',
-            '/C[MD]/' => 'copied in index',
+        $status = $this->x . $this->y;
+        $matching = [
+            '/ [MD]/'   => 'not updated',
+            '/M[MD]/'   => 'updated in index',
+            '/A[MD]/'   => 'added to index',
+            '/D[M]/'    => 'deleted from index',
+            '/R[MD]/'   => 'renamed in index',
+            '/C[MD]/'   => 'copied in index',
             '/[MARC] /' => 'index and work tree matches',
             '/[MARC]M/' => 'work tree changed since index',
             '/[MARC]D/' => 'deleted in work tree',
-            '/DD/' => 'unmerged, both deleted',
-            '/AU/' => 'unmerged, added by us',
-            '/UD/' => 'unmerged, deleted by them',
-            '/UA/' => 'unmerged, added by them',
-            '/DU/' => 'unmerged, deleted by us',
-            '/AA/' => 'unmerged, both added',
-            '/UU/' => 'unmerged, both modified',
-            '/\?\?/' => 'untracked',
-            '/!!/' => 'ignored',
-        );
-        $out = array();
+            '/DD/'      => 'unmerged, both deleted',
+            '/AU/'      => 'unmerged, added by us',
+            '/UD/'      => 'unmerged, deleted by them',
+            '/UA/'      => 'unmerged, added by them',
+            '/DU/'      => 'unmerged, deleted by us',
+            '/AA/'      => 'unmerged, both added',
+            '/UU/'      => 'unmerged, both modified',
+            '/\?\?/'    => 'untracked',
+            '/!!/'      => 'ignored',
+        ];
+        $out = [];
         foreach ($matching as $pattern => $label) {
             if (preg_match($pattern, $status)) {
                 $out[] = $label;
@@ -175,7 +175,7 @@ class StatusFile
      *
      * @param string $description the description variable
      */
-    public function setDescription($description)
+    public function setDescription(string $description)
     {
         $this->description = $description;
     }
@@ -195,7 +195,7 @@ class StatusFile
      *
      * @param string $type the type variable
      */
-    public function setType($type)
+    public function setType(string $type)
     {
         $this->type = $type;
     }

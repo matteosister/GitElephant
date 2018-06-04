@@ -38,7 +38,7 @@ abstract class DiffChunkLineChanged extends DiffChunkLine
      *
      * @param int $number line number
      */
-    public function setNumber($number)
+    public function setNumber(int $number)
     {
         $this->number = $number;
     }

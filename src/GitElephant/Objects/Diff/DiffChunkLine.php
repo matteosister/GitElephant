@@ -27,8 +27,8 @@ namespace GitElephant\Objects\Diff;
 abstract class DiffChunkLine
 {
     const UNCHANGED = "unchanged";
-    const ADDED     = "added";
-    const DELETED   = "deleted";
+    const ADDED = "added";
+    const DELETED = "deleted";
 
     /**
      * line type
@@ -59,7 +59,7 @@ abstract class DiffChunkLine
      *
      * @param string $type line type
      */
-    public function setType($type)
+    public function setType(string $type)
     {
         $this->type = $type;
     }
@@ -79,7 +79,7 @@ abstract class DiffChunkLine
      *
      * @param string $content line content
      */
-    public function setContent($content)
+    public function setContent(string $content)
     {
         $this->content = $content;
     }

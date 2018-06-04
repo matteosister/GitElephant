@@ -59,6 +59,20 @@ class Caller implements CallerInterface
     private $rawOutput;
 
     /**
+     * the output lines of the command
+     *
+     * @var array
+     */
+    private $errorLines = array();
+
+    /**
+     * raw output
+     *
+     * @var string
+     */
+    private $rawErrorOutput;
+
+    /**
      * Class constructor
      *
      * @param \GitElephant\GitBinary $binary         the binary
@@ -106,6 +120,9 @@ class Caller implements CallerInterface
             $cmd = $this->binary->getPath() . ' ' . $cmd;
         }
 
+        // We rely on the C locale in all output we parse.
+        $cmd = 'LC_ALL=C ' . $cmd;
+
         $process = new Process($cmd, is_null($cwd) ? $this->repositoryPath : $cwd);
         $process->setTimeout(15000);
         $process->run();
@@ -117,6 +134,7 @@ class Caller implements CallerInterface
             throw new \RuntimeException($text);
         }
         $this->rawOutput = $process->getOutput();
+
         // rtrim values
         $values = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
         $this->outputLines = $values;
@@ -125,13 +143,13 @@ class Caller implements CallerInterface
     }
 
     /**
-     * returns the raw output of the last executed command
+     * returns the output of the last executed command
      *
      * @return string
      */
     public function getOutput()
     {
-        return implode(" ", $this->outputLines);
+        return implode("\n", $this->outputLines);
     }
 
     /**
@@ -165,5 +183,48 @@ class Caller implements CallerInterface
     public function getRawOutput()
     {
         return $this->rawOutput;
+    }
+
+    /**
+     * returns the error output of the last executed command
+     *
+     * @return string
+     */
+    public function getErrorOutput()
+    {
+        return implode("\n", $this->errorLines);
+    }
+
+    /**
+     * returns the error output of the last executed command as an array of lines
+     *
+     * @param bool $stripBlankLines remove the blank lines
+     *
+     * @return array
+     */
+    public function getErrorLines($stripBlankLines = false)
+    {
+        if ($stripBlankLines) {
+            $output = array();
+            foreach ($this->errorLines as $line) {
+                if ('' !== $line) {
+                    $output[] = $line;
+                }
+            }
+
+            return $output;
+        }
+
+        return $this->errorLines;
+    }
+
+    /**
+     * Get RawErrorOutput
+     *
+     * @return string
+     */
+    public function getRawErrorOutput()
+    {
+        return $this->rawErrorOutput;
     }
 }

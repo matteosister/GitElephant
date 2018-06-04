@@ -52,7 +52,7 @@ class TagCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function create($name, $startPoint = null, $message = null)
+    public function create(string $name, $startPoint = null, $message = null)
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);

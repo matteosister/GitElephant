@@ -19,9 +19,9 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Command\BranchCommand;
-use \GitElephant\Exception\InvalidBranchNameException;
-use \GitElephant\Repository;
+use GitElephant\Command\BranchCommand;
+use GitElephant\Exception\InvalidBranchNameException;
+use GitElephant\Repository;
 
 /**
  * An object representing a git branch
@@ -78,9 +78,11 @@ class Branch extends NodeObject implements TreeishInterface
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Branch
      */
-    public static function create(Repository $repository, $name, $startPoint = null)
+    public static function create(Repository $repository, string $name, string $startPoint = null)
     {
-        $repository->getCaller()->execute(BranchCommand::getInstance($repository)->create($name, $startPoint));
+        $repository
+            ->getCaller()
+            ->execute(BranchCommand::getInstance($repository)->create($name, $startPoint));
 
         return new self($repository, $name);
     }
@@ -94,7 +96,7 @@ class Branch extends NodeObject implements TreeishInterface
      * @throws \InvalidArgumentException
      * @return Branch
      */
-    public static function createFromOutputLine(Repository $repository, $outputLine)
+    public static function createFromOutputLine(Repository $repository, string $outputLine)
     {
         $matches = static::getMatches($outputLine);
         $branch = new self($repository, $matches[1]);
@@ -119,6 +121,7 @@ class Branch extends NodeObject implements TreeishInterface
         } else {
             $branch = new self($repository, $name);
         }
+
         $repository->checkout($branch);
 
         return $branch;
@@ -135,11 +138,11 @@ class Branch extends NodeObject implements TreeishInterface
      * @throws \GitElephant\Exception\InvalidBranchNameException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function __construct(Repository $repository, $name)
+    public function __construct(Repository $repository, string $name)
     {
         $this->repository = $repository;
         $this->name = trim($name);
-        $this->fullRef = 'refs/heads/'.$name;
+        $this->fullRef = 'refs/heads/' . $name;
         $this->createFromCommand();
     }
 
@@ -154,12 +157,14 @@ class Branch extends NodeObject implements TreeishInterface
         $outputLines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
         foreach ($outputLines as $outputLine) {
             $matches = static::getMatches($outputLine);
+
             if ($this->name === $matches[1]) {
                 $this->parseOutputLine($outputLine);
 
                 return;
             }
         }
+
         throw new InvalidBranchNameException(sprintf('The %s branch doesn\'t exists', $this->name));
     }
 
@@ -167,9 +172,10 @@ class Branch extends NodeObject implements TreeishInterface
      * parse an output line from the BranchCommand::singleInfo command
      *
      * @param string $branchString an output line for a branch
+     *
      * @throws \InvalidArgumentException
      */
-    public function parseOutputLine($branchString)
+    public function parseOutputLine(string $branchString)
     {
         if (preg_match('/^\* (.*)/', $branchString, $matches)) {
             $this->current = true;
@@ -177,6 +183,7 @@ class Branch extends NodeObject implements TreeishInterface
         } else {
             $branchString = trim($branchString);
         }
+
         $matches = static::getMatches($branchString);
         $this->name = $matches[1];
         $this->sha = $matches[2];
@@ -191,11 +198,21 @@ class Branch extends NodeObject implements TreeishInterface
      * @throws \InvalidArgumentException
      * @return array
      */
-    public static function getMatches($branchString)
+    public static function getMatches(string $branchString)
     {
-        $matches = array();
-        preg_match('/^\*?\ *?(\S+)\ +(\S{40})\ +(.+)$/', trim($branchString), $matches);
-        if (!count($matches)) {
+        $branchString = trim($branchString);
+
+        $regexList = [
+            '/^\*?\ *?(\S+)\ +(\S{40})\ +(.+)$/',
+            '/^\*?\ *?\(.*(detached).*\)\ +(\S{40})\ +(.+)$/',
+        ];
+
+        $matches = [];
+        while (empty($matches) and $regex = array_pop($regexList)) {
+            preg_match($regex, trim($branchString), $matches);
+        }
+
+        if (empty($matches)) {
             throw new \InvalidArgumentException(sprintf('the branch string is not valid: %s', $branchString));
         }
 
@@ -217,7 +234,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @param string $name the branch name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
@@ -237,7 +254,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @param string $sha the sha of the branch
      */
-    public function setSha($sha)
+    public function setSha(string $sha)
     {
         $this->sha = $sha;
     }
@@ -257,7 +274,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @param bool $current whether if the branch is the current or not
      */
-    public function setCurrent($current)
+    public function setCurrent(bool $current)
     {
         $this->current = $current;
     }
@@ -277,7 +294,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @param string $comment the branch comment
      */
-    public function setComment($comment)
+    public function setComment(string $comment)
     {
         $this->comment = $comment;
     }
@@ -297,7 +314,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @param string $fullRef full git reference of the branch
      */
-    public function setFullRef($fullRef)
+    public function setFullRef(string $fullRef)
     {
         $this->fullRef = $fullRef;
     }

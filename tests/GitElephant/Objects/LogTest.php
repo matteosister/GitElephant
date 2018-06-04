@@ -76,31 +76,31 @@ class LogTest extends TestCase
      */
     public function testLogCountLimit()
     {
-        $log = $this->getRepository()->getLog(null, null, null);
+        $log = $this->getRepository()->getLog();
         $this->assertEquals(10, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, 10, null);
+        $log = $this->getRepository()->getLog('HEAD', null, 10);
         $this->assertEquals(10, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, 50, null);
+        $log = $this->getRepository()->getLog('HEAD', null, 50);
         $this->assertEquals(10, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, 60, null);
+        $log = $this->getRepository()->getLog('HEAD', null, 60);
         $this->assertEquals(10, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, 1, null);
+        $log = $this->getRepository()->getLog('HEAD', null, 1);
         $this->assertEquals(1, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, 0, null);
+        $log = $this->getRepository()->getLog('HEAD', null, 0);
         $this->assertEquals(0, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, -1, null);
+        $log = $this->getRepository()->getLog('HEAD', null, -1);
         $this->assertEquals(10, $log->count());
 
-        $log = $this->getRepository()->getLog(null, "test\ file\ 1", -1, null);
+        $log = $this->getRepository()->getLog('HEAD', "test\ file\ 1", -1, null);
         $this->assertEquals(1, $log->count());
 
-        $log = $this->getRepository()->getLog(null, "test\ file*", -1, null);
+        $log = $this->getRepository()->getLog('HEAD', "test\ file*", -1, null);
         $this->assertEquals(10, $log->count());
     }
 
@@ -109,16 +109,16 @@ class LogTest extends TestCase
      */
     public function testLogOffset()
     {
-        $log = $this->getRepository()->getLog(null, null, null, 0);
+        $log = $this->getRepository()->getLog('HEAD', null, 15, 0);
         $this->assertEquals(10, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, null, 5);
+        $log = $this->getRepository()->getLog('HEAD', null, 15, 5);
         $this->assertEquals(5, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, null, 50);
+        $log = $this->getRepository()->getLog('HEAD', null, 15, 50);
         $this->assertEquals(0, $log->count());
 
-        $log = $this->getRepository()->getLog(null, null, null, 100);
+        $log = $this->getRepository()->getLog('HEAD', null, 15, 100);
         $this->assertEquals(0, $log->count());
     }
 
@@ -127,7 +127,7 @@ class LogTest extends TestCase
      */
     public function testLogIndex()
     {
-        $log = $this->getRepository()->getLog(null, null, null, null);
+        $log = $this->getRepository()->getLog();
 
         // [0;50[ - 10 = 39
         $this->assertEquals('test commit index:7', $log[2]->getMessage()->toString());
@@ -140,7 +140,7 @@ class LogTest extends TestCase
      */
     public function testLogToArray()
     {
-        $log = $this->getRepository()->getLog(null, null, null, null);
+        $log = $this->getRepository()->getLog();
 
         $this->assertTrue(is_array($log->toArray()));
         $this->assertInternalType('array', $log->toArray());

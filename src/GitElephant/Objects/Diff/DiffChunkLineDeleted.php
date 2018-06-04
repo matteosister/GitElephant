@@ -32,7 +32,7 @@ class DiffChunkLineDeleted extends DiffChunkLineChanged
      * @param int    $number  line number
      * @param string $content line content
      */
-    public function __construct($number, $content)
+    public function __construct(int $number, string $content)
     {
         $this->setNumber($number);
         $this->setContent($content);

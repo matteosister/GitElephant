@@ -35,9 +35,14 @@ class StatusWorkingTree extends Status
      */
     public function all()
     {
-        return new Sequence(array_filter($this->files, function (StatusFile $statusFile) {
-            return $statusFile->getWorkingTreeStatus();
-        }));
+        return new Sequence(
+            array_filter(
+                $this->files,
+                function (StatusFile $statusFile) {
+                    return $statusFile->getWorkingTreeStatus();
+                }
+            )
+        );
     }
 
     /**
@@ -47,14 +52,19 @@ class StatusWorkingTree extends Status
      *
      * @return Sequence
      */
-    protected function filterByType($type)
+    protected function filterByType(string $type)
     {
         if (!$this->files) {
             return new Sequence();
         }
 
-        return new Sequence(array_filter($this->files, function (StatusFile $statusFile) use ($type) {
-            return $type === $statusFile->getWorkingTreeStatus();
-        }));
+        return new Sequence(
+            array_filter(
+                $this->files,
+                function (StatusFile $statusFile) use ($type) {
+                    return $type === $statusFile->getWorkingTreeStatus();
+                }
+            )
+        );
     }
 }

@@ -55,7 +55,7 @@ class Author
      *
      * @param string $email the email
      */
-    public function setEmail($email)
+    public function setEmail(string $email)
     {
         $this->email = $email;
     }
@@ -75,7 +75,7 @@ class Author
      *
      * @param string $name the author name
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->name = $name;
     }
