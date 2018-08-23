@@ -8,8 +8,6 @@ GitElephant is an abstraction layer to manage your git repositories with php
 
 This library officially supports git >= 1.8, older version are supported as well, but with some caveat.
 
-Watch a [live example](http://gitelephant.cypresslab.net) of what you can do with GitElephant, Symfony2 and a git repository...
-
 How it works
 ------------
 
