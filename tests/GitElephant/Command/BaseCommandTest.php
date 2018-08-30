@@ -277,4 +277,11 @@ class BaseCommandTest extends TestCase
         $actual = $ref_bc_cli_meth->invoke($bc);
         $this->assertSame($expected, $actual);
     }
+
+    public function testGetBinaryVersion()
+    {
+        $repo = $this->getRepository();
+        $bc = BaseCommand::getInstance($repo);
+        $this->assertInternalType('string', $bc->getBinaryVersion());
+    }
 }

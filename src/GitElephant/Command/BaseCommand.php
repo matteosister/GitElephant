@@ -95,6 +95,11 @@ class BaseCommand
     private $path = null;
 
     /**
+     * @var string
+     */
+    private $binaryVersion;
+
+    /**
      * constructor
      *
      * should be called by all child classes' constructors to permit use of 
@@ -114,6 +119,7 @@ class BaseCommand
                     $this->addGlobalCommandArgument($argument);
                 }
             }
+            $this->binaryVersion = $repo->getCaller()->getBinaryVersion();
         }
     }
 
@@ -128,6 +134,7 @@ class BaseCommand
         $this->commandSubject         = null;
         $this->commandSubject2        = null;
         $this->path                   = null;
+        $this->binaryVersion          = null;
     }
 
     public static function getInstance(Repository $repo = null)
@@ -436,5 +443,13 @@ class BaseCommand
             }
         }
         return $command;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getBinaryVersion()
+    {
+        return $this->binaryVersion;
     }
 }

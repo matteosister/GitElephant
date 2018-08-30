@@ -90,13 +90,19 @@ class Caller implements CallerInterface
     }
 
     /**
-     * Get the binary path
-     *
-     * @return mixed
+     * @inheritdoc
      */
     public function getBinaryPath()
     {
         return $this->binary->getPath();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBinaryVersion()
+    {
+        return $this->binary->getVersion();
     }
 
     /**

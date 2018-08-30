@@ -13,14 +13,11 @@
 
 namespace GitElephant;
 
-use \GitElephant\GitBinary;
-
 /**
  * GitBinary Test
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
 class GitBinaryTest extends TestCase
 {
     protected $path = '/path/to/binary';
@@ -29,5 +26,11 @@ class GitBinaryTest extends TestCase
     {
         $binary = new GitBinary($this->path);
         $this->assertEquals($this->path, $binary->getPath());
+    }
+
+    public function testGetVersion()
+    {
+        $binary = new GitBinary($this->path);
+        $this->assertInternalType('string', $binary->getVersion());
     }
 }

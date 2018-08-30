@@ -54,6 +54,16 @@ class CallerTest extends TestCase
     }
 
     /**
+     * testGetBinaryVersion
+     */
+    public function testGetBinaryVersion()
+    {
+        $binary = new GitBinary();
+        $c = new Caller($binary, $this->repository->getPath());
+        $this->assertInternalType('string', $c->getBinaryVersion());
+    }
+
+    /**
      * @expectedException \RuntimeException
      */
     public function testGetError()

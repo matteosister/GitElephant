@@ -37,6 +37,11 @@ class CallerSSH2 implements CallerInterface
     private $gitPath;
 
     /**
+     * @var string
+     */
+    private $binaryVersion;
+
+    /**
      * the output lines of the command
      *
      * @var array
@@ -54,6 +59,8 @@ class CallerSSH2 implements CallerInterface
     {
         $this->resource = $resource;
         $this->gitPath = $gitPath;
+        // unix only
+        $this->binaryVersion = $this->execute('--version | cut -d " " -f 3', true);
     }
 
     /**
@@ -102,5 +109,21 @@ class CallerSSH2 implements CallerInterface
         }
 
         return $this->outputLines;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBinaryPath()
+    {
+        return $this->gitPath;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBinaryVersion()
+    {
+        return $this->binaryVersion;
     }
 }

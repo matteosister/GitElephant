@@ -35,6 +35,11 @@ class GitBinary
     private $path;
 
     /**
+     * @var string
+     */
+    private $version;
+
+    /**
      * Class constructor
      *
      * @param null $path the physical path to the git binary
@@ -52,7 +57,7 @@ class GitBinary
      * path getter
      * returns the path of the binary
      *
-     * @return mixed
+     * @return string
      */
     public function getPath()
     {
@@ -67,5 +72,19 @@ class GitBinary
     public function setPath(string $path)
     {
         $this->path = $path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVersion()
+    {
+        if (is_null($this->version)) {
+
+            // unix only!
+            $this->version = exec('git --version | cut -d " " -f 3');
+        }
+
+        return $this->version;
     }
 }
