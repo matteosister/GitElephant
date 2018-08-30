@@ -26,11 +26,17 @@ use \GitElephant\Objects\Commit;
 class CloneCommandTest extends TestCase
 {
     /**
+     * @var string
+     */
+    private $binaryVersion;
+
+    /**
      * set up
      */
     public function setUp()
     {
         $this->initRepository();
+        $this->binaryVersion = exec('git --version | cut -d " " -f 3');
     }
 
     /**
@@ -46,6 +52,31 @@ class CloneCommandTest extends TestCase
         $this->assertEquals(
             "clone 'git://github.com/matteosister/GitElephant.git' 'test'",
             $cc->cloneUrl('git://github.com/matteosister/GitElephant.git', 'test')
+        );
+
+        if (version_compare($this->binaryVersion, '1.8.3.1', '<')) {
+            // Will fail if tested on git version 1.8.3.0 or lower
+            $this->expectException(\RuntimeException::class);
+        }
+        $this->assertEquals(
+            "clone '--branch=master' 'git://github.com/matteosister/GitElephant.git' 'test'",
+            $cc->cloneUrl('git://github.com/matteosister/GitElephant.git', 'test', 'master')
+        );
+
+        $this->assertEquals(
+            "clone '--depth=1' 'git://github.com/matteosister/GitElephant.git' 'test'",
+            $cc->cloneUrl('git://github.com/matteosister/GitElephant.git', 'test', null, 1)
+        );
+
+        // Output depends on git version used
+        if (version_compare($this->binaryVersion, '2.9.0', '<')) {
+            $expected = "clone '--depth=1' '--recursive' 'git://github.com/matteosister/GitElephant.git' 'test'";
+        } else {
+            $expected = "clone '--depth=1' '--shallow-submodules' '--recursive' 'git://github.com/matteosister/GitElephant.git' 'test'";
+        }
+        $this->assertEquals(
+            $expected,
+            $cc->cloneUrl('git://github.com/matteosister/GitElephant.git', 'test', null, 1, true)
         );
     }
 }

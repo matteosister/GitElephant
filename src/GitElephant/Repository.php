@@ -966,19 +966,22 @@ class Repository
     /**
      * Clone a repository
      *
-     * @param string $url the repository url (i.e. git://github.com/matteosister/GitElephant.git)
-     * @param null   $to  where to clone the repo
+     * @param string      $url           the repository url (i.e. git://github.com/matteosister/GitElephant.git)
+     * @param null        $to            where to clone the repo
+     * @param string|null $repoReference Repo reference to clone. Required if performing a shallow clone.
+     * @param int|null    $depth         Depth to clone repo. Specify 1 to perform a shallow clone
+     * @param bool        $recursive     Whether to recursively clone child repos.
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function cloneFrom(string $url, string $to = null)
+    public function cloneFrom(string $url, string $to = null, string $repoReference = null, int $depth = null, bool $recursive = false)
     {
-        $this->caller->execute(CloneCommand::getInstance($this)->cloneUrl($url, $to));
-
+        $command = (Command\CloneCommand::getInstance($this))->cloneUrl($url, $to, $repoReference, $depth, $recursive);
+        $this->caller->execute($command);
         return $this;
     }
 
