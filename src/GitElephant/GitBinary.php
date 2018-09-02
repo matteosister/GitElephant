@@ -80,9 +80,11 @@ class GitBinary
     public function getVersion()
     {
         if (is_null($this->version)) {
-
-            // unix only!
-            $this->version = exec('git --version | cut -d " " -f 3');
+            $version = exec('git --version');
+            if (!preg_match('/^git version [0-9\.]+$/', $version)) {
+                throw new \RuntimeException('Could not parse git version. Unexpected format "' . $version . '".');
+            }
+            $this->version = preg_replace('/^git version ([0-9\.]+)$/', '$1', $version);
         }
 
         return $this->version;
