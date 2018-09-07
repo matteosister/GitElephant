@@ -1,12 +1,6 @@
 language: php
 
-matrix:
-  include:
-    - php: 7.0
-      dist: precise
-
 php:
-    - 7.0
     - 7.1
     - 7.2
 
