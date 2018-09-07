@@ -656,7 +656,7 @@ class RepositoryTest extends TestCase
         $this->addFile('test', null, null, $remote);
         $remote->commit('test', true);
         $local = $this->getRepository(1);
-        $local->cloneFrom($remote->getPath(), '.');
+        $local->cloneFrom($remote->getPath(), '.', 'master', 1, false);
         $commit = $local->getCommit();
         $this->assertEquals($remote->getCommit()->getSha(), $commit->getSha());
         $this->assertEquals($remote->getCommit()->getMessage(), $commit->getMessage());
