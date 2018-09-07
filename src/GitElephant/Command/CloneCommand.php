@@ -63,8 +63,6 @@ class CloneCommand extends BaseCommand
             $this->addCommandSubject2($to);
         }
 
-        $binaryVersion = '2.0.0.0';
-
         if (null !== $repoReference) {
             // git documentation says the --branch was added in 2.0.0, but it exists undocumented at least back to 1.8.3.1
             if (version_compare($binaryVersion, '1.8.3.1', '<')) {
