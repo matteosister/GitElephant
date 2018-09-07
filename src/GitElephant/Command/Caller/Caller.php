@@ -20,36 +20,22 @@
 namespace GitElephant\Command\Caller;
 
 use GitElephant\Exception\InvalidRepositoryPathException;
-use \GitElephant\GitBinary;
 use \Symfony\Component\Process\Process;
 
 /**
  * Caller
  *
  * @author Matteo Giachino <matteog@gmail.com>
+ * @author Tim Bernhard <tim@bernhard-webstudio.ch>
  */
-class Caller implements CallerInterface
+class Caller extends AbstractCaller
 {
-    /**
-     * GitBinary instance
-     *
-     * @var \GitElephant\GitBinary
-     */
-    private $binary;
-
     /**
      * the repository path
      *
      * @var string
      */
     private $repositoryPath;
-
-    /**
-     * the output lines of the command
-     *
-     * @var array
-     */
-    private $outputLines = array();
 
     /**
      * raw output
@@ -59,50 +45,24 @@ class Caller implements CallerInterface
     private $rawOutput;
 
     /**
-     * the output lines of the command
-     *
-     * @var array
-     */
-    private $errorLines = array();
-
-    /**
-     * raw output
-     *
-     * @var string
-     */
-    private $rawErrorOutput;
-
-    /**
      * Class constructor
      *
-     * @param \GitElephant\GitBinary $binary         the binary
-     * @param string                 $repositoryPath the physical base path for the repository
+     * @param string|null   $gitPath the physical path to the git binary
+     * @param string        $repositoryPath the physical base path for the repository
      */
-    public function __construct(GitBinary $binary, $repositoryPath)
+    public function __construct($gitPath, $repositoryPath)
     {
-        $this->binary         = $binary;
+        if (is_null($gitPath)) {
+            // unix only!
+            $gitPath = exec('which git');
+        }
+        $this->setBinaryPath($gitPath);
 
         if (!is_dir($repositoryPath)) {
             throw new InvalidRepositoryPathException($repositoryPath);
         }
 
         $this->repositoryPath = $repositoryPath;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBinaryPath()
-    {
-        return $this->binary->getPath();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBinaryVersion()
-    {
-        return $this->binary->getVersion();
     }
 
     /**
@@ -123,7 +83,7 @@ class Caller implements CallerInterface
     public function execute($cmd, $git = true, $cwd = null, $acceptedExitCodes = array(0))
     {
         if ($git) {
-            $cmd = $this->binary->getPath() . ' ' . $cmd;
+            $cmd = $this->getBinaryPath() . ' ' . $cmd;
         }
 
         if (stripos(PHP_OS, 'WIN') !== 0) {
@@ -191,48 +151,5 @@ class Caller implements CallerInterface
     public function getRawOutput()
     {
         return $this->rawOutput;
-    }
-
-    /**
-     * returns the error output of the last executed command
-     *
-     * @return string
-     */
-    public function getErrorOutput()
-    {
-        return implode("\n", $this->errorLines);
-    }
-
-    /**
-     * returns the error output of the last executed command as an array of lines
-     *
-     * @param bool $stripBlankLines remove the blank lines
-     *
-     * @return array
-     */
-    public function getErrorLines($stripBlankLines = false)
-    {
-        if ($stripBlankLines) {
-            $output = array();
-            foreach ($this->errorLines as $line) {
-                if ('' !== $line) {
-                    $output[] = $line;
-                }
-            }
-
-            return $output;
-        }
-
-        return $this->errorLines;
-    }
-
-    /**
-     * Get RawErrorOutput
-     *
-     * @return string
-     */
-    public function getRawErrorOutput()
-    {
-        return $this->rawErrorOutput;
     }
 }

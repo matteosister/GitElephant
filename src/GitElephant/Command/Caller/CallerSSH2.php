@@ -19,34 +19,20 @@
 
 namespace GitElephant\Command\Caller;
 
+use GitElephant\Command\Caller\AbstractCaller;
+
 /**
  * Caller via ssh2 PECL extension
  *
  * @author Matteo Giachino <matteog@gmail.com>
+ * @author Tim Bernhard <tim@bernhard-webstudio.ch>
  */
-class CallerSSH2 implements CallerInterface
+class CallerSSH2 extends AbstractCaller
 {
     /**
      * @var resource
      */
     private $resource;
-
-    /**
-     * @var string
-     */
-    private $gitPath;
-
-    /**
-     * @var string
-     */
-    private $binaryVersion;
-
-    /**
-     * the output lines of the command
-     *
-     * @var array
-     */
-    private $outputLines = array();
 
     /**
      * @param resource $resource
@@ -58,9 +44,7 @@ class CallerSSH2 implements CallerInterface
     public function __construct($resource, $gitPath = '/usr/bin/git')
     {
         $this->resource = $resource;
-        $this->gitPath = $gitPath;
-        // unix only
-        $this->binaryVersion = $this->execute('--version | cut -d " " -f 3', true);
+        $this->binaryPath = $gitPath;
     }
 
     /**
@@ -75,7 +59,7 @@ class CallerSSH2 implements CallerInterface
     public function execute($cmd, $git = true, $cwd = null)
     {
         if ($git) {
-            $cmd = $this->gitPath . ' ' . $cmd;
+            $cmd = $this->getBinaryPath() . ' ' . $cmd;
         }
         $stream = ssh2_exec($this->resource, $cmd);
         stream_set_blocking($stream, 1);
@@ -88,42 +72,4 @@ class CallerSSH2 implements CallerInterface
         return $this;
     }
 
-    /**
-     * after calling execute this method should return the output
-     *
-     * @param bool $stripBlankLines strips the blank lines
-     *
-     * @return array
-     */
-    public function getOutputLines($stripBlankLines = false)
-    {
-        if ($stripBlankLines) {
-            $output = array();
-            foreach ($this->outputLines as $line) {
-                if ('' !== $line) {
-                    $output[] = $line;
-                }
-            }
-
-            return $output;
-        }
-
-        return $this->outputLines;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBinaryPath()
-    {
-        return $this->gitPath;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getBinaryVersion()
-    {
-        return $this->binaryVersion;
-    }
 }
