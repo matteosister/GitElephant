@@ -100,9 +100,14 @@ class BaseCommand
     private $binaryVersion;
 
     /**
+     * @var Repository
+     */
+    private $repo;
+
+    /**
      * constructor
      *
-     * should be called by all child classes' constructors to permit use of 
+     * should be called by all child classes' constructors to permit use of
      * global configs, options and command arguments
      *
      * @param null|\GitElephant\Repository $repo The repo object to read
@@ -112,14 +117,14 @@ class BaseCommand
         if (!is_null($repo)) {
             $this->addGlobalConfigs($repo->getGlobalConfigs());
             $this->addGlobalOptions($repo->getGlobalOptions());
-            
+
             $arguments = $repo->getGlobalCommandArguments();
             if (!empty($arguments)) {
                 foreach ($arguments as $argument) {
                     $this->addGlobalCommandArgument($argument);
                 }
             }
-            $this->binaryVersion = $repo->getCaller()->getBinaryVersion();
+            $this->repo = $repo;
         }
     }
 
@@ -128,13 +133,13 @@ class BaseCommand
      */
     public function clearAll()
     {
-        $this->commandName            = null;
-        $this->configs                = array();
-        $this->commandArguments       = array();
-        $this->commandSubject         = null;
-        $this->commandSubject2        = null;
-        $this->path                   = null;
-        $this->binaryVersion          = null;
+        $this->commandName = null;
+        $this->configs = array();
+        $this->commandArguments = array();
+        $this->commandSubject = null;
+        $this->commandSubject2 = null;
+        $this->path = null;
+        $this->binaryVersion = null;
     }
 
     public static function getInstance(Repository $repo = null)
@@ -241,7 +246,7 @@ class BaseCommand
      */
     protected function getCommandArguments()
     {
-        return ($this->commandArguments) ? $this->commandArguments: array();
+        return ($this->commandArguments) ? $this->commandArguments : array();
     }
 
     /**
@@ -285,7 +290,7 @@ class BaseCommand
      *
      * @return array Associative array of valid, normalized command options
      */
-    public function normalizeOptions(Array $options = array(), Array $switchOptions = array(), $valueOptions = array())
+    public function normalizeOptions(array $options = array(), array $switchOptions = array(), $valueOptions = array())
     {
         $normalizedOptions = array();
 
@@ -319,7 +324,7 @@ class BaseCommand
             throw new \RuntimeException("You should pass a commandName to execute a command");
         }
 
-        $command  = '';
+        $command = '';
         $command .= $this->getCLIConfigs();
         $command .= $this->getCLIGlobalOptions();
         $command .= $this->getCLICommandName();
@@ -450,6 +455,9 @@ class BaseCommand
      */
     public function getBinaryVersion()
     {
+        if (is_null($this->binaryVersion)) {
+            $this->binaryVersion = $this->repo->getCaller()->getBinaryVersion();
+        }
         return $this->binaryVersion;
     }
 }

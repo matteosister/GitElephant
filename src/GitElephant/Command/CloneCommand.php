@@ -56,6 +56,9 @@ class CloneCommand extends BaseCommand
      */
     public function cloneUrl(string $url, string $to = null, string $repoReference = null, int $depth = null, bool $recursive = false)
     {
+        // get binary version before reset
+        $v = $this->getBinaryVersion();
+
         $this->clearAll();
         $this->addCommandName(static::GIT_CLONE_COMMAND);
         $this->addCommandSubject($url);
@@ -63,13 +66,11 @@ class CloneCommand extends BaseCommand
             $this->addCommandSubject2($to);
         }
 
-        $binaryVersion = '2.0.0.0';
-
         if (null !== $repoReference) {
             // git documentation says the --branch was added in 2.0.0, but it exists undocumented at least back to 1.8.3.1
-            if (version_compare($binaryVersion, '1.8.3.1', '<')) {
+            if (version_compare($v, '1.8.3.1', '<')) {
                 throw new \RuntimeException(
-                    'Please upgrade to git v1.8.3.1 or newer to support cloning a specific branch.'
+                    'Please upgrade to git v1.8.3.1 or newer to support cloning a specific branch. You have ' . $v . '.'
                 );
             }
             $this->addCommandArgument('--branch=' . $repoReference);
@@ -79,7 +80,7 @@ class CloneCommand extends BaseCommand
             $this->addCommandArgument('--depth=' . $depth);
             // shallow-submodules is a nice to have feature. Just ignoring if git version not high enough
             // It would be nice if this had a logger injected for us to log notices
-            if (version_compare($binaryVersion, '2.9.0', '>=') && $recursive && 1 == $depth) {
+            if (version_compare($v, '2.9.0', '>=') && $recursive && 1 == $depth) {
                 $this->addCommandArgument('--shallow-submodules');
             }
         }

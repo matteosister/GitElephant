@@ -15,7 +15,6 @@ namespace GitElephant\Command;
 
 use \GitElephant\Command\CloneCommand;
 use \GitElephant\TestCase;
-use \GitElephant\Objects\Commit;
 
 /**
  * CloneCommandTest
@@ -44,7 +43,7 @@ class CloneCommandTest extends TestCase
      */
     public function testCloneUrl()
     {
-        $cc = CloneCommand::getInstance();
+        $cc = CloneCommand::getInstance($this->getRepository());
         $this->assertEquals(
             "clone 'git://github.com/matteosister/GitElephant.git'",
             $cc->cloneUrl('git://github.com/matteosister/GitElephant.git')
@@ -57,11 +56,13 @@ class CloneCommandTest extends TestCase
         if (version_compare($this->binaryVersion, '1.8.3.1', '<')) {
             // Will fail if tested on git version 1.8.3.0 or lower
             $this->expectException(\RuntimeException::class);
+            $cc->cloneUrl('git://github.com/matteosister/GitElephant.git', 'test', 'master');
+        } else {
+            $this->assertEquals(
+                "clone '--branch=master' 'git://github.com/matteosister/GitElephant.git' 'test'",
+                $cc->cloneUrl('git://github.com/matteosister/GitElephant.git', 'test', 'master')
+            );
         }
-        $this->assertEquals(
-            "clone '--branch=master' 'git://github.com/matteosister/GitElephant.git' 'test'",
-            $cc->cloneUrl('git://github.com/matteosister/GitElephant.git', 'test', 'master')
-        );
 
         $this->assertEquals(
             "clone '--depth=1' 'git://github.com/matteosister/GitElephant.git' 'test'",
