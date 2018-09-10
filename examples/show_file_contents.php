@@ -1,14 +1,14 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-use GitElephant\Repository;
 use GitElephant\Objects\Branch;
 use GitElephant\Objects\Commit;
 use GitElephant\Objects\Tag;
+use GitElephant\Repository;
 
-$repo = Repository::open(realpath(__DIR__.'/../'));
-$binaryFile = $repo->getTree('HEAD', 'src/GitElephant/GitBinary.php');
+$repo = Repository::open(realpath(__DIR__ . '/../'));
+$binaryFile = $repo->getTree('HEAD', 'src/GitElephant/Repository.php');
 
 $master = new Branch($repo, 'master'); // pick a branch
 $commit = Commit::pick($repo, '83e26d0f'); // pick a single commit

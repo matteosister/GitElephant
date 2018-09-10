@@ -13,14 +13,13 @@
 
 namespace GitElephant;
 
-use \GitElephant\Command\MvCommand;
-use \GitElephant\Repository;
-use \GitElephant\GitBinary;
 use \GitElephant\Command\Caller\Caller;
+use \GitElephant\Command\MvCommand;
 use \GitElephant\Objects\Commit;
-use \Symfony\Component\Finder\Finder;
-use \Symfony\Component\Filesystem\Filesystem;
+use \GitElephant\Repository;
 use \Mockery as m;
+use \Symfony\Component\Filesystem\Filesystem;
+use \Symfony\Component\Finder\Finder;
 
 /**
  * Class TestCase
@@ -87,12 +86,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function initRepository($name = null, $index = null)
     {
         $tempDir = realpath(sys_get_temp_dir());
-        $tempName = null === $name ? tempnam($tempDir, 'gitelephant') : $tempDir.DIRECTORY_SEPARATOR.$name;
+        $tempName = null === $name ? tempnam($tempDir, 'gitelephant') : $tempDir . DIRECTORY_SEPARATOR . $name;
         $this->path = $tempName;
         @unlink($this->path);
         $fs = new Filesystem();
         $fs->mkdir($this->path);
-        $this->caller = new Caller(new GitBinary(), $this->path);
+        $this->caller = new Caller(null, $this->path);
         if (is_null($index)) {
             $this->repository = Repository::open($this->path);
             $this->assertInstanceOf('GitElephant\Repository', $this->repository);
@@ -134,8 +133,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
             $path = $repository->getPath();
         }
         $filename = $folder == null ?
-            $path.DIRECTORY_SEPARATOR.$name :
-            $path.DIRECTORY_SEPARATOR.$folder.DIRECTORY_SEPARATOR.$name;
+        $path . DIRECTORY_SEPARATOR . $name :
+        $path . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $name;
         $handle = fopen($filename, 'w');
         $fileContent = $content == null ? 'test content' : $content;
         $this->assertTrue(false !== fwrite($handle, $fileContent), sprintf('unable to write the file %s', $name));
@@ -149,7 +148,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected function removeFile($name)
     {
-        $filename = $this->path.DIRECTORY_SEPARATOR.$name;
+        $filename = $this->path . DIRECTORY_SEPARATOR . $name;
         $this->assertTrue(unlink($filename));
     }
 
@@ -161,7 +160,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected function updateFile($name, $content)
     {
-        $filename = $this->path.DIRECTORY_SEPARATOR.$name;
+        $filename = $this->path . DIRECTORY_SEPARATOR . $name;
         $this->assertTrue(false !== file_put_contents($filename, $content));
     }
 
@@ -179,8 +178,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
             return;
         }
-        $origin = $this->path.DIRECTORY_SEPARATOR.$originName;
-        $target = $this->path.DIRECTORY_SEPARATOR.$targetName;
+        $origin = $this->path . DIRECTORY_SEPARATOR . $originName;
+        $target = $this->path . DIRECTORY_SEPARATOR . $targetName;
         $fs = new Filesystem();
         $fs->rename($origin, $target);
     }
@@ -193,7 +192,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function addFolder($name)
     {
         $fs = new Filesystem();
-        $fs->mkdir($this->path.DIRECTORY_SEPARATOR.$name);
+        $fs->mkdir($this->path . DIRECTORY_SEPARATOR . $name);
     }
 
     protected function addSubmodule($url, $path)
@@ -277,14 +276,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
             array(),
             array(
                 $this->repository->getPath(),
-                $this->getMockBinary()
+                null,
             )
         );
-    }
-
-    protected function getMockBinary()
-    {
-        return $this->getMock('GitElephant\GitBinary');
     }
 
     protected function doCommitTest(

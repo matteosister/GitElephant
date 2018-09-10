@@ -43,4 +43,18 @@ interface CallerInterface
      * @return array
      */
     public function getOutputLines($stripBlankLines = false);
+
+    /**
+     * Get the binary path
+     *
+     * @return string
+     */
+    public function getBinaryPath();
+
+    /**
+     * Get the binary version
+     *
+     * @return string
+     */
+    public function getBinaryVersion();
 }
