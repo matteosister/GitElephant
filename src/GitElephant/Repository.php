@@ -19,42 +19,42 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\ResetCommand;
+use GitElephant\Command\StashCommand;
+use GitElephant\Objects\TreeObject;
+use Symfony\Component\Process\Exception\InvalidArgumentException;
+use \GitElephant\Command\BranchCommand;
+use \GitElephant\Command\Caller\Caller;
+use \GitElephant\Command\CatFileCommand;
+use \GitElephant\Command\CloneCommand;
 use \GitElephant\Command\FetchCommand;
+use \GitElephant\Command\LogCommand;
+use \GitElephant\Command\LsTreeCommand;
+use \GitElephant\Command\MainCommand;
+use \GitElephant\Command\MergeCommand;
 use \GitElephant\Command\PullCommand;
 use \GitElephant\Command\PushCommand;
 use \GitElephant\Command\RemoteCommand;
-use GitElephant\Command\ResetCommand;
-use \GitElephant\Command\Caller\Caller;
-use GitElephant\Command\StashCommand;
+use \GitElephant\Command\RevParseCommand;
+use \GitElephant\Command\SubmoduleCommand;
+use \GitElephant\Command\TagCommand;
 use \GitElephant\Objects\Author;
-use \GitElephant\Objects\Remote;
-use \GitElephant\Objects\Tree;
 use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\Tag;
-use \GitElephant\Objects\NodeObject;
-use \GitElephant\Objects\Diff\Diff;
 use \GitElephant\Objects\Commit;
+use \GitElephant\Objects\Diff\Diff;
 use \GitElephant\Objects\Log;
 use \GitElephant\Objects\LogRange;
+use \GitElephant\Objects\NodeObject;
+use \GitElephant\Objects\Remote;
+use \GitElephant\Objects\Tag;
+use \GitElephant\Objects\Tree;
 use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Command\MainCommand;
-use \GitElephant\Command\BranchCommand;
-use \GitElephant\Command\MergeCommand;
-use \GitElephant\Command\RevParseCommand;
-use \GitElephant\Command\TagCommand;
-use \GitElephant\Command\LogCommand;
-use \GitElephant\Command\CloneCommand;
-use \GitElephant\Command\CatFileCommand;
-use \GitElephant\Command\LsTreeCommand;
-use \GitElephant\Command\SubmoduleCommand;
-use GitElephant\Objects\TreeObject;
 use \GitElephant\Status\Status;
 use \GitElephant\Status\StatusIndex;
 use \GitElephant\Status\StatusWorkingTree;
 use \Symfony\Component\Filesystem\Filesystem;
 use \Symfony\Component\Finder\Finder;
 use \Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Process\Exception\InvalidArgumentException;
 
 /**
  * Repository
@@ -113,17 +113,13 @@ class Repository
      * Class constructor
      *
      * @param string         $repositoryPath the path of the git repository
-     * @param GitBinary|null $binary         the GitBinary instance that calls the commands
+     * @param string|null $binary         the path to the git binary
      * @param string         $name           a repository name
      *
      * @throws Exception\InvalidRepositoryPathException
      */
-    public function __construct($repositoryPath, GitBinary $binary = null, $name = null)
+    public function __construct($repositoryPath, string $binary = null, $name = null)
     {
-        if (is_null($binary)) {
-            $binary = new GitBinary();
-        }
-
         $this->path = $repositoryPath;
         $this->caller = new Caller($binary, $repositoryPath);
         $this->name = $name;
@@ -133,12 +129,12 @@ class Repository
      * Factory method
      *
      * @param string         $repositoryPath the path of the git repository
-     * @param GitBinary|null $binary         the GitBinary instance that calls the commands
+     * @param string|null $binary         the path to the git binary
      * @param string         $name           a repository name
      *
      * @return \GitElephant\Repository
      */
-    public static function open($repositoryPath, GitBinary $binary = null, $name = null)
+    public static function open($repositoryPath, string $binary = null, $name = null)
     {
         return new self($repositoryPath, $binary, $name);
     }
@@ -149,14 +145,14 @@ class Repository
      *
      * @param string|Repository $git            the git remote url, or the filesystem path
      * @param null              $repositoryPath path
-     * @param GitBinary         $binary         binary
+     * @param string|null $binary         the path to the git binary
      * @param null              $name           repository name
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Filesystem\Exception\IOException
      * @return Repository
      */
-    public static function createFromRemote($git, $repositoryPath = null, GitBinary $binary = null, $name = null)
+    public static function createFromRemote($git, $repositoryPath = null, string $binary = null, $name = null)
     {
         if (null === $repositoryPath) {
             $tempDir = realpath(sys_get_temp_dir());
@@ -542,8 +538,8 @@ class Repository
             $allBranches,
             function (string $branch) use ($actualBranches) {
                 return !in_array($branch, $actualBranches)
-                    && preg_match('/^remotes(.+)$/', $branch)
-                    && !preg_match('/^(.+)(HEAD)(.*?)$/', $branch);
+                && preg_match('/^remotes(.+)$/', $branch)
+                && !preg_match('/^(.+)(HEAD)(.*?)$/', $branch);
             }
         );
 
@@ -572,9 +568,9 @@ class Repository
     public function merge(Branch $branch, string $message = '', string $mode = 'auto')
     {
         $valid_modes = [
-            'auto',    // deafult git behavior
+            'auto', // deafult git behavior
             'ff-only', // force fast forward merge
-            'no-ff',   // force 3-way merge
+            'no-ff', // force 3-way merge
         ];
         if (!in_array($mode, $valid_modes)) {
             throw new InvalidArgumentException("Invalid merge mode: $mode.");
@@ -683,8 +679,7 @@ class Repository
         bool $init = false,
         bool $force = false,
         $path = null
-    )
-    {
+    ) {
         $this->caller->execute(SubmoduleCommand::getInstance($this)->update($recursive, $init, $force, $path));
 
         return $this;
@@ -837,8 +832,7 @@ class Repository
         int $limit = 10,
         int $offset = null,
         bool $firstParent = false
-    )
-    {
+    ) {
         return new Log($this, $ref, $path, $limit, $offset, $firstParent);
     }
 
@@ -861,8 +855,7 @@ class Repository
         int $limit = 10,
         int $offset = null,
         bool $firstParent = false
-    )
-    {
+    ) {
         // Handle when clients provide bad start reference on branch creation
         if (preg_match('~^[0]+$~', $refStart)) {
             return new Log($this, $refEnd, $path, $limit, $offset, $firstParent);
@@ -966,19 +959,22 @@ class Repository
     /**
      * Clone a repository
      *
-     * @param string $url the repository url (i.e. git://github.com/matteosister/GitElephant.git)
-     * @param null   $to  where to clone the repo
+     * @param string      $url           the repository url (i.e. git://github.com/matteosister/GitElephant.git)
+     * @param null        $to            where to clone the repo
+     * @param string|null $repoReference Repo reference to clone. Required if performing a shallow clone.
+     * @param int|null    $depth         Depth to clone repo. Specify 1 to perform a shallow clone
+     * @param bool        $recursive     Whether to recursively clone child repos.
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
-     * @throws InvalidArgumentException
+     * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function cloneFrom(string $url, string $to = null)
+    public function cloneFrom(string $url, string $to = null, string $repoReference = null, int $depth = null, bool $recursive = false)
     {
-        $this->caller->execute(CloneCommand::getInstance($this)->cloneUrl($url, $to));
-
+        $command = (Command\CloneCommand::getInstance($this))->cloneUrl($url, $to, $repoReference, $depth, $recursive);
+        $this->caller->execute($command);
         return $this;
     }
 

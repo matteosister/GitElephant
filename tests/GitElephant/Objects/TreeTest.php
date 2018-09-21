@@ -13,10 +13,8 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\GitBinary;
-use \GitElephant\Command\Caller\Caller;
 use \GitElephant\Repository;
+use \GitElephant\TestCase;
 
 /**
  * TreeTest
@@ -90,7 +88,7 @@ class TreeTest extends TestCase
      */
     public function testSubmodule()
     {
-        $tempDir = realpath(sys_get_temp_dir()).'gitelephant_'.md5(uniqid(rand(), 1));
+        $tempDir = realpath(sys_get_temp_dir()) . 'gitelephant_' . md5(uniqid(rand(), 1));
         // horrible hack because php is beautiful.
         $tempName = @tempnam($tempDir, 'gitelephant');
         $path = $tempName;
