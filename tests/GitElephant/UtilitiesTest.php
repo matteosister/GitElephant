@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -14,69 +16,69 @@
 namespace GitElephant;
 
 /**
- * UtilitiesTest
- *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-
-class UtilitiesTest extends TestCase
+final class UtilitiesTest extends TestCase
 {
-    protected $arr = array(
+    private $arr = [
         'a',
         'b',
         'c',
         '1',
         'd',
         'b',
-        'e'
-    );
+        'e',
+    ];
 
     /**
-     * testNormalizeDirectorySeparator
+     * @dataProvider pregSplitArrayProvider()
+     *
+     * @covers \GitElephant\Utilities::pregSplitArray
      */
-    public function testNormalizeDirectorySeparator()
-    {
-        $this->assertEquals('foo/bar', Utilities::normalizeDirectorySeparator('foo/bar'));
-    }
-
-    /**
-     * @covers GitElephant\Utilities::pregSplitArray
-     */
-    public function testPregSplitArray()
+    public function testPregSplitArray(array $expected, array $list, string $pattern)
     {
         $this->assertEquals(
-            array(
-                array('b', 'c', '1', 'd'),
-                array('b', 'e')
-            ),
-            Utilities::pregSplitArray($this->arr, '/^b$/')
-        );
-        $this->assertEquals(
-            array(
-                array('1', 'd', 'b', 'e')
-            ),
-            Utilities::pregSplitArray($this->arr, '/^\d$/')
+            $expected,
+            Utilities::pregSplitArray(
+                $list,
+                $pattern
+            )
         );
     }
 
+    /**
+     * @dataProvider
+     */
     public function testPregSplitFlatArray()
     {
         $this->assertEquals(
-            array(
-                array('a'),
-                array('b', 'c', '1', 'd'),
-                array('b', 'e')),
+            [
+                ['a'],
+                ['b', 'c', '1', 'd'],
+                ['b', 'e'],
+            ],
             Utilities::pregSplitFlatArray($this->arr, '/^b$/')
         );
     }
 
-    /**
-     * @covers GitElephant\Utilities::isAssociative
-     */
-    public function testIsAssociative()
+    public function pregSplitArrayProvider(): array
     {
-        $this->assertFalse(Utilities::isAssociative(array(1, 2)));
-        $this->assertTrue(Utilities::isAssociative(array(1 => 1, 2 => 2)));
-        $this->assertFalse(Utilities::isAssociative(array(0 => 1, 1 => 2)));
+        return [
+            [
+                [
+                    ['b', 'c', '1', 'd'],
+                    ['b', 'e'],
+                ],
+                $this->arr,
+                '/^b$/',
+            ],
+            [
+                [
+                    ['1', 'd', 'b', 'e'],
+                ],
+                $this->arr,
+                '/^\d$/',
+            ],
+        ];
     }
 }
