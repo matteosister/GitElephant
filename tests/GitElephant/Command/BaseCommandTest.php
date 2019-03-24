@@ -282,6 +282,6 @@ class BaseCommandTest extends TestCase
     {
         $repo = $this->getRepository();
         $bc = BaseCommand::getInstance($repo);
-        $this->assertInternalType('string', $bc->getBinaryVersion());
+        $this->assertIsString($bc->getBinaryVersion());
     }
 }

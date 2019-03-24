@@ -143,7 +143,7 @@ class LogTest extends TestCase
         $log = $this->getRepository()->getLog();
 
         $this->assertTrue(is_array($log->toArray()));
-        $this->assertInternalType('array', $log->toArray());
+        $this->assertIsArray($log->toArray());
         $this->assertEquals($log->count(), count($log->toArray()));
     }
 

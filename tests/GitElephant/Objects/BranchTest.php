@@ -45,22 +45,21 @@ class BranchTest extends TestCase
 
     /**
      * testGetMatchesErrors
-     *
-     * @expectedException \InvalidArgumentException
      */
     public function testGetMatchesShortShaError()
     {
         // short sha
+        $this->expectException(\InvalidArgumentException::class);
         $matches = Branch::getMatches('* develop 45eac8c31adfbbf633824cee6ce8cc5040b3351 test message');
     }
 
     /**
      * testGetMatchesErrors
      *
-     * @expectedException \InvalidArgumentException
      */
     public function testGetMatchesNoSpaceError()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $matches = Branch::getMatches('* develop 45eac8c31adfbbf633824cee6ce8cc5040b33511test message');
     }
 
