@@ -42,7 +42,7 @@ class RemoteTest extends TestCase
     /**
      * test setup
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
         $repo = $this->getRepository();
@@ -353,9 +353,9 @@ EOM;
         $verboseOutput = explode("\n", $sample);
 
         $mockRemote = $this->getMockBuilder(Remote::class)
-                        ->disableOriginalConstructor()
-                        ->setMethods(['getShowOutput', 'getVerboseOutput'])
-                        ->getMock();
+            ->disableOriginalConstructor()
+            ->setMethods(['getShowOutput', 'getVerboseOutput'])
+            ->getMock();
 
         $mockRemote->expects($this->any())
             ->method('getShowOutput')

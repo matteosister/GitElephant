@@ -24,7 +24,7 @@ use \GitElephant\Command\MainCommand;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
- 
+
 class MainCommandTest extends TestCase
 {
     /**
@@ -35,7 +35,7 @@ class MainCommandTest extends TestCase
     /**
      * setup
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->mainCommand = new MainCommand();
     }
@@ -46,7 +46,7 @@ class MainCommandTest extends TestCase
     public function testInit()
     {
         $this->assertEquals(MainCommand::GIT_INIT, $this->mainCommand->init());
-        $this->assertEquals(MainCommand::GIT_INIT." '--bare'", $this->mainCommand->init(true));
+        $this->assertEquals(MainCommand::GIT_INIT . " '--bare'", $this->mainCommand->init(true));
     }
 
     /**
@@ -54,7 +54,7 @@ class MainCommandTest extends TestCase
      */
     public function testStatus()
     {
-        $this->assertEquals("'-c' 'color.status'='false' ".MainCommand::GIT_STATUS, $this->mainCommand->status());
+        $this->assertEquals("'-c' 'color.status'='false' " . MainCommand::GIT_STATUS, $this->mainCommand->status());
     }
 
     /**
@@ -62,8 +62,8 @@ class MainCommandTest extends TestCase
      */
     public function testAdd()
     {
-        $this->assertEquals(MainCommand::GIT_ADD." '--all' '.'", $this->mainCommand->add());
-        $this->assertEquals(MainCommand::GIT_ADD." '--all' 'foo'", $this->mainCommand->add('foo'));
+        $this->assertEquals(MainCommand::GIT_ADD . " '--all' '.'", $this->mainCommand->add());
+        $this->assertEquals(MainCommand::GIT_ADD . " '--all' 'foo'", $this->mainCommand->add('foo'));
     }
 
     /**
@@ -71,7 +71,7 @@ class MainCommandTest extends TestCase
      */
     public function testUnstage()
     {
-        $this->assertEquals(MainCommand::GIT_RESET." 'HEAD' -- 'foo'", $this->mainCommand->unstage('foo'));
+        $this->assertEquals(MainCommand::GIT_RESET . " 'HEAD' -- 'foo'", $this->mainCommand->unstage('foo'));
     }
 
     /**
@@ -79,14 +79,20 @@ class MainCommandTest extends TestCase
      */
     public function testCommit()
     {
-        $this->assertEquals(MainCommand::GIT_COMMIT." '-m' 'foo'", $this->mainCommand->commit('foo'));
-        $this->assertEquals(MainCommand::GIT_COMMIT." '-a' '-m' 'foo'", $this->mainCommand->commit('foo', true));
-        $this->assertEquals(MainCommand::GIT_COMMIT." '--author' 'example <example@example.com>' '-m' 'foo'",
-            $this->mainCommand->commit('foo', false, 'example <example@example.com>'));
-        $this->assertEquals(MainCommand::GIT_COMMIT." '-a' '--author' 'example <example@example.com>' '-m' 'foo'",
-            $this->mainCommand->commit('foo', true, 'example <example@example.com>'));
-        $this->assertEquals(MainCommand::GIT_COMMIT." '--author' 'example <example@example.com>' '--allow-empty' '-m' 'foo'",
-          $this->mainCommand->commit('foo', false, 'example <example@example.com>', true));
+        $this->assertEquals(MainCommand::GIT_COMMIT . " '-m' 'foo'", $this->mainCommand->commit('foo'));
+        $this->assertEquals(MainCommand::GIT_COMMIT . " '-a' '-m' 'foo'", $this->mainCommand->commit('foo', true));
+        $this->assertEquals(
+            MainCommand::GIT_COMMIT . " '--author' 'example <example@example.com>' '-m' 'foo'",
+            $this->mainCommand->commit('foo', false, 'example <example@example.com>')
+        );
+        $this->assertEquals(
+            MainCommand::GIT_COMMIT . " '-a' '--author' 'example <example@example.com>' '-m' 'foo'",
+            $this->mainCommand->commit('foo', true, 'example <example@example.com>')
+        );
+        $this->assertEquals(
+            MainCommand::GIT_COMMIT . " '--author' 'example <example@example.com>' '--allow-empty' '-m' 'foo'",
+            $this->mainCommand->commit('foo', false, 'example <example@example.com>', true)
+        );
     }
 
     /**
@@ -94,6 +100,6 @@ class MainCommandTest extends TestCase
      */
     public function testCheckout()
     {
-        $this->assertEquals(MainCommand::GIT_CHECKOUT." '-q' 'master'", $this->mainCommand->checkout('master'));
+        $this->assertEquals(MainCommand::GIT_CHECKOUT . " '-q' 'master'", $this->mainCommand->checkout('master'));
     }
 }

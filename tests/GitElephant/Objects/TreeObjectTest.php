@@ -6,7 +6,7 @@ use GitElephant\TestCase;
 
 class TreeObjectTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
         $this->getRepository()->init();

@@ -10,7 +10,7 @@ use \GitElephant\TestCase;
 
 class NodeObjectTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
         $this->getRepository()->init();

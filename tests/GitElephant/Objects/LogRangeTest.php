@@ -43,7 +43,7 @@ class LogRangeTest extends TestCase
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository(null, 0);
         $this->initRepository(null, 1);

@@ -27,7 +27,7 @@ class LogTest extends TestCase
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->getRepository()->init();
 
@@ -168,6 +168,5 @@ class LogTest extends TestCase
         $log = Log::createFromOutputLines($this->getRepository(), $this->caller->execute($command)->getOutputLines());
         $this->assertInstanceOf('GitElephant\Objects\Log', $log);
         $this->assertCount(1, $log);
-
     }
 }

@@ -31,7 +31,7 @@ class RepositoryTest extends TestCase
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
     }
@@ -297,8 +297,7 @@ class RepositoryTest extends TestCase
         $this->assertEquals(3, count($this->getRepository()->getTree()));
         try {
             $this->getRepository()->merge($this->getRepository()->getBranch('branch2'), '', 'ff-only');
-        }
-        catch (\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             return;
         }
         $this->fail("Merge should have produced a runtime exception.");
@@ -876,7 +875,6 @@ class RepositoryTest extends TestCase
         $r->init(true);
 
         $this->assertEquals(true, $r->isBare());
-
     }
 
     /**
@@ -1148,5 +1146,4 @@ class RepositoryTest extends TestCase
         $this->getRepository()->stashClear();
         $this->assertCount(0, $this->getRepository()->stashList());
     }
-
 }

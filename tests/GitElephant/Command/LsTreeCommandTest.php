@@ -33,7 +33,7 @@ class LsTreeCommandTest extends TestCase
     /**
      * setUp function
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->lsTreeCommand = new LsTreeCommand();
     }

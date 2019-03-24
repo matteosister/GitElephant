@@ -27,7 +27,7 @@ class CallerTest extends TestCase
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
     }
