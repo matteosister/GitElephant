@@ -32,7 +32,7 @@ class CommitTest extends TestCase
      */
     private $commit;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
         $mainCommand = new MainCommand();
@@ -245,5 +245,4 @@ class CommitTest extends TestCase
         $commitTags = $commit->getTags();
         $this->assertEquals('1.0.0', $commitTags[0]->getName());
     }
-
 }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -20,92 +23,53 @@
 namespace GitElephant;
 
 /**
- * Utilities class
- *
  * @author Matteo Giachino <matteog@gmail.com>
  */
 class Utilities
 {
     /**
-     * Replace / with the system directory separator
-     *
-     * @param string $path the original path
-     *
-     * @return mixed
-     */
-    public static function normalizeDirectorySeparator(string $path)
-    {
-        return str_replace(DIRECTORY_SEPARATOR, '/', $path);
-    }
-
-    /**
      * explode an array by lines that match a regular expression
      *
-     * @param array  $list   the original array, should be a non-associative array
-     * @param string $regexp the regular expression
+     * @param string[] $list  a flat array
+     * @param string $pattern a regular expression
      *
-     * @return array an array of array pieces
-     * @throws \InvalidArgumentException
+     * @return string[]
      */
-    public static function pregSplitArray(array $list, string $regexp)
+    public static function pregSplitArray(array $list, string $pattern): array
     {
-        if (static::isAssociative($list)) {
-            throw new \InvalidArgumentException('pregSplitArray only accepts non-associative arrays.');
-        }
-        $lineNumbers = [];
-        $arrOut = [];
-        foreach ($list as $i => $line) {
-            if (preg_match($regexp, $line)) {
-                $lineNumbers[] = $i;
-            }
-        }
-
-        foreach ($lineNumbers as $i => $lineNum) {
-            if (isset($lineNumbers[$i + 1])) {
-                $arrOut[] = array_slice($list, $lineNum, $lineNumbers[$i + 1] - $lineNum);
-            } else {
-                $arrOut[] = array_slice($list, $lineNum);
-            }
-        }
-
-        return $arrOut;
-    }
-
-    /**
-     * @param array  $list   a flat array
-     * @param string $regexp a regular expression
-     *
-     * @return array
-     */
-    public static function pregSplitFlatArray(array $list, string $regexp)
-    {
-        $index = 0;
         $slices = [];
-        $slice = [];
-        foreach ($list as $val) {
-            if (preg_match($regexp, $val) && !empty($slice)) {
-                $slices[$index] = $slice;
+        $index = -1;
+        foreach ($list as $value) {
+            if (preg_match($pattern, $value) === 1) {
                 ++$index;
-                $slice = [];
             }
-            $slice[] = $val;
-        }
-        if (!empty($slice)) {
-            $slices[$index] = $slice;
+
+            if ($index !== -1) {
+                $slices[$index][] = $value;
+            }
         }
 
         return $slices;
     }
 
     /**
-     * Tell if an array is associative
+     * @param string[] $list  a flat array
+     * @param string $pattern a regular expression
      *
-     * @param array $list an array
-     *
-     * @return bool
+     * @return string[]
      */
-    public static function isAssociative(array $list)
+    public static function pregSplitFlatArray(array $list, string $pattern): array
     {
-        return array_keys($list) !== range(0, count($list) - 1);
+        $slices = [];
+        $index = -1;
+        foreach ($list as $value) {
+            if (preg_match($pattern, $value) === 1) {
+                ++$index;
+            }
+
+            $slices[$index + 1][] = $value;
+        }
+
+        return $slices;
     }
 }

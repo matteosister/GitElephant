@@ -32,7 +32,7 @@ class CloneCommandTest extends TestCase
     /**
      * set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
         $this->binaryVersion = exec('git --version | cut -d " " -f 3');

@@ -104,7 +104,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         }
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $fs = new Filesystem();
         if (is_array($this->repository)) {
@@ -133,8 +133,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             $path = $repository->getPath();
         }
         $filename = $folder == null ?
-        $path . DIRECTORY_SEPARATOR . $name :
-        $path . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $name;
+            $path . DIRECTORY_SEPARATOR . $name : $path . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $name;
         $handle = fopen($filename, 'w');
         $fileContent = $content == null ? 'test content' : $content;
         $this->assertTrue(false !== fwrite($handle, $fileContent), sprintf('unable to write the file %s', $name));

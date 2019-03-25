@@ -49,10 +49,11 @@ class TagTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * testNonExistentTag
      */
     public function testNonExistentTag()
     {
+        $this->expectException(\InvalidArgumentException::class);
         $this->getRepository()->init();
         $this->addFile('foo');
         $this->getRepository()->commit('commit1', true);

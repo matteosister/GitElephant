@@ -20,13 +20,17 @@ The api is completely transparent to the end user. You don't have to worry about
 Requirements
 ------------
 
-- php >= 7.0.0
+- php >= `7.2`
 - *nix system with git installed
 
-*For php 5.x please use GitElephant version 1.x.*
+*For php `7.1`, please use GitElephant version 3.x
 
-I work on linux, but the lib should work well with every unix system, as far as a git binary is available.
-I don't have a windows installation to test...if someone want to help...
+*For php `7.0`, please use GitElephant version 2.x
+
+*For php `5.x` please use GitElephant version 1.x
+
+This library is tested on linux, but it should work well with any unix system, as far as a git binary is available.
+For windows support, well.. if someone want to help?!
 
 Installation
 ------------
@@ -38,7 +42,7 @@ To install GitElephant with composer you simply need to create a *composer.json*
 ``` json
 {
     "require": {
-        "cypresslab/gitelephant": "~2.0"
+        "cypresslab/gitelephant": "~4.0"
     }
 }
 ```
@@ -57,7 +61,7 @@ And an handy autoload file to include in you project in *vendor/autoload.php*
 How to use
 ----------
 
-``` php
+```php
 use GitElephant\Repository;
 $repo = new Repository('/path/to/git/repository');
 // or the factory method
@@ -70,14 +74,14 @@ the *Repository* class is the main class where you can find every method you nee
 
 **Read repository**
 
-``` php
+```php
 // get the current status
 $repo->getStatusOutput(); // returns an array of lines of the status message
 ```
 
 *branches*
 
-``` php
+```php
 $repo->getBranches(); // return an array of Branch objects
 $repo->getMainBranch(); // return the Branch instance of the current checked out branch
 $repo->getBranch('master'); // return a Branch instance by its name
@@ -87,7 +91,7 @@ $develop = Branch::checkout($repo, 'develop', true); // create and checkout
 
 *tags*
 
-``` php
+```php
 $repo->getTags(); // array of Tag instances
 $repo->getTag('v1.0'); // a Tag instance by name
 Tag::pick($repo, 'v1.0'); // a Tag instance by name
@@ -98,7 +102,7 @@ $repo->getLastTag();
 
 *commits*
 
-``` php
+```php
 $repo->getCommit(); // get a Commit instance of the current HEAD
 $repo->getCommit('v1.0'); // get a Commit instance for a tag
 $repo->getCommit('1ac370d'); // full sha or part of it
@@ -116,7 +120,7 @@ count($commit);
 
 *remotes*
 
-``` php
+```php
 $repo->getRemote('origin'); // a Remote object
 $repo->getRemotes(); // array of Remote objects
 
@@ -143,7 +147,7 @@ foreach ($log as $commit) {
 
 If you build a GitElephant\Status\Status class, you will get a nice api for getting the actual state of the working tree and staging area.
 
-``` php
+```php
 $status = $repo->getStatus();
 $status = GitElephant\Status\Status::get($repo); // it's the same...
 
@@ -166,7 +170,7 @@ You could also use GitElephant to manage your git repositories via PHP.
 
 Your web server user (like www-data) needs to have access to the folder of the git repository
 
-``` php
+```php
 $repo->init(); // init
 $repo->cloneFrom("git://github.com/matteosister/GitElephant.git"); // clone
 
@@ -204,7 +208,7 @@ $repo->createTag($repo->getCommit());
 
 If you need to access remote repository you have to install the [ssh2 extension](http://www.php.net/manual/en/book.ssh2.php) and pass a new *Caller* to the repository. *this is a new feature...consider this in a testing phase*
 
-``` php
+```php
 $repo = new Repository('/path/to/git/repository');
 $connection = ssh_connect('host', 'port');
 // authorize the connection with the method you want
@@ -222,7 +226,7 @@ a tree representation of the repository, at a given point in history.
 
 **Tree class**
 
-``` php
+```php
 $tree = $repo->getTree(); // retrieve the actual *HEAD* tree
 $tree = $repo->getTree($repo->getCommit('1ac370d')); // retrieve a tree for a given commit
 $tree = $repo->getTree('master', 'lib/vendor'); // retrieve a tree for a given path
@@ -234,7 +238,7 @@ The Tree class implements *ArrayAccess*, *Countable* and *Iterator* interfaces.
 
 You can use it as an array of git objects.
 
-``` php
+```php
 foreach ($tree as $treeObject) {
     echo $treeObject;
 }
@@ -242,7 +246,7 @@ foreach ($tree as $treeObject) {
 
 A Object instance is a php representation of a node in a git tree
 
-``` php
+```php
 echo $treeObject; // the name of the object (folder, file or link)
 $treeObject->getType(); // one class constant of Object::TYPE_BLOB, Object::TYPE_TREE and Object::TYPE_LINK
 $treeObject->getSha();
@@ -254,7 +258,7 @@ $treeObject->getPath();
 
 You can also pass a tree object to the repository to get its subtree
 
-``` php
+```php
 $subtree = $repo->getTree('master', $treeObject);
 ```
 
@@ -263,7 +267,7 @@ Diffs
 
 If you want to check a Diff between two commits the Diff class comes in
 
-``` php
+```php
 // get the diff between the given commit and it parent
 $diff = $repo->getDiff($repo->getCommit());
 // get the diff between two commits
@@ -284,7 +288,7 @@ The Diff class implements *ArrayAccess*, *Countable* and *Iterator* interfaces
 
 You can iterate over DiffObject
 
-``` php
+```php
 foreach ($diff as $diffObject) {
     // mode is a constant of the DiffObject class
     // DiffObject::MODE_INDEX an index change
@@ -306,7 +310,7 @@ Every DiffObject can have multiple chunks of changes. For example:
 
 You can iterate over DiffObject to get DiffChunks. DiffChunks are the last steps of the Diff process, they are a collection of DiffChunkLine Objects
 
-``` php
+```php
 foreach ($diffObject as $diffChunk) {
     if (count($diffChunk) > 0) {
         echo "change detected from line ".$diffChunk->getDestStartLine()." to ".$diffChunk->getDestEndLine();
@@ -331,10 +335,10 @@ $ ./vendor/bin/phpunit # phpunit test suite
 
 If you want to run the test suite you should have all the dependencies loaded.
 
-Symfony2
+Symfony
 --------
 
-There is a [GitElephantBundle](https://github.com/matteosister/GitElephantBundle) to use this library inside a Symfony2 project.
+There is a [GitElephantBundle](https://github.com/matteosister/GitElephantBundle) to use this library inside a Symfony project.
 
 Dependencies
 ------------
@@ -350,9 +354,10 @@ Dependencies
 
 Code style
 ----------
-
-* GitElephant follows the [PSR-2 Coding Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
-* I'm using [gitflow](https://github.com/nvie/gitflow)
+GitElephant follows the:
+* [PSR-2 Coding Standard](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-2-coding-style-guide.md)
+* [Extended Coding Style Guide](https://github.com/php-fig/fig-standards/blob/master/proposed/extended-coding-style-guide.md)
+* [gitflow](https://github.com/nvie/gitflow)
 
 Want to contribute?
 -------------------
@@ -361,8 +366,8 @@ Want to contribute?
 
 Just remember:
 
-* PSR2 coding standard
-* test everything you develop with phpunit
+* PSR coding standards
+* add tests to everything you develop
 * if you don't use gitflow, just remember to branch from "develop" and send your PR there. **Please do not send pull requests on the master branch**.
 
 Author

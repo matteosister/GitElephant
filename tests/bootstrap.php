@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -11,22 +13,12 @@
  * Just for fun...
  */
 
-require_once __DIR__.'/../vendor/autoload.php';
+$file = __DIR__.'/../vendor/autoload.php';
+if (!file_exists($file)) {
+    throw new \RuntimeException('Install dependencies to run test suite.');
+}
+require_once $file;
 require_once __DIR__.'/GitElephant/TestCase.php';
-
-spl_autoload_register(function ($class) {
-    $file = __DIR__.'/../src/'.strtr($class, '\\', '/').'.php';
-    if (file_exists($file)) {
-        require $file;
-        return true;
-    }
-
-    $file = __DIR__.'/../vendor/'.strtr($class, '\\', '/').'.php';
-    if (file_exists($file)) {
-        require $file;
-        return true;
-    }
-});
 
 echo exec('git --version')."\n";
 

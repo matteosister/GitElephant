@@ -35,7 +35,7 @@ use \GitElephant\Command\MainCommand,
 
 class DiffTest extends TestCase
 {
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
     }

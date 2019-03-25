@@ -28,7 +28,7 @@ class BranchCommandTest extends TestCase
     /**
      * setUp, called on every method
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
         $this->getRepository()->init();

@@ -27,7 +27,7 @@ class LogTest extends TestCase
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->getRepository()->init();
 
@@ -143,7 +143,7 @@ class LogTest extends TestCase
         $log = $this->getRepository()->getLog();
 
         $this->assertTrue(is_array($log->toArray()));
-        $this->assertInternalType('array', $log->toArray());
+        $this->assertIsArray($log->toArray());
         $this->assertEquals($log->count(), count($log->toArray()));
     }
 
@@ -168,6 +168,5 @@ class LogTest extends TestCase
         $log = Log::createFromOutputLines($this->getRepository(), $this->caller->execute($command)->getOutputLines());
         $this->assertInstanceOf('GitElephant\Objects\Log', $log);
         $this->assertCount(1, $log);
-
     }
 }

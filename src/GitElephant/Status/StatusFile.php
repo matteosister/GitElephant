@@ -78,7 +78,6 @@ class StatusFile
         $this->y = ' ' === $y ? null : $y;
         $this->name = $name;
         $this->renamed = $renamed;
-        $this->calculateDescription();
     }
 
     /**
@@ -187,6 +186,9 @@ class StatusFile
      */
     public function getDescription()
     {
+        if ($this->description === null) {
+            $this->calculateDescription();
+        }
         return $this->description;
     }
 

@@ -28,7 +28,7 @@ class RemoteCommandTest extends TestCase
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
         $repo = $this->getRepository();

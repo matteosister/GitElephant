@@ -41,6 +41,8 @@ class Status
     protected $files;
 
     /**
+     * Private constructor in order to follow the singleton pattern
+     * 
      * @param Repository $repository
      *
      * @throws \RuntimeException
