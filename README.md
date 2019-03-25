@@ -338,7 +338,7 @@ If you want to run the test suite you should have all the dependencies loaded.
 Symfony
 --------
 
-There is a [GitElephantBundle](https://github.com/matteosister/GitElephantBundle) to use this library inside a Symfony2 project.
+There is a [GitElephantBundle](https://github.com/matteosister/GitElephantBundle) to use this library inside a Symfony project.
 
 Dependencies
 ------------
