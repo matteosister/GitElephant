@@ -1,4 +1,4 @@
-FROM php:7.1.11
+FROM php:7.2-alpine
 
 RUN php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php && \
     php composer-setup.php && \
