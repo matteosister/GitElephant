@@ -43,7 +43,7 @@ class LogRangeTest extends TestCase
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository(null, 0);
         $this->initRepository(null, 1);
@@ -72,7 +72,7 @@ class LogRangeTest extends TestCase
     public function testToArray()
     {
         $logRange = new LogRange($this->getRepository(0), $this->firstCommit, $this->lastCommit);
-        $this->assertInternalType('array', $logRange->toArray());
+        $this->assertIsArray($logRange->toArray());
         $this->assertCount(9, $logRange->toArray());
     }
 
@@ -92,7 +92,7 @@ class LogRangeTest extends TestCase
         $this->assertTrue(isset($logRange[0]));
         foreach ($logRange as $key => $commit) {
             $this->assertInstanceOf('GitElephant\Objects\Commit', $commit);
-            $this->assertInternalType('int', $key);
+            $this->assertIsInt($key);
         }
         $r = $this->getRepository(1);
         $logRange->setRepository($r);
@@ -100,19 +100,21 @@ class LogRangeTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
+     * testExceptionOnSet
      */
     public function testExceptionOnSet()
     {
+        $this->expectException(\RuntimeException::class);
         $logRange = new LogRange($this->getRepository(0), $this->firstCommit, $this->lastCommit);
         $logRange[9] = 'test';
     }
 
     /**
-     * @expectedException \RuntimeException
+     * testExceptionOnUnSet
      */
     public function testExceptionOnUnset()
     {
+        $this->expectException(\RuntimeException::class);
         $logRange = new LogRange($this->getRepository(0), $this->firstCommit, $this->lastCommit);
         unset($logRange[0]);
     }

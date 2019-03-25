@@ -28,7 +28,7 @@ class DiffTreeCommandTest extends TestCase
     /**
      * set up
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
         $this->getRepository()->init();

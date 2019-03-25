@@ -74,10 +74,10 @@ abstract class AbstractCaller implements CallerInterface
     {
         if (is_null($this->binaryVersion)) {
             $version = $this->execute('--version')->getOutput();
-            if (!preg_match('/^git version [0-9\.]+$/', $version)) {
+            if (!preg_match('/^git version [0-9\.]+/', $version)) {
                 throw new \RuntimeException('Could not parse git version. Unexpected format "' . $version . '".');
             }
-            $this->binaryVersion = preg_replace('/^git version ([0-9\.]+)$/', '$1', $version);
+            $this->binaryVersion = preg_replace('/^git version ([0-9\.]+)/', '$1', $version);
         }
 
         return $this->binaryVersion;

@@ -27,7 +27,7 @@ class CallerTest extends TestCase
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
     }
@@ -56,14 +56,15 @@ class CallerTest extends TestCase
     public function testGetBinaryVersion()
     {
         $c = new Caller(null, $this->repository->getPath());
-        $this->assertInternalType('string', $c->getBinaryVersion());
+        $this->assertIsString($c->getBinaryVersion());
     }
 
     /**
-     * @expectedException \RuntimeException
+     * testGetError
      */
     public function testGetError()
     {
+        $this->expectException(\RuntimeException::class);
         $binary = null;
         $caller = new Caller(null, $this->getRepository()->getPath());
         $mainCommand = new MainCommand();
@@ -113,10 +114,11 @@ class CallerTest extends TestCase
     }
 
     /**
-     * @expectedException \GitElephant\Exception\InvalidRepositoryPathException
+     * testRepositoryValidation 
      */
     public function testRepositoryValidation()
     {
+        $this->expectException(\GitElephant\Exception\InvalidRepositoryPathException::class);
         $caller = new Caller(null, 'someinvalidpath');
     }
 }

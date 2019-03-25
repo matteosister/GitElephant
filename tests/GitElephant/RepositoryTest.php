@@ -31,7 +31,7 @@ class RepositoryTest extends TestCase
     /**
      * setUp
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->initRepository();
     }
@@ -297,8 +297,7 @@ class RepositoryTest extends TestCase
         $this->assertEquals(3, count($this->getRepository()->getTree()));
         try {
             $this->getRepository()->merge($this->getRepository()->getBranch('branch2'), '', 'ff-only');
-        }
-        catch (\RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             return;
         }
         $this->fail("Merge should have produced a runtime exception.");
@@ -559,11 +558,11 @@ class RepositoryTest extends TestCase
         $tag = $this->getRepository()->getTag('v0.0.1');
         $this->assertInstanceOf('GitElephant\Objects\Tag', $tag);
         $lastCommit = $this->getRepository()->getCommit();
-        $this->assertNotContains('detached', implode(' ', $this->getRepository()->getStatusOutput()));
+        $this->assertStringNotContainsString('detached', implode(' ', $this->getRepository()->getStatusOutput()));
         $this->getRepository()->checkout($tag);
         $newCommit = $this->getRepository()->getCommit();
         $this->assertNotEquals($newCommit->getSha(), $lastCommit->getSha());
-        $this->assertContains('detached', implode(' ', $this->getRepository()->getStatusOutput()));
+        $this->assertStringContainsString('detached', implode(' ', $this->getRepository()->getStatusOutput()));
     }
 
     /**
@@ -876,7 +875,6 @@ class RepositoryTest extends TestCase
         $r->init(true);
 
         $this->assertEquals(true, $r->isBare());
-
     }
 
     /**
@@ -1060,7 +1058,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->commit('Test commit', true);
         $this->addFile('test2');
         $this->getRepository()->stash('My stash', true);
-        $this->assertInternalType('string', $this->getRepository()->stashShow(0));
+        $this->assertIsString($this->getRepository()->stashShow(0));
     }
 
     /**
@@ -1130,7 +1128,7 @@ class RepositoryTest extends TestCase
         $this->addFile('test');
         $this->getRepository()->commit('Test commit', true);
         $objectName = $this->getRepository()->stashCreate();
-        $this->assertInternalType('string', $objectName);
+        $this->assertIsString($objectName);
     }
 
     /**
@@ -1148,5 +1146,4 @@ class RepositoryTest extends TestCase
         $this->getRepository()->stashClear();
         $this->assertCount(0, $this->getRepository()->stashList());
     }
-
 }

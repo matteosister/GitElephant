@@ -29,7 +29,7 @@ class MessageTest extends \PHPUnit\Framework\TestCase
      */
     protected $msg;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->shortMsg = 'This is the short message';
         $this->longMsg = <<<HDOC
