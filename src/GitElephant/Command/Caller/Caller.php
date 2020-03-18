@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -91,7 +92,10 @@ class Caller extends AbstractCaller
             $cmd = 'LC_ALL=C ' . $cmd;
         }
 
-        $process = new Process($cmd, is_null($cwd) ? $this->repositoryPath : $cwd);
+        if (is_null($cwd) || !is_dir($cwd)) {
+            $cwd = $this->repositoryPath;
+        }
+        $process = Process::fromShellCommandline($cmd, $cwd);
         $process->setTimeout(15000);
         $process->run();
         if (!in_array($process->getExitCode(), $acceptedExitCodes)) {

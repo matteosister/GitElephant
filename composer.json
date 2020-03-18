@@ -14,16 +14,16 @@
     ],
     "require": {
         "php": ">=7.2.0",
-        "symfony/process": "~2.8|~3.0|~4.0",
-        "symfony/filesystem": "~2.8|~3.0|~4.0",
-        "symfony/finder": "~2.8|~3.0|~4.0",
-        "phpcollection/phpcollection": "~0.4"
+        "symfony/process": "~2.8|~3.0|~4.0|~5.0",
+        "symfony/filesystem": "~2.8|~3.0|~4.0|~5.0",
+        "symfony/finder": "~2.8|~3.0|~4.0|~5.0",
+        "phpcollection/phpcollection": "~0.4|~5.0"
     },
     "require-dev": {
         "php": ">=7.2.0",
-        "phpunit/phpunit": "~8.0",
+        "phpunit/phpunit": "~9.0",
         "mockery/mockery": "~1.1",
-        "symfony/var-dumper": "3.*|4.*"
+        "symfony/var-dumper": "~3.0|~4.0|~5.0"
     },
     "minimum-stability": "stable",
     "autoload": {
