@@ -52,23 +52,23 @@ class SubCommandCommand extends BaseCommand
     /**
      * Clear all previous variables
      */
-    public function clearAll()
+    public function clearAll(): void
     {
         parent::clearAll();
         $this->orderedSubjects = null;
     }
 
-    protected function addCommandSubject($subject)
+    protected function addCommandSubject($subject): void
     {
         $this->orderedSubjects[] = $subject;
     }
 
     protected function getCommandSubjects()
     {
-        return ($this->orderedSubjects) ? $this->orderedSubjects : array();
+        return ($this->orderedSubjects !== []) ? $this->orderedSubjects : array();
     }
 
-    protected function extractArguments($args)
+    protected function extractArguments($args): string
     {
         $orderArgs = array();
         foreach ($args as $arg) {
@@ -92,7 +92,7 @@ class SubCommandCommand extends BaseCommand
      * @return string
      * @throws \RuntimeException
      */
-    public function getCommand()
+    public function getCommand(): string
     {
         $command = $this->getCommandName();
 
@@ -107,7 +107,7 @@ class SubCommandCommand extends BaseCommand
             $command .= ' ';
         }
         $subjects = $this->getCommandSubjects();
-        if (count($subjects) > 0) {
+        if ((is_countable($subjects) ? count($subjects) : 0) > 0) {
             $command .= implode(' ', array_map('escapeshellarg', $subjects));
         }
         $command = preg_replace('/\\s{2,}/', ' ', $command);

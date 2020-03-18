@@ -88,7 +88,7 @@ class StatusFile
      *
      * @return StatusFile
      */
-    public static function create(string $x, string $y, string $name, string $renamed = null)
+    public static function create(string $x, string $y, string $name, string $renamed = null): \GitElephant\Status\StatusFile
     {
         return new self($x, $y, $name, $renamed);
     }
@@ -96,7 +96,7 @@ class StatusFile
     /**
      * @return bool
      */
-    public function isRenamed()
+    public function isRenamed(): bool
     {
         return $this->renamed !== null;
     }
@@ -106,7 +106,7 @@ class StatusFile
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -116,7 +116,7 @@ class StatusFile
      *
      * @return string
      */
-    public function getIndexStatus()
+    public function getIndexStatus(): string
     {
         return $this->x;
     }
@@ -126,7 +126,7 @@ class StatusFile
      *
      * @return string
      */
-    public function getWorkingTreeStatus()
+    public function getWorkingTreeStatus(): string
     {
         return $this->y;
     }
@@ -136,7 +136,7 @@ class StatusFile
      *
      * @return string
      */
-    public function calculateDescription()
+    public function calculateDescription(): void
     {
         $status = $this->x . $this->y;
         $matching = [
@@ -174,7 +174,7 @@ class StatusFile
      *
      * @param string $description the description variable
      */
-    public function setDescription(string $description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
@@ -184,7 +184,7 @@ class StatusFile
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         if ($this->description === null) {
             $this->calculateDescription();
@@ -197,7 +197,7 @@ class StatusFile
      *
      * @param string $type the type variable
      */
-    public function setType(string $type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -207,7 +207,7 @@ class StatusFile
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }

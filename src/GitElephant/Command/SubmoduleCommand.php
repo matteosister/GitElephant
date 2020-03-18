@@ -56,7 +56,7 @@ class SubmoduleCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function add($gitUrl, $path = null)
+    public function add($gitUrl, $path = null): string
     {
         $this->clearAll();
         $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_ADD_COMMAND));
@@ -75,7 +75,7 @@ class SubmoduleCommand extends BaseCommand
      *
      * @return string
      */
-    public function init($path = null)
+    public function init($path = null): string
     {
         $this->clearAll();
         $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_INIT_COMMAND));
@@ -92,7 +92,7 @@ class SubmoduleCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function listSubmodules()
+    public function listSubmodules(): string
     {
         $this->clearAll();
         $this->addCommandName(self::SUBMODULE_COMMAND);
@@ -110,7 +110,7 @@ class SubmoduleCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function lists()
+    public function lists(): string
     {
         return $this->listSubmodules();
     }
@@ -125,17 +125,17 @@ class SubmoduleCommand extends BaseCommand
      *
      * @return string
      */
-    public function update($recursive = false, $init = false, $force = false, $path = null)
+    public function update($recursive = false, $init = false, $force = false, $path = null): string
     {
         $this->clearAll();
         $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_UPDATE_COMMAND));
-        if ($recursive === true) {
+        if ($recursive) {
             $this->addCommandArgument(self::SUBMODULE_OPTION_RECURSIVE);
         }
-        if ($init === true) {
+        if ($init) {
             $this->addCommandArgument(self::SUBMODULE_OPTION_INIT);
         }
-        if ($force === true) {
+        if ($force) {
             $this->addCommandArgument(self::SUBMODULE_OPTION_FORCE);
         }
         if ($path !== null) {

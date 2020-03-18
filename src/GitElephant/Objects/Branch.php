@@ -78,7 +78,7 @@ class Branch extends NodeObject implements TreeishInterface
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Branch
      */
-    public static function create(Repository $repository, string $name, string $startPoint = null)
+    public static function create(Repository $repository, string $name, string $startPoint = null): \GitElephant\Objects\Branch
     {
         $repository
             ->getCaller()
@@ -96,7 +96,7 @@ class Branch extends NodeObject implements TreeishInterface
      * @throws \InvalidArgumentException
      * @return Branch
      */
-    public static function createFromOutputLine(Repository $repository, string $outputLine)
+    public static function createFromOutputLine(Repository $repository, string $outputLine): \GitElephant\Objects\Branch
     {
         $matches = static::getMatches($outputLine);
         $branch = new self($repository, $matches[1]);
@@ -114,13 +114,9 @@ class Branch extends NodeObject implements TreeishInterface
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Branch
      */
-    public static function checkout(Repository $repository, $name, $create = false)
+    public static function checkout(Repository $repository, $name, $create = false): \GitElephant\Objects\Branch
     {
-        if ($create) {
-            $branch = self::create($repository, $name);
-        } else {
-            $branch = new self($repository, $name);
-        }
+        $branch = $create ? self::create($repository, $name) : new self($repository, $name);
 
         $repository->checkout($branch);
 
@@ -175,7 +171,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @throws \InvalidArgumentException
      */
-    public function parseOutputLine(string $branchString)
+    public function parseOutputLine(string $branchString): void
     {
         if (preg_match('/^\* (.*)/', $branchString, $matches)) {
             $this->current = true;
@@ -198,7 +194,7 @@ class Branch extends NodeObject implements TreeishInterface
      * @throws \InvalidArgumentException
      * @return array
      */
-    public static function getMatches(string $branchString)
+    public static function getMatches(string $branchString): array
     {
         $branchString = trim($branchString);
 
@@ -224,7 +220,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @return string the sha
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getSha();
     }
@@ -234,7 +230,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @param string $name the branch name
      */
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -244,7 +240,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -254,7 +250,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @param string $sha the sha of the branch
      */
-    public function setSha(string $sha)
+    public function setSha(string $sha): void
     {
         $this->sha = $sha;
     }
@@ -264,7 +260,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getSha()
+    public function getSha(): string
     {
         return $this->sha;
     }
@@ -274,7 +270,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @param bool $current whether if the branch is the current or not
      */
-    public function setCurrent(bool $current)
+    public function setCurrent(bool $current): void
     {
         $this->current = $current;
     }
@@ -284,7 +280,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @return bool
      */
-    public function getCurrent()
+    public function getCurrent(): bool
     {
         return $this->current;
     }
@@ -294,7 +290,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @param string $comment the branch comment
      */
-    public function setComment(string $comment)
+    public function setComment(string $comment): void
     {
         $this->comment = $comment;
     }
@@ -304,7 +300,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getComment()
+    public function getComment(): string
     {
         return $this->comment;
     }
@@ -314,7 +310,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @param string $fullRef full git reference of the branch
      */
-    public function setFullRef(string $fullRef)
+    public function setFullRef(string $fullRef): void
     {
         $this->fullRef = $fullRef;
     }
@@ -324,7 +320,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getFullRef()
+    public function getFullRef(): string
     {
         return $this->fullRef;
     }

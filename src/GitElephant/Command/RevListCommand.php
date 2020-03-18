@@ -51,7 +51,7 @@ class RevListCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function getTagCommit(Tag $tag)
+    public function getTagCommit(Tag $tag): string
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_REVLIST);
@@ -71,7 +71,7 @@ class RevListCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function commitPath(Commit $commit, $max = 1000)
+    public function commitPath(Commit $commit, $max = 1000): string
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_REVLIST);

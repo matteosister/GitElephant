@@ -54,7 +54,7 @@ class MergeCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function merge(Branch $with, $message = '', Array $options = array())
+    public function merge(Branch $with, $message = '', Array $options = array()): string
     {
         if (in_array(self::MERGE_OPTION_FF_ONLY, $options) && in_array(self::MERGE_OPTION_NO_FF, $options)) {
             throw new \Symfony\Component\Process\Exception\InvalidArgumentException("Invalid options: cannot use flags --ff-only and --no-ff together.");
@@ -83,7 +83,7 @@ class MergeCommand extends BaseCommand
      *
      * @return array Associative array mapping all non-value options and their respective normalized option
      */
-    public function mergeCmdSwitchOptions()
+    public function mergeCmdSwitchOptions(): array
     {
         return array(
             self::MERGE_OPTION_FF_ONLY => self::MERGE_OPTION_FF_ONLY,

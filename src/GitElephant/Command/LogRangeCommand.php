@@ -53,7 +53,7 @@ class LogRangeCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function showLog($refStart, $refEnd, $path = null, $limit = null, $offset = null, $firstParent = false)
+    public function showLog($refStart, $refEnd, $path = null, $limit = null, $offset = null, $firstParent = false): string
     {
         $this->clearAll();
 
@@ -72,7 +72,7 @@ class LogRangeCommand extends BaseCommand
             $this->addCommandArgument('--skip=' . $offset);
         }
 
-        if (true === $firstParent) {
+        if ($firstParent) {
             $this->addCommandArgument('--first-parent');
         }
 

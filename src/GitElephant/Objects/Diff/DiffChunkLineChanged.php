@@ -38,7 +38,7 @@ abstract class DiffChunkLineChanged extends DiffChunkLine
      *
      * @param int $number line number
      */
-    public function setNumber(int $number)
+    public function setNumber(int $number): void
     {
         $this->number = $number;
     }
@@ -48,7 +48,7 @@ abstract class DiffChunkLineChanged extends DiffChunkLine
      *
      * @return int
      */
-    public function getNumber()
+    public function getNumber(): int
     {
         return $this->number;
     }
@@ -58,7 +58,7 @@ abstract class DiffChunkLineChanged extends DiffChunkLine
      *
      * @return int
      */
-    public function getOriginNumber()
+    public function getOriginNumber(): int
     {
         return $this->getNumber();
     }
@@ -68,7 +68,7 @@ abstract class DiffChunkLineChanged extends DiffChunkLine
      *
      * @return int
      */
-    public function getDestNumber()
+    public function getDestNumber(): int
     {
         return $this->getNumber();
     }

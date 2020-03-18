@@ -49,7 +49,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function contains($reference)
+    public function contains($reference): string
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -68,7 +68,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function create($name, $startPoint = null)
+    public function create($name, $startPoint = null): string
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -89,7 +89,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function listBranches($all = false, $simple = false)
+    public function listBranches($all = false, $simple = false): string
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -118,7 +118,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function lists($all = false, $simple = false)
+    public function lists($all = false, $simple = false): string
     {
         return $this->listBranches($all, $simple);
     }
@@ -134,7 +134,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function singleInfo($name, $all = false, $simple = false, $verbose = false)
+    public function singleInfo($name, $all = false, $simple = false, $verbose = false): string
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -164,9 +164,9 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function delete($name, $force = false)
+    public function delete($name, $force = false): string
     {
-        $arg = ($force === true) ? '-D' : '-d';
+        $arg = ($force) ? '-D' : '-d';
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
         $this->addCommandArgument($arg);

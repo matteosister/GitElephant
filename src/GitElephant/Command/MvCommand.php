@@ -50,7 +50,7 @@ class MvCommand extends BaseCommand
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function rename($source, $target)
+    public function rename($source, $target): string
     {
         if ($source instanceof NodeObject) {
             if (!$source->isBlob()) {

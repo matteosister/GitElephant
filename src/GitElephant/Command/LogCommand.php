@@ -56,7 +56,7 @@ class LogCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function showObjectLog(NodeObject $obj, $branch = null, $limit = null, $offset = null)
+    public function showObjectLog(NodeObject $obj, $branch = null, $limit = null, $offset = null): string
     {
         $subject = null;
         if (null !== $branch) {
@@ -83,7 +83,7 @@ class LogCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function showLog($ref, $path = null, $limit = null, $offset = null, $firstParent = false)
+    public function showLog($ref, $path = null, $limit = null, $offset = null, $firstParent = false): string
     {
         $this->clearAll();
 
@@ -102,7 +102,7 @@ class LogCommand extends BaseCommand
             $this->addCommandArgument('--skip=' . $offset);
         }
 
-        if (true === $firstParent) {
+        if ($firstParent) {
             $this->addCommandArgument('--first-parent');
         }
 

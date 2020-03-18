@@ -52,7 +52,7 @@ class TagCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function create(string $name, $startPoint = null, $message = null)
+    public function create(string $name, $startPoint = null, $message = null): string
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
@@ -76,7 +76,7 @@ class TagCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function listTags()
+    public function listTags(): string
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
@@ -94,7 +94,7 @@ class TagCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function lists()
+    public function lists(): string
     {
         return $this->listTags();
     }
@@ -107,7 +107,7 @@ class TagCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function delete($tag)
+    public function delete($tag): string
     {
         $this->clearAll();
 

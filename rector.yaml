@@ -1,0 +1,8 @@
+parameters:
+    sets:
+        - 'code-quality'
+        - 'symfony-code-quality'
+        - 'php71'
+        - 'php72'
+        - 'php73'
+        - 'phpunit90'

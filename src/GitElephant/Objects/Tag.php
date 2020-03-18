@@ -67,7 +67,7 @@ class Tag extends NodeObject
         string $name,
         $startPoint = null,
         string $message = null
-    )
+    ): ?\GitElephant\Objects\Tag
     {
         $repository
             ->getCaller()
@@ -88,7 +88,7 @@ class Tag extends NodeObject
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Tag
      */
-    public static function createFromOutputLines(Repository $repository, array $outputLines, string $name)
+    public static function createFromOutputLines(Repository $repository, array $outputLines, string $name): \GitElephant\Objects\Tag
     {
         $tag = new self($repository, $name);
         $tag->parseOutputLines($outputLines);
@@ -122,7 +122,7 @@ class Tag extends NodeObject
      *
      * @return \GitElephant\Objects\Tag
      */
-    public static function pick(Repository $repository, string $name)
+    public static function pick(Repository $repository, string $name): \GitElephant\Objects\Tag
     {
         return new self($repository, $name);
     }
@@ -130,7 +130,7 @@ class Tag extends NodeObject
     /**
      * deletes the tag
      */
-    public function delete()
+    public function delete(): void
     {
         $this->repository
             ->getCaller()
@@ -142,7 +142,7 @@ class Tag extends NodeObject
      *
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand()
+    private function createFromCommand(): void
     {
         $command = TagCommand::getInstance($this->getRepository())->listTags();
         $outputLines = $this->getCaller()->execute($command, true, $this->getRepository()->getPath())->getOutputLines();
@@ -185,7 +185,7 @@ class Tag extends NodeObject
      *
      * @return string the sha
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->getSha();
     }
@@ -193,7 +193,7 @@ class Tag extends NodeObject
     /**
      * @return \GitElephant\Command\Caller\Caller
      */
-    private function getCaller()
+    private function getCaller(): \GitElephant\Command\Caller\Caller
     {
         return $this->getRepository()->getCaller();
     }
@@ -203,7 +203,7 @@ class Tag extends NodeObject
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -213,7 +213,7 @@ class Tag extends NodeObject
      *
      * @return string
      */
-    public function getFullRef()
+    public function getFullRef(): string
     {
         return $this->fullRef;
     }
@@ -223,7 +223,7 @@ class Tag extends NodeObject
      *
      * @param string $sha sha
      */
-    public function setSha(string $sha)
+    public function setSha(string $sha): void
     {
         $this->sha = $sha;
     }
@@ -233,7 +233,7 @@ class Tag extends NodeObject
      *
      * @return string
      */
-    public function getSha()
+    public function getSha(): string
     {
         return $this->sha;
     }

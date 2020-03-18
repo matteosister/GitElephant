@@ -121,7 +121,7 @@ class NodeObject implements TreeishInterface
      *
      * @return array
      */
-    public static function getLineSlices(string $line)
+    public static function getLineSlices(string $line): array
     {
         preg_match('/^(\d+) (\w+) ([a-z0-9]+) +(\d+|-)\t(.*)$/', $line, $matches);
         $permissions = $matches[1];
@@ -185,7 +185,7 @@ class NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return (string)$this->name;
     }
@@ -207,7 +207,7 @@ class NodeObject implements TreeishInterface
      *
      * @return string|null
      */
-    public function getExtension()
+    public function getExtension(): ?string
     {
         $pos = strrpos($this->name, '.');
         if ($pos === false) {
@@ -222,7 +222,7 @@ class NodeObject implements TreeishInterface
      *
      * @return bool
      */
-    public function isTree()
+    public function isTree(): bool
     {
         return self::TYPE_TREE == $this->getType();
     }
@@ -232,7 +232,7 @@ class NodeObject implements TreeishInterface
      *
      * @return bool
      */
-    public function isLink()
+    public function isLink(): bool
     {
         return self::TYPE_LINK == $this->getType();
     }
@@ -242,7 +242,7 @@ class NodeObject implements TreeishInterface
      *
      * @return bool
      */
-    public function isBlob()
+    public function isBlob(): bool
     {
         return self::TYPE_BLOB == $this->getType();
     }
@@ -252,7 +252,7 @@ class NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getFullPath()
+    public function getFullPath(): string
     {
         return rtrim(
             '' == $this->path ? $this->name : $this->path . DIRECTORY_SEPARATOR . $this->name,
@@ -265,7 +265,7 @@ class NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getPermissions()
+    public function getPermissions(): string
     {
         return $this->permissions;
     }
@@ -275,7 +275,7 @@ class NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getSha()
+    public function getSha(): string
     {
         return $this->sha;
     }
@@ -285,7 +285,7 @@ class NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -295,7 +295,7 @@ class NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -305,7 +305,7 @@ class NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -315,7 +315,7 @@ class NodeObject implements TreeishInterface
      *
      * @return string
      */
-    public function getSize()
+    public function getSize(): string
     {
         return $this->size;
     }
@@ -325,7 +325,7 @@ class NodeObject implements TreeishInterface
      *
      * @return Commit
      */
-    public function getLastCommit()
+    public function getLastCommit(): ?\GitElephant\Objects\Commit
     {
         $log = $this->repository->getLog('HEAD', $this->getFullPath(), 1);
 
@@ -342,7 +342,7 @@ class NodeObject implements TreeishInterface
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function revParse(array $options = [])
+    public function revParse(array $options = []): array
     {
         $c = RevParseCommand::getInstance()->revParse($this, $options);
         $caller = $this->repository->getCaller();
@@ -356,7 +356,7 @@ class NodeObject implements TreeishInterface
      *
      * @param \GitElephant\Repository $repository the repository variable
      */
-    public function setRepository(Repository $repository)
+    public function setRepository(Repository $repository): void
     {
         $this->repository = $repository;
     }
@@ -366,7 +366,7 @@ class NodeObject implements TreeishInterface
      *
      * @return \GitElephant\Repository
      */
-    public function getRepository()
+    public function getRepository(): \GitElephant\Repository
     {
         return $this->repository;
     }

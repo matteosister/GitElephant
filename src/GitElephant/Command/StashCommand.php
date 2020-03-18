@@ -51,7 +51,7 @@ class StashCommand extends BaseCommand
      *
      * @return string
      */
-    public function save($message = null, $includeUntracked = false, $keepIndex = false)
+    public function save($message = null, $includeUntracked = false, $keepIndex = false): string
     {
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' save');
@@ -77,7 +77,7 @@ class StashCommand extends BaseCommand
      *
      * @return string
      */
-    public function listStashes(array $options = null)
+    public function listStashes(array $options = null): string
     {
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' list');
@@ -94,7 +94,7 @@ class StashCommand extends BaseCommand
      *
      * @return string
      */
-    public function show($stash)
+    public function show($stash): string
     {
         $stash = $this->normalizeStashName($stash);
         $this->clearAll();
@@ -110,7 +110,7 @@ class StashCommand extends BaseCommand
      *
      * @return string
      */
-    public function drop($stash)
+    public function drop($stash): string
     {
         $stash = $this->normalizeStashName($stash);
         $this->clearAll();
@@ -127,7 +127,7 @@ class StashCommand extends BaseCommand
      *
      * @return string
      */
-    public function apply($stash, $index = false)
+    public function apply($stash, $index = false): string
     {
         $stash = $this->normalizeStashName($stash);
         $this->clearAll();
@@ -147,7 +147,7 @@ class StashCommand extends BaseCommand
      *
      * @return string
      */
-    public function pop($stash, $index = false)
+    public function pop($stash, $index = false): string
     {
         $stash = $this->normalizeStashName($stash);
         $this->clearAll();
@@ -167,7 +167,7 @@ class StashCommand extends BaseCommand
      *
      * @return string
      */
-    public function branch($branch, $stash)
+    public function branch($branch, $stash): string
     {
         $stash = $this->normalizeStashName($stash);
         $this->clearAll();
@@ -179,9 +179,8 @@ class StashCommand extends BaseCommand
 
     /**
      *  Remove all the stashed states.
-     *
      */
-    public function clear()
+    public function clear(): string
     {
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' clear');
@@ -191,9 +190,8 @@ class StashCommand extends BaseCommand
     /**
      * Create a stash (which is a regular commit object) and return its object name, without storing it anywhere in the
      * ref namespace.
-     *
      */
-    public function create()
+    public function create(): string
     {
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' create');
@@ -205,7 +203,7 @@ class StashCommand extends BaseCommand
      *
      * @return string
      */
-    private function normalizeStashName($stash)
+    private function normalizeStashName($stash): string
     {
         if (0 !== strpos($stash, 'stash@{')) {
             $stash = 'stash@{' . $stash . '}';

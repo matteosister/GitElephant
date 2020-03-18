@@ -59,7 +59,7 @@ class MainCommand extends BaseCommand
      * @throws \RuntimeException
      * @return MainCommand
      */
-    public function init($bare = false)
+    public function init($bare = false): string
     {
         $this->clearAll();
         if ($bare) {
@@ -78,7 +78,7 @@ class MainCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function status($porcelain = false)
+    public function status($porcelain = false): string
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_STATUS);
@@ -99,7 +99,7 @@ class MainCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function add($what = '.')
+    public function add($what = '.'): string
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_ADD);
@@ -117,7 +117,7 @@ class MainCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function unstage($what)
+    public function unstage($what): string
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_RESET);
@@ -138,7 +138,7 @@ class MainCommand extends BaseCommand
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function commit($message, $stageAll = false, $author = null, $allowEmpty = false)
+    public function commit($message, $stageAll = false, $author = null, $allowEmpty = false): string
     {
         $this->clearAll();
         if (trim($message) === '' || is_null($message)) {
@@ -173,7 +173,7 @@ class MainCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function checkout($ref)
+    public function checkout($ref): string
     {
         $this->clearAll();
 
@@ -201,7 +201,7 @@ class MainCommand extends BaseCommand
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function move($from, $to)
+    public function move($from, $to): string
     {
         $this->clearAll();
 
@@ -233,7 +233,7 @@ class MainCommand extends BaseCommand
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function remove($path, $recursive, $force)
+    public function remove($path, $recursive, $force): string
     {
         $this->clearAll();
 
@@ -264,7 +264,7 @@ class MainCommand extends BaseCommand
      *
      * @return bool
      */
-    protected function validatePath($path)
+    protected function validatePath($path): bool
     {
         if (empty($path)) {
             return false;

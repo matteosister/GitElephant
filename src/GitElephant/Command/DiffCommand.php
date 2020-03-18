@@ -52,7 +52,7 @@ class DiffCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function diff($of, $with = null, $path = null)
+    public function diff($of, $with = null, $path = null): string
     {
         $this->clearAll();
         $this->addCommandName(self::DIFF_COMMAND);

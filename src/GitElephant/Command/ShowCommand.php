@@ -49,7 +49,7 @@ class ShowCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function showCommit($ref)
+    public function showCommit($ref): string
     {
         $this->clearAll();
 

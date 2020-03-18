@@ -23,7 +23,8 @@
         "php": ">=7.2.0",
         "phpunit/phpunit": "~9.0",
         "mockery/mockery": "~1.1",
-        "symfony/var-dumper": "~3.0|~4.0|~5.0"
+        "symfony/var-dumper": "~3.0|~4.0|~5.0",
+        "rector/rector": "^0.7.6"
     },
     "minimum-stability": "stable",
     "autoload": {

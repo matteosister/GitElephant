@@ -53,7 +53,7 @@ class DiffTreeCommand extends BaseCommand
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function rootDiff(Commit $commit)
+    public function rootDiff(Commit $commit): string
     {
         if (!$commit->isRoot()) {
             throw new \InvalidArgumentException('rootDiff method accepts only root commits');

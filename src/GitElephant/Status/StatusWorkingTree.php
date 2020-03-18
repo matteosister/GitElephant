@@ -33,7 +33,7 @@ class StatusWorkingTree extends Status
      *
      * @return Sequence
      */
-    public function all()
+    public function all(): \PhpCollection\Sequence
     {
         return new Sequence(
             array_filter(
@@ -52,7 +52,7 @@ class StatusWorkingTree extends Status
      *
      * @return Sequence
      */
-    protected function filterByType(string $type)
+    protected function filterByType(string $type): \PhpCollection\Sequence
     {
         if (!$this->files) {
             return new Sequence();

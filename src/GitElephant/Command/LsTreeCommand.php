@@ -52,7 +52,7 @@ class LsTreeCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function fullTree($ref = 'HEAD')
+    public function fullTree($ref = 'HEAD'): string
     {
         $what = $ref;
         if ($ref instanceof TreeishInterface) {
@@ -79,7 +79,7 @@ class LsTreeCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function tree($ref = 'HEAD', $path = null)
+    public function tree($ref = 'HEAD', $path = null): string
     {
         if ($path instanceof NodeObject) {
             $subjectPath = $path->getFullPath() . ($path->isTree() ? '/' : '');
@@ -110,7 +110,7 @@ class LsTreeCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function listAll($ref = null)
+    public function listAll($ref = null): string
     {
         if (is_null($ref)) {
             $ref = 'HEAD';

@@ -52,14 +52,10 @@ class CatFileCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function content(NodeObject $object, $treeish)
+    public function content(NodeObject $object, $treeish): string
     {
         $this->clearAll();
-        if ($treeish instanceof TreeishInterface) {
-            $sha = $treeish->getSha();
-        } else {
-            $sha = $treeish;
-        }
+        $sha = $treeish instanceof TreeishInterface ? $treeish->getSha() : $treeish;
         $this->addCommandName(static::GIT_CAT_FILE);
         // pretty format
         $this->addCommandArgument('-p');
@@ -76,7 +72,7 @@ class CatFileCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function contentBySha($sha)
+    public function contentBySha($sha): string
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_CAT_FILE);
