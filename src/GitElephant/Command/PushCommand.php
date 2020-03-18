@@ -34,7 +34,7 @@ class PushCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -62,7 +62,7 @@ class PushCommand extends BaseCommand
         $this->addCommandSubject($remote);
         $this->addCommandSubject2($branch);
 
-        if(!is_null($args)) {
+        if (!is_null($args)) {
             $this->addCommandArgument($args);
         }
 

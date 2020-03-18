@@ -68,8 +68,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
         int $limit = 15,
         int $offset = null,
         bool $firstParent = false
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent);
     }
@@ -97,8 +96,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
         int $limit = 15,
         int $offset = null,
         bool $firstParent = false
-    ): void
-    {
+    ): void {
         $command = LogRangeCommand::getInstance($this->getRepository())->showLog(
             $refStart,
             $refEnd,

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -83,8 +84,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
         int $limit = 15,
         int $offset = null,
         bool $firstParent = false
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->createFromCommand($ref, $path, $limit, $offset, $firstParent);
     }
@@ -104,7 +104,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand($ref, $path = null, int $limit, int $offset = null, bool $firstParent = false): void
+    private function createFromCommand($ref, $path = null, int $limit = null, int $offset = null, bool $firstParent = false): void
     {
         $command = LogCommand::getInstance($this->getRepository())
             ->showLog($ref, $path, $limit, $offset, $firstParent);
@@ -123,7 +123,11 @@ class Log implements \ArrayAccess, \Countable, \Iterator
         $commits = Utilities::pregSplitFlatArray($outputLines, '/^commit (\w+)$/');
 
         foreach ($commits as $commitOutputLines) {
-            $this->commits[] = Commit::createFromOutputLines($this->getRepository(), $commitOutputLines);
+            if (is_string($commitOutputLines)) {
+                $this->commits[] = Commit::createFromOutputLines($this->getRepository(), [$commitOutputLines]);
+            } elseif (is_iterable($commitOutputLines)) {
+                $this->commits[] = Commit::createFromOutputLines($this->getRepository(), $commitOutputLines);
+            }
         }
     }
 

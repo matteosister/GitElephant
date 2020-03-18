@@ -71,5 +71,4 @@ class CallerSSH2 extends AbstractCaller
 
         return $this;
     }
-
 }

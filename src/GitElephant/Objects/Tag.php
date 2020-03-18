@@ -67,8 +67,7 @@ class Tag extends NodeObject
         string $name,
         $startPoint = null,
         string $message = null
-    ): ?\GitElephant\Objects\Tag
-    {
+    ): ?\GitElephant\Objects\Tag {
         $repository
             ->getCaller()
             ->execute(TagCommand::getInstance($repository)->create($name, $startPoint, $message));

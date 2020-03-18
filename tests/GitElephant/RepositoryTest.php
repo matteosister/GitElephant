@@ -513,7 +513,7 @@ class RepositoryTest extends TestCase
     /**
      * @covers \GitElephant\Repository::getLog
      */
-    public function testGetLog_for_a_branch(): void
+    public function testGetLogForBranch(): void
     {
         $this->getRepository()->init();
         $this->addFile('test file 0');

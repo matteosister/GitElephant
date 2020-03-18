@@ -169,8 +169,7 @@ class NodeObject implements TreeishInterface
         string $size,
         string $name,
         string $path
-    )
-    {
+    ) {
         $this->repository = $repository;
         $this->permissions = $permissions;
         $this->type = $type;

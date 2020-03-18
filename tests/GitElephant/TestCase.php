@@ -266,7 +266,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     protected function getMockRepository(): \PHPUnit\Framework\MockObject\MockObject
-    {        
+    {
         $mockRepo = $this->getMock(
             Repository::class,
             array(),

@@ -36,7 +36,7 @@ class DiffTreeCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)

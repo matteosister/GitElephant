@@ -45,7 +45,7 @@ class MergeCommandTest extends TestCase
     /**
      * MergeCommand should throw an exception when both --ff-only and --no-ff flags were set.
      */
-    public function test_exception_when_calling_merge_with_conflicting_ff_arguments(): void
+    public function testExceptionWhenCallingMergeWithConflictingFfArguments(): void
     {
         $branch = $this->getRepository()->getBranch('test');
         $this->expectException(\Symfony\Component\Process\Exception\InvalidArgumentException::class);

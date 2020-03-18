@@ -83,8 +83,7 @@ class LsTreeCommand extends BaseCommand
     {
         if ($path instanceof NodeObject) {
             $subjectPath = $path->getFullPath() . ($path->isTree() ? '/' : '');
-        }
-        else {
+        } else {
             $subjectPath = $path;
         }
 

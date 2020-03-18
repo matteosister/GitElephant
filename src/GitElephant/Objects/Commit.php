@@ -218,7 +218,7 @@ class Commit implements TreeishInterface, \Countable
     /**
      * parse the output of a git command showing a commit
      *
-     * @param array $outputLines output lines
+     * @param Iterable $outputLines output lines
      */
     private function parseOutputLines($outputLines): void
     {

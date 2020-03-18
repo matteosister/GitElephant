@@ -1,6 +1,11 @@
 {
     "name": "cypresslab/gitelephant",
     "description": "An abstraction layer for git written in PHP",
+    "scripts": {
+        "tests": "./vendor/bin/phpunit",
+        "check-cs": "./vendor/bin/phpcs --exclude=Generic.Files.LineLength --standard=PSR2 src tests",
+        "fix-cs": "./vendor/bin/phpcbf --standard=PSR2 src tests"
+    },
     "keywords": [
         "git"
     ],
@@ -21,10 +26,11 @@
     },
     "require-dev": {
         "php": ">=7.2.0",
-        "phpunit/phpunit": "~9.0",
+        "phpunit/phpunit": "~8.0|~9.0",
         "mockery/mockery": "~1.1",
         "symfony/var-dumper": "~3.0|~4.0|~5.0",
-        "rector/rector": "^0.7.6"
+        "rector/rector": "^0.7.6",
+        "squizlabs/php_codesniffer": "^3.5.4"
     },
     "minimum-stability": "stable",
     "autoload": {

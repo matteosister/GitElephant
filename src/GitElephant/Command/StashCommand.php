@@ -210,5 +210,4 @@ class StashCommand extends BaseCommand
         }
         return $stash;
     }
-
 }

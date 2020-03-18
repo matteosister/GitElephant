@@ -114,7 +114,7 @@ class CallerTest extends TestCase
     }
 
     /**
-     * testRepositoryValidation 
+     * testRepositoryValidation
      */
     public function testRepositoryValidation(): void
     {
