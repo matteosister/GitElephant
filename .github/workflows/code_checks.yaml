@@ -23,6 +23,11 @@ jobs:
                 with:
                     php-version: ${{ matrix.php }}
                     coverage: none # disable xdebug, pcov
+            
+            -   run: git --version
+            -   run: git config --global user.email "test@github.com"
+            -   run: git config --global user.name "GitHub Action"
+            -   run: git --version
 
             # if we 2 steps like this, we can better see if composer failed or tests
             -   run: composer install --no-progress
