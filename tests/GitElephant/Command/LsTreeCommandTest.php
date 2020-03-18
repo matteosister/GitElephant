@@ -11,7 +11,7 @@
  * Just for fun...
  */
 
-namespace GitElephant;
+namespace GitElephant\Command;
 
 use \GitElephant\Command\LsTreeCommand;
 use \GitElephant\TestCase;
@@ -26,7 +26,7 @@ use \GitElephant\TestCase;
 class LsTreeCommandTest extends TestCase
 {
     /**
-     * @var \GitElephant\Command\LsTreeCommand;
+     * @var \GitElephant\Command\LsTreeCommand ;
      */
     private $lsTreeCommand;
 
@@ -43,7 +43,7 @@ class LsTreeCommandTest extends TestCase
      *
      * @covers \GitElephant\Command\LsTreeCommand::tree
      */
-    public function testFullTree()
+    public function testFullTree(): void
     {
         $this->assertEquals("ls-tree '-r' '-t' '-l' 'HEAD'", $this->lsTreeCommand->fullTree(), 'ls-tree command test');
     }
@@ -53,7 +53,7 @@ class LsTreeCommandTest extends TestCase
      *
      * @covers \GitElephant\Command\LsTreeCommand::tree
      */
-    public function testTree()
+    public function testTree(): void
     {
         $this->assertEquals("ls-tree '-l' 'HEAD'", $this->lsTreeCommand->tree(), 'ls-tree command test');
     }
@@ -63,7 +63,7 @@ class LsTreeCommandTest extends TestCase
      *
      * @covers \GitElephant\Command\LsTreeCommand::listAll
      */
-    public function testListAll()
+    public function testListAll(): void
     {
         $this->assertEquals("ls-tree 'HEAD'", $this->lsTreeCommand->listAll(), 'ls-tree command test');
     }

@@ -46,7 +46,7 @@ class FetchCommandTest extends TestCase
     /**
      * fetch test
      */
-    public function testFetch()
+    public function testFetch(): void
     {
         $fc = FetchCommand::getInstance();
         $this->assertEquals("fetch", $fc->fetch());

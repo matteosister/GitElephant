@@ -46,7 +46,7 @@ HDOC;
     /**
      * @covers GitElephant\Objects\Commit\Message::getShortMessage
      */
-    public function testGetShortMessage()
+    public function testGetShortMessage(): void
     {
         $this->assertEquals($this->shortMsg, $this->msg->getShortMessage());
     }
@@ -54,7 +54,7 @@ HDOC;
     /**
      * @covers GitElephant\Objects\Commit\Message::getFullMessage
      */
-    public function testGetFullMessage()
+    public function testGetFullMessage(): void
     {
         $this->assertEquals($this->fullMsg, $this->msg->getFullMessage());
     }
@@ -62,7 +62,7 @@ HDOC;
     /**
      * @covers GitElephant\Objects\Commit\Message::toString
      */
-    public function testToString()
+    public function testToString(): void
     {
         $this->assertEquals($this->shortMsg, $this->msg->toString());
         $this->assertEquals($this->shortMsg, $this->msg->__toString());

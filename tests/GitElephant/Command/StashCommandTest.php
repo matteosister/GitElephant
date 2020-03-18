@@ -20,7 +20,7 @@ class StashCommandTest extends TestCase
     /**
      * testSave
      */
-    public function testSave()
+    public function testSave(): void
     {
         $command = StashCommand::getInstance();
         $this->assertEquals("stash save 'Test'", $command->save('Test'));
@@ -30,7 +30,7 @@ class StashCommandTest extends TestCase
     /**
      * testList
      */
-    public function testList()
+    public function testList(): void
     {
         $command = StashCommand::getInstance();
         $this->assertEquals("stash list", $command->listStashes());
@@ -40,7 +40,7 @@ class StashCommandTest extends TestCase
     /**
      * testShow
      */
-    public function testShow()
+    public function testShow(): void
     {
         $command = StashCommand::getInstance();
         $this->assertEquals("stash show 'stash@{0}'", $command->show(0));
@@ -49,7 +49,7 @@ class StashCommandTest extends TestCase
     /**
      * testDrop
      */
-    public function testDrop()
+    public function testDrop(): void
     {
         $command = StashCommand::getInstance();
         $this->assertEquals("stash drop 'stash@{0}'", $command->drop(0));
@@ -58,7 +58,7 @@ class StashCommandTest extends TestCase
     /**
      * testApply
      */
-    public function testApply()
+    public function testApply(): void
     {
         $command = StashCommand::getInstance();
         $this->assertEquals("stash apply 'stash@{0}'", $command->apply(0));
@@ -68,7 +68,7 @@ class StashCommandTest extends TestCase
     /**
      * testPop
      */
-    public function testPop()
+    public function testPop(): void
     {
         $command = StashCommand::getInstance();
         $this->assertEquals("stash pop 'stash@{0}'", $command->pop(0));
@@ -78,7 +78,7 @@ class StashCommandTest extends TestCase
     /**
      * testBranch
      */
-    public function testBranch()
+    public function testBranch(): void
     {
         $command = StashCommand::getInstance();
         $this->assertEquals("stash branch 'testbranch' 'stash@{0}'", $command->branch('testbranch', 0));
@@ -87,7 +87,7 @@ class StashCommandTest extends TestCase
     /**
      * testClear
      */
-    public function testClear()
+    public function testClear(): void
     {
         $command = StashCommand::getInstance();
         $this->assertEquals("stash clear", $command->clear());
@@ -96,7 +96,7 @@ class StashCommandTest extends TestCase
     /**
      * testCreate
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $command = StashCommand::getInstance();
         $this->assertEquals("stash create", $command->create());

@@ -32,7 +32,7 @@ class MvCommandTest extends TestCase
     /**
      * testRename
      */
-    public function testRename()
+    public function testRename(): void
     {
         $mc = MvCommand::getInstance();
         $this->assertEquals("mv '-k' 'a' 'b'", $mc->rename('a', 'b'));

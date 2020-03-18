@@ -1,4 +1,10 @@
 parameters:
+    # autoload_paths:
+    #     - 'vendor/autoload.php'
+    paths:
+        - 'src'
+        - 'tests'
+    php_version_features: '7.2'
     sets:
         - 'code-quality'
         - 'symfony-code-quality'
@@ -6,3 +12,4 @@ parameters:
         - 'php72'
         - 'php73'
         - 'phpunit90'
+

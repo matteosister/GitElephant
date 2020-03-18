@@ -40,7 +40,7 @@ class DiffTest extends TestCase
         $this->initRepository();
     }
 
-    public function testDiff()
+    public function testDiff(): void
     {
         $mainCommand = new MainCommand();
         $diffCommand = new DiffCommand();
@@ -70,7 +70,7 @@ class DiffTest extends TestCase
         }
     }
 
-    private function assertArrayInterfaces($obj)
+    private function assertArrayInterfaces($obj): void
     {
         $this->assertInstanceOf('\Iterator', $obj);
         $this->assertInstanceOf('\Countable', $obj);

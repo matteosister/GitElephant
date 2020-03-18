@@ -14,6 +14,7 @@
 namespace GitElephant;
 
 use \GitElephant\Command\Caller\Caller;
+use GitElephant\Command\Caller\CallerInterface;
 use \GitElephant\Command\MvCommand;
 use \GitElephant\Objects\Commit;
 use \GitElephant\Repository;
@@ -68,7 +69,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * @return \GitElephant\Command\Caller\Caller
      */
-    protected function getCaller()
+    protected function getCaller(): \GitElephant\Command\Caller\CallerInterface
     {
         if ($this->caller == null) {
             $this->initRepository();
@@ -83,7 +84,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function initRepository($name = null, $index = null)
+    protected function initRepository($name = null, $index = null): void
     {
         $tempDir = realpath(sys_get_temp_dir());
         $tempName = null === $name ? tempnam($tempDir, 'gitelephant') : $tempDir . DIRECTORY_SEPARATOR . $name;
@@ -125,17 +126,13 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function addFile($name, $folder = null, $content = null, $repository = null)
+    protected function addFile($name, $folder = null, $content = null, $repository = null): void
     {
-        if (is_null($repository)) {
-            $path = $this->path;
-        } else {
-            $path = $repository->getPath();
-        }
+        $path = is_null($repository) ? $this->path : $repository->getPath();
         $filename = $folder == null ?
             $path . DIRECTORY_SEPARATOR . $name : $path . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $name;
         $handle = fopen($filename, 'w');
-        $fileContent = $content == null ? 'test content' : $content;
+        $fileContent = $content === null ? 'test content' : $content;
         $this->assertTrue(false !== fwrite($handle, $fileContent), sprintf('unable to write the file %s', $name));
         fclose($handle);
     }
@@ -145,7 +142,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @param string $name
      */
-    protected function removeFile($name)
+    protected function removeFile($name): void
     {
         $filename = $this->path . DIRECTORY_SEPARATOR . $name;
         $this->assertTrue(unlink($filename));
@@ -157,7 +154,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      * @param string $name    file name
      * @param string $content content
      */
-    protected function updateFile($name, $content)
+    protected function updateFile($name, $content): void
     {
         $filename = $this->path . DIRECTORY_SEPARATOR . $name;
         $this->assertTrue(false !== file_put_contents($filename, $content));
@@ -170,7 +167,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      * @param string $targetName new file name
      * @param bool   $gitMv      use git mv, otherwise uses php rename function (with the Filesystem component)
      */
-    protected function renameFile($originName, $targetName, $gitMv = true)
+    protected function renameFile($originName, $targetName, $gitMv = true): void
     {
         if ($gitMv) {
             $this->getRepository()->getCaller()->execute(MvCommand::getInstance()->rename($originName, $targetName));
@@ -188,13 +185,13 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function addFolder($name)
+    protected function addFolder($name): void
     {
         $fs = new Filesystem();
         $fs->mkdir($this->path . DIRECTORY_SEPARATOR . $name);
     }
 
-    protected function addSubmodule($url, $path)
+    protected function addSubmodule($url, $path): void
     {
         $this->getRepository()->addSubmodule($url, $path);
     }
@@ -204,7 +201,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return \PHPUnit\Framework\MockObject\MockObject
      */
-    protected function getMock($classname)
+    protected function getMock($classname): \PHPUnit\Framework\MockObject\MockObject
     {
         return $this
             ->getMockBuilder($classname)
@@ -220,9 +217,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return \PHPUnit\Framework\MockObject\MockObject
      */
-    protected function getMockCaller($command, $output)
+    protected function getMockCaller($command, $output): \PHPUnit\Framework\MockObject\MockObject
     {
-        $mock = $this->getMock('GitElephant\Command\Caller\CallerInterface');
+        $mock = $this->createMock(CallerInterface::class);
         $mock
             ->expects($this->any())
             ->method('execute')
@@ -235,12 +232,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
         return $mock;
     }
 
-    protected function getMockContainer()
+    protected function getMockContainer(): \PHPUnit\Framework\MockObject\MockObject
     {
         return $this->getMock('GitElephant\Command\CommandContainer');
     }
 
-    protected function addCommandToMockContainer(\PHPUnit\Framework\MockObject\MockObject $container, $commandName)
+    protected function addCommandToMockContainer(\PHPUnit\Framework\MockObject\MockObject $container, $commandName): void
     {
         $container
             ->expects($this->any())
@@ -249,7 +246,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($this->getMockCommand()));
     }
 
-    protected function addOutputToMockRepo(\PHPUnit\Framework\MockObject\MockObject $repo, $output)
+    protected function addOutputToMockRepo(\PHPUnit\Framework\MockObject\MockObject $repo, $output): void
     {
         $repo
             ->expects($this->any())
@@ -257,7 +254,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             ->will($this->returnValue($this->getMockCaller('', $output)));
     }
 
-    protected function getMockCommand()
+    protected function getMockCommand(): \PHPUnit\Framework\MockObject\MockObject
     {
         $command = $this->getMock('Command', array('showCommit'));
         $command
@@ -268,16 +265,19 @@ class TestCase extends \PHPUnit\Framework\TestCase
         return $command;
     }
 
-    protected function getMockRepository()
-    {
-        return $this->getMock(
-            'GitElephant\Repository',
+    protected function getMockRepository(): \PHPUnit\Framework\MockObject\MockObject
+    {        
+        $mockRepo = $this->getMock(
+            Repository::class,
             array(),
             array(
                 $this->repository->getPath(),
                 null,
             )
         );
+
+        $mockRepo->expects($this->any())->method('getCaller')->willReturn($this->getMockCaller('', ''));
+        return $mockRepo;
     }
 
     protected function doCommitTest(
@@ -291,7 +291,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $datetimeAuthor,
         $datetimeCommitter,
         $message
-    ) {
+    ): void {
         $this->assertInstanceOf('GitElephant\Objects\Commit', $commit);
         $this->assertEquals($sha, $commit->getSha());
         $this->assertEquals($tree, $commit->getTree());

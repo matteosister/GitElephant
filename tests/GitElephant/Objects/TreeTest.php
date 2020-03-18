@@ -45,7 +45,7 @@ class TreeTest extends TestCase
     /**
      * testConstructor
      */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $tree = $this->repository->getTree('HEAD');
         $this->assertInstanceOf('Traversable', $tree);
@@ -64,7 +64,7 @@ class TreeTest extends TestCase
     /**
      * testWithPath
      */
-    public function testWithPath()
+    public function testWithPath(): void
     {
         /** @var Tree $tree */
         $tree = $this->repository->getTree('HEAD');
@@ -86,7 +86,7 @@ class TreeTest extends TestCase
     /**
      * testSubmodule
      */
-    public function testSubmodule()
+    public function testSubmodule(): void
     {
         $tempDir = realpath(sys_get_temp_dir()) . 'gitelephant_' . md5(uniqid(rand(), 1));
         // horrible hack because php is beautiful.
@@ -99,8 +99,8 @@ class TreeTest extends TestCase
         $repository->addSubmodule($this->repository->getPath());
         $repository->commit('test', true);
         $tree = $repository->getTree();
-        $this->assertContains('.gitmodules', $tree);
-        $this->assertContains($this->repository->getHumanishName(), $tree);
+        $this->assertContainsEquals('.gitmodules', $tree);
+        $this->assertContainsEquals($this->repository->getHumanishName(), $tree);
         $submodule = $tree[0];
         $this->assertEquals(NodeObject::TYPE_LINK, $submodule->getType());
     }
@@ -108,7 +108,7 @@ class TreeTest extends TestCase
     /**
      * testIsRoot
      */
-    public function testIsRoot()
+    public function testIsRoot(): void
     {
         $this->initRepository();
         $this->getRepository()->init();
@@ -122,7 +122,7 @@ class TreeTest extends TestCase
     /**
      * testGetObject
      */
-    public function testGetObject()
+    public function testGetObject(): void
     {
         $tree = $this->getRepository()->getTree();
         $this->assertNull($tree->getObject());

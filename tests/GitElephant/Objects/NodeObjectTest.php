@@ -18,7 +18,7 @@ class NodeObjectTest extends TestCase
         $this->getRepository()->commit('first commit', true);
     }
 
-    public function testGetLastCommitFromTree()
+    public function testGetLastCommitFromTree(): void
     {
         $tree = $this->getRepository()->getTree('master');
         $testFile = $tree[0];
@@ -26,7 +26,7 @@ class NodeObjectTest extends TestCase
         $this->assertEquals('first commit', $testFile->getLastCommit()->getMessage());
     }
 
-    public function testGetLastCommitFromBranch()
+    public function testGetLastCommitFromBranch(): void
     {
         $this->getRepository()->createBranch('test');
         $this->getRepository()->checkout('test');
@@ -38,7 +38,7 @@ class NodeObjectTest extends TestCase
         $this->assertEquals('test branch commit', $testFile->getLastCommit()->getMessage()->getFullMessage());
     }
 
-    public function testGetLastCommitFromTag()
+    public function testGetLastCommitFromTag(): void
     {
         $this->getRepository()->createTag('test-tag');
         $tag = $this->getRepository()->getTag('test-tag');
@@ -52,7 +52,7 @@ class NodeObjectTest extends TestCase
         $this->assertEquals('tag 2 commit', $tag->getLastCommit()->getMessage());
     }
 
-    public function testRevParse()
+    public function testRevParse(): void
     {
         $master = $this->getRepository()->getBranch('master');
 
@@ -66,7 +66,7 @@ class NodeObjectTest extends TestCase
      * @covers GitElephant\Objects\NodeObject::getRepository
      * @covers GitElephant\Objects\NodeObject::setRepository
      */
-    public function testGetSetRepository()
+    public function testGetSetRepository(): void
     {
         $this->initRepository('object1', 1);
         $repo1 = $this->getRepository(1);

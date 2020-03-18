@@ -27,7 +27,7 @@ class AuthorTest extends TestCase
     /**
      * testAuthor
      */
-    public function testAuthor()
+    public function testAuthor(): void
     {
         $author = new Author();
         $author->setEmail('foo@bar.com');

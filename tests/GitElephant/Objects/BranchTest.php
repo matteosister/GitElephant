@@ -3,10 +3,9 @@
  * User: matteo
  * Date: 05/01/13
  * Time: 0.18
- * 
+ *
  * Just for fun...
  */
-
 namespace GitElephant\Objects;
 
 use \GitElephant\TestCase;
@@ -20,7 +19,7 @@ class BranchTest extends TestCase
     /**
      * testGetMatches
      */
-    public function testGetMatches()
+    public function testGetMatches(): void
     {
         $matches = Branch::getMatches('* develop 45eac8c31adfbbf633824cee6ce8cc5040b33513 test message');
         $this->assertEquals('develop', $matches[1]);
@@ -46,7 +45,7 @@ class BranchTest extends TestCase
     /**
      * testGetMatchesErrors
      */
-    public function testGetMatchesShortShaError()
+    public function testGetMatchesShortShaError(): void
     {
         // short sha
         $this->expectException(\InvalidArgumentException::class);
@@ -55,9 +54,8 @@ class BranchTest extends TestCase
 
     /**
      * testGetMatchesErrors
-     *
      */
-    public function testGetMatchesNoSpaceError()
+    public function testGetMatchesNoSpaceError(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $matches = Branch::getMatches('* develop 45eac8c31adfbbf633824cee6ce8cc5040b33511test message');
@@ -66,7 +64,7 @@ class BranchTest extends TestCase
     /**
      * test constructor
      */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');
@@ -87,7 +85,7 @@ class BranchTest extends TestCase
     /**
      * testBranchCreate
      */
-    public function testBranchCreate()
+    public function testBranchCreate(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');
@@ -100,7 +98,7 @@ class BranchTest extends TestCase
     /**
      * __toString
      */
-    public function testToString()
+    public function testToString(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');
@@ -112,7 +110,7 @@ class BranchTest extends TestCase
     /**
      * testCreate
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');

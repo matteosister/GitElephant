@@ -40,7 +40,7 @@ class LogCommandTest extends TestCase
     /**
      * testShowObjectLog
      */
-    public function testShowObjectLog()
+    public function testShowObjectLog(): void
     {
         $branch = $this->getRepository()->getBranch('master');
         $obj = $this->getRepository()->getTree('HEAD', 'test-folder/test-file')->getBlob();

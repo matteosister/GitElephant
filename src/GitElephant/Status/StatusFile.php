@@ -116,7 +116,7 @@ class StatusFile
      *
      * @return string
      */
-    public function getIndexStatus(): string
+    public function getIndexStatus(): ?string
     {
         return $this->x;
     }
@@ -124,9 +124,9 @@ class StatusFile
     /**
      * Get the status of the working tree
      *
-     * @return string
+     * @return string|null
      */
-    public function getWorkingTreeStatus(): string
+    public function getWorkingTreeStatus(): ?string
     {
         return $this->y;
     }

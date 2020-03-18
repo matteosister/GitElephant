@@ -39,7 +39,7 @@ class DiffTreeCommandTest extends TestCase
     /**
      * set up
      */
-    public function testRootDiff()
+    public function testRootDiff(): void
     {
         $dtc = DiffTreeCommand::getInstance();
         $commit = $this->getRepository()->getCommit();

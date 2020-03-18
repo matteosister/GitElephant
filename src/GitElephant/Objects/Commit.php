@@ -20,6 +20,7 @@
 namespace GitElephant\Objects;
 
 use \GitElephant\Command\BranchCommand;
+use GitElephant\Command\Caller\CallerInterface;
 use \GitElephant\Command\MainCommand;
 use \GitElephant\Command\RevListCommand;
 use \GitElephant\Command\RevParseCommand;
@@ -285,9 +286,9 @@ class Commit implements TreeishInterface, \Countable
     }
 
     /**
-     * @return \GitElephant\Command\Caller\Caller
+     * @return CallerInterface
      */
-    private function getCaller(): \GitElephant\Command\Caller\Caller
+    private function getCaller(): CallerInterface
     {
         return $this->getRepository()->getCaller();
     }
@@ -297,7 +298,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @param \GitElephant\Repository $repository repository variable
      */
-    public function setRepository($repository): void
+    public function setRepository(Repository $repository): void
     {
         $this->repository = $repository;
     }
@@ -345,7 +346,7 @@ class Commit implements TreeishInterface, \Countable
     /**
      * parent getter
      *
-     * @return mixed
+     * @return array
      */
     public function getParents(): array
     {
@@ -357,7 +358,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @param bool $short short version
      *
-     * @return mixed
+     * @return string
      */
     public function getSha(bool $short = false): string
     {
@@ -367,7 +368,7 @@ class Commit implements TreeishInterface, \Countable
     /**
      * tree getter
      *
-     * @return mixed
+     * @return string
      */
     public function getTree(): string
     {
@@ -377,7 +378,7 @@ class Commit implements TreeishInterface, \Countable
     /**
      * datetimeAuthor getter
      *
-     * @return mixed
+     * @return \DateTime
      */
     public function getDatetimeAuthor(): \DateTime
     {
@@ -389,7 +390,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @return \DateTime
      */
-    public function getDatetimeCommitter(): \Datetime
+    public function getDatetimeCommitter(): \DateTime
     {
         return $this->datetimeCommitter;
     }

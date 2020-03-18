@@ -15,7 +15,7 @@ class TreeObjectTest extends TestCase
         $this->getRepository()->commit('first commit', true);
     }
 
-    public function testInstance()
+    public function testInstance(): void
     {
         $tree = $this->getRepository()->getTree('master', 'test');
         $this->assertInstanceOf('GitElephant\Objects\TreeObject', $tree[0]);

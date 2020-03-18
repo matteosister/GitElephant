@@ -31,5 +31,10 @@
         "psr-0": {
             "GitElephant": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-0": {
+            "GitElephant": "tests/"
+        }
     }
 }
