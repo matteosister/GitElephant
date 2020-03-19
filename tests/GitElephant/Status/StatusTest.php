@@ -30,7 +30,7 @@ class StatusTest extends TestCase
     /**
      * testStatusIndexWithoutUntracked
      */
-    public function testStatusIndexWithoutUntracked()
+    public function testStatusIndexWithoutUntracked(): void
     {
         $this->addFile('test');
         $s = $this->repository->getIndexStatus();
@@ -41,7 +41,7 @@ class StatusTest extends TestCase
     /**
      * status test
      */
-    public function testUntracked()
+    public function testUntracked(): void
     {
         $this->addFile('test');
         $s = $this->repository->getStatus();
@@ -58,7 +58,7 @@ class StatusTest extends TestCase
     /**
      * modified
      */
-    public function testModified()
+    public function testModified(): void
     {
         $this->addFile('test', null, 'test');
         $this->repository->stage();
@@ -75,7 +75,7 @@ class StatusTest extends TestCase
     /**
      * added
      */
-    public function testAdded()
+    public function testAdded(): void
     {
         $this->addFile('test');
         $this->repository->stage();
@@ -91,7 +91,7 @@ class StatusTest extends TestCase
     /**
      * deleted
      */
-    public function testDeleted()
+    public function testDeleted(): void
     {
         $this->addFile('test');
         $this->repository->commit('test message', true);
@@ -108,7 +108,7 @@ class StatusTest extends TestCase
     /**
      * renamed
      */
-    public function testRenamed()
+    public function testRenamed(): void
     {
         $this->addFile('test', null, 'test content');
         $this->repository->commit('test message', true);
@@ -125,7 +125,7 @@ class StatusTest extends TestCase
     /**
      * testWorkingTreeStatus
      */
-    public function testWorkingTreeStatus()
+    public function testWorkingTreeStatus(): void
     {
         /*$this->markTestSkipped(
             'Caller::execute throws a RuntimeException here because. Repository::unstage
@@ -188,7 +188,7 @@ On new git version this is not happening anymore.'
     /**
      * @param mixed $subject
      */
-    private function assertInterfaces($subject)
+    private function assertInterfaces($subject): void
     {
         $this->assertInstanceOf('\Countable', $subject);
         $this->assertInstanceOf('\Traversable', $subject);

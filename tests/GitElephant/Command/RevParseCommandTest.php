@@ -23,7 +23,7 @@ use \GitElephant\TestCase;
  */
 class RevParseCommandTest extends TestCase
 {
-    public function testRevParse()
+    public function testRevParse(): void
     {
         $c = RevParseCommand::getInstance();
         $this->assertEquals("rev-parse 'master'", $c->revParse('master'));
@@ -34,7 +34,7 @@ class RevParseCommandTest extends TestCase
         )));
     }
 
-    public function testRevParseIsBare()
+    public function testRevParseIsBare(): void
     {
         $this->initRepository(null, 0);
         $repo = $this->getRepository(0);

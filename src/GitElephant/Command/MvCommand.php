@@ -34,7 +34,7 @@ class MvCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -50,7 +50,7 @@ class MvCommand extends BaseCommand
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function rename($source, $target)
+    public function rename($source, $target): string
     {
         if ($source instanceof NodeObject) {
             if (!$source->isBlob()) {

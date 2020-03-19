@@ -56,7 +56,7 @@ class CallerSSH2 extends AbstractCaller
      *
      * @return CallerInterface
      */
-    public function execute($cmd, $git = true, $cwd = null)
+    public function execute($cmd, $git = true, $cwd = null): \GitElephant\Command\Caller\CallerInterface
     {
         if ($git) {
             $cmd = $this->getBinaryPath() . ' ' . $cmd;
@@ -71,5 +71,4 @@ class CallerSSH2 extends AbstractCaller
 
         return $this;
     }
-
 }

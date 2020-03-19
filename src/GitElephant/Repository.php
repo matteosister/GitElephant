@@ -134,7 +134,7 @@ class Repository
      *
      * @return \GitElephant\Repository
      */
-    public static function open($repositoryPath, string $binary = null, $name = null)
+    public static function open($repositoryPath, string $binary = null, $name = null): \GitElephant\Repository
     {
         return new self($repositoryPath, $binary, $name);
     }
@@ -152,7 +152,7 @@ class Repository
      * @throws \Symfony\Component\Filesystem\Exception\IOException
      * @return Repository
      */
-    public static function createFromRemote($git, $repositoryPath = null, string $binary = null, $name = null)
+    public static function createFromRemote($git, $repositoryPath = null, string $binary = null, $name = null): \GitElephant\Repository
     {
         if (null === $repositoryPath) {
             $tempDir = realpath(sys_get_temp_dir());
@@ -181,7 +181,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function init($bare = false)
+    public function init($bare = false): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->init($bare));
 
@@ -199,7 +199,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function stage($path = '.')
+    public function stage($path = '.'): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->add($path));
 
@@ -217,7 +217,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function unstage($path)
+    public function unstage($path): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->unstage($path), true, null, [0, 1]);
 
@@ -237,7 +237,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function move($from, $to)
+    public function move($from, $to): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->move($from, $to));
 
@@ -258,7 +258,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function remove($path, $recursive = false, $force = false)
+    public function remove($path, $recursive = false, $force = false): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->remove($path, $recursive, $force));
 
@@ -279,7 +279,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function commit(string $message, $stageAll = false, $ref = null, $author = null, $allowEmpty = false)
+    public function commit(string $message, $stageAll = false, $ref = null, $author = null, $allowEmpty = false): self
     {
         $currentBranch = null;
         if (!is_null($ref)) {
@@ -308,7 +308,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function revParse(string $arg = null, array $options = [])
+    public function revParse(string $arg = null, array $options = []): array
     {
         $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
 
@@ -320,7 +320,7 @@ class Repository
      *
      * @return boolean
      */
-    public function isBare()
+    public function isBare(): bool
     {
         $options = [RevParseCommand::OPTION_IS_BARE_REPOSIORY];
         $this->caller->execute(RevParseCommand::getInstance()->revParse(null, $options));
@@ -332,7 +332,7 @@ class Repository
      * @param TreeishInterface|Commit|string $arg
      * @param array                          $options
      */
-    public function reset($arg, $options)
+    public function reset($arg, $options): void
     {
         $this->caller->execute(ResetCommand::getInstance($this)->reset($arg, $options));
     }
@@ -342,7 +342,7 @@ class Repository
      *
      * @return Status
      */
-    public function getStatus()
+    public function getStatus(): \GitElephant\Status\Status
     {
         return Status::get($this);
     }
@@ -350,7 +350,7 @@ class Repository
     /**
      * @return Status
      */
-    public function getWorkingTreeStatus()
+    public function getWorkingTreeStatus(): \GitElephant\Status\Status
     {
         return StatusWorkingTree::get($this);
     }
@@ -358,7 +358,7 @@ class Repository
     /**
      * @return Status
      */
-    public function getIndexStatus()
+    public function getIndexStatus(): \GitElephant\Status\Status
     {
         return StatusIndex::get($this);
     }
@@ -368,7 +368,7 @@ class Repository
      *
      * @return boolean
      */
-    public function isClean()
+    public function isClean(): bool
     {
         return $this->getStatus()->all()->isEmpty();
     }
@@ -378,7 +378,7 @@ class Repository
      *
      * @return boolean
      */
-    public function isDirty()
+    public function isDirty(): bool
     {
         return !$this->isClean();
     }
@@ -392,7 +392,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getStatusOutput()
+    public function getStatusOutput(): array
     {
         $this->caller->execute(MainCommand::getInstance($this)->status());
 
@@ -409,7 +409,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function createBranch(string $name, $startPoint = null)
+    public function createBranch(string $name, $startPoint = null): self
     {
         Branch::create($this, $name, $startPoint);
 
@@ -429,7 +429,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function deleteBranch(string $name, bool $force = false)
+    public function deleteBranch(string $name, bool $force = false): self
     {
         $this->caller->execute(BranchCommand::getInstance($this)->delete($name, $force));
 
@@ -449,7 +449,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getBranches(bool $namesOnly = false, bool $all = false)
+    public function getBranches(bool $namesOnly = false, bool $all = false): array
     {
         $branches = [];
         if ($namesOnly) {
@@ -484,7 +484,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Objects\Branch
      */
-    public function getMainBranch()
+    public function getMainBranch(): \GitElephant\Objects\Branch
     {
         $filtered = array_filter(
             $this->getBranches(),
@@ -507,7 +507,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return null|Branch
      */
-    public function getBranch(string $name)
+    public function getBranch(string $name): ?\GitElephant\Objects\Branch
     {
         /** @var Branch $branch */
         foreach ($this->getBranches() as $branch) {
@@ -529,7 +529,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function checkoutAllRemoteBranches($remote = 'origin')
+    public function checkoutAllRemoteBranches($remote = 'origin'): self
     {
         $actualBranch = $this->getMainBranch();
         $actualBranches = $this->getBranches(true, false);
@@ -565,7 +565,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function merge(Branch $branch, string $message = '', string $mode = 'auto')
+    public function merge(Branch $branch, string $message = '', string $mode = 'auto'): self
     {
         $valid_modes = [
             'auto', // deafult git behavior
@@ -603,7 +603,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function createTag(string $name, $startPoint = null, string $message = null)
+    public function createTag(string $name, $startPoint = null, string $message = null): self
     {
         Tag::create($this, $name, $startPoint, $message);
 
@@ -620,7 +620,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function deleteTag($tag)
+    public function deleteTag($tag): self
     {
         if ($tag instanceof Tag) {
             $tag->delete();
@@ -643,7 +643,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function addSubmodule(string $gitUrl, $path = null)
+    public function addSubmodule(string $gitUrl, $path = null): self
     {
         $this->caller->execute(SubmoduleCommand::getInstance($this)->add($gitUrl, $path));
 
@@ -657,7 +657,7 @@ class Repository
      *
      * @return Repository
      */
-    public function initSubmodule($path = null)
+    public function initSubmodule($path = null): self
     {
         $this->caller->execute(SubmoduleCommand::getInstance($this)->init($path));
 
@@ -679,7 +679,7 @@ class Repository
         bool $init = false,
         bool $force = false,
         $path = null
-    ) {
+    ): self {
         $this->caller->execute(SubmoduleCommand::getInstance($this)->update($recursive, $init, $force, $path));
 
         return $this;
@@ -694,7 +694,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getTags()
+    public function getTags(): array
     {
         $tags = [];
         $this->caller->execute(TagCommand::getInstance($this)->listTags());
@@ -716,7 +716,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Tag|null
      */
-    public function getTag(string $name)
+    public function getTag(string $name): ?\GitElephant\Objects\Tag
     {
         $tagFinderOutput = $this->caller
             ->execute(TagCommand::getInstance()->listTags())
@@ -739,14 +739,14 @@ class Repository
      * @throws \InvalidArgumentException
      * @return Tag|null
      */
-    public function getLastTag()
+    public function getLastTag(): ?\GitElephant\Objects\Tag
     {
         $finder = Finder::create()
             ->files()
             ->in(sprintf('%s/.git/refs/tags', $this->path))
             ->sortByChangedTime();
 
-        if ($finder->count() == 0) {
+        if ($finder->count() === 0) {
             return null;
         }
 
@@ -792,11 +792,9 @@ class Repository
      * @throws \RuntimeException
      * @return Objects\Commit
      */
-    public function getCommit($ref = 'HEAD')
+    public function getCommit($ref = 'HEAD'): \GitElephant\Objects\Commit
     {
-        $commit = Commit::pick($this, $ref);
-
-        return $commit;
+        return Commit::pick($this, $ref);
     }
 
     /**
@@ -808,7 +806,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return int
      */
-    public function countCommits($start = 'HEAD')
+    public function countCommits($start = 'HEAD'): int
     {
         $commit = Commit::pick($this, $start);
 
@@ -832,7 +830,7 @@ class Repository
         int $limit = 10,
         int $offset = null,
         bool $firstParent = false
-    ) {
+    ): \GitElephant\Objects\Log {
         return new Log($this, $ref, $path, $limit, $offset, $firstParent);
     }
 
@@ -883,7 +881,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Log
      */
-    public function getObjectLog(NodeObject $obj, $branch = null, int $limit = 1, int $offset = null)
+    public function getObjectLog(NodeObject $obj, $branch = null, int $limit = 1, int $offset = null): \GitElephant\Objects\Log
     {
         $command = LogCommand::getInstance($this)->showObjectLog($obj, $branch, $limit, $offset);
 
@@ -903,7 +901,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function checkout($ref, bool $create = false)
+    public function checkout($ref, bool $create = false): self
     {
         if ($create && is_null($this->getBranch($ref))) {
             $this->createBranch($ref);
@@ -926,7 +924,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Objects\Tree
      */
-    public function getTree($ref = 'HEAD', $path = null)
+    public function getTree($ref = 'HEAD', $path = null): \GitElephant\Objects\Tree
     {
         if (is_string($path) && '' !== $path) {
             $outputLines = $this
@@ -951,7 +949,7 @@ class Repository
      * @throws \InvalidArgumentException
      * @return Objects\Diff\Diff
      */
-    public function getDiff(string $commit1 = null, string $commit2 = null, string $path = null)
+    public function getDiff(string $commit1 = null, string $commit2 = null, string $path = null): \GitElephant\Objects\Diff\Diff
     {
         return Diff::create($this, $commit1, $commit2, $path);
     }
@@ -971,7 +969,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function cloneFrom(string $url, string $to = null, string $repoReference = null, int $depth = null, bool $recursive = false)
+    public function cloneFrom(string $url, string $to = null, string $repoReference = null, int $depth = null, bool $recursive = false): self
     {
         $command = (Command\CloneCommand::getInstance($this))->cloneUrl($url, $to, $repoReference, $depth, $recursive);
         $this->caller->execute($command);
@@ -988,7 +986,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function addRemote(string $name, string $url)
+    public function addRemote(string $name, string $url): self
     {
         $this->caller->execute(RemoteCommand::getInstance($this)->add($name, $url));
 
@@ -1001,7 +999,7 @@ class Repository
      *
      * @return \GitElephant\Objects\Remote
      */
-    public function getRemote(string $name, bool $queryRemotes = true)
+    public function getRemote(string $name, bool $queryRemotes = true): \GitElephant\Objects\Remote
     {
         return Remote::pick($this, $name, $queryRemotes);
     }
@@ -1017,7 +1015,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getRemotes(bool $queryRemotes = true)
+    public function getRemotes(bool $queryRemotes = true): array
     {
         $remoteNames = $this->caller
             ->execute(RemoteCommand::getInstance($this)->show(null, $queryRemotes))
@@ -1043,10 +1041,10 @@ class Repository
      * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function fetch($from = null, $ref = null, bool $tags = false)
+    public function fetch($from = null, $ref = null, bool $tags = false): void
     {
         $options = [];
-        if ($tags === true) {
+        if ($tags) {
             $options = ['--tags'];
         }
         $this->caller->execute(FetchCommand::getInstance($this)->fetch($from, $ref, $options));
@@ -1064,7 +1062,7 @@ class Repository
      * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function pull($from = null, $ref = null, bool $rebase = true)
+    public function pull($from = null, $ref = null, bool $rebase = true): void
     {
         $this->caller->execute(PullCommand::getInstance($this)->pull($from, $ref, $rebase));
     }
@@ -1081,7 +1079,7 @@ class Repository
      * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function push($to = null, $ref = null, string $args = null)
+    public function push($to = null, $ref = null, string $args = null): void
     {
         $this->caller->execute(PushCommand::getInstance($this)->push($to, $ref, $args));
     }
@@ -1091,13 +1089,12 @@ class Repository
      *
      * @return string
      */
-    public function getHumanishName()
+    public function getHumanishName(): string
     {
         $name = substr($this->getPath(), strrpos($this->getPath(), '/') + 1);
         $name = str_replace('.git', '.', $name);
-        $name = str_replace('.bundle', '.', $name);
 
-        return $name;
+        return str_replace('.bundle', '.', $name);
     }
 
     /**
@@ -1112,7 +1109,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function outputContent(NodeObject $obj, $treeish)
+    public function outputContent(NodeObject $obj, $treeish): array
     {
         $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
 
@@ -1131,7 +1128,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return string
      */
-    public function outputRawContent(NodeObject $obj, $treeish)
+    public function outputRawContent(NodeObject $obj, $treeish): string
     {
         $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
 
@@ -1143,7 +1140,7 @@ class Repository
      *
      * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -1153,7 +1150,7 @@ class Repository
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -1163,7 +1160,7 @@ class Repository
      *
      * @param string $name the repository name
      */
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -1173,7 +1170,7 @@ class Repository
      *
      * @param \GitElephant\Command\Caller\Caller $caller the caller variable
      */
-    public function setCaller(Caller $caller)
+    public function setCaller(Caller $caller): void
     {
         $this->caller = $caller;
     }
@@ -1183,7 +1180,7 @@ class Repository
      *
      * @return \GitElephant\Command\Caller\Caller
      */
-    public function getCaller()
+    public function getCaller(): \GitElephant\Command\Caller\Caller
     {
         return $this->caller;
     }
@@ -1193,7 +1190,7 @@ class Repository
      *
      * @return array Global config list
      */
-    public function getGlobalConfigs()
+    public function getGlobalConfigs(): array
     {
         return $this->globalConfigs;
     }
@@ -1204,7 +1201,7 @@ class Repository
      * @param string $name  The config name
      * @param mixed  $value The config value
      */
-    public function addGlobalConfig(string $name, $value)
+    public function addGlobalConfig(string $name, $value): void
     {
         $this->globalConfigs[$name] = $value;
     }
@@ -1214,7 +1211,7 @@ class Repository
      *
      * @param  string $name The config name
      */
-    public function removeGlobalConfig(string $name)
+    public function removeGlobalConfig(string $name): void
     {
         if (isset($this->globalConfigs[$name])) {
             unset($this->globalConfigs[$name]);
@@ -1226,7 +1223,7 @@ class Repository
      *
      * @return array Global options list
      */
-    public function getGlobalOptions()
+    public function getGlobalOptions(): array
     {
         return $this->globalOptions;
     }
@@ -1237,7 +1234,7 @@ class Repository
      * @param string $name  The option name
      * @param mixed  $value The option value
      */
-    public function addGlobalOption(string $name, $value)
+    public function addGlobalOption(string $name, $value): void
     {
         $this->globalOptions[$name] = $value;
     }
@@ -1247,7 +1244,7 @@ class Repository
      *
      * @param  string $name The option name
      */
-    public function removeGlobalOption(string $name)
+    public function removeGlobalOption(string $name): void
     {
         if (isset($this->globalOptions[$name])) {
             unset($this->globalOptions[$name]);
@@ -1259,7 +1256,7 @@ class Repository
      *
      * @return array Global command arguments list
      */
-    public function getGlobalCommandArguments()
+    public function getGlobalCommandArguments(): array
     {
         return $this->globalCommandArguments;
     }
@@ -1269,7 +1266,7 @@ class Repository
      *
      * @param string $value The command argument
      */
-    public function addGlobalCommandArgument($value)
+    public function addGlobalCommandArgument($value): void
     {
         if (!in_array($value, $this->globalCommandArguments, true)) {
             $this->globalCommandArguments[] = $value;
@@ -1282,7 +1279,7 @@ class Repository
      *
      * @param  string $value The command argument
      */
-    public function removeGlobalCommandArgument($value)
+    public function removeGlobalCommandArgument($value): void
     {
         if (in_array($value, $this->globalCommandArguments, true)) {
             $index = array_search($value, $this->globalCommandArguments);
@@ -1297,7 +1294,7 @@ class Repository
      * @param boolean     $includeUntracked
      * @param boolean     $keepIndex
      */
-    public function stash(string $message = null, bool $includeUntracked = false, bool $keepIndex = false)
+    public function stash(string $message = null, bool $includeUntracked = false, bool $keepIndex = false): void
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->save($message, $includeUntracked, $keepIndex);
@@ -1311,7 +1308,7 @@ class Repository
      *
      * @return array
      */
-    public function stashList(array $options = null)
+    public function stashList(array $options = null): array
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->listStashes($options);
@@ -1327,7 +1324,7 @@ class Repository
      *
      * @return string
      */
-    public function stashShow(string $stash)
+    public function stashShow(string $stash): string
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->show($stash);
@@ -1341,7 +1338,7 @@ class Repository
      *
      * @param string $stash
      */
-    public function stashDrop(string $stash)
+    public function stashDrop(string $stash): void
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->drop($stash);
@@ -1354,7 +1351,7 @@ class Repository
      * @param string  $stash
      * @param boolean $index
      */
-    public function stashApply(string $stash, bool $index = false)
+    public function stashApply(string $stash, bool $index = false): void
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->apply($stash, $index);
@@ -1367,7 +1364,7 @@ class Repository
      * @param string  $stash
      * @param boolean $index
      */
-    public function stashPop(string $stash, bool $index = false)
+    public function stashPop(string $stash, bool $index = false): void
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->pop($stash, $index);
@@ -1380,7 +1377,7 @@ class Repository
      * @param string $branch
      * @param string $stash
      */
-    public function stashBranch(string $branch, string $stash)
+    public function stashBranch(string $branch, string $stash): void
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->branch($branch, $stash);
@@ -1389,9 +1386,8 @@ class Repository
 
     /**
      *  Save your local modifications to a new stash, and run git reset --hard to revert them.
-     *
      */
-    public function stashClear()
+    public function stashClear(): void
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->clear();
@@ -1404,7 +1400,7 @@ class Repository
      *
      * @return string
      */
-    public function stashCreate()
+    public function stashCreate(): string
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->clear();

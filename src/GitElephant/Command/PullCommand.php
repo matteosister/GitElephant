@@ -34,7 +34,7 @@ class PullCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -50,7 +50,7 @@ class PullCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function pull($remote = null, $branch = null, $rebase = false)
+    public function pull($remote = null, $branch = null, $rebase = false): string
     {
         if ($remote instanceof Remote) {
             $remote = $remote->getName();

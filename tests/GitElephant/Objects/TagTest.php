@@ -17,7 +17,7 @@ class TagTest extends TestCase
     /**
      * testTag
      */
-    public function testTag()
+    public function testTag(): void
     {
         $this->getRepository()->init();
         $this->addFile('foo');
@@ -33,7 +33,7 @@ class TagTest extends TestCase
     /**
      * testTagFromStartPoint
      */
-    public function testTagFromStartPoint()
+    public function testTagFromStartPoint(): void
     {
         $this->getRepository()->init();
         $this->addFile('foo');
@@ -51,7 +51,7 @@ class TagTest extends TestCase
     /**
      * testNonExistentTag
      */
-    public function testNonExistentTag()
+    public function testNonExistentTag(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->getRepository()->init();
@@ -64,7 +64,7 @@ class TagTest extends TestCase
     /**
      * testCreate
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');

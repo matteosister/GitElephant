@@ -44,7 +44,7 @@ class DiffChunkLineAdded extends DiffChunkLineChanged
      *
      * @return int
      */
-    public function getOriginNumber()
+    public function getOriginNumber(): int
     {
         return '';
     }

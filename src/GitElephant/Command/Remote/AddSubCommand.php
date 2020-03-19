@@ -44,7 +44,7 @@ class AddSubCommand extends SubCommandCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -57,7 +57,7 @@ class AddSubCommand extends SubCommandCommand
      *
      * @return array Array of all value-required options
      */
-    public function addCmdValueOptions()
+    public function addCmdValueOptions(): array
     {
         return array(
             self::GIT_REMOTE_ADD_OPTION_TRACK => self::GIT_REMOTE_ADD_OPTION_TRACK,
@@ -71,7 +71,7 @@ class AddSubCommand extends SubCommandCommand
      *
      * @return array
      */
-    public function addCmdSwitchOptions()
+    public function addCmdSwitchOptions(): array
     {
         return array(
             self::GIT_REMOTE_ADD_OPTION_TAGS => self::GIT_REMOTE_ADD_OPTION_TAGS,
@@ -89,7 +89,7 @@ class AddSubCommand extends SubCommandCommand
      *
      * @return string
      */
-    public function prepare($name, $url, $options = array())
+    public function prepare($name, $url, $options = array()): self
     {
         $options = $this->normalizeOptions(
             $options,

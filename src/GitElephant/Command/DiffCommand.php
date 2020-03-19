@@ -34,7 +34,7 @@ class DiffCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -52,7 +52,7 @@ class DiffCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function diff($of, $with = null, $path = null)
+    public function diff($of, $with = null, $path = null): string
     {
         $this->clearAll();
         $this->addCommandName(self::DIFF_COMMAND);

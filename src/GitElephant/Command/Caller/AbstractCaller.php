@@ -50,7 +50,7 @@ abstract class AbstractCaller implements CallerInterface
     /**
      * @inheritdoc
      */
-    public function getBinaryPath()
+    public function getBinaryPath(): string
     {
         return $this->binaryPath;
     }
@@ -60,7 +60,7 @@ abstract class AbstractCaller implements CallerInterface
      *
      * @param string $path the path to the system git binary
      */
-    public function setBinaryPath(string $path)
+    public function setBinaryPath(string $path): self
     {
         $this->binaryPath = $path;
 
@@ -70,10 +70,11 @@ abstract class AbstractCaller implements CallerInterface
     /**
      * @inheritdoc
      */
-    public function getBinaryVersion()
+    public function getBinaryVersion(): string
     {
         if (is_null($this->binaryVersion)) {
-            $version = $this->execute('--version')->getOutput();
+            $this->execute('--version');
+            $version = $this->getOutput();
             if (!preg_match('/^git version [0-9\.]+/', $version)) {
                 throw new \RuntimeException('Could not parse git version. Unexpected format "' . $version . '".');
             }
@@ -88,7 +89,7 @@ abstract class AbstractCaller implements CallerInterface
      *
      * @return string
      */
-    public function getOutput()
+    public function getOutput(): string
     {
         return implode("\n", $this->outputLines);
     }
@@ -100,7 +101,7 @@ abstract class AbstractCaller implements CallerInterface
      *
      * @return array
      */
-    public function getOutputLines($stripBlankLines = false)
+    public function getOutputLines($stripBlankLines = false): array
     {
         if ($stripBlankLines) {
             $output = array();

@@ -33,7 +33,7 @@ class ShowCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -49,7 +49,7 @@ class ShowCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function showCommit($ref)
+    public function showCommit($ref): string
     {
         $this->clearAll();
 

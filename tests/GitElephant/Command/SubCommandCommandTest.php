@@ -26,7 +26,7 @@ class SubCommandCommandTest extends TestCase
      * verify SubCommandCommands behavior, which is slightly
      * different that BaseCommand, for more sophisticated needs
      */
-    public function testGetCommand()
+    public function testGetCommand(): void
     {
         $cmdName = 'foo';
         $subOne = 'bar';

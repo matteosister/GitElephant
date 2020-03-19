@@ -47,7 +47,7 @@ class PushCommandTest extends TestCase
     /**
      * clone url
      */
-    public function testPush()
+    public function testPush(): void
     {
         $pc = PushCommand::getInstance();
         $this->assertEquals("push 'origin' 'master'", $pc->push());

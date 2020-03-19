@@ -70,7 +70,7 @@ class RevParseCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -85,7 +85,7 @@ class RevParseCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function revParse($arg = null, Array $options = array())
+    public function revParse($arg = null, Array $options = array()): string
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_REV_PARSE_COMMAND);

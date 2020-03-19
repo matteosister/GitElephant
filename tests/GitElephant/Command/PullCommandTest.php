@@ -47,7 +47,7 @@ class PullCommandTest extends TestCase
     /**
      * clone url
      */
-    public function testPull()
+    public function testPull(): void
     {
         $pc = PullCommand::getInstance();
         $this->assertEquals("pull", $pc->pull());

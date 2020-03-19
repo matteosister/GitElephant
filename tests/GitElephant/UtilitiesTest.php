@@ -35,7 +35,7 @@ final class UtilitiesTest extends TestCase
      *
      * @covers \GitElephant\Utilities::pregSplitArray
      */
-    public function testPregSplitArray(array $expected, array $list, string $pattern)
+    public function testPregSplitArray(array $expected, array $list, string $pattern): void
     {
         $this->assertEquals(
             $expected,
@@ -49,7 +49,7 @@ final class UtilitiesTest extends TestCase
     /**
      * @dataProvider
      */
-    public function testPregSplitFlatArray()
+    public function testPregSplitFlatArray(): void
     {
         $this->assertEquals(
             [

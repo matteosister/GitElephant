@@ -28,7 +28,7 @@ use \GitElephant\Command\CommandContainer;
 class CommitTest extends TestCase
 {
     /**
-     * @var \GitElephant\Objects\Commit;
+     * @var \GitElephant\Objects\Commit ;
      */
     private $commit;
 
@@ -45,7 +45,7 @@ class CommitTest extends TestCase
     /**
      * commit tests
      */
-    public function testCommit()
+    public function testCommit(): void
     {
         $showCommand = new ShowCommand();
         $this->commit = Commit::pick($this->getRepository());
@@ -71,7 +71,7 @@ class CommitTest extends TestCase
     /**
      * constructor regex test
      */
-    public function testCommitRegEx()
+    public function testCommitRegEx(): void
     {
         $outputLines = array(
             "commit c277373174aa442af12a8e59de1812f3472c15f5",
@@ -121,7 +121,7 @@ class CommitTest extends TestCase
     /**
      * testCommitDate
      */
-    public function testCommitDate()
+    public function testCommitDate(): void
     {
         $outputLines = array(
             "commit c277373174aa442af12a8e59de1812f3472c15f5",
@@ -153,7 +153,7 @@ class CommitTest extends TestCase
     /**
      * testCreateFromOutputLines
      */
-    public function testCreateFromOutputLines()
+    public function testCreateFromOutputLines(): void
     {
         $outputLines = array(
             "commit c277373174aa442af12a8e59de1812f3472c15f5",
@@ -182,7 +182,7 @@ class CommitTest extends TestCase
     /**
      * testCreate
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');
@@ -194,7 +194,7 @@ class CommitTest extends TestCase
     /**
      * testGetDiff
      */
-    public function testGetDiff()
+    public function testGetDiff(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');
@@ -213,7 +213,7 @@ class CommitTest extends TestCase
         $this->assertCount(2, $diff);
     }
 
-    public function testRevParse()
+    public function testRevParse(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');
@@ -224,7 +224,7 @@ class CommitTest extends TestCase
         $this->assertEquals($commit->getSha(), $revParse[0]);
     }
 
-    public function testCommitWithoutTag()
+    public function testCommitWithoutTag(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');
@@ -233,7 +233,7 @@ class CommitTest extends TestCase
         $this->assertFalse($commit->tagged());
     }
 
-    public function testCommitWithTag()
+    public function testCommitWithTag(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');

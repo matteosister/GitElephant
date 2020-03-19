@@ -38,7 +38,7 @@ class ShowSubCommand extends SubCommandCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -57,14 +57,13 @@ class ShowSubCommand extends SubCommandCommand
      *
      * @return ShowSubCommand
      */
-    public function prepare($name = null, $queryRemotes = true)
+    public function prepare($name = null, $queryRemotes = true): self
     {
         $this->addCommandName(self::GIT_REMOTE_SHOW);
         /**
          *  only add subject if relevant,
          *  otherwise on repositories without a remote defined (ie, fresh
          *  init'd or mock) will likely trigger warning/error condition
-         *
          */
         if ($name) {
             $this->addCommandSubject($name);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -80,7 +81,7 @@ class Caller extends AbstractCaller
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @return Caller
      */
-    public function execute($cmd, $git = true, $cwd = null, $acceptedExitCodes = array(0))
+    public function execute($cmd, $git = true, $cwd = null, $acceptedExitCodes = array(0)): \GitElephant\Command\Caller\CallerInterface
     {
         if ($git) {
             $cmd = $this->getBinaryPath() . ' ' . $cmd;
@@ -91,7 +92,10 @@ class Caller extends AbstractCaller
             $cmd = 'LC_ALL=C ' . $cmd;
         }
 
-        $process = new Process($cmd, is_null($cwd) ? $this->repositoryPath : $cwd);
+        if (is_null($cwd) || !is_dir($cwd)) {
+            $cwd = $this->repositoryPath;
+        }
+        $process = Process::fromShellCommandline($cmd, $cwd);
         $process->setTimeout(15000);
         $process->run();
         if (!in_array($process->getExitCode(), $acceptedExitCodes)) {
@@ -115,7 +119,7 @@ class Caller extends AbstractCaller
      *
      * @return string
      */
-    public function getOutput()
+    public function getOutput(): string
     {
         return implode("\n", $this->outputLines);
     }
@@ -127,7 +131,7 @@ class Caller extends AbstractCaller
      *
      * @return array
      */
-    public function getOutputLines($stripBlankLines = false)
+    public function getOutputLines($stripBlankLines = false): array
     {
         if ($stripBlankLines) {
             $output = array();
@@ -148,7 +152,7 @@ class Caller extends AbstractCaller
      *
      * @return string
      */
-    public function getRawOutput()
+    public function getRawOutput(): string
     {
         return $this->rawOutput;
     }

@@ -36,7 +36,7 @@ class DiffTreeCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -53,7 +53,7 @@ class DiffTreeCommand extends BaseCommand
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function rootDiff(Commit $commit)
+    public function rootDiff(Commit $commit): string
     {
         if (!$commit->isRoot()) {
             throw new \InvalidArgumentException('rootDiff method accepts only root commits');

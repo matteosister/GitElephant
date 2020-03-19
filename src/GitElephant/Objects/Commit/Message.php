@@ -53,7 +53,7 @@ class Message
      *
      * @return string|null
      */
-    public function getShortMessage()
+    public function getShortMessage(): ?string
     {
         return $this->toString();
     }
@@ -63,7 +63,7 @@ class Message
      *
      * @return string|null
      */
-    public function getFullMessage()
+    public function getFullMessage(): ?string
     {
         return $this->toString(true);
     }
@@ -77,7 +77,7 @@ class Message
      */
     public function toString(bool $full = false)
     {
-        if (count($this->message) == 0) {
+        if ((is_countable($this->message) ? count($this->message) : 0) === 0) {
             return null;
         }
 
@@ -93,7 +93,7 @@ class Message
      *
      * @return string|null
      */
-    public function __toString()
+    public function __toString(): ?string
     {
         return $this->toString();
     }

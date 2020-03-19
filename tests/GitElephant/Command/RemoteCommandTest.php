@@ -43,7 +43,7 @@ class RemoteCommandTest extends TestCase
     /**
      * Validate generated command when no arguements and no repository are used
      */
-    public function testRemoteNoArgs()
+    public function testRemoteNoArgs(): void
     {
         $actual = RemoteCommand::getInstance()->remote();
         $expected = "remote";
@@ -53,7 +53,7 @@ class RemoteCommandTest extends TestCase
     /**
      * validate git-remote show [name]
      */
-    public function testShow()
+    public function testShow(): void
     {
         $remotename = 'foobar';
         $actual = RemoteCommand::getInstance()->show($remotename);
@@ -68,7 +68,7 @@ class RemoteCommandTest extends TestCase
     /**
      * validate git-remote --verbose
      */
-    public function testVerbose()
+    public function testVerbose(): void
     {
         $actual = RemoteCommand::getInstance()->verbose();
         $expected = "remote '--verbose'";
@@ -78,7 +78,7 @@ class RemoteCommandTest extends TestCase
     /**
      * validate git-remote add [options] <name> <url>
      */
-    public function testAdd()
+    public function testAdd(): void
     {
         $name = 'foobar';
         $url = 'git@foobar.com:/Foo/Bar.git';

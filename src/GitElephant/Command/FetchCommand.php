@@ -35,7 +35,7 @@ class FetchCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -51,7 +51,7 @@ class FetchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function fetch($remote = null, $branch = null, Array $options = array())
+    public function fetch($remote = null, $branch = null, Array $options = array()): string
     {
         if ($remote instanceof Remote) {
             $remote = $remote->getName();
@@ -83,7 +83,7 @@ class FetchCommand extends BaseCommand
      *
      * @return array Associative array mapping all non-value options and their respective normalized option
      */
-    public function fetchCmdSwitchOptions()
+    public function fetchCmdSwitchOptions(): array
     {
         return array(
             self::GIT_FETCH_OPTION_TAGS => self::GIT_FETCH_OPTION_TAGS,

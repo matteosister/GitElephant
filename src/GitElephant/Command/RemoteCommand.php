@@ -40,7 +40,7 @@ class RemoteCommand extends BaseCommand
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -61,7 +61,7 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string Command string to pass to caller
      */
-    public function remote(SubCommandCommand $subcommand = null, Array $options = array())
+    public function remote(SubCommandCommand $subcommand = null, Array $options = array()): string
     {
         $normalizedOptions = $this->normalizeOptions($options, $this->remoteCmdSwitchOptions());
 
@@ -73,7 +73,7 @@ class RemoteCommand extends BaseCommand
             $this->addCommandArgument($value);
         }
 
-        if ($subcommand) {
+        if ($subcommand !== null) {
             $this->addCommandSubject($subcommand);
         }
 
@@ -85,7 +85,7 @@ class RemoteCommand extends BaseCommand
      *
      * @return array Associative array mapping all non-value options and their respective normalized option
      */
-    public function remoteCmdSwitchOptions()
+    public function remoteCmdSwitchOptions(): array
     {
         return array(
             self::GIT_REMOTE_OPTION_VERBOSE => self::GIT_REMOTE_OPTION_VERBOSE,
@@ -99,7 +99,7 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function verbose()
+    public function verbose(): string
     {
         return $this->remote(null, array(self::GIT_REMOTE_OPTION_VERBOSE));
     }
@@ -116,7 +116,7 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function show($name = null, $queryRemotes = true)
+    public function show($name = null, $queryRemotes = true): string
     {
         $subcmd = new ShowSubCommand();
         $subcmd->prepare($name, $queryRemotes);
@@ -134,7 +134,7 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function add($name, $url, $options = array())
+    public function add($name, $url, $options = array()): string
     {
         $subcmd = new AddSubCommand();
         $subcmd->prepare($name, $url, $options);
