@@ -92,7 +92,13 @@ class Caller extends AbstractCaller
         if (is_null($cwd) || !is_dir($cwd)) {
             $cwd = $this->repositoryPath;
         }
-        $process = Process::fromShellCommandline($cmd, $cwd);
+
+        if (method_exists(Process::class, 'fromShellCommandline')) {
+            $process = Process::fromShellCommandline($cmd, $cwd);
+        } else {
+            // compatibility fix required for Symfony/Process < 4.
+            $process = new Process($cmd, $cwd);
+        }
         $process->setTimeout(15000);
         $process->run();
         if (!in_array($process->getExitCode(), $acceptedExitCodes)) {
