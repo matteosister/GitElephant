@@ -61,7 +61,7 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string Command string to pass to caller
      */
-    public function remote(SubCommandCommand $subcommand = null, Array $options = array()): string
+    public function remote(SubCommandCommand $subcommand = null, array $options = array()): string
     {
         $normalizedOptions = $this->normalizeOptions($options, $this->remoteCmdSwitchOptions());
 
@@ -116,7 +116,7 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function show($name = null, $queryRemotes = true): string
+    public function show($name = null, bool $queryRemotes = true): string
     {
         $subcmd = new ShowSubCommand();
         $subcmd->prepare($name, $queryRemotes);

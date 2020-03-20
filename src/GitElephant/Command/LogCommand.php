@@ -56,7 +56,7 @@ class LogCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function showObjectLog(NodeObject $obj, $branch = null, $limit = null, $offset = null): string
+    public function showObjectLog(NodeObject $obj, $branch = null, int $limit = null, int $offset = null): string
     {
         $subject = null;
         if (null !== $branch) {
@@ -78,12 +78,12 @@ class LogCommand extends BaseCommand
      *                                                                  repository root
      * @param int|null                                     $limit       limit to n entries
      * @param int|null                                     $offset      skip n entries
-     * @param boolean|false                                $firstParent skip commits brought in to branch by a merge
+     * @param bool                                         $firstParent skip commits brought in to branch by a merge
      *
      * @throws \RuntimeException
      * @return string
      */
-    public function showLog($ref, $path = null, $limit = null, $offset = null, $firstParent = false): string
+    public function showLog($ref, $path = null, $limit = null, int $offset = null, bool $firstParent = false): string
     {
         $this->clearAll();
 

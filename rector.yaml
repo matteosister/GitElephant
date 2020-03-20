@@ -13,3 +13,5 @@ parameters:
         - 'php73'
         - 'phpunit90'
 
+services:
+    Rector\DynamicTypeAnalysis\Rector\ClassMethod\DecorateMethodWithArgumentTypeProbeRector: ~

@@ -33,7 +33,7 @@ interface CallerInterface
      *
      * @return CallerInterface
      */
-    public function execute($cmd, $git = true, $cwd = null): \GitElephant\Command\Caller\CallerInterface;
+    public function execute(string $cmd, bool $git = true, string $cwd = null): \GitElephant\Command\Caller\CallerInterface;
 
     /**
      * after calling execute this method should return the output
@@ -42,7 +42,7 @@ interface CallerInterface
      *
      * @return array
      */
-    public function getOutputLines($stripBlankLines = false): array;
+    public function getOutputLines(bool $stripBlankLines = false): array;
 
     /**
      * Get the binary path

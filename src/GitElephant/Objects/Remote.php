@@ -388,11 +388,11 @@ class Remote
      * @throws \InvalidArgumentException
      * @return array
      */
-    public static function getMatches($remoteString): array
+    public static function getMatches(string $remoteString): array
     {
         $matches = [];
         preg_match('/^(\S+)\s*(\S[^\( ]+)\s*\((.+)\)$/', trim($remoteString), $matches);
-        if (count($matches) === 0) {
+        if (empty($matches)) {
             throw new \InvalidArgumentException(sprintf('the remote string is not valid: %s', $remoteString));
         }
 
