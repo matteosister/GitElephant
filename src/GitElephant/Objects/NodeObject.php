@@ -102,7 +102,6 @@ class NodeObject implements TreeishInterface
             $path = substr($fullPath, 0, $pos);
             $name = substr($fullPath, $pos + 1);
         }
-
         return new static(
             $repository,
             $slices['permissions'],
@@ -140,7 +139,6 @@ class NodeObject implements TreeishInterface
         $sha = $matches[3];
         $size = $matches[4];
         $fullPath = $matches[5];
-
         return [
             'permissions' => $permissions,
             'type'        => $type,
@@ -161,15 +159,8 @@ class NodeObject implements TreeishInterface
      * @param string                  $name        node name
      * @param string                  $path        node path
      */
-    public function __construct(
-        Repository $repository,
-        string $permissions,
-        string $type,
-        string $sha,
-        string $size,
-        string $name,
-        string $path
-    ) {
+    public function __construct(Repository $repository, string $permissions, string $type, string $sha, string $size, string $name, string $path)
+    {
         $this->repository = $repository;
         $this->permissions = $permissions;
         $this->type = $type;
@@ -346,7 +337,6 @@ class NodeObject implements TreeishInterface
         $c = RevParseCommand::getInstance()->revParse($this, $options);
         $caller = $this->repository->getCaller();
         $caller->execute($c);
-
         return array_map('trim', $caller->getOutputLines(true));
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,7 +20,7 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Repository;
+use \GitElephant\Repository;
 
 /**
  * CloneCommand generator
@@ -58,14 +59,12 @@ class CloneCommand extends BaseCommand
     {
         // get binary version before reset
         $v = $this->getBinaryVersion();
-
         $this->clearAll();
         $this->addCommandName(static::GIT_CLONE_COMMAND);
         $this->addCommandSubject($url);
         if (null !== $to) {
             $this->addCommandSubject2($to);
         }
-
         if (null !== $repoReference) {
             // git documentation says the --branch was added in 2.0.0, but it exists undocumented at least back to 1.8.3.1
             if (version_compare($v, '1.8.3.1', '<')) {
@@ -75,7 +74,6 @@ class CloneCommand extends BaseCommand
             }
             $this->addCommandArgument('--branch=' . $repoReference);
         }
-
         if (null !== $depth) {
             $this->addCommandArgument('--depth=' . $depth);
             // shallow-submodules is a nice to have feature. Just ignoring if git version not high enough
@@ -84,11 +82,9 @@ class CloneCommand extends BaseCommand
                 $this->addCommandArgument('--shallow-submodules');
             }
         }
-
         if ($recursive) {
             $this->addCommandArgument('--recursive');
         }
-
         return $this->getCommand();
     }
 }

@@ -51,7 +51,7 @@ class FetchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function fetch($remote = null, $branch = null, Array $options = array()): string
+    public function fetch($remote = null, $branch = null, array $options = array()): string
     {
         if ($remote instanceof Remote) {
             $remote = $remote->getName();
@@ -60,21 +60,17 @@ class FetchCommand extends BaseCommand
             $branch = $branch->getName();
         }
         $normalizedOptions = $this->normalizeOptions($options, $this->fetchCmdSwitchOptions());
-
         $this->clearAll();
         $this->addCommandName(self::GIT_FETCH_COMMAND);
-
         foreach ($normalizedOptions as $value) {
             $this->addCommandArgument($value);
         }
-
         if (!is_null($remote)) {
             $this->addCommandSubject($remote);
         }
         if (!is_null($branch)) {
             $this->addCommandSubject2($branch);
         }
-
         return $this->getCommand();
     }
 

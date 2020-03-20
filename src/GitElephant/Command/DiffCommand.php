@@ -66,15 +66,12 @@ class DiffCommand extends BaseCommand
         $this->addCommandArgument('-M');
         $this->addCommandArgument('--dst-prefix=DST/');
         $this->addCommandArgument('--src-prefix=SRC/');
-
         $subject = '';
-
         if (is_null($with)) {
             $subject .= $of.'^..'.$of;
         } else {
             $subject .= $with.'..'.$of;
         }
-
         if (! is_null($path)) {
             if (!is_string($path)) {
                 /** @var Object $path */
@@ -82,9 +79,7 @@ class DiffCommand extends BaseCommand
             }
             $this->addPath($path);
         }
-
         $this->addCommandSubject($subject);
-
         return $this->getCommand();
     }
 }

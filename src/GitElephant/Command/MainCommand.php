@@ -66,7 +66,6 @@ class MainCommand extends BaseCommand
             $this->addCommandArgument('--bare');
         }
         $this->addCommandName(self::GIT_INIT);
-
         return $this->getCommand();
     }
 
@@ -87,7 +86,6 @@ class MainCommand extends BaseCommand
         } else {
             $this->addConfigs(array('color.status' => 'false'));
         }
-
         return $this->getCommand();
     }
 
@@ -105,7 +103,6 @@ class MainCommand extends BaseCommand
         $this->addCommandName(self::GIT_ADD);
         $this->addCommandArgument('--all');
         $this->addCommandSubject($what);
-
         return $this->getCommand();
     }
 
@@ -123,7 +120,6 @@ class MainCommand extends BaseCommand
         $this->addCommandName(self::GIT_RESET);
         $this->addCommandArgument('HEAD');
         $this->addPath($what);
-
         return $this->getCommand();
     }
 
@@ -145,23 +141,18 @@ class MainCommand extends BaseCommand
             throw new \InvalidArgumentException(sprintf('You can\'t commit without message'));
         }
         $this->addCommandName(self::GIT_COMMIT);
-
         if ($stageAll) {
             $this->addCommandArgument('-a');
         }
-
         if ($author !== null) {
             $this->addCommandArgument('--author');
             $this->addCommandArgument($author);
         }
-
         if ($allowEmpty) {
             $this->addCommandArgument('--allow-empty');
         }
-
         $this->addCommandArgument('-m');
         $this->addCommandSubject($message);
-
         return $this->getCommand();
     }
 
@@ -176,18 +167,15 @@ class MainCommand extends BaseCommand
     public function checkout($ref): string
     {
         $this->clearAll();
-
         $what = $ref;
         if ($ref instanceof Branch) {
             $what = $ref->getName();
         } elseif ($ref instanceof TreeishInterface) {
             $what = $ref->getSha();
         }
-
         $this->addCommandName(self::GIT_CHECKOUT);
         $this->addCommandArgument('-q');
         $this->addCommandSubject($what);
-
         return $this->getCommand();
     }
 
@@ -204,21 +192,17 @@ class MainCommand extends BaseCommand
     public function move($from, $to): string
     {
         $this->clearAll();
-
         $from = trim($from);
         if (!$this->validatePath($from)) {
             throw new \InvalidArgumentException('Invalid source path');
         }
-
         $to = trim($to);
         if (!$this->validatePath($to)) {
             throw new \InvalidArgumentException('Invalid destination path');
         }
-
         $this->addCommandName(self::GIT_MOVE);
         $this->addCommandSubject($from);
         $this->addCommandSubject2($to);
-
         return $this->getCommand();
     }
 
@@ -236,24 +220,18 @@ class MainCommand extends BaseCommand
     public function remove($path, $recursive, $force): string
     {
         $this->clearAll();
-
         $path = trim($path);
         if (!$this->validatePath($path)) {
             throw new \InvalidArgumentException('Invalid path');
         }
-
         $this->addCommandName(self::GIT_REMOVE);
-
         if ($recursive) {
             $this->addCommandArgument('-r');
         }
-
         if ($force) {
             $this->addCommandArgument('-f');
         }
-
         $this->addPath($path);
-
         return $this->getCommand();
     }
 

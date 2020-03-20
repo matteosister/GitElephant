@@ -64,19 +64,14 @@ class RemoteCommand extends BaseCommand
     public function remote(SubCommandCommand $subcommand = null, array $options = array()): string
     {
         $normalizedOptions = $this->normalizeOptions($options, $this->remoteCmdSwitchOptions());
-
         $this->clearAll();
-
         $this->addCommandName(self::GIT_REMOTE);
-
         foreach ($normalizedOptions as $value) {
             $this->addCommandArgument($value);
         }
-
         if ($subcommand !== null) {
             $this->addCommandSubject($subcommand);
         }
-
         return $this->getCommand();
     }
 
@@ -120,7 +115,6 @@ class RemoteCommand extends BaseCommand
     {
         $subcmd = new ShowSubCommand();
         $subcmd->prepare($name, $queryRemotes);
-
         return $this->remote($subcmd);
     }
 
@@ -138,7 +132,6 @@ class RemoteCommand extends BaseCommand
     {
         $subcmd = new AddSubCommand();
         $subcmd->prepare($name, $url, $options);
-
         return $this->remote($subcmd);
     }
 }

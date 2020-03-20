@@ -293,7 +293,6 @@ class BaseCommand
     public function normalizeOptions(array $options = array(), array $switchOptions = array(), $valueOptions = array()): array
     {
         $normalizedOptions = array();
-
         foreach ($options as $option) {
             if (array_key_exists($option, $switchOptions)) {
                 $normalizedOptions[$switchOptions[$option]] = $switchOptions[$option];
@@ -308,7 +307,6 @@ class BaseCommand
                 }
             }
         }
-
         return $normalizedOptions;
     }
 

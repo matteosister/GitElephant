@@ -66,7 +66,6 @@ class TagCommand extends BaseCommand
         } else {
             $this->addCommandSubject($name);
         }
-
         return $this->getCommand();
     }
 
@@ -110,16 +109,13 @@ class TagCommand extends BaseCommand
     public function delete($tag): string
     {
         $this->clearAll();
-
         $name = $tag;
         if ($tag instanceof Tag) {
             $name = $tag->getName();
         }
-
         $this->addCommandName(self::TAG_COMMAND);
         $this->addCommandArgument('-d');
         $this->addCommandSubject($name);
-
         return $this->getCommand();
     }
 }

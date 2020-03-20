@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,7 +20,7 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Repository;
+use \GitElephant\Repository;
 
 /**
  * Stash command generator
@@ -58,15 +59,12 @@ class StashCommand extends BaseCommand
         if (!is_null($message)) {
             $this->addCommandSubject($message);
         }
-
         if ($includeUntracked) {
             $this->addCommandArgument('--include-untracked');
         }
-
         if ($keepIndex) {
             $this->addCommandArgument('--keep-index');
         }
-
         return $this->getCommand();
     }
 

@@ -61,11 +61,9 @@ class PushCommand extends BaseCommand
         $this->addCommandName(self::GIT_PUSH_COMMAND);
         $this->addCommandSubject($remote);
         $this->addCommandSubject2($branch);
-
         if (!is_null($args)) {
             $this->addCommandArgument($args);
         }
-
         return $this->getCommand();
     }
 }

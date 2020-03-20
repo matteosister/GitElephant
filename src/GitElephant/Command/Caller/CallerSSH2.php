@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,7 +20,7 @@
 
 namespace GitElephant\Command\Caller;
 
-use GitElephant\Command\Caller\AbstractCaller;
+use \GitElephant\Command\Caller\AbstractCaller;
 
 /**
  * Caller via ssh2 PECL extension
@@ -68,7 +69,6 @@ class CallerSSH2 extends AbstractCaller
         // rtrim values
         $values = array_map('rtrim', explode(PHP_EOL, $data));
         $this->outputLines = $values;
-
         return $this;
     }
 }

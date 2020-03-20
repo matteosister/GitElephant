@@ -54,27 +54,22 @@ class MergeCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function merge(Branch $with, $message = '', Array $options = array()): string
+    public function merge(Branch $with, $message = '', array $options = array()): string
     {
         if (in_array(self::MERGE_OPTION_FF_ONLY, $options) && in_array(self::MERGE_OPTION_NO_FF, $options)) {
             throw new \Symfony\Component\Process\Exception\InvalidArgumentException("Invalid options: cannot use flags --ff-only and --no-ff together.");
         }
         $normalizedOptions = $this->normalizeOptions($options, $this->mergeCmdSwitchOptions());
-
         $this->clearAll();
         $this->addCommandName(static::MERGE_COMMAND);
-
         foreach ($normalizedOptions as $value) {
             $this->addCommandArgument($value);
         }
-
         if (!empty($message)) {
             $this->addCommandArgument('-m');
             $this->addCommandArgument($message);
         }
-
         $this->addCommandSubject($with->getFullRef());
-
         return $this->getCommand();
     }
 

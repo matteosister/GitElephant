@@ -68,11 +68,9 @@ class ShowSubCommand extends SubCommandCommand
         if ($name) {
             $this->addCommandSubject($name);
         }
-
         if (!$queryRemotes) {
             $this->addCommandArgument('-n');
         }
-
         return $this;
     }
 }

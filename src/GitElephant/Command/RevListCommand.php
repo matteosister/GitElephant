@@ -58,7 +58,6 @@ class RevListCommand extends BaseCommand
         // only the last commit
         $this->addCommandArgument('-n1');
         $this->addCommandSubject($tag->getFullRef());
-
         return $this->getCommand();
     }
 
@@ -77,7 +76,6 @@ class RevListCommand extends BaseCommand
         $this->addCommandName(static::GIT_REVLIST);
         $this->addCommandArgument(sprintf('--max-count=%s', $max));
         $this->addCommandSubject($commit->getSha());
-
         return $this->getCommand();
     }
 }

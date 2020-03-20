@@ -63,7 +63,6 @@ abstract class AbstractCaller implements CallerInterface
     public function setBinaryPath(string $path): self
     {
         $this->binaryPath = $path;
-
         return $this;
     }
 
@@ -101,7 +100,7 @@ abstract class AbstractCaller implements CallerInterface
      *
      * @return array
      */
-    public function getOutputLines($stripBlankLines = false): array
+    public function getOutputLines(bool $stripBlankLines = false): array
     {
         if ($stripBlankLines) {
             $output = array();
@@ -113,7 +112,6 @@ abstract class AbstractCaller implements CallerInterface
 
             return $output;
         }
-
         return $this->outputLines;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: christian
@@ -8,7 +9,7 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Commit;
+use \GitElephant\Objects\Commit;
 use \GitElephant\TestCase;
 
 class ResetCommandTest extends TestCase

@@ -66,7 +66,6 @@ class LogCommand extends BaseCommand
                 $subject .= (string) $branch;
             }
         }
-
         return $this->showLog($subject, $obj->getFullPath(), $limit, $offset);
     }
 
@@ -86,36 +85,28 @@ class LogCommand extends BaseCommand
     public function showLog($ref, $path = null, $limit = null, int $offset = null, bool $firstParent = false): string
     {
         $this->clearAll();
-
         $this->addCommandName(self::GIT_LOG);
         $this->addCommandArgument('-s');
         $this->addCommandArgument('--pretty=raw');
         $this->addCommandArgument('--no-color');
-
         if (null !== $limit) {
             $limit = (int) $limit;
             $this->addCommandArgument('--max-count=' . $limit);
         }
-
         if (null !== $offset) {
             $offset = (int) $offset;
             $this->addCommandArgument('--skip=' . $offset);
         }
-
         if ($firstParent) {
             $this->addCommandArgument('--first-parent');
         }
-
         if ($ref instanceof TreeishInterface) {
             $ref = $ref->getSha();
         }
-
         if (null !== $path && !empty($path)) {
             $this->addPath($path);
         }
-
         $this->addCommandSubject($ref);
-
         return $this->getCommand();
     }
 }

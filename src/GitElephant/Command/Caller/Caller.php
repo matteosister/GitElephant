@@ -21,8 +21,8 @@
 namespace GitElephant\Command\Caller;
 
 use \Symfony\Component\Process\Process;
-use GitElephant\Command\Caller\CallerInterface;
-use GitElephant\Exception\InvalidRepositoryPathException;
+use \GitElephant\Command\Caller\CallerInterface;
+use \GitElephant\Exception\InvalidRepositoryPathException;
 
 /**
  * Caller
@@ -59,11 +59,9 @@ class Caller extends AbstractCaller
             $gitPath = exec('which git');
         }
         $this->setBinaryPath($gitPath);
-
         if (!is_dir($repositoryPath)) {
             throw new InvalidRepositoryPathException($repositoryPath);
         }
-
         $this->repositoryPath = $repositoryPath;
     }
 
@@ -87,12 +85,10 @@ class Caller extends AbstractCaller
         if ($git) {
             $cmd = $this->getBinaryPath() . ' ' . $cmd;
         }
-
         if (stripos(PHP_OS, 'WIN') !== 0) {
             // We rely on the C locale in all output we parse.
             $cmd = 'LC_ALL=C ' . $cmd;
         }
-
         if (is_null($cwd) || !is_dir($cwd)) {
             $cwd = $this->repositoryPath;
         }
@@ -107,11 +103,9 @@ class Caller extends AbstractCaller
             throw new \RuntimeException($text);
         }
         $this->rawOutput = $process->getOutput();
-
         // rtrim values
         $values = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
         $this->outputLines = $values;
-
         return $this;
     }
 
@@ -144,7 +138,6 @@ class Caller extends AbstractCaller
 
             return $output;
         }
-
         return $this->outputLines;
     }
 

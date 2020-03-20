@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -33,7 +34,7 @@ interface CallerInterface
      *
      * @return CallerInterface
      */
-    public function execute(string $cmd, bool $git = true, string $cwd = null): \GitElephant\Command\Caller\CallerInterface;
+    public function execute(string $cmd, bool $git = true, string $cwd = null): CallerInterface;
 
     /**
      * after calling execute this method should return the output

@@ -2,10 +2,10 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use GitElephant\Objects\Branch;
-use GitElephant\Objects\Commit;
-use GitElephant\Objects\Tag;
-use GitElephant\Repository;
+use \GitElephant\Objects\Branch;
+use \GitElephant\Objects\Commit;
+use \GitElephant\Objects\Tag;
+use \GitElephant\Repository;
 
 $repo = Repository::open(realpath(__DIR__ . '/../'));
 $binaryFile = $repo->getTree('HEAD', 'src/GitElephant/Repository.php');

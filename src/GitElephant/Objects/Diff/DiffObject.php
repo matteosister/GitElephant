@@ -87,9 +87,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     {
         $this->position = 0;
         $this->chunks = [];
-
         $this->findPath($lines[0]);
-
         $sliceIndex = 4;
         if ($this->hasPathChanged()) {
             $this->findSimilarityIndex($lines[1]);
@@ -102,7 +100,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
         } else {
             $this->findMode($lines[1]);
         }
-
         if ($this->mode === self::MODE_INDEX || $this->mode === self::MODE_NEW_FILE) {
             $lines = array_slice($lines, $sliceIndex);
             if (!empty($lines)) {

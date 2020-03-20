@@ -89,7 +89,6 @@ class Remote
             $this->name = trim($name);
             $this->createFromCommand($queryRemotes);
         }
-
         return $this;
     }
 
@@ -124,7 +123,6 @@ class Remote
             $remoteCmd = RemoteCommand::getInstance($this->repository);
         }
         $command = $remoteCmd->verbose();
-
         return $this->repository->getCaller()->execute($command)->getOutputLines(true);
     }
 
@@ -150,7 +148,6 @@ class Remote
             $remoteCmd = RemoteCommand::getInstance($this->repository);
         }
         $command = $remoteCmd->show($name, $queryRemotes);
-
         return $this->repository->getCaller()->execute($command)->getOutputLines(true);
     }
 
@@ -208,13 +205,10 @@ class Remote
         $this->name = $name;
         $fetchURLPattern = '/^Fetch\s+URL:\s*(.*)$/';
         $fetchURL = null;
-
         $pushURLPattern = '/^Push\s+URL:\s*(.*)$/';
         $pushURL = null;
-
         $remoteHEADPattern = '/^HEAD\s+branch:\s*(.*)$/';
         $remoteHEAD = null;
-
         $remoteBranchHeaderPattern = '/^Remote\s+branch(?:es)?:$/';
         $localBranchPullHeaderPattern = '/^Local\sbranch(?:es)?\sconfigured\sfor\s\'git\spull\'\:$/';
         $localRefPushHeaderPattern = '/^Local\sref(?:s)?\sconfigured\sfor\s\'git\spush\':$/';
@@ -223,7 +217,6 @@ class Remote
             'localBranches'  => null,
             'localRefs'      => null,
         ];
-
         foreach ($remoteDetails as $lineno => $line) {
             $line = trim($line);
             $matches = [];
@@ -241,7 +234,6 @@ class Remote
                 $groups['localRefs'] = $lineno;
             }
         }
-
         $this->setBranches($this->aggregateBranchDetails($groups, $remoteDetails));
     }
 
@@ -308,7 +300,6 @@ class Remote
                 $branches[$parts[0]] = ['local_relationship' => $parts[1]];
             }
         }
-
         return $branches;
     }
 
@@ -332,7 +323,6 @@ class Remote
                 $branches[$parts[0]] = ['merges_with' => $parts[1]];
             }
         }
-
         return $branches;
     }
 
@@ -357,7 +347,6 @@ class Remote
                 $branches[$parts[0]] = ['pushes_to' => $value[0], 'local_state' => $value[1]];
             }
         }
-
         return $branches;
     }
 
@@ -376,7 +365,6 @@ class Remote
         if (!isset($matches[1])) {
             return '';
         }
-
         return $matches[1];
     }
 
@@ -395,7 +383,6 @@ class Remote
         if (empty($matches)) {
             throw new \InvalidArgumentException(sprintf('the remote string is not valid: %s', $remoteString));
         }
-
         return array_map('trim', $matches);
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -22,6 +23,7 @@ namespace GitElephant\Objects;
 use \GitElephant\Repository;
 use \GitElephant\Command\LsTreeCommand;
 use \GitElephant\Command\CatFileCommand;
+use \GitElephant\Command\Caller\CallerInterface;
 
 /**
  * An abstraction of a git tree
@@ -85,7 +87,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     {
         $tree = new self($repository);
         $tree->parseOutputLines($outputLines);
-
         return $tree;
     }
 
@@ -139,9 +140,9 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
-     * @return \GitElephant\Command\Caller\Caller
+     * @return CallerInterface
      */
-    private function getCaller(): \GitElephant\Command\Caller\Caller
+    private function getCaller(): CallerInterface
     {
         return $this->getRepository()->getCaller();
     }
@@ -382,7 +383,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
             return $this->getRepository()->getCommit($ref);
         }
         $log = $this->repository->getObjectLog($this->getObject(), $ref);
-
         return $log[0];
     }
 

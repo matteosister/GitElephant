@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: christian
@@ -8,8 +9,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Commit;
-use GitElephant\Objects\TreeishInterface;
+use \GitElephant\Objects\Commit;
+use \GitElephant\Objects\TreeishInterface;
 use \GitElephant\Repository;
 
 class ResetCommand extends BaseCommand
@@ -43,15 +44,14 @@ class ResetCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(self::GIT_RESET_COMMAND);
         // if there are options add them.
-        if (! is_null($options)) {
+        if (!is_null($options)) {
             foreach ($options as $option) {
                 $this->addCommandArgument($option);
             }
         }
-        if ($arg!=null) {
+        if ($arg != null) {
             $this->addCommandSubject2($arg);
         }
-
         return $this->getCommand();
     }
 

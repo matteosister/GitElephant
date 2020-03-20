@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -22,6 +23,7 @@ namespace GitElephant\Objects;
 use \GitElephant\Repository;
 use \GitElephant\Command\TagCommand;
 use \GitElephant\Command\RevListCommand;
+use \GitElephant\Command\Caller\CallerInterface;
 
 /**
  * An object representing a git tag
@@ -62,16 +64,11 @@ class Tag extends NodeObject
      * @throws \RuntimeException
      * @return \GitElephant\Objects\Tag
      */
-    public static function create(
-        Repository $repository,
-        string $name,
-        $startPoint = null,
-        string $message = null
-    ): ?\GitElephant\Objects\Tag {
+    public static function create(Repository $repository, string $name, $startPoint = null, string $message = null): ?\GitElephant\Objects\Tag
+    {
         $repository
             ->getCaller()
             ->execute(TagCommand::getInstance($repository)->create($name, $startPoint, $message));
-
         return $repository->getTag($name);
     }
 
@@ -91,7 +88,6 @@ class Tag extends NodeObject
     {
         $tag = new self($repository, $name);
         $tag->parseOutputLines($outputLines);
-
         return $tag;
     }
 
@@ -190,9 +186,9 @@ class Tag extends NodeObject
     }
 
     /**
-     * @return \GitElephant\Command\Caller\Caller
+     * @return CallerInterface
      */
-    private function getCaller(): \GitElephant\Command\Caller\Caller
+    private function getCaller(): CallerInterface
     {
         return $this->getRepository()->getCaller();
     }

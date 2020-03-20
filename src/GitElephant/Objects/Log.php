@@ -63,7 +63,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     {
         $log = new self($repository);
         $log->parseOutputLines($outputLines);
-
         return $log;
     }
 
@@ -77,14 +76,8 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * @param int|null    $offset
      * @param bool        $firstParent
      */
-    public function __construct(
-        Repository $repository,
-        $ref = 'HEAD',
-        $path = null,
-        int $limit = 15,
-        int $offset = null,
-        bool $firstParent = false
-    ) {
+    public function __construct(Repository $repository, $ref = 'HEAD', $path = null, int $limit = 15, int $offset = null, bool $firstParent = false)
+    {
         $this->repository = $repository;
         $this->createFromCommand($ref, $path, $limit, $offset, $firstParent);
     }

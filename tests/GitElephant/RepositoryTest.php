@@ -13,9 +13,9 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\ResetCommand;
+use \GitElephant\Command\ResetCommand;
 use \GitElephant\Objects\Branch;
-use GitElephant\Objects\Log;
+use \GitElephant\Objects\Log;
 use \GitElephant\Objects\NodeObject;
 use \GitElephant\Objects\Tag;
 

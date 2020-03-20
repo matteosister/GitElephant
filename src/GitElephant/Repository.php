@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,12 +20,13 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\ResetCommand;
-use GitElephant\Command\StashCommand;
-use GitElephant\Objects\TreeObject;
+use \GitElephant\Command\ResetCommand;
+use \GitElephant\Command\StashCommand;
+use \GitElephant\Objects\TreeObject;
 use Symfony\Component\Process\Exception\InvalidArgumentException;
 use \GitElephant\Command\BranchCommand;
 use \GitElephant\Command\Caller\Caller;
+use \GitElephant\Command\Caller\CallerInterface;
 use \GitElephant\Command\CatFileCommand;
 use \GitElephant\Command\CloneCommand;
 use \GitElephant\Command\FetchCommand;
@@ -166,7 +168,6 @@ class Repository
         }
         $repository->cloneFrom($git, $repositoryPath);
         $repository->checkoutAllRemoteBranches();
-
         return $repository;
     }
 
@@ -184,7 +185,6 @@ class Repository
     public function init($bare = false): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->init($bare));
-
         return $this;
     }
 
@@ -202,7 +202,6 @@ class Repository
     public function stage($path = '.'): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->add($path));
-
         return $this;
     }
 
@@ -220,7 +219,6 @@ class Repository
     public function unstage($path): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->unstage($path), true, null, [0, 1]);
-
         return $this;
     }
 
@@ -240,7 +238,6 @@ class Repository
     public function move($from, $to): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->move($from, $to));
-
         return $this;
     }
 
@@ -261,7 +258,6 @@ class Repository
     public function remove($path, $recursive = false, $force = false): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->remove($path, $recursive, $force));
-
         return $this;
     }
 
@@ -293,7 +289,6 @@ class Repository
         if (!is_null($ref)) {
             $this->checkout($currentBranch);
         }
-
         return $this;
     }
 
@@ -311,7 +306,6 @@ class Repository
     public function revParse(string $arg = null, array $options = []): array
     {
         $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
-
         return array_map('trim', $this->caller->getOutputLines(true));
     }
 
@@ -412,7 +406,6 @@ class Repository
     public function createBranch(string $name, $startPoint = null): self
     {
         Branch::create($this, $name, $startPoint);
-
         return $this;
     }
 
@@ -432,7 +425,6 @@ class Repository
     public function deleteBranch(string $name, bool $force = false): self
     {
         $this->caller->execute(BranchCommand::getInstance($this)->delete($name, $force));
-
         return $this;
     }
 
@@ -472,7 +464,6 @@ class Repository
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
         }
-
         return $branches;
     }
 
@@ -515,7 +506,6 @@ class Repository
                 return $branch;
             }
         }
-
         return null;
     }
 
@@ -538,17 +528,14 @@ class Repository
             $allBranches,
             function (string $branch) use ($actualBranches) {
                 return !in_array($branch, $actualBranches)
-                && preg_match('/^remotes(.+)$/', $branch)
-                && !preg_match('/^(.+)(HEAD)(.*?)$/', $branch);
+                    && preg_match('/^remotes(.+)$/', $branch)
+                    && !preg_match('/^(.+)(HEAD)(.*?)$/', $branch);
             }
         );
-
         foreach ($realBranches as $realBranch) {
             $this->checkout(str_replace(sprintf('remotes/%s/', $remote), '', $realBranch));
         }
-
         $this->checkout($actualBranch);
-
         return $this;
     }
 
@@ -575,7 +562,6 @@ class Repository
         if (!in_array($mode, $valid_modes)) {
             throw new InvalidArgumentException("Invalid merge mode: $mode.");
         }
-
         $options = [];
         switch ($mode) {
             case 'ff-only':
@@ -585,9 +571,7 @@ class Repository
                 $options[] = MergeCommand::MERGE_OPTION_NO_FF;
                 break;
         }
-
         $this->caller->execute(MergeCommand::getInstance($this)->merge($branch, $message, $options));
-
         return $this;
     }
 
@@ -606,7 +590,6 @@ class Repository
     public function createTag(string $name, $startPoint = null, string $message = null): self
     {
         Tag::create($this, $name, $startPoint, $message);
-
         return $this;
     }
 
@@ -627,7 +610,6 @@ class Repository
         } else {
             Tag::pick($this, $tag)->delete();
         }
-
         return $this;
     }
 
@@ -646,7 +628,6 @@ class Repository
     public function addSubmodule(string $gitUrl, $path = null): self
     {
         $this->caller->execute(SubmoduleCommand::getInstance($this)->add($gitUrl, $path));
-
         return $this;
     }
 
@@ -660,7 +641,6 @@ class Repository
     public function initSubmodule($path = null): self
     {
         $this->caller->execute(SubmoduleCommand::getInstance($this)->init($path));
-
         return $this;
     }
 
@@ -674,14 +654,9 @@ class Repository
      *
      * @return Repository
      */
-    public function updateSubmodule(
-        bool $recursive = false,
-        bool $init = false,
-        bool $force = false,
-        $path = null
-    ): self {
+    public function updateSubmodule(bool $recursive = false, bool $init = false, bool $force = false, $path = null): self
+    {
         $this->caller->execute(SubmoduleCommand::getInstance($this)->update($recursive, $init, $force, $path));
-
         return $this;
     }
 
@@ -721,13 +696,11 @@ class Repository
         $tagFinderOutput = $this->caller
             ->execute(TagCommand::getInstance()->listTags())
             ->getOutputLines(true);
-
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
                 return new Tag($this, $name);
             }
         }
-
         return null;
     }
 
@@ -780,7 +753,6 @@ class Repository
                 return new Tag($this, $name);
             }
         }
-
         return null;
     }
 
@@ -809,7 +781,6 @@ class Repository
     public function countCommits($start = 'HEAD'): int
     {
         $commit = Commit::pick($this, $start);
-
         return $commit->count();
     }
 
@@ -824,13 +795,8 @@ class Repository
      *
      * @return \GitElephant\Objects\Log
      */
-    public function getLog(
-        $ref = 'HEAD',
-        $path = null,
-        int $limit = 10,
-        int $offset = null,
-        bool $firstParent = false
-    ): \GitElephant\Objects\Log {
+    public function getLog($ref = 'HEAD', $path = null, int $limit = 10, int $offset = null, bool $firstParent = false): \GitElephant\Objects\Log
+    {
         return new Log($this, $ref, $path, $limit, $offset, $firstParent);
     }
 
@@ -846,24 +812,16 @@ class Repository
      *
      * @return \GitElephant\Objects\LogRange|\GitElephant\Objects\Log
      */
-    public function getLogRange(
-        $refStart,
-        $refEnd,
-        $path = null,
-        int $limit = 10,
-        int $offset = null,
-        bool $firstParent = false
-    ) {
+    public function getLogRange($refStart, $refEnd, $path = null, int $limit = 10, int $offset = null, bool $firstParent = false)
+    {
         // Handle when clients provide bad start reference on branch creation
         if (preg_match('~^[0]+$~', $refStart)) {
             return new Log($this, $refEnd, $path, $limit, $offset, $firstParent);
         }
-
         // Handle when clients provide bad end reference on branch deletion
         if (preg_match('~^[0]+$~', $refEnd)) {
             $refEnd = $refStart;
         }
-
         return new LogRange($this, $refStart, $refEnd, $path, $limit, $offset, $firstParent);
     }
 
@@ -884,7 +842,6 @@ class Repository
     public function getObjectLog(NodeObject $obj, $branch = null, int $limit = 1, int $offset = null): \GitElephant\Objects\Log
     {
         $command = LogCommand::getInstance($this)->showObjectLog($obj, $branch, $limit, $offset);
-
         return Log::createFromOutputLines($this, $this->caller->execute($command)->getOutputLines());
     }
 
@@ -907,7 +864,6 @@ class Repository
             $this->createBranch($ref);
         }
         $this->caller->execute(MainCommand::getInstance($this)->checkout($ref));
-
         return $this;
     }
 
@@ -934,7 +890,6 @@ class Repository
 
             $path = TreeObject::createFromOutputLine($this, $outputLines[0]);
         }
-
         return new Tree($this, $ref, $path);
     }
 
@@ -989,7 +944,6 @@ class Repository
     public function addRemote(string $name, string $url): self
     {
         $this->caller->execute(RemoteCommand::getInstance($this)->add($name, $url));
-
         return $this;
     }
 
@@ -1020,12 +974,10 @@ class Repository
         $remoteNames = $this->caller
             ->execute(RemoteCommand::getInstance($this)->show(null, $queryRemotes))
             ->getOutputLines(true);
-
         $remotes = [];
         foreach ($remoteNames as $remoteName) {
             $remotes[] = $this->getRemote($remoteName, $queryRemotes);
         }
-
         return $remotes;
     }
 
@@ -1112,7 +1064,6 @@ class Repository
     public function outputContent(NodeObject $obj, $treeish): array
     {
         $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
-
         return $this->caller->execute($command)->getOutputLines();
     }
 
@@ -1131,7 +1082,6 @@ class Repository
     public function outputRawContent(NodeObject $obj, $treeish): string
     {
         $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
-
         return $this->caller->execute($command)->getRawOutput();
     }
 
@@ -1168,9 +1118,9 @@ class Repository
     /**
      * Caller setter
      *
-     * @param \GitElephant\Command\Caller\Caller $caller the caller variable
+     * @param CallerInterface $caller the caller variable
      */
-    public function setCaller(Caller $caller): void
+    public function setCaller(CallerInterface $caller): void
     {
         $this->caller = $caller;
     }
@@ -1178,9 +1128,9 @@ class Repository
     /**
      * Caller getter
      *
-     * @return \GitElephant\Command\Caller\Caller
+     * @return CallerInterface the caller to use to call commands
      */
-    public function getCaller(): \GitElephant\Command\Caller\Caller
+    public function getCaller(): CallerInterface
     {
         return $this->caller;
     }
@@ -1313,7 +1263,6 @@ class Repository
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->listStashes($options);
         $this->caller->execute($command);
-
         return array_map('trim', $this->caller->getOutputLines(true));
     }
 
@@ -1329,7 +1278,6 @@ class Repository
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->show($stash);
         $this->caller->execute($command);
-
         return $this->caller->getOutput();
     }
 
