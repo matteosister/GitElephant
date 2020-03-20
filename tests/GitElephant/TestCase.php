@@ -89,8 +89,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function initRepository(string $name = null, int $index = null): void
     {
         $tempDir = realpath(sys_get_temp_dir());
-        $tempName = null === $name 
-            ? tempnam($tempDir, 'gitelephant') 
+        $tempName = null === $name
+            ? tempnam($tempDir, 'gitelephant')
             : $tempDir . DIRECTORY_SEPARATOR . $name;
         $this->path = $tempName;
         @unlink($this->path);
