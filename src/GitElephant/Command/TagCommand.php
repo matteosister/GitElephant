@@ -57,6 +57,7 @@ class TagCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
+
         if (null !== $message) {
             $this->addCommandArgument('-m');
             $this->addCommandArgument($message);
@@ -111,11 +112,13 @@ class TagCommand extends BaseCommand
     public function delete($tag): string
     {
         $this->clearAll();
+        $this->addCommandName(self::TAG_COMMAND);
+
         $name = $tag;
         if ($tag instanceof Tag) {
             $name = $tag->getName();
         }
-        $this->addCommandName(self::TAG_COMMAND);
+
         $this->addCommandArgument('-d');
         $this->addCommandSubject($name);
 

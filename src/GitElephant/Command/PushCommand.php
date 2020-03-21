@@ -51,16 +51,19 @@ class PushCommand extends BaseCommand
      */
     public function push($remote = 'origin', $branch = 'master', string $args = null): string
     {
+        $this->clearAll();
+
         if ($remote instanceof Remote) {
             $remote = $remote->getName();
         }
         if ($branch instanceof Branch) {
             $branch = $branch->getName();
         }
-        $this->clearAll();
+
         $this->addCommandName(self::GIT_PUSH_COMMAND);
         $this->addCommandSubject($remote);
         $this->addCommandSubject2($branch);
+        
         if (!is_null($args)) {
             $this->addCommandArgument($args);
         }

@@ -53,6 +53,7 @@ class ShowCommand extends BaseCommand
     public function showCommit($ref): string
     {
         $this->clearAll();
+        
         $this->addCommandName(self::GIT_SHOW);
         $this->addCommandArgument('-s');
         $this->addCommandArgument('--pretty=raw');

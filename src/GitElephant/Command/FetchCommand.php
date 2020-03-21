@@ -59,12 +59,16 @@ class FetchCommand extends BaseCommand
         if ($branch instanceof Branch) {
             $branch = $branch->getName();
         }
+
         $normalizedOptions = $this->normalizeOptions($options, $this->fetchCmdSwitchOptions());
+
         $this->clearAll();
         $this->addCommandName(self::GIT_FETCH_COMMAND);
+
         foreach ($normalizedOptions as $value) {
             $this->addCommandArgument($value);
         }
+        
         if (!is_null($remote)) {
             $this->addCommandSubject($remote);
         }

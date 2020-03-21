@@ -121,6 +121,7 @@ class Branch extends NodeObject implements TreeishInterface
     public static function checkout(Repository $repository, $name, $create = false): \GitElephant\Objects\Branch
     {
         $branch = $create ? self::create($repository, $name) : new self($repository, $name);
+
         $repository->checkout($branch);
 
         return $branch;
@@ -182,6 +183,7 @@ class Branch extends NodeObject implements TreeishInterface
         } else {
             $branchString = trim($branchString);
         }
+
         $matches = static::getMatches($branchString);
         $this->name = $matches[1];
         $this->sha = $matches[2];
@@ -203,10 +205,12 @@ class Branch extends NodeObject implements TreeishInterface
             '/^\*?\ *?(\S+)\ +(\S{40})\ +(.+)$/',
             '/^\*?\ *?\(.*(detached).*\)\ +(\S{40})\ +(.+)$/',
         ];
+
         $matches = [];
         while (empty($matches) and $regex = array_pop($regexList)) {
             preg_match($regex, trim($branchString), $matches);
         }
+        
         if (empty($matches)) {
             throw new \InvalidArgumentException(sprintf('the branch string is not valid: %s', $branchString));
         }

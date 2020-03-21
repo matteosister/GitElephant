@@ -97,6 +97,7 @@ class AddSubCommand extends SubCommandCommand
             $this->addCmdSwitchOptions(),
             $this->addCmdValueOptions()
         );
+        
         $this->addCommandName(self::GIT_REMOTE_ADD);
         $this->addCommandSubject($name);
         $this->addCommandSubject($url);

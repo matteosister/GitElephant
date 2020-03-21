@@ -62,16 +62,21 @@ class MergeCommand extends BaseCommand
                 "Invalid options: cannot use flags --ff-only and --no-ff together."
             );
         }
+
         $normalizedOptions = $this->normalizeOptions($options, $this->mergeCmdSwitchOptions());
+
         $this->clearAll();
         $this->addCommandName(static::MERGE_COMMAND);
+
         foreach ($normalizedOptions as $value) {
             $this->addCommandArgument($value);
         }
+
         if (!empty($message)) {
             $this->addCommandArgument('-m');
             $this->addCommandArgument($message);
         }
+        
         $this->addCommandSubject($with->getFullRef());
 
         return $this->getCommand();

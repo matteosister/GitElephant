@@ -87,14 +87,17 @@ class LsTreeCommand extends BaseCommand
         } else {
             $subjectPath = $path;
         }
+
         $what = $ref;
         if ($ref instanceof TreeishInterface) {
             $what = $ref->getSha();
         }
+        $subject = $what;
+
         $this->clearAll();
+
         $this->addCommandName(self::LS_TREE_COMMAND);
         $this->addCommandArgument('-l');
-        $subject = $what;
         $this->addCommandSubject($subject);
         $this->addPath($subjectPath);
 

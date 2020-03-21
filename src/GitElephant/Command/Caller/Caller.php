@@ -88,10 +88,12 @@ class Caller extends AbstractCaller
         if ($git) {
             $cmd = $this->getBinaryPath() . ' ' . $cmd;
         }
+
         if (stripos(PHP_OS, 'WIN') !== 0) {
             // We rely on the C locale in all output we parse.
             $cmd = 'LC_ALL=C ' . $cmd;
         }
+
         if (is_null($cwd) || !is_dir($cwd)) {
             $cwd = $this->repositoryPath;
         }
@@ -102,6 +104,7 @@ class Caller extends AbstractCaller
             // compatibility fix required for symfony/process versions prior to v4.2.
             $process = new Process($cmd, $cwd);
         }
+
         $process->setTimeout(15000);
         $process->run();
         if (!in_array($process->getExitCode(), $acceptedExitCodes)) {
@@ -111,6 +114,7 @@ class Caller extends AbstractCaller
             $text .= "\n" . $process->getOutput();
             throw new \RuntimeException($text);
         }
+        
         $this->rawOutput = $process->getOutput();
         // rtrim values
         $values = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));

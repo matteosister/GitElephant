@@ -55,13 +55,17 @@ class StashCommand extends BaseCommand
     public function save($message = null, $includeUntracked = false, $keepIndex = false): string
     {
         $this->clearAll();
+
         $this->addCommandName(self::STASH_COMMAND . ' save');
+
         if (!is_null($message)) {
             $this->addCommandSubject($message);
         }
+
         if ($includeUntracked) {
             $this->addCommandArgument('--include-untracked');
         }
+
         if ($keepIndex) {
             $this->addCommandArgument('--keep-index');
         }
@@ -79,7 +83,9 @@ class StashCommand extends BaseCommand
     public function listStashes(array $options = null): string
     {
         $this->clearAll();
+
         $this->addCommandName(self::STASH_COMMAND . ' list');
+        
         if (null !== $options) {
             $this->addCommandSubject($options);
         }

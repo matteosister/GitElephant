@@ -539,6 +539,7 @@ class Repository
         $actualBranch = $this->getMainBranch();
         $actualBranches = $this->getBranches(true, false);
         $allBranches = $this->getBranches(true, true);
+
         $realBranches = array_filter(
             $allBranches,
             function (string $branch) use ($actualBranches) {
@@ -547,9 +548,11 @@ class Repository
                     && !preg_match('/^(.+)(HEAD)(.*?)$/', $branch);
             }
         );
+
         foreach ($realBranches as $realBranch) {
             $this->checkout(str_replace(sprintf('remotes/%s/', $remote), '', $realBranch));
         }
+
         $this->checkout($actualBranch);
 
         return $this;
@@ -575,9 +578,11 @@ class Repository
             'ff-only', // force fast forward merge
             'no-ff', // force 3-way merge
         ];
+
         if (!in_array($mode, $valid_modes)) {
             throw new InvalidArgumentException("Invalid merge mode: $mode.");
         }
+
         $options = [];
         switch ($mode) {
             case 'ff-only':
@@ -587,6 +592,7 @@ class Repository
                 $options[] = MergeCommand::MERGE_OPTION_NO_FF;
                 break;
         }
+
         $this->caller->execute(MergeCommand::getInstance($this)->merge($branch, $message, $options));
 
         return $this;
@@ -699,6 +705,7 @@ class Repository
     {
         $tags = [];
         $this->caller->execute(TagCommand::getInstance($this)->listTags());
+
         foreach ($this->caller->getOutputLines() as $tagString) {
             if ($tagString != '') {
                 $tags[] = new Tag($this, trim($tagString));
@@ -722,6 +729,7 @@ class Repository
         $tagFinderOutput = $this->caller
             ->execute(TagCommand::getInstance()->listTags())
             ->getOutputLines(true);
+
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
                 return new Tag($this, $name);
@@ -774,7 +782,11 @@ class Repository
         if (in_array($name, $this->getBranches(true))) {
             return new Branch($this, $name);
         }
-        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance($this)->listTags())->getOutputLines(true);
+
+        $tagFinderOutput = $this->caller
+            ->execute(TagCommand::getInstance($this)
+            ->listTags())->getOutputLines(true);
+        
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
                 return new Tag($this, $name);
@@ -858,6 +870,7 @@ class Repository
         if (preg_match('~^[0]+$~', $refStart)) {
             return new Log($this, $refEnd, $path, $limit, $offset, $firstParent);
         }
+
         // Handle when clients provide bad end reference on branch deletion
         if (preg_match('~^[0]+$~', $refEnd)) {
             $refEnd = $refStart;
@@ -982,7 +995,8 @@ class Repository
         int $depth = null,
         bool $recursive = false
     ): self {
-        $command = Command\CloneCommand::getInstance($this)->cloneUrl($url, $to, $repoReference, $depth, $recursive);
+        $command = Command\CloneCommand::getInstance($this)
+            ->cloneUrl($url, $to, $repoReference, $depth, $recursive);
         $this->caller->execute($command);
 
         return $this;
@@ -1032,6 +1046,7 @@ class Repository
         $remoteNames = $this->caller
             ->execute(RemoteCommand::getInstance($this)->show(null, $queryRemotes))
             ->getOutputLines(true);
+
         $remotes = [];
         foreach ($remoteNames as $remoteName) {
             $remotes[] = $this->getRemote($remoteName, $queryRemotes);

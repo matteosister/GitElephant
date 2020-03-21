@@ -81,6 +81,7 @@ class Message
         if ((is_countable($this->message) ? count($this->message) : 0) === 0) {
             return null;
         }
+        
         if ($full) {
             return implode(PHP_EOL, $this->message);
         } else {

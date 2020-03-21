@@ -209,16 +209,21 @@ class Remote
         $name = array_shift($remoteDetails);
         $name = is_string($name) ? trim($name) : '';
         $name = $this->parseName($name);
+
         if ($name === '') {
             throw new \UnexpectedValueException(sprintf('Invalid data provided for remote detail parsing'));
         }
+
         $this->name = $name;
         $fetchURLPattern = '/^Fetch\s+URL:\s*(.*)$/';
         $fetchURL = null;
+
         $pushURLPattern = '/^Push\s+URL:\s*(.*)$/';
         $pushURL = null;
+
         $remoteHEADPattern = '/^HEAD\s+branch:\s*(.*)$/';
         $remoteHEAD = null;
+
         $remoteBranchHeaderPattern = '/^Remote\s+branch(?:es)?:$/';
         $localBranchPullHeaderPattern = '/^Local\sbranch(?:es)?\sconfigured\sfor\s\'git\spull\'\:$/';
         $localRefPushHeaderPattern = '/^Local\sref(?:s)?\sconfigured\sfor\s\'git\spush\':$/';
@@ -227,6 +232,7 @@ class Remote
             'localBranches' => null,
             'localRefs' => null,
         ];
+
         foreach ($remoteDetails as $lineno => $line) {
             $line = trim($line);
             $matches = [];
@@ -244,6 +250,7 @@ class Remote
                 $groups['localRefs'] = $lineno;
             }
         }
+        
         $this->setBranches($this->aggregateBranchDetails($groups, $remoteDetails));
     }
 
