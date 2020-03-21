@@ -898,7 +898,7 @@ class RepositoryTest extends TestCase
         }
         $this->assertSame($configs, $repo->getGlobalConfigs());
 
-        foreach ($configs as $configName) {
+        foreach (array_keys($configs) as $configName) {
             $repo->removeGlobalConfig($configName);
         }
         $this->assertEmpty($repo->getGlobalConfigs());
@@ -971,7 +971,7 @@ class RepositoryTest extends TestCase
         }
         $this->assertSame($options, $repo->getGlobalOptions());
 
-        foreach ($options as $configName) {
+        foreach (array_keys($options) as $configName) {
             $repo->removeGlobalOption($configName);
         }
         $this->assertEmpty($repo->getGlobalOptions());
