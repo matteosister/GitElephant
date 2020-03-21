@@ -90,6 +90,7 @@ class CloneCommand extends BaseCommand
         if ($recursive) {
             $this->addCommandArgument('--recursive');
         }
+
         return $this->getCommand();
     }
 }

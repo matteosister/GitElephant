@@ -114,6 +114,7 @@ abstract class AbstractCaller implements CallerInterface
 
             return $output;
         }
+
         return $this->outputLines;
     }
 }

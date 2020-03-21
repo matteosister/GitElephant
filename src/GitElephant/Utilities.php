@@ -48,6 +48,7 @@ class Utilities
                 $slices[$index][] = $value;
             }
         }
+
         return $slices;
     }
 
@@ -68,6 +69,7 @@ class Utilities
 
             $slices[$index + 1][] = $value;
         }
+
         return $slices;
     }
 }

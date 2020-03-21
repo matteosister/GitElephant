@@ -73,6 +73,7 @@ class RemoteCommand extends BaseCommand
         if ($subcommand !== null) {
             $this->addCommandSubject($subcommand);
         }
+
         return $this->getCommand();
     }
 

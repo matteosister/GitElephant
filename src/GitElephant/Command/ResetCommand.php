@@ -52,6 +52,7 @@ class ResetCommand extends BaseCommand
         if ($arg != null) {
             $this->addCommandSubject2($arg);
         }
+
         return $this->getCommand();
     }
 

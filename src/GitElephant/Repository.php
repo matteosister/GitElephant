@@ -298,6 +298,7 @@ class Repository
         if (!is_null($ref)) {
             $this->checkout($currentBranch);
         }
+
         return $this;
     }
 
@@ -476,6 +477,7 @@ class Repository
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
         }
+
         return $branches;
     }
 
@@ -518,6 +520,7 @@ class Repository
                 return $branch;
             }
         }
+
         return null;
     }
 
@@ -625,6 +628,7 @@ class Repository
         } else {
             Tag::pick($this, $tag)->delete();
         }
+
         return $this;
     }
 
@@ -723,6 +727,7 @@ class Repository
                 return new Tag($this, $name);
             }
         }
+
         return null;
     }
 
@@ -775,6 +780,7 @@ class Repository
                 return new Tag($this, $name);
             }
         }
+
         return null;
     }
 
@@ -856,6 +862,7 @@ class Repository
         if (preg_match('~^[0]+$~', $refEnd)) {
             $refEnd = $refStart;
         }
+
         return new LogRange($this, $refStart, $refEnd, $path, $limit, $offset, $firstParent);
     }
 
@@ -930,6 +937,7 @@ class Repository
 
             $path = TreeObject::createFromOutputLine($this, $outputLines[0]);
         }
+
         return new Tree($this, $ref, $path);
     }
 
@@ -1028,6 +1036,7 @@ class Repository
         foreach ($remoteNames as $remoteName) {
             $remotes[] = $this->getRemote($remoteName, $queryRemotes);
         }
+
         return $remotes;
     }
 

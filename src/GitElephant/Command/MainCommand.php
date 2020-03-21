@@ -88,6 +88,7 @@ class MainCommand extends BaseCommand
         } else {
             $this->addConfigs(['color.status' => 'false']);
         }
+
         return $this->getCommand();
     }
 

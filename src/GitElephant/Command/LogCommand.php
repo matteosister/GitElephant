@@ -67,6 +67,7 @@ class LogCommand extends BaseCommand
                 $subject .= (string) $branch;
             }
         }
+
         return $this->showLog($subject, $obj->getFullPath(), $limit, $offset);
     }
 

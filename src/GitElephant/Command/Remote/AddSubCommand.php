@@ -103,6 +103,7 @@ class AddSubCommand extends SubCommandCommand
         foreach ($options as $option) {
             $this->addCommandArgument($option);
         }
+
         return $this;
     }
 }

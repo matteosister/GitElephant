@@ -210,6 +210,7 @@ class Branch extends NodeObject implements TreeishInterface
         if (empty($matches)) {
             throw new \InvalidArgumentException(sprintf('the branch string is not valid: %s', $branchString));
         }
+
         return array_map('trim', $matches);
     }
 

@@ -148,6 +148,7 @@ class Caller extends AbstractCaller
 
             return $output;
         }
+
         return $this->outputLines;
     }
 

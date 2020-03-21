@@ -69,6 +69,7 @@ class PullCommand extends BaseCommand
         if (!is_null($branch)) {
             $this->addCommandSubject2($branch);
         }
+
         return $this->getCommand();
     }
 }

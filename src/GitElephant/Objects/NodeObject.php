@@ -103,6 +103,7 @@ class NodeObject implements TreeishInterface
             $path = substr($fullPath, 0, $pos);
             $name = substr($fullPath, $pos + 1);
         }
+
         return new static(
             $repository,
             $slices['permissions'],

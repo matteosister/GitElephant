@@ -194,6 +194,7 @@ class StatusFile
         if ($this->description === null) {
             $this->calculateDescription();
         }
+
         return $this->description;
     }
 

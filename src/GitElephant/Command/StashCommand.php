@@ -65,6 +65,7 @@ class StashCommand extends BaseCommand
         if ($keepIndex) {
             $this->addCommandArgument('--keep-index');
         }
+
         return $this->getCommand();
     }
 
@@ -82,6 +83,7 @@ class StashCommand extends BaseCommand
         if (null !== $options) {
             $this->addCommandSubject($options);
         }
+
         return $this->getCommand();
     }
 
@@ -136,6 +138,7 @@ class StashCommand extends BaseCommand
         if ($index) {
             $this->addCommandArgument('--index');
         }
+
         return $this->getCommand();
     }
 
@@ -156,6 +159,7 @@ class StashCommand extends BaseCommand
         if ($index) {
             $this->addCommandArgument('--index');
         }
+
         return $this->getCommand();
     }
 
@@ -211,6 +215,7 @@ class StashCommand extends BaseCommand
         if (0 !== strpos($stash, 'stash@{')) {
             $stash = 'stash@{' . $stash . '}';
         }
+
         return $stash;
     }
 }

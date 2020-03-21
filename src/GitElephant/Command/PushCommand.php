@@ -64,6 +64,7 @@ class PushCommand extends BaseCommand
         if (!is_null($args)) {
             $this->addCommandArgument($args);
         }
+
         return $this->getCommand();
     }
 }

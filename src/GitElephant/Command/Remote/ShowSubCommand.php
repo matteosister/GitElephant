@@ -72,6 +72,7 @@ class ShowSubCommand extends SubCommandCommand
         if (!$queryRemotes) {
             $this->addCommandArgument('-n');
         }
+
         return $this;
     }
 }

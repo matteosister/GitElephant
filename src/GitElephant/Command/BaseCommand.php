@@ -312,7 +312,7 @@ class BaseCommand
                 }
             }
         }
-        
+
         return $normalizedOptions;
     }
 
@@ -353,6 +353,7 @@ class BaseCommand
         if (count($combinedArguments) > 0) {
             $command .= ' ' . implode(' ', array_map('escapeshellarg', $combinedArguments));
         }
+
         return $command;
     }
 
@@ -385,6 +386,7 @@ class BaseCommand
                 );
             }
         }
+
         return $command;
     }
 
@@ -401,6 +403,7 @@ class BaseCommand
                 $command .= sprintf(' %s=%s', escapeshellarg($name), escapeshellarg($value));
             }
         }
+
         return $command;
     }
 
@@ -415,6 +418,7 @@ class BaseCommand
         if (!is_null($this->path)) {
             $command .= sprintf(' -- %s', escapeshellarg($this->path));
         }
+
         return $command;
     }
 
@@ -447,6 +451,7 @@ class BaseCommand
                 $command .= escapeshellarg($this->commandSubject2);
             }
         }
+
         return $command;
     }
 
@@ -458,6 +463,7 @@ class BaseCommand
         if (is_null($this->binaryVersion)) {
             $this->binaryVersion = $this->repo->getCaller()->getBinaryVersion();
         }
+
         return $this->binaryVersion;
     }
 }

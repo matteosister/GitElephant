@@ -65,6 +65,7 @@ class SubmoduleCommand extends BaseCommand
         if (null !== $path) {
             $this->addCommandSubject($path);
         }
+
         return $this->getCommand();
     }
 
@@ -82,6 +83,7 @@ class SubmoduleCommand extends BaseCommand
         if (null !== $path) {
             $this->addPath($path);
         }
+
         return $this->getCommand();
     }
 
@@ -140,6 +142,7 @@ class SubmoduleCommand extends BaseCommand
         if ($path !== null) {
             $this->addPath($path);
         }
+
         return $this->getCommand();
     }
 }

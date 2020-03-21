@@ -67,6 +67,7 @@ class TagCommand extends BaseCommand
         } else {
             $this->addCommandSubject($name);
         }
+
         return $this->getCommand();
     }
 

@@ -77,6 +77,7 @@ class BranchCommand extends BaseCommand
         if (null !== $startPoint) {
             $this->addCommandSubject2($startPoint);
         }
+
         return $this->getCommand();
     }
 

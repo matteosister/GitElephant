@@ -90,6 +90,7 @@ class Remote
             $this->name = trim($name);
             $this->createFromCommand($queryRemotes);
         }
+
         return $this;
     }
 
@@ -309,6 +310,7 @@ class Remote
                 $branches[$parts[0]] = ['local_relationship' => $parts[1]];
             }
         }
+
         return $branches;
     }
 
@@ -332,6 +334,7 @@ class Remote
                 $branches[$parts[0]] = ['merges_with' => $parts[1]];
             }
         }
+
         return $branches;
     }
 
@@ -356,6 +359,7 @@ class Remote
                 $branches[$parts[0]] = ['pushes_to' => $value[0], 'local_state' => $value[1]];
             }
         }
+
         return $branches;
     }
 
@@ -374,6 +378,7 @@ class Remote
         if (!isset($matches[1])) {
             return '';
         }
+
         return $matches[1];
     }
 
@@ -392,6 +397,7 @@ class Remote
         if (empty($matches)) {
             throw new \InvalidArgumentException(sprintf('the remote string is not valid: %s', $remoteString));
         }
+
         return array_map('trim', $matches);
     }
 
