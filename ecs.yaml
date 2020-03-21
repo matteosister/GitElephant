@@ -1,0 +1,14 @@
+# ecs.yml
+parameters:
+    sets:
+        - 'clean-code'
+        - 'psr2'
+        - 'psr12'
+
+services:
+    PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer:
+        syntax: short
+    Symplify\CodingStandard\Fixer\LineLength\LineLengthFixer: 
+        max_line_length: 100 # default: 120
+        break_long_lines: true # default: true
+        inline_short_lines: false # default: true
