@@ -62,7 +62,7 @@ class SubCommandCommandTest extends TestCase
 
         $rmeth = new \ReflectionMethod($subcmd, 'addCommandArgument');
         $rmeth->setAccessible(true);
-        $rmeth->invoke($subcmd, array($argTwo, $argTwoValue));
+        $rmeth->invoke($subcmd, [$argTwo, $argTwoValue]);
 
         $actual = $subcmd->getCommand();
         $this->assertEquals(

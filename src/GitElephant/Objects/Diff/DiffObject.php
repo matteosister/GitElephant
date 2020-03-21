@@ -235,7 +235,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      */
     public function hasPathChanged(): bool
     {
-        return ($this->originalPath !== $this->destinationPath);
+        return $this->originalPath !== $this->destinationPath;
     }
 
     /**

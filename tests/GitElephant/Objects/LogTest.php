@@ -13,9 +13,8 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\TestCase;
-use GitElephant\Objects\Log;
 use GitElephant\Command\LogCommand;
+use GitElephant\TestCase;
 
 /**
  * LogTest
@@ -154,6 +153,8 @@ class LogTest extends TestCase
     {
         $tree = $this->getRepository()->getTree();
         $file = $tree[0];
+
+        $this->assertNull($file);
     }
 
     /**

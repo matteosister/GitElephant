@@ -13,16 +13,15 @@
 
 namespace GitElephant;
 
-use Mockery as m;
-use GitElephant\Repository;
+use GitElephant\Command\Caller\Caller;
+use GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Command\MvCommand;
 use GitElephant\Objects\Author;
 use GitElephant\Objects\Commit;
-use GitElephant\Command\MvCommand;
-use Symfony\Component\Finder\Finder;
-use GitElephant\Command\Caller\Caller;
+use Mockery as m;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
-use GitElephant\Command\Caller\CallerInterface;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Class TestCase
@@ -102,7 +101,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             $this->assertInstanceOf(Repository::class, $this->repository);
         } else {
             if (!is_array($this->repository)) {
-                $this->repository = array();
+                $this->repository = [];
             }
             $this->repository[$index] = Repository::open($this->path);
             $this->assertInstanceOf(Repository::class, $this->repository[$index]);
@@ -130,8 +129,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function addFile(string $name, string $folder = null, string $content = null, Repository $repository = null): void
-    {
+    protected function addFile(
+        string $name,
+        string $folder = null,
+        string $content = null,
+        Repository $repository = null
+    ): void {
         $path = is_null($repository) ? $this->path : $repository->getPath();
         $filename = $folder == null
             ? $path . DIRECTORY_SEPARATOR . $name
@@ -258,7 +261,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     protected function getMockCommand(): MockObject
     {
-        $command = $this->getMock('Command', array('showCommit'));
+        $command = $this->getMock('Command', ['showCommit']);
         $command
             ->expects($this->any())
             ->method('showCommit')
@@ -269,16 +272,14 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     protected function getMockRepository(): MockObject
     {
-        $mockRepo = $this->getMock(
+        return $this->getMock(
             Repository::class,
-            array(),
-            array(
+            [],
+            [
                 $this->repository->getPath(),
                 null,
-            )
+            ]
         );
-
-        return $mockRepo;
     }
 
     protected function doCommitTest(

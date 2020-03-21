@@ -62,7 +62,7 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string Command string to pass to caller
      */
-    public function remote(SubCommandCommand $subcommand = null, array $options = array()): string
+    public function remote(SubCommandCommand $subcommand = null, array $options = []): string
     {
         $normalizedOptions = $this->normalizeOptions($options, $this->remoteCmdSwitchOptions());
         $this->clearAll();
@@ -83,10 +83,10 @@ class RemoteCommand extends BaseCommand
      */
     public function remoteCmdSwitchOptions(): array
     {
-        return array(
+        return [
             self::GIT_REMOTE_OPTION_VERBOSE => self::GIT_REMOTE_OPTION_VERBOSE,
             self::GIT_REMOTE_OPTION_VERBOSE_SHORT => self::GIT_REMOTE_OPTION_VERBOSE,
-        );
+        ];
     }
 
     /**
@@ -97,7 +97,7 @@ class RemoteCommand extends BaseCommand
      */
     public function verbose(): string
     {
-        return $this->remote(null, array(self::GIT_REMOTE_OPTION_VERBOSE));
+        return $this->remote(null, [self::GIT_REMOTE_OPTION_VERBOSE]);
     }
 
     /**
@@ -129,7 +129,7 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function add($name, $url, $options = array()): string
+    public function add($name, $url, $options = []): string
     {
         $subcmd = new AddSubCommand();
         $subcmd->prepare($name, $url, $options);

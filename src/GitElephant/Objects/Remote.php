@@ -102,8 +102,11 @@ class Remote
      *
      * @return \GitElephant\Objects\Remote
      */
-    public static function pick(Repository $repository, string $name = null, bool $queryRemotes = true): \GitElephant\Objects\Remote
-    {
+    public static function pick(
+        Repository $repository,
+        string $name = null,
+        bool $queryRemotes = true
+    ): \GitElephant\Objects\Remote {
         return new self($repository, $name, $queryRemotes);
     }
 
@@ -143,8 +146,11 @@ class Remote
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getShowOutput(string $name = null, RemoteCommand $remoteCmd = null, bool $queryRemotes = true): array
-    {
+    public function getShowOutput(
+        string $name = null,
+        RemoteCommand $remoteCmd = null,
+        bool $queryRemotes = true
+    ): array {
         if ($remoteCmd === null) {
             $remoteCmd = RemoteCommand::getInstance($this->repository);
         }
@@ -198,7 +204,7 @@ class Remote
     {
         array_filter($remoteDetails);
         $name = array_shift($remoteDetails);
-        $name = (is_string($name)) ? trim($name) : '';
+        $name = is_string($name) ? trim($name) : '';
         $name = $this->parseName($name);
         if ($name === '') {
             throw new \UnexpectedValueException(sprintf('Invalid data provided for remote detail parsing'));
@@ -215,8 +221,8 @@ class Remote
         $localRefPushHeaderPattern = '/^Local\sref(?:s)?\sconfigured\sfor\s\'git\spush\':$/';
         $groups = [
             'remoteBranches' => null,
-            'localBranches'  => null,
-            'localRefs'      => null,
+            'localBranches' => null,
+            'localRefs' => null,
         ];
         foreach ($remoteDetails as $lineno => $line) {
             $line = trim($line);

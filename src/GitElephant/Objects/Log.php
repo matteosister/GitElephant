@@ -20,8 +20,8 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Repository;
 use GitElephant\Command\LogCommand;
+use GitElephant\Repository;
 use GitElephant\Utilities;
 
 /**
@@ -76,8 +76,14 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * @param int|null    $offset
      * @param bool        $firstParent
      */
-    public function __construct(Repository $repository, $ref = 'HEAD', $path = null, int $limit = 15, int $offset = null, bool $firstParent = false)
-    {
+    public function __construct(
+        Repository $repository,
+        $ref = 'HEAD',
+        $path = null,
+        int $limit = 15,
+        int $offset = null,
+        bool $firstParent = false
+    ) {
         $this->repository = $repository;
         $this->createFromCommand($ref, $path, $limit, $offset, $firstParent);
     }
@@ -97,8 +103,13 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand($ref, $path = null, int $limit = null, int $offset = null, bool $firstParent = false): void
-    {
+    private function createFromCommand(
+        $ref,
+        $path = null,
+        int $limit = null,
+        int $offset = null,
+        bool $firstParent = false
+    ): void {
         $command = LogCommand::getInstance($this->getRepository())
             ->showLog($ref, $path, $limit, $offset, $firstParent);
 

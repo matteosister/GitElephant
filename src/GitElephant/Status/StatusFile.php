@@ -89,8 +89,12 @@ class StatusFile
      *
      * @return StatusFile
      */
-    public static function create(string $x, string $y, string $name, string $renamed = null): \GitElephant\Status\StatusFile
-    {
+    public static function create(
+        string $x,
+        string $y,
+        string $name,
+        string $renamed = null
+    ): \GitElephant\Status\StatusFile {
         return new self($x, $y, $name, $renamed);
     }
 
@@ -141,24 +145,24 @@ class StatusFile
     {
         $status = $this->x . $this->y;
         $matching = [
-            '/ [MD]/'   => 'not updated',
-            '/M[MD]/'   => 'updated in index',
-            '/A[MD]/'   => 'added to index',
-            '/D[M]/'    => 'deleted from index',
-            '/R[MD]/'   => 'renamed in index',
-            '/C[MD]/'   => 'copied in index',
+            '/ [MD]/' => 'not updated',
+            '/M[MD]/' => 'updated in index',
+            '/A[MD]/' => 'added to index',
+            '/D[M]/' => 'deleted from index',
+            '/R[MD]/' => 'renamed in index',
+            '/C[MD]/' => 'copied in index',
             '/[MARC] /' => 'index and work tree matches',
             '/[MARC]M/' => 'work tree changed since index',
             '/[MARC]D/' => 'deleted in work tree',
-            '/DD/'      => 'unmerged, both deleted',
-            '/AU/'      => 'unmerged, added by us',
-            '/UD/'      => 'unmerged, deleted by them',
-            '/UA/'      => 'unmerged, added by them',
-            '/DU/'      => 'unmerged, deleted by us',
-            '/AA/'      => 'unmerged, both added',
-            '/UU/'      => 'unmerged, both modified',
-            '/\?\?/'    => 'untracked',
-            '/!!/'      => 'ignored',
+            '/DD/' => 'unmerged, both deleted',
+            '/AU/' => 'unmerged, added by us',
+            '/UD/' => 'unmerged, deleted by them',
+            '/UA/' => 'unmerged, added by them',
+            '/DU/' => 'unmerged, deleted by us',
+            '/AA/' => 'unmerged, both added',
+            '/UU/' => 'unmerged, both modified',
+            '/\?\?/' => 'untracked',
+            '/!!/' => 'ignored',
         ];
         $out = [];
         foreach ($matching as $pattern => $label) {

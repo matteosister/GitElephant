@@ -15,8 +15,8 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Repository;
 use GitElephant\Command\LogRangeCommand;
+use GitElephant\Repository;
 
 /**
  * Git range log abstraction object
@@ -60,8 +60,15 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function __construct(Repository $repository, $refStart, $refEnd, $path = null, int $limit = 15, int $offset = null, bool $firstParent = false)
-    {
+    public function __construct(
+        Repository $repository,
+        $refStart,
+        $refEnd,
+        $path = null,
+        int $limit = 15,
+        int $offset = null,
+        bool $firstParent = false
+    ) {
         $this->repository = $repository;
         $this->createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent);
     }

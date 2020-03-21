@@ -32,14 +32,14 @@ use GitElephant\Repository;
  */
 class MainCommand extends BaseCommand
 {
-    public const GIT_INIT     = 'init';
-    public const GIT_STATUS   = 'status';
-    public const GIT_ADD      = 'add';
-    public const GIT_COMMIT   = 'commit';
+    public const GIT_INIT = 'init';
+    public const GIT_STATUS = 'status';
+    public const GIT_ADD = 'add';
+    public const GIT_COMMIT = 'commit';
     public const GIT_CHECKOUT = 'checkout';
-    public const GIT_MOVE     = 'mv';
-    public const GIT_REMOVE   = 'rm';
-    public const GIT_RESET    = 'reset';
+    public const GIT_MOVE = 'mv';
+    public const GIT_REMOVE = 'rm';
+    public const GIT_RESET = 'reset';
 
     /**
      * constructor
@@ -85,7 +85,7 @@ class MainCommand extends BaseCommand
         if ($porcelain) {
             $this->addCommandArgument('--porcelain');
         } else {
-            $this->addConfigs(array('color.status' => 'false'));
+            $this->addConfigs(['color.status' => 'false']);
         }
         return $this->getCommand();
     }

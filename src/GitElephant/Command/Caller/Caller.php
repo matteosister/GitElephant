@@ -20,9 +20,8 @@
 
 namespace GitElephant\Command\Caller;
 
-use Symfony\Component\Process\Process;
-use GitElephant\Command\Caller\CallerInterface;
 use GitElephant\Exception\InvalidRepositoryPathException;
+use Symfony\Component\Process\Process;
 
 /**
  * Caller
@@ -80,8 +79,12 @@ class Caller extends AbstractCaller
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @return Caller
      */
-    public function execute(string $cmd, bool $git = true, string $cwd = null, array $acceptedExitCodes = array(0)): CallerInterface
-    {
+    public function execute(
+        string $cmd,
+        bool $git = true,
+        string $cwd = null,
+        array $acceptedExitCodes = [0]
+    ): CallerInterface {
         if ($git) {
             $cmd = $this->getBinaryPath() . ' ' . $cmd;
         }
@@ -135,7 +138,7 @@ class Caller extends AbstractCaller
     public function getOutputLines(bool $stripBlankLines = false): array
     {
         if ($stripBlankLines) {
-            $output = array();
+            $output = [];
             foreach ($this->outputLines as $line) {
                 if ('' !== $line) {
                     $output[] = $line;

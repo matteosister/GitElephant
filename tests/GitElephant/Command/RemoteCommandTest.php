@@ -83,11 +83,11 @@ class RemoteCommandTest extends TestCase
     {
         $name = 'foobar';
         $url = 'git@foobar.com:/Foo/Bar.git';
-        $options = array(
+        $options = [
             '-t bazblurg',
             '--mirror=fetch',
             '--tags'
-        );
+        ];
         $actual = RemoteCommand::getInstance()->add($name, $url, $options);
         $expected = "remote add '-t' 'bazblurg' '--mirror=fetch' '--tags' '$name' '$url'";
         $this->assertEquals($expected, $actual, 'add() builds remote command with add subcommand');

@@ -20,14 +20,14 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Repository;
-use GitElephant\Command\MainCommand;
-use GitElephant\Command\ShowCommand;
 use GitElephant\Command\BranchCommand;
-use GitElephant\Objects\Commit\Message;
+use GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Command\MainCommand;
 use GitElephant\Command\RevListCommand;
 use GitElephant\Command\RevParseCommand;
-use GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Command\ShowCommand;
+use GitElephant\Objects\Commit\Message;
+use GitElephant\Repository;
 
 /**
  * The Commit object represent a commit
@@ -130,8 +130,12 @@ class Commit implements TreeishInterface, \Countable
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Commit
      */
-    public static function create(Repository $repository, string $message, bool $stageAll = false, $author = null): Commit
-    {
+    public static function create(
+        Repository $repository,
+        string $message,
+        bool $stageAll = false,
+        $author = null
+    ): Commit {
         $repository->getCaller()->execute(MainCommand::getInstance($repository)->commit($message, $stageAll, $author));
         return $repository->getCommit();
     }

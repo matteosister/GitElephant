@@ -14,17 +14,6 @@
 namespace GitElephant\Objects\Diff;
 
 use GitElephant\TestCase;
-use GitElephant\Objects\Diff\Diff;
-use GitElephant\Objects\Diff\DiffObject;
-use GitElephant\Objects\Diff\DiffChunk;
-use GitElephant\Objects\Diff\DiffChunkLine;
-use GitElephant\Objects\Diff\DiffChunkLineAdded;
-use GitElephant\Objects\Diff\DiffChunkLineDeleted;
-use GitElephant\Objects\Diff\DiffChunkLineUnchanged;
-use GitElephant\Objects\Commit;
-use GitElephant\Command\MainCommand;
-use GitElephant\Command\DiffCommand;
-use GitElephant\Command\ShowCommand;
 
 /**
  * DiffTest
@@ -41,9 +30,6 @@ class DiffTest extends TestCase
 
     public function testDiff(): void
     {
-        $mainCommand = new MainCommand();
-        $diffCommand = new DiffCommand();
-
         $this->getRepository()->init();
         $this->addFile('foo', null, "content line 1\ncontent line 2\ncontent line 3");
         $this->getRepository()->commit('commit1', true);

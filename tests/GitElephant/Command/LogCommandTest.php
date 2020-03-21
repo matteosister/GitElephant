@@ -13,7 +13,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\LogCommand;
 use GitElephant\TestCase;
 
 /**

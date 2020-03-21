@@ -35,12 +35,18 @@ class MergeCommandTest extends TestCase
      */
     public function testMerge(): void
     {
-        $mc     = MergeCommand::getInstance();
+        $mc = MergeCommand::getInstance();
         $branch = $this->getRepository()->getBranch('test');
         $this->assertEquals("merge 'refs/heads/test'", $mc->merge($branch));
         $this->assertEquals("merge '-m' 'test msg' 'refs/heads/test'", $mc->merge($branch, "test msg"));
-        $this->assertEquals("merge '--ff-only' '-m' 'test msg' 'refs/heads/test'", $mc->merge($branch, "test msg", array('--ff-only')));
-        $this->assertEquals("merge '--no-ff' '-m' 'test msg' 'refs/heads/test'", $mc->merge($branch, "test msg", array('--no-ff')));
+        $this->assertEquals(
+            "merge '--ff-only' '-m' 'test msg' 'refs/heads/test'",
+            $mc->merge($branch, "test msg", ['--ff-only'])
+        );
+        $this->assertEquals(
+            "merge '--no-ff' '-m' 'test msg' 'refs/heads/test'",
+            $mc->merge($branch, "test msg", ['--no-ff'])
+        );
     }
 
     /**
@@ -50,6 +56,6 @@ class MergeCommandTest extends TestCase
     {
         $branch = $this->getRepository()->getBranch('test');
         $this->expectException(\Symfony\Component\Process\Exception\InvalidArgumentException::class);
-        MergeCommand::getInstance()->merge($branch, "test msg", array('--ff-only', '--no-ff'));
+        MergeCommand::getInstance()->merge($branch, "test msg", ['--ff-only', '--no-ff']);
     }
 }

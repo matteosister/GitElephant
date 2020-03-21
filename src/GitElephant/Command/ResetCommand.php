@@ -17,9 +17,9 @@ class ResetCommand extends BaseCommand
 {
     public const GIT_RESET_COMMAND = 'reset';
 
-    public const OPTION_HARD  = '--hard';
+    public const OPTION_HARD = '--hard';
     public const OPTION_MERGE = '--merge';
-    public const OPTION_SOFT  = '--soft';
+    public const OPTION_SOFT = '--soft';
 
     /**
      * constructor
@@ -39,7 +39,7 @@ class ResetCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function reset($arg = null, array $options = array()): string
+    public function reset($arg = null, array $options = []): string
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_RESET_COMMAND);

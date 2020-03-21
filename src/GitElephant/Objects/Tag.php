@@ -20,10 +20,10 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Repository;
-use GitElephant\Command\TagCommand;
-use GitElephant\Command\RevListCommand;
 use GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Command\RevListCommand;
+use GitElephant\Command\TagCommand;
+use GitElephant\Repository;
 
 /**
  * An object representing a git tag
@@ -64,8 +64,12 @@ class Tag extends NodeObject
      * @throws \RuntimeException
      * @return \GitElephant\Objects\Tag
      */
-    public static function create(Repository $repository, string $name, $startPoint = null, string $message = null): ?\GitElephant\Objects\Tag
-    {
+    public static function create(
+        Repository $repository,
+        string $name,
+        $startPoint = null,
+        string $message = null
+    ): ?\GitElephant\Objects\Tag {
         $repository
             ->getCaller()
             ->execute(TagCommand::getInstance($repository)->create($name, $startPoint, $message));
@@ -84,8 +88,11 @@ class Tag extends NodeObject
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Tag
      */
-    public static function createFromOutputLines(Repository $repository, array $outputLines, string $name): \GitElephant\Objects\Tag
-    {
+    public static function createFromOutputLines(
+        Repository $repository,
+        array $outputLines,
+        string $name
+    ): \GitElephant\Objects\Tag {
         $tag = new self($repository, $name);
         $tag->parseOutputLines($outputLines);
         return $tag;

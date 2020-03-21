@@ -51,7 +51,7 @@ class FetchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function fetch($remote = null, $branch = null, array $options = array()): string
+    public function fetch($remote = null, $branch = null, array $options = []): string
     {
         if ($remote instanceof Remote) {
             $remote = $remote->getName();
@@ -81,8 +81,8 @@ class FetchCommand extends BaseCommand
      */
     public function fetchCmdSwitchOptions(): array
     {
-        return array(
+        return [
             self::GIT_FETCH_OPTION_TAGS => self::GIT_FETCH_OPTION_TAGS,
-        );
+        ];
     }
 }

@@ -44,35 +44,35 @@ class BaseCommand
      *
      * @var array
      */
-    private $configs = array();
+    private $configs = [];
 
     /**
      * global configs
      *
      * @var array
      */
-    private $globalConfigs = array();
+    private $globalConfigs = [];
 
     /**
      * global options
      *
      * @var array
      */
-    private $globalOptions = array();
+    private $globalOptions = [];
 
     /**
      * the command arguments
      *
      * @var array
      */
-    private $commandArguments = array();
+    private $commandArguments = [];
 
     /**
      * the global command arguments
      *
      * @var array
      */
-    private $globalCommandArguments = array();
+    private $globalCommandArguments = [];
 
     /**
      * the command subject
@@ -135,8 +135,8 @@ class BaseCommand
     public function clearAll(): void
     {
         $this->commandName = null;
-        $this->configs = array();
-        $this->commandArguments = array();
+        $this->configs = [];
+        $this->commandArguments = [];
         $this->commandSubject = null;
         $this->commandSubject2 = null;
         $this->path = null;
@@ -247,7 +247,7 @@ class BaseCommand
      */
     protected function getCommandArguments(): array
     {
-        return ($this->commandArguments !== []) ? $this->commandArguments : array();
+        return $this->commandArguments !== [] ? $this->commandArguments : [];
     }
 
     /**
@@ -291,9 +291,12 @@ class BaseCommand
      *
      * @return array Associative array of valid, normalized command options
      */
-    public function normalizeOptions(array $options = array(), array $switchOptions = array(), $valueOptions = array()): array
-    {
-        $normalizedOptions = array();
+    public function normalizeOptions(
+        array $options = [],
+        array $switchOptions = [],
+        $valueOptions = []
+    ): array {
+        $normalizedOptions = [];
         foreach ($options as $option) {
             if (array_key_exists($option, $switchOptions)) {
                 $normalizedOptions[$switchOptions[$option]] = $switchOptions[$option];
@@ -302,7 +305,7 @@ class BaseCommand
                 if ((is_countable($parts) ? count($parts) : 0) > 0) {
                     $optionName = $parts[0];
                     if (in_array($optionName, $valueOptions)) {
-                        $value = ($parts[1] === '=') ? $option : array($parts[0], $parts[2]);
+                        $value = $parts[1] === '=' ? $option : [$parts[0], $parts[2]];
                         $normalizedOptions[$optionName] = $value;
                     }
                 }

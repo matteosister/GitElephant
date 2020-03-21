@@ -20,15 +20,10 @@
 
 namespace GitElephant;
 
-use GitElephant\Command\ResetCommand;
-use GitElephant\Command\StashCommand;
-use GitElephant\Objects\TreeObject;
-use Symfony\Component\Process\Exception\InvalidArgumentException;
 use GitElephant\Command\BranchCommand;
 use GitElephant\Command\Caller\Caller;
 use GitElephant\Command\Caller\CallerInterface;
 use GitElephant\Command\CatFileCommand;
-use GitElephant\Command\CloneCommand;
 use GitElephant\Command\FetchCommand;
 use GitElephant\Command\LogCommand;
 use GitElephant\Command\LsTreeCommand;
@@ -37,7 +32,9 @@ use GitElephant\Command\MergeCommand;
 use GitElephant\Command\PullCommand;
 use GitElephant\Command\PushCommand;
 use GitElephant\Command\RemoteCommand;
+use GitElephant\Command\ResetCommand;
 use GitElephant\Command\RevParseCommand;
+use GitElephant\Command\StashCommand;
 use GitElephant\Command\SubmoduleCommand;
 use GitElephant\Command\TagCommand;
 use GitElephant\Objects\Author;
@@ -51,12 +48,14 @@ use GitElephant\Objects\Remote;
 use GitElephant\Objects\Tag;
 use GitElephant\Objects\Tree;
 use GitElephant\Objects\TreeishInterface;
+use GitElephant\Objects\TreeObject;
 use GitElephant\Status\Status;
 use GitElephant\Status\StatusIndex;
 use GitElephant\Status\StatusWorkingTree;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Process\Exception\InvalidArgumentException;
 
 /**
  * Repository
@@ -86,7 +85,7 @@ class Repository
     /**
      * A general repository name
      *
-     * @var string $name the repository name
+     * @var string the repository name
      */
     private $name;
 
@@ -154,8 +153,12 @@ class Repository
      * @throws \Symfony\Component\Filesystem\Exception\IOException
      * @return Repository
      */
-    public static function createFromRemote($git, $repositoryPath = null, string $binary = null, $name = null): \GitElephant\Repository
-    {
+    public static function createFromRemote(
+        $git,
+        $repositoryPath = null,
+        string $binary = null,
+        $name = null
+    ): \GitElephant\Repository {
         if (null === $repositoryPath) {
             $tempDir = realpath(sys_get_temp_dir());
             $repositoryPath = sprintf('%s%s%s', $tempDir, DIRECTORY_SEPARATOR, sha1(uniqid()));
@@ -654,8 +657,12 @@ class Repository
      *
      * @return Repository
      */
-    public function updateSubmodule(bool $recursive = false, bool $init = false, bool $force = false, $path = null): self
-    {
+    public function updateSubmodule(
+        bool $recursive = false,
+        bool $init = false,
+        bool $force = false,
+        $path = null
+    ): self {
         $this->caller->execute(SubmoduleCommand::getInstance($this)->update($recursive, $init, $force, $path));
         return $this;
     }
@@ -725,7 +732,7 @@ class Repository
 
         $files = iterator_to_array($finder->getIterator(), false);
         $files = array_reverse($files);
-        /** @var $firstFile SplFileInfo */
+        /** @var SplFileInfo $firstFile */
         $firstFile = $files[0];
         $tagName = $firstFile->getFilename();
 
@@ -795,8 +802,13 @@ class Repository
      *
      * @return \GitElephant\Objects\Log
      */
-    public function getLog($ref = 'HEAD', $path = null, int $limit = 10, int $offset = null, bool $firstParent = false): \GitElephant\Objects\Log
-    {
+    public function getLog(
+        $ref = 'HEAD',
+        $path = null,
+        int $limit = 10,
+        int $offset = null,
+        bool $firstParent = false
+    ): \GitElephant\Objects\Log {
         return new Log($this, $ref, $path, $limit, $offset, $firstParent);
     }
 
@@ -812,8 +824,14 @@ class Repository
      *
      * @return \GitElephant\Objects\LogRange|\GitElephant\Objects\Log
      */
-    public function getLogRange($refStart, $refEnd, $path = null, int $limit = 10, int $offset = null, bool $firstParent = false)
-    {
+    public function getLogRange(
+        $refStart,
+        $refEnd,
+        $path = null,
+        int $limit = 10,
+        int $offset = null,
+        bool $firstParent = false
+    ) {
         // Handle when clients provide bad start reference on branch creation
         if (preg_match('~^[0]+$~', $refStart)) {
             return new Log($this, $refEnd, $path, $limit, $offset, $firstParent);
@@ -839,8 +857,12 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Log
      */
-    public function getObjectLog(NodeObject $obj, $branch = null, int $limit = 1, int $offset = null): \GitElephant\Objects\Log
-    {
+    public function getObjectLog(
+        NodeObject $obj,
+        $branch = null,
+        int $limit = 1,
+        int $offset = null
+    ): \GitElephant\Objects\Log {
         $command = LogCommand::getInstance($this)->showObjectLog($obj, $branch, $limit, $offset);
         return Log::createFromOutputLines($this, $this->caller->execute($command)->getOutputLines());
     }
@@ -904,8 +926,11 @@ class Repository
      * @throws \InvalidArgumentException
      * @return Objects\Diff\Diff
      */
-    public function getDiff(string $commit1 = null, string $commit2 = null, string $path = null): \GitElephant\Objects\Diff\Diff
-    {
+    public function getDiff(
+        string $commit1 = null,
+        string $commit2 = null,
+        string $path = null
+    ): \GitElephant\Objects\Diff\Diff {
         return Diff::create($this, $commit1, $commit2, $path);
     }
 
@@ -924,9 +949,14 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function cloneFrom(string $url, string $to = null, string $repoReference = null, int $depth = null, bool $recursive = false): self
-    {
-        $command = (Command\CloneCommand::getInstance($this))->cloneUrl($url, $to, $repoReference, $depth, $recursive);
+    public function cloneFrom(
+        string $url,
+        string $to = null,
+        string $repoReference = null,
+        int $depth = null,
+        bool $recursive = false
+    ): self {
+        $command = Command\CloneCommand::getInstance($this)->cloneUrl($url, $to, $repoReference, $depth, $recursive);
         $this->caller->execute($command);
         return $this;
     }

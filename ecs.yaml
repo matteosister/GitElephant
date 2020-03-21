@@ -4,6 +4,16 @@ parameters:
         - 'clean-code'
         - 'psr2'
         - 'psr12'
+    paths:
+        - 'src'
+        - 'tests'
+
+    # Skip two possible bugs in SlevomatCodingStandard\Sniffs\Variables\UnusedVariableSniff.UnusedVariable
+    skip:
+        'Unused variable $deleted.':
+            - 'src/GitElephant/Objects/Diff/DiffChunk.php'
+        'Unused variable $new.':
+            - 'src/GitElephant/Objects/Diff/DiffChunk.php'
 
 services:
     PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer:

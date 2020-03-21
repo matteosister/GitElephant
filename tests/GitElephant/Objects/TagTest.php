@@ -11,7 +11,6 @@
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
-use GitElephant\Objects\Tag;
 
 class TagTest extends TestCase
 {
@@ -59,7 +58,7 @@ class TagTest extends TestCase
         $this->addFile('foo');
         $this->getRepository()->commit('commit1', true);
         $this->getRepository()->createTag('test-tag');
-        $tag = new Tag($this->getRepository(), 'test-tag-non-existent');
+        new Tag($this->getRepository(), 'test-tag-non-existent');
     }
 
     /**

@@ -14,7 +14,6 @@
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
-use GitElephant\Objects\Author;
 
 /**
  * AuthorTest

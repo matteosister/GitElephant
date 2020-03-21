@@ -55,10 +55,12 @@ class MergeCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function merge(Branch $with, $message = '', array $options = array()): string
+    public function merge(Branch $with, $message = '', array $options = []): string
     {
         if (in_array(self::MERGE_OPTION_FF_ONLY, $options) && in_array(self::MERGE_OPTION_NO_FF, $options)) {
-            throw new \Symfony\Component\Process\Exception\InvalidArgumentException("Invalid options: cannot use flags --ff-only and --no-ff together.");
+            throw new \Symfony\Component\Process\Exception\InvalidArgumentException(
+                "Invalid options: cannot use flags --ff-only and --no-ff together."
+            );
         }
         $normalizedOptions = $this->normalizeOptions($options, $this->mergeCmdSwitchOptions());
         $this->clearAll();
@@ -81,9 +83,9 @@ class MergeCommand extends BaseCommand
      */
     public function mergeCmdSwitchOptions(): array
     {
-        return array(
+        return [
             self::MERGE_OPTION_FF_ONLY => self::MERGE_OPTION_FF_ONLY,
             self::MERGE_OPTION_NO_FF => self::MERGE_OPTION_NO_FF,
-        );
+        ];
     }
 }

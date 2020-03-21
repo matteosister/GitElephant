@@ -60,11 +60,11 @@ class AddSubCommand extends SubCommandCommand
      */
     public function addCmdValueOptions(): array
     {
-        return array(
+        return [
             self::GIT_REMOTE_ADD_OPTION_TRACK => self::GIT_REMOTE_ADD_OPTION_TRACK,
             self::GIT_REMOTE_ADD_OPTION_MIRROR => self::GIT_REMOTE_ADD_OPTION_MIRROR,
             self::GIT_REMOTE_ADD_OPTION_SETHEAD => self::GIT_REMOTE_ADD_OPTION_SETHEAD,
-        );
+        ];
     }
 
     /**
@@ -74,11 +74,11 @@ class AddSubCommand extends SubCommandCommand
      */
     public function addCmdSwitchOptions(): array
     {
-        return array(
+        return [
             self::GIT_REMOTE_ADD_OPTION_TAGS => self::GIT_REMOTE_ADD_OPTION_TAGS,
             self::GIT_REMOTE_ADD_OPTION_NOTAGS => self::GIT_REMOTE_ADD_OPTION_NOTAGS,
             self::GIT_REMOTE_ADD_OPTION_FETCH => self::GIT_REMOTE_ADD_OPTION_FETCH,
-        );
+        ];
     }
 
     /**
@@ -90,7 +90,7 @@ class AddSubCommand extends SubCommandCommand
      *
      * @return string
      */
-    public function prepare($name, $url, $options = array()): self
+    public function prepare($name, $url, $options = []): self
     {
         $options = $this->normalizeOptions(
             $options,

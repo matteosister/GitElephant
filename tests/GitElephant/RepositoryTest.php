@@ -436,7 +436,7 @@ class RepositoryTest extends TestCase
 
         $tree = $repo->getTree();
 
-        /* @var $treeObj NodeObject */
+        /** @var NodeObject $treeObj */
         foreach ($tree as $treeObj) {
             $name = $treeObj->getName();
             $log = $repo->getObjectLog($treeObj, null, 10);
@@ -898,7 +898,7 @@ class RepositoryTest extends TestCase
         }
         $this->assertSame($configs, $repo->getGlobalConfigs());
 
-        foreach ($configs as $configName => $configValue) {
+        foreach ($configs as $configName) {
             $repo->removeGlobalConfig($configName);
         }
         $this->assertEmpty($repo->getGlobalConfigs());
@@ -971,7 +971,7 @@ class RepositoryTest extends TestCase
         }
         $this->assertSame($options, $repo->getGlobalOptions());
 
-        foreach ($options as $configName => $configValue) {
+        foreach ($options as $configName) {
             $repo->removeGlobalOption($configName);
         }
         $this->assertEmpty($repo->getGlobalOptions());

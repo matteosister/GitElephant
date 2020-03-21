@@ -142,10 +142,10 @@ class NodeObject implements TreeishInterface
         $fullPath = $matches[5];
         return [
             'permissions' => $permissions,
-            'type'        => $type,
-            'sha'         => $sha,
-            'size'        => $size,
-            'fullPath'    => $fullPath,
+            'type' => $type,
+            'sha' => $sha,
+            'size' => $size,
+            'fullPath' => $fullPath,
         ];
     }
 
@@ -160,8 +160,15 @@ class NodeObject implements TreeishInterface
      * @param string                  $name        node name
      * @param string                  $path        node path
      */
-    public function __construct(Repository $repository, string $permissions, string $type, string $sha, string $size, string $name, string $path)
-    {
+    public function __construct(
+        Repository $repository,
+        string $permissions,
+        string $type,
+        string $sha,
+        string $size,
+        string $name,
+        string $path
+    ) {
         $this->repository = $repository;
         $this->permissions = $permissions;
         $this->type = $type;

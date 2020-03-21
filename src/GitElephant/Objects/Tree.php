@@ -20,10 +20,10 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Repository;
-use GitElephant\Command\LsTreeCommand;
-use GitElephant\Command\CatFileCommand;
 use GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Command\CatFileCommand;
+use GitElephant\Command\LsTreeCommand;
+use GitElephant\Repository;
 
 /**
  * An abstraction of a git tree
@@ -135,7 +135,9 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
         foreach ($outputLines as $line) {
             $this->parseLine($line);
         }
-        usort($this->children, [$this, 'sortChildren']);
+        usort($this->children, function ($a, $b) {
+            return self::sortChildren($a, $b);
+        });
         $this->scanPathsForBlob($outputLines);
     }
 
@@ -277,13 +279,13 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @return int
      */
-    private function sortChildren(NodeObject $a, NodeObject $b): int
+    private static function sortChildren(NodeObject $a, NodeObject $b): int
     {
         if ($a->getType() === $b->getType()) {
             $names = [$a->getName(), $b->getName()];
             sort($names);
 
-            return ($a->getName() === $names[0]) ? -1 : 1;
+            return $a->getName() === $names[0] ? -1 : 1;
         }
 
         return $a->getType() === NodeObject::TYPE_TREE || $b->getType() === NodeObject::TYPE_BLOB ? -1 : 1;

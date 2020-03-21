@@ -20,8 +20,8 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\NodeObject;
 use GitElephant\Objects\Branch;
+use GitElephant\Objects\NodeObject;
 use GitElephant\Objects\TreeishInterface;
 use GitElephant\Repository;
 

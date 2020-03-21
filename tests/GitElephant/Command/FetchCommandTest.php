@@ -21,9 +21,7 @@
 namespace GitElephant\Command;
 
 use GitElephant\Objects\Branch;
-use GitElephant\Objects\Remote;
 use GitElephant\TestCase;
-use GitElephant\Objects\Commit;
 use Mockery as m;
 
 /**
@@ -59,6 +57,9 @@ class FetchCommandTest extends TestCase
         $this->assertEquals("fetch 'test-remote' 'develop'", $fc->fetch($remote, 'develop'));
         $branch = Branch::create($this->getRepository(), 'test-branch');
         $this->assertEquals("fetch 'test-remote' 'test-branch'", $fc->fetch($remote, $branch));
-        $this->assertEquals("fetch '--tags' 'test-remote' 'test-branch'", $fc->fetch($remote, $branch, array('--tags')));
+        $this->assertEquals(
+            "fetch '--tags' 'test-remote' 'test-branch'",
+            $fc->fetch($remote, $branch, ['--tags'])
+        );
     }
 }

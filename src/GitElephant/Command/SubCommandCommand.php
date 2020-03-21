@@ -33,11 +33,10 @@ use GitElephant\Repository;
  */
 class SubCommandCommand extends BaseCommand
 {
-
     /**
      * Subjects to a subcommand name
      */
-    private $orderedSubjects = array();
+    private $orderedSubjects = [];
 
     /**
      * constructor
@@ -66,12 +65,12 @@ class SubCommandCommand extends BaseCommand
 
     protected function getCommandSubjects()
     {
-        return ($this->orderedSubjects !== []) ? $this->orderedSubjects : array();
+        return $this->orderedSubjects !== [] ? $this->orderedSubjects : [];
     }
 
     protected function extractArguments($args): string
     {
-        $orderArgs = array();
+        $orderArgs = [];
         foreach ($args as $arg) {
             if (is_array($arg)) {
                 foreach ($arg as $value) {

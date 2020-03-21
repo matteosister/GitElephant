@@ -6,7 +6,6 @@
 
 namespace GitElephant\Objects;
 
-use GitElephant\Objects\NodeObject;
 use GitElephant\TestCase;
 
 class NodeObjectTest extends TestCase

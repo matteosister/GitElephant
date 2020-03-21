@@ -55,8 +55,13 @@ class CloneCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string command
      */
-    public function cloneUrl(string $url, string $to = null, string $repoReference = null, int $depth = null, bool $recursive = false): string
-    {
+    public function cloneUrl(
+        string $url,
+        string $to = null,
+        string $repoReference = null,
+        int $depth = null,
+        bool $recursive = false
+    ): string {
         // get binary version before reset
         $v = $this->getBinaryVersion();
         $this->clearAll();

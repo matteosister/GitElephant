@@ -79,8 +79,11 @@ class Branch extends NodeObject implements TreeishInterface
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Branch
      */
-    public static function create(Repository $repository, string $name, string $startPoint = null): \GitElephant\Objects\Branch
-    {
+    public static function create(
+        Repository $repository,
+        string $name,
+        string $startPoint = null
+    ): \GitElephant\Objects\Branch {
         $repository
             ->getCaller()
             ->execute(BranchCommand::getInstance($repository)->create($name, $startPoint));

@@ -13,7 +13,6 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Command\BranchCommand;
 use GitElephant\TestCase;
 
 /**
@@ -111,7 +110,15 @@ class BranchCommandTest extends TestCase
     public function testDelete(): void
     {
         $branch = new BranchCommand();
-        $this->assertEquals("branch '-d' 'test-branch'", $branch->delete('test-branch'), 'list branch command without force');
-        $this->assertEquals("branch '-D' 'test-branch'", $branch->delete('test-branch', true), 'list branch command with force');
+        $this->assertEquals(
+            "branch '-d' 'test-branch'",
+            $branch->delete('test-branch'),
+            'list branch command without force'
+        );
+        $this->assertEquals(
+            "branch '-D' 'test-branch'",
+            $branch->delete('test-branch', true),
+            'list branch command with force'
+        );
     }
 }

@@ -20,10 +20,10 @@
 
 namespace GitElephant\Objects\Diff;
 
-use GitElephant\Utilities;
-use GitElephant\Repository;
-use GitElephant\Command\DiffTreeCommand;
 use GitElephant\Command\DiffCommand;
+use GitElephant\Command\DiffTreeCommand;
+use GitElephant\Repository;
+use GitElephant\Utilities;
 
 /**
  * Represent a collection of diffs between two trees
@@ -64,8 +64,12 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Diff
      */
-    public static function create(Repository $repository, $commit1 = null, $commit2 = null, string $path = null): \GitElephant\Objects\Diff\Diff
-    {
+    public static function create(
+        Repository $repository,
+        $commit1 = null,
+        $commit2 = null,
+        string $path = null
+    ): \GitElephant\Objects\Diff\Diff {
         $commit = new self($repository);
         $commit->createFromCommand($commit1, $commit2, $path);
         return $commit;

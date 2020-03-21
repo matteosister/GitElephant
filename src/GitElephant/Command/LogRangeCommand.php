@@ -54,8 +54,14 @@ class LogRangeCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function showLog($refStart, $refEnd, $path = null, $limit = null, $offset = null, $firstParent = false): string
-    {
+    public function showLog(
+        $refStart,
+        $refEnd,
+        $path = null,
+        $limit = null,
+        $offset = null,
+        $firstParent = false
+    ): string {
         $this->clearAll();
         $this->addCommandName(self::GIT_LOG);
         $this->addCommandArgument('-s');

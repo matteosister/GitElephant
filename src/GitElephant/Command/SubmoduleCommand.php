@@ -29,12 +29,12 @@ use GitElephant\Repository;
  */
 class SubmoduleCommand extends BaseCommand
 {
-    public const SUBMODULE_COMMAND          = 'submodule';
-    public const SUBMODULE_ADD_COMMAND      = 'add';
-    public const SUBMODULE_INIT_COMMAND     = 'init';
-    public const SUBMODULE_UPDATE_COMMAND   = 'update';
-    public const SUBMODULE_OPTION_FORCE     = '--force';
-    public const SUBMODULE_OPTION_INIT      = '--init';
+    public const SUBMODULE_COMMAND = 'submodule';
+    public const SUBMODULE_ADD_COMMAND = 'add';
+    public const SUBMODULE_INIT_COMMAND = 'init';
+    public const SUBMODULE_UPDATE_COMMAND = 'update';
+    public const SUBMODULE_OPTION_FORCE = '--force';
+    public const SUBMODULE_OPTION_INIT = '--init';
     public const SUBMODULE_OPTION_RECURSIVE = '--recursive';
 
     /**
