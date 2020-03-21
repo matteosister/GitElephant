@@ -73,6 +73,7 @@ class MergeCommand extends BaseCommand
             $this->addCommandArgument($message);
         }
         $this->addCommandSubject($with->getFullRef());
+
         return $this->getCommand();
     }
 

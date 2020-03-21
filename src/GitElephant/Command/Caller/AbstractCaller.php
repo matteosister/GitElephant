@@ -64,6 +64,7 @@ abstract class AbstractCaller implements CallerInterface
     public function setBinaryPath(string $path): self
     {
         $this->binaryPath = $path;
+
         return $this;
     }
 

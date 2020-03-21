@@ -117,6 +117,7 @@ class TagCommand extends BaseCommand
         $this->addCommandName(self::TAG_COMMAND);
         $this->addCommandArgument('-d');
         $this->addCommandSubject($name);
+
         return $this->getCommand();
     }
 }

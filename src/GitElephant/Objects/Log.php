@@ -63,6 +63,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     {
         $log = new self($repository);
         $log->parseOutputLines($outputLines);
+
         return $log;
     }
 

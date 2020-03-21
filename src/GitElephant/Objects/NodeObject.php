@@ -140,6 +140,7 @@ class NodeObject implements TreeishInterface
         $sha = $matches[3];
         $size = $matches[4];
         $fullPath = $matches[5];
+
         return [
             'permissions' => $permissions,
             'type' => $type,
@@ -345,6 +346,7 @@ class NodeObject implements TreeishInterface
         $c = RevParseCommand::getInstance()->revParse($this, $options);
         $caller = $this->repository->getCaller();
         $caller->execute($c);
+
         return array_map('trim', $caller->getOutputLines(true));
     }
 

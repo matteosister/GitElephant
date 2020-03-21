@@ -87,6 +87,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     {
         $tree = new self($repository);
         $tree->parseOutputLines($outputLines);
+
         return $tree;
     }
 
@@ -385,6 +386,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
             return $this->getRepository()->getCommit($ref);
         }
         $log = $this->repository->getObjectLog($this->getObject(), $ref);
+
         return $log[0];
     }
 

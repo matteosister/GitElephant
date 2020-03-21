@@ -88,6 +88,7 @@ class LogRangeCommand extends BaseCommand
             $this->addPath($path);
         }
         $this->addCommandSubject($refStart . '..' . $refEnd);
+
         return $this->getCommand();
     }
 }

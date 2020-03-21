@@ -87,6 +87,7 @@ class Branch extends NodeObject implements TreeishInterface
         $repository
             ->getCaller()
             ->execute(BranchCommand::getInstance($repository)->create($name, $startPoint));
+
         return new self($repository, $name);
     }
 
@@ -104,6 +105,7 @@ class Branch extends NodeObject implements TreeishInterface
         $matches = static::getMatches($outputLine);
         $branch = new self($repository, $matches[1]);
         $branch->parseOutputLine($outputLine);
+
         return $branch;
     }
 
@@ -120,6 +122,7 @@ class Branch extends NodeObject implements TreeishInterface
     {
         $branch = $create ? self::create($repository, $name) : new self($repository, $name);
         $repository->checkout($branch);
+
         return $branch;
     }
 

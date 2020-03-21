@@ -67,6 +67,7 @@ class MainCommand extends BaseCommand
             $this->addCommandArgument('--bare');
         }
         $this->addCommandName(self::GIT_INIT);
+
         return $this->getCommand();
     }
 
@@ -104,6 +105,7 @@ class MainCommand extends BaseCommand
         $this->addCommandName(self::GIT_ADD);
         $this->addCommandArgument('--all');
         $this->addCommandSubject($what);
+
         return $this->getCommand();
     }
 
@@ -121,6 +123,7 @@ class MainCommand extends BaseCommand
         $this->addCommandName(self::GIT_RESET);
         $this->addCommandArgument('HEAD');
         $this->addPath($what);
+
         return $this->getCommand();
     }
 
@@ -154,6 +157,7 @@ class MainCommand extends BaseCommand
         }
         $this->addCommandArgument('-m');
         $this->addCommandSubject($message);
+
         return $this->getCommand();
     }
 
@@ -177,6 +181,7 @@ class MainCommand extends BaseCommand
         $this->addCommandName(self::GIT_CHECKOUT);
         $this->addCommandArgument('-q');
         $this->addCommandSubject($what);
+
         return $this->getCommand();
     }
 
@@ -204,6 +209,7 @@ class MainCommand extends BaseCommand
         $this->addCommandName(self::GIT_MOVE);
         $this->addCommandSubject($from);
         $this->addCommandSubject2($to);
+
         return $this->getCommand();
     }
 
@@ -233,6 +239,7 @@ class MainCommand extends BaseCommand
             $this->addCommandArgument('-f');
         }
         $this->addPath($path);
+
         return $this->getCommand();
     }
 

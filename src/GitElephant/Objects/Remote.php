@@ -127,6 +127,7 @@ class Remote
             $remoteCmd = RemoteCommand::getInstance($this->repository);
         }
         $command = $remoteCmd->verbose();
+
         return $this->repository->getCaller()->execute($command)->getOutputLines(true);
     }
 
@@ -155,6 +156,7 @@ class Remote
             $remoteCmd = RemoteCommand::getInstance($this->repository);
         }
         $command = $remoteCmd->show($name, $queryRemotes);
+
         return $this->repository->getCaller()->execute($command)->getOutputLines(true);
     }
 

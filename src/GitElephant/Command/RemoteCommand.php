@@ -116,6 +116,7 @@ class RemoteCommand extends BaseCommand
     {
         $subcmd = new ShowSubCommand();
         $subcmd->prepare($name, $queryRemotes);
+
         return $this->remote($subcmd);
     }
 
@@ -133,6 +134,7 @@ class RemoteCommand extends BaseCommand
     {
         $subcmd = new AddSubCommand();
         $subcmd->prepare($name, $url, $options);
+
         return $this->remote($subcmd);
     }
 }

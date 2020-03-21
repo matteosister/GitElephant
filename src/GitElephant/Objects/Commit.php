@@ -137,6 +137,7 @@ class Commit implements TreeishInterface, \Countable
         $author = null
     ): Commit {
         $repository->getCaller()->execute(MainCommand::getInstance($repository)->commit($message, $stageAll, $author));
+
         return $repository->getCommit();
     }
 
@@ -154,6 +155,7 @@ class Commit implements TreeishInterface, \Countable
     {
         $commit = new self($repository, $treeish);
         $commit->createFromCommand();
+
         return $commit;
     }
 
@@ -169,6 +171,7 @@ class Commit implements TreeishInterface, \Countable
     {
         $commit = new self($repository);
         $commit->parseOutputLines($outputLines);
+
         return $commit;
     }
 
@@ -412,6 +415,7 @@ class Commit implements TreeishInterface, \Countable
         $c = RevParseCommand::getInstance()->revParse($this, $options);
         $caller = $this->repository->getCaller();
         $caller->execute($c);
+
         return array_map('trim', $caller->getOutputLines(true));
     }
 

@@ -67,6 +67,7 @@ class LsTreeCommand extends BaseCommand
         $this->addCommandArgument('-t');
         $this->addCommandArgument('-l');
         $this->addCommandSubject($what);
+
         return $this->getCommand();
     }
 
@@ -96,6 +97,7 @@ class LsTreeCommand extends BaseCommand
         $subject = $what;
         $this->addCommandSubject($subject);
         $this->addPath($subjectPath);
+
         return $this->getCommand();
     }
 
@@ -115,6 +117,7 @@ class LsTreeCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(self::LS_TREE_COMMAND);
         $this->addCommandSubject($ref);
+
         return $this->getCommand();
     }
 }

@@ -81,6 +81,7 @@ class DiffCommand extends BaseCommand
             $this->addPath($path);
         }
         $this->addCommandSubject($subject);
+
         return $this->getCommand();
     }
 }

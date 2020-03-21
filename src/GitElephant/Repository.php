@@ -171,6 +171,7 @@ class Repository
         }
         $repository->cloneFrom($git, $repositoryPath);
         $repository->checkoutAllRemoteBranches();
+
         return $repository;
     }
 
@@ -188,6 +189,7 @@ class Repository
     public function init($bare = false): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->init($bare));
+
         return $this;
     }
 
@@ -205,6 +207,7 @@ class Repository
     public function stage($path = '.'): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->add($path));
+
         return $this;
     }
 
@@ -222,6 +225,7 @@ class Repository
     public function unstage($path): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->unstage($path), true, null, [0, 1]);
+
         return $this;
     }
 
@@ -241,6 +245,7 @@ class Repository
     public function move($from, $to): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->move($from, $to));
+
         return $this;
     }
 
@@ -261,6 +266,7 @@ class Repository
     public function remove($path, $recursive = false, $force = false): self
     {
         $this->caller->execute(MainCommand::getInstance($this)->remove($path, $recursive, $force));
+
         return $this;
     }
 
@@ -309,6 +315,7 @@ class Repository
     public function revParse(string $arg = null, array $options = []): array
     {
         $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
+
         return array_map('trim', $this->caller->getOutputLines(true));
     }
 
@@ -409,6 +416,7 @@ class Repository
     public function createBranch(string $name, $startPoint = null): self
     {
         Branch::create($this, $name, $startPoint);
+
         return $this;
     }
 
@@ -428,6 +436,7 @@ class Repository
     public function deleteBranch(string $name, bool $force = false): self
     {
         $this->caller->execute(BranchCommand::getInstance($this)->delete($name, $force));
+
         return $this;
     }
 
@@ -539,6 +548,7 @@ class Repository
             $this->checkout(str_replace(sprintf('remotes/%s/', $remote), '', $realBranch));
         }
         $this->checkout($actualBranch);
+
         return $this;
     }
 
@@ -575,6 +585,7 @@ class Repository
                 break;
         }
         $this->caller->execute(MergeCommand::getInstance($this)->merge($branch, $message, $options));
+
         return $this;
     }
 
@@ -593,6 +604,7 @@ class Repository
     public function createTag(string $name, $startPoint = null, string $message = null): self
     {
         Tag::create($this, $name, $startPoint, $message);
+
         return $this;
     }
 
@@ -631,6 +643,7 @@ class Repository
     public function addSubmodule(string $gitUrl, $path = null): self
     {
         $this->caller->execute(SubmoduleCommand::getInstance($this)->add($gitUrl, $path));
+
         return $this;
     }
 
@@ -644,6 +657,7 @@ class Repository
     public function initSubmodule($path = null): self
     {
         $this->caller->execute(SubmoduleCommand::getInstance($this)->init($path));
+
         return $this;
     }
 
@@ -664,6 +678,7 @@ class Repository
         $path = null
     ): self {
         $this->caller->execute(SubmoduleCommand::getInstance($this)->update($recursive, $init, $force, $path));
+
         return $this;
     }
 
@@ -788,6 +803,7 @@ class Repository
     public function countCommits($start = 'HEAD'): int
     {
         $commit = Commit::pick($this, $start);
+
         return $commit->count();
     }
 
@@ -864,6 +880,7 @@ class Repository
         int $offset = null
     ): \GitElephant\Objects\Log {
         $command = LogCommand::getInstance($this)->showObjectLog($obj, $branch, $limit, $offset);
+
         return Log::createFromOutputLines($this, $this->caller->execute($command)->getOutputLines());
     }
 
@@ -886,6 +903,7 @@ class Repository
             $this->createBranch($ref);
         }
         $this->caller->execute(MainCommand::getInstance($this)->checkout($ref));
+
         return $this;
     }
 
@@ -958,6 +976,7 @@ class Repository
     ): self {
         $command = Command\CloneCommand::getInstance($this)->cloneUrl($url, $to, $repoReference, $depth, $recursive);
         $this->caller->execute($command);
+
         return $this;
     }
 
@@ -974,6 +993,7 @@ class Repository
     public function addRemote(string $name, string $url): self
     {
         $this->caller->execute(RemoteCommand::getInstance($this)->add($name, $url));
+
         return $this;
     }
 
@@ -1094,6 +1114,7 @@ class Repository
     public function outputContent(NodeObject $obj, $treeish): array
     {
         $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
+
         return $this->caller->execute($command)->getOutputLines();
     }
 
@@ -1112,6 +1133,7 @@ class Repository
     public function outputRawContent(NodeObject $obj, $treeish): string
     {
         $command = CatFileCommand::getInstance($this)->content($obj, $treeish);
+
         return $this->caller->execute($command)->getRawOutput();
     }
 
@@ -1293,6 +1315,7 @@ class Repository
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->listStashes($options);
         $this->caller->execute($command);
+
         return array_map('trim', $this->caller->getOutputLines(true));
     }
 
@@ -1308,6 +1331,7 @@ class Repository
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->show($stash);
         $this->caller->execute($command);
+
         return $this->caller->getOutput();
     }
 

@@ -98,6 +98,7 @@ class StashCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' show');
         $this->addCommandSubject($stash);
+
         return $this->getCommand();
     }
 
@@ -114,6 +115,7 @@ class StashCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' drop');
         $this->addCommandSubject($stash);
+
         return $this->getCommand();
     }
 
@@ -172,6 +174,7 @@ class StashCommand extends BaseCommand
         $this->addCommandName(self::STASH_COMMAND . ' branch');
         $this->addCommandSubject($branch);
         $this->addCommandSubject2($stash);
+
         return $this->getCommand();
     }
 
@@ -182,6 +185,7 @@ class StashCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' clear');
+
         return $this->getCommand();
     }
 
@@ -193,6 +197,7 @@ class StashCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' create');
+
         return $this->getCommand();
     }
 

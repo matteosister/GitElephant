@@ -67,6 +67,7 @@ class MvCommand extends BaseCommand
         $this->addCommandArgument('-k');
         $this->addCommandSubject($sourceName);
         $this->addCommandSubject2($target);
+
         return $this->getCommand();
     }
 }

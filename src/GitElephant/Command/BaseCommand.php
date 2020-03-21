@@ -297,6 +297,7 @@ class BaseCommand
         $valueOptions = []
     ): array {
         $normalizedOptions = [];
+
         foreach ($options as $option) {
             if (array_key_exists($option, $switchOptions)) {
                 $normalizedOptions[$switchOptions[$option]] = $switchOptions[$option];
@@ -311,6 +312,7 @@ class BaseCommand
                 }
             }
         }
+        
         return $normalizedOptions;
     }
 

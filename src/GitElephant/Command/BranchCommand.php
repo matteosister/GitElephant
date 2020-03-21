@@ -56,6 +56,7 @@ class BranchCommand extends BaseCommand
         $this->addCommandName(self::BRANCH_COMMAND);
         $this->addCommandArgument('--contains');
         $this->addCommandSubject($reference);
+
         return $this->getCommand();
     }
 
@@ -100,6 +101,7 @@ class BranchCommand extends BaseCommand
         if ($all) {
             $this->addCommandArgument('-a');
         }
+
         return $this->getCommand();
     }
 
@@ -149,6 +151,7 @@ class BranchCommand extends BaseCommand
             $this->addCommandArgument('-vv');
         }
         $this->addCommandSubject($name);
+
         return $this->getCommand();
     }
 
@@ -168,6 +171,7 @@ class BranchCommand extends BaseCommand
         $this->addCommandName(self::BRANCH_COMMAND);
         $this->addCommandArgument($arg);
         $this->addCommandSubject($name);
+
         return $this->getCommand();
     }
 }

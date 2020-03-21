@@ -115,6 +115,7 @@ class Caller extends AbstractCaller
         // rtrim values
         $values = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
         $this->outputLines = $values;
+
         return $this;
     }
 

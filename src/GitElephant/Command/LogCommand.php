@@ -108,6 +108,7 @@ class LogCommand extends BaseCommand
             $this->addPath($path);
         }
         $this->addCommandSubject($ref);
+
         return $this->getCommand();
     }
 }

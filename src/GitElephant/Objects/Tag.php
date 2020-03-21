@@ -73,6 +73,7 @@ class Tag extends NodeObject
         $repository
             ->getCaller()
             ->execute(TagCommand::getInstance($repository)->create($name, $startPoint, $message));
+
         return $repository->getTag($name);
     }
 
@@ -95,6 +96,7 @@ class Tag extends NodeObject
     ): \GitElephant\Objects\Tag {
         $tag = new self($repository, $name);
         $tag->parseOutputLines($outputLines);
+
         return $tag;
     }
 
