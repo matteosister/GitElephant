@@ -13,8 +13,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\LsTreeCommand;
-use \GitElephant\TestCase;
+use GitElephant\Command\LsTreeCommand;
+use GitElephant\TestCase;
 
 /**
  * LsTreeCommandTest

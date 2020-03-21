@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,10 +20,10 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\NodeObject;
-use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Repository;
+use GitElephant\Objects\NodeObject;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * Log command generator
@@ -32,7 +33,7 @@ use \GitElephant\Repository;
  */
 class LogCommand extends BaseCommand
 {
-    const GIT_LOG = 'log';
+    public const GIT_LOG = 'log';
 
     /**
      * constructor

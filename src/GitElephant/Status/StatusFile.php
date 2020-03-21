@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -26,15 +27,15 @@ namespace GitElephant\Status;
  */
 class StatusFile
 {
-    const UNTRACKED = '?';
-    const IGNORED = '!';
-    const UNMODIFIED = '';
-    const MODIFIED = 'M';
-    const ADDED = 'A';
-    const DELETED = 'D';
-    const RENAMED = 'R';
-    const COPIED = 'C';
-    const UPDATED_BUT_UNMERGED = 'U';
+    public const UNTRACKED = '?';
+    public const IGNORED = '!';
+    public const UNMODIFIED = '';
+    public const MODIFIED = 'M';
+    public const ADDED = 'A';
+    public const DELETED = 'D';
+    public const RENAMED = 'R';
+    public const COPIED = 'C';
+    public const UPDATED_BUT_UNMERGED = 'U';
 
     /**
      * @var string

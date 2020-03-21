@@ -20,7 +20,7 @@
 
 namespace GitElephant\Command\Caller;
 
-use \GitElephant\Command\Caller\AbstractCaller;
+use GitElephant\Command\Caller\AbstractCaller;
 
 /**
  * Caller via ssh2 PECL extension

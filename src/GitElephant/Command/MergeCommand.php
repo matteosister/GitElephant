@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Branch;
-use \GitElephant\Repository;
+use GitElephant\Objects\Branch;
+use GitElephant\Repository;
 
 /**
  * Merge command generator
@@ -29,9 +30,9 @@ use \GitElephant\Repository;
  */
 class MergeCommand extends BaseCommand
 {
-    const MERGE_COMMAND = 'merge';
-    const MERGE_OPTION_FF_ONLY = '--ff-only';
-    const MERGE_OPTION_NO_FF = '--no-ff';
+    public const MERGE_COMMAND = 'merge';
+    public const MERGE_OPTION_FF_ONLY = '--ff-only';
+    public const MERGE_OPTION_NO_FF = '--no-ff';
 
     /**
      * constructor

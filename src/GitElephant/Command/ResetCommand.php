@@ -9,17 +9,17 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Commit;
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Repository;
+use GitElephant\Objects\Commit;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 class ResetCommand extends BaseCommand
 {
-    const GIT_RESET_COMMAND = 'reset';
+    public const GIT_RESET_COMMAND = 'reset';
 
-    const OPTION_HARD  = '--hard';
-    const OPTION_MERGE = '--merge';
-    const OPTION_SOFT  = '--soft';
+    public const OPTION_HARD  = '--hard';
+    public const OPTION_MERGE = '--merge';
+    public const OPTION_SOFT  = '--soft';
 
     /**
      * constructor

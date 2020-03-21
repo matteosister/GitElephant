@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -13,13 +11,15 @@ declare(strict_types=1);
  * Just for fun...
  */
 
-$file = __DIR__.'/../vendor/autoload.php';
+declare(strict_types=1);
+
+$file = __DIR__ . '/../vendor/autoload.php';
 if (!file_exists($file)) {
     throw new \RuntimeException('Install dependencies to run test suite.');
 }
 require_once $file;
-require_once __DIR__.'/GitElephant/TestCase.php';
+require_once __DIR__ . '/GitElephant/TestCase.php';
 
-echo exec('git --version')."\n";
+echo exec('git --version') . "\n";
 
 date_default_timezone_set('UTC');

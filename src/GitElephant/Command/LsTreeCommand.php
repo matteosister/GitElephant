@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,10 +20,10 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Objects\NodeObject;
-use \GitElephant\Repository;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Objects\NodeObject;
+use GitElephant\Repository;
 
 /**
  * ls-tree command generator
@@ -31,7 +32,7 @@ use \GitElephant\Repository;
  */
 class LsTreeCommand extends BaseCommand
 {
-    const LS_TREE_COMMAND = 'ls-tree';
+    public const LS_TREE_COMMAND = 'ls-tree';
 
     /**
      * constructor

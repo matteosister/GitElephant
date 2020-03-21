@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: matteo
  * Date: 06/06/13
@@ -8,7 +9,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * Class StashCommandTest

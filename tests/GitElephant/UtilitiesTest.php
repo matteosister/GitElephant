@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * This file is part of the GitElephant package.
  *
@@ -12,6 +10,8 @@ declare(strict_types=1);
  *
  * Just for fun...
  */
+
+declare(strict_types=1);
 
 namespace GitElephant;
 

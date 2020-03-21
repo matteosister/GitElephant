@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Command\RemoteCommand;
-use \GitElephant\Repository;
+use GitElephant\Command\RemoteCommand;
+use GitElephant\Repository;
 
 /**
  * Class Remote
@@ -491,7 +492,7 @@ class Remote
      *
      * @param array $branches
      */
-    public function setBranches(Array $branches): void
+    public function setBranches(array $branches): void
     {
         $this->branches = $branches;
     }

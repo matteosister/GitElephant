@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -26,9 +27,9 @@ namespace GitElephant\Objects\Diff;
  */
 abstract class DiffChunkLine
 {
-    const UNCHANGED = "unchanged";
-    const ADDED = "added";
-    const DELETED = "deleted";
+    public const UNCHANGED = "unchanged";
+    public const ADDED = "added";
+    public const DELETED = "deleted";
 
     /**
      * line type

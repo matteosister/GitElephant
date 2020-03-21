@@ -20,9 +20,9 @@
 
 namespace GitElephant\Command\Caller;
 
-use \Symfony\Component\Process\Process;
-use \GitElephant\Command\Caller\CallerInterface;
-use \GitElephant\Exception\InvalidRepositoryPathException;
+use Symfony\Component\Process\Process;
+use GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Exception\InvalidRepositoryPathException;
 
 /**
  * Caller
@@ -96,7 +96,7 @@ class Caller extends AbstractCaller
         if (method_exists(Process::class, 'fromShellCommandline')) {
             $process = Process::fromShellCommandline($cmd, $cwd);
         } else {
-            // compatibility fix required for Symfony/Process < 4.
+            // compatibility fix required for symfony/process versions prior to v4.2.
             $process = new Process($cmd, $cwd);
         }
         $process->setTimeout(15000);

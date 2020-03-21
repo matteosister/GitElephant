@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,10 +20,10 @@
 
 namespace GitElephant\Objects\Diff;
 
-use \GitElephant\Utilities;
-use \GitElephant\Repository;
-use \GitElephant\Command\DiffTreeCommand;
-use \GitElephant\Command\DiffCommand;
+use GitElephant\Utilities;
+use GitElephant\Repository;
+use GitElephant\Command\DiffTreeCommand;
+use GitElephant\Command\DiffCommand;
 
 /**
  * Represent a collection of diffs between two trees

@@ -20,7 +20,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Repository;
+use GitElephant\Repository;
 
 /**
  * CloneCommand generator
@@ -30,7 +30,7 @@ use \GitElephant\Repository;
  */
 class CloneCommand extends BaseCommand
 {
-    const GIT_CLONE_COMMAND = 'clone';
+    public const GIT_CLONE_COMMAND = 'clone';
 
     /**
      * constructor

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -14,8 +15,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Repository;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * Log Range command generator
@@ -26,7 +27,7 @@ use \GitElephant\Repository;
  */
 class LogRangeCommand extends BaseCommand
 {
-    const GIT_LOG = 'log';
+    public const GIT_LOG = 'log';
 
     /**
      * constructor
@@ -61,11 +62,11 @@ class LogRangeCommand extends BaseCommand
         $this->addCommandArgument('--pretty=raw');
         $this->addCommandArgument('--no-color');
         if (null !== $limit) {
-            $limit = (int)$limit;
+            $limit = (int) $limit;
             $this->addCommandArgument('--max-count=' . $limit);
         }
         if (null !== $offset) {
-            $offset = (int)$offset;
+            $offset = (int) $offset;
             $this->addCommandArgument('--skip=' . $offset);
         }
         if ($firstParent) {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -12,8 +13,8 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Remote;
+use GitElephant\TestCase;
+use GitElephant\Objects\Remote;
 
 /**
  * Class RemoteTest
@@ -397,7 +398,7 @@ EOM;
         $obj = $this->getMockRemote();
         $this->assertEquals(
             $this->sampleRemoteShowRemoteName(),
-            (string)$obj,
+            (string) $obj,
             'magic to string method provides the remote name'
         );
     }

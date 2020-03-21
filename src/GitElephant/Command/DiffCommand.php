@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Repository;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * Diff command generator
@@ -29,7 +30,7 @@ use \GitElephant\Repository;
  */
 class DiffCommand extends BaseCommand
 {
-    const DIFF_COMMAND = 'diff';
+    public const DIFF_COMMAND = 'diff';
 
     /**
      * constructor
@@ -68,11 +69,11 @@ class DiffCommand extends BaseCommand
         $this->addCommandArgument('--src-prefix=SRC/');
         $subject = '';
         if (is_null($with)) {
-            $subject .= $of.'^..'.$of;
+            $subject .= $of . '^..' . $of;
         } else {
-            $subject .= $with.'..'.$of;
+            $subject .= $with . '..' . $of;
         }
-        if (! is_null($path)) {
+        if (!is_null($path)) {
             if (!is_string($path)) {
                 /** @var Object $path */
                 $path = $path->getPath();

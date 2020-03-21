@@ -3,8 +3,8 @@
     "description": "An abstraction layer for git written in PHP",
     "scripts": {
         "tests": "./vendor/bin/phpunit",
-        "check-cs": "./vendor/bin/phpcs --exclude=Generic.Files.LineLength --standard=PSR2 src tests",
-        "fix-cs": "./vendor/bin/phpcbf --standard=PSR2 src tests"
+        "check-cs": "./vendor/bin/phpcs --exclude=Generic.Files.LineLength --standard=PSR2,PSR12 src tests",
+        "fix-cs": "./vendor/bin/phpcbf --standard=PSR2,PSR12 src tests"
     },
     "keywords": [
         "git"

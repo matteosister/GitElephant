@@ -13,9 +13,9 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\Caller\Caller;
-use \GitElephant\Command\MainCommand;
-use \GitElephant\TestCase;
+use GitElephant\Command\Caller\Caller;
+use GitElephant\Command\MainCommand;
+use GitElephant\TestCase;
 
 /**
  * CallerTest

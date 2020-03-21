@@ -20,9 +20,9 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Command\BranchCommand;
-use \GitElephant\Exception\InvalidBranchNameException;
-use \GitElephant\Repository;
+use GitElephant\Command\BranchCommand;
+use GitElephant\Exception\InvalidBranchNameException;
+use GitElephant\Repository;
 
 /**
  * An object representing a git branch

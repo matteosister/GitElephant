@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command\Remote;
 
-use \GitElephant\Command\SubCommandCommand;
-use \GitElephant\Repository;
+use GitElephant\Command\SubCommandCommand;
+use GitElephant\Repository;
 
 /**
  * Class ShowRemoteCommand
@@ -33,7 +34,7 @@ use \GitElephant\Repository;
 
 class ShowSubCommand extends SubCommandCommand
 {
-    const GIT_REMOTE_SHOW = 'show';
+    public const GIT_REMOTE_SHOW = 'show';
 
     /**
      * constructor

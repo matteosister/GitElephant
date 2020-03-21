@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,7 +20,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Repository;
+use GitElephant\Repository;
 
 /**
  * Branch command generator
@@ -28,7 +29,7 @@ use \GitElephant\Repository;
  */
 class BranchCommand extends BaseCommand
 {
-    const BRANCH_COMMAND = 'branch';
+    public const BRANCH_COMMAND = 'branch';
 
     /**
      * constructor

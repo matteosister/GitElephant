@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command\Remote;
 
-use \GitElephant\Command\SubCommandCommand;
-use \GitElephant\Repository;
+use GitElephant\Command\SubCommandCommand;
+use GitElephant\Repository;
 
 /**
  * Class AddRemoteCommand
@@ -33,13 +34,13 @@ use \GitElephant\Repository;
 
 class AddSubCommand extends SubCommandCommand
 {
-    const GIT_REMOTE_ADD = 'add';
-    const GIT_REMOTE_ADD_OPTION_FETCH = '-f';
-    const GIT_REMOTE_ADD_OPTION_TAGS = '--tags';
-    const GIT_REMOTE_ADD_OPTION_NOTAGS = '--no-tags';
-    const GIT_REMOTE_ADD_OPTION_MIRROR = '--mirror';
-    const GIT_REMOTE_ADD_OPTION_SETHEAD = '-m';
-    const GIT_REMOTE_ADD_OPTION_TRACK = '-t';
+    public const GIT_REMOTE_ADD = 'add';
+    public const GIT_REMOTE_ADD_OPTION_FETCH = '-f';
+    public const GIT_REMOTE_ADD_OPTION_TAGS = '--tags';
+    public const GIT_REMOTE_ADD_OPTION_NOTAGS = '--no-tags';
+    public const GIT_REMOTE_ADD_OPTION_MIRROR = '--mirror';
+    public const GIT_REMOTE_ADD_OPTION_SETHEAD = '-m';
+    public const GIT_REMOTE_ADD_OPTION_TRACK = '-t';
 
     /**
      * constructor

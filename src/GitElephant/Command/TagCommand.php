@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Tag;
-use \GitElephant\Repository;
+use GitElephant\Objects\Tag;
+use GitElephant\Repository;
 
 /**
  * Tag command generator
@@ -29,7 +30,7 @@ use \GitElephant\Repository;
  */
 class TagCommand extends BaseCommand
 {
-    const TAG_COMMAND = 'tag';
+    public const TAG_COMMAND = 'tag';
 
     /**
      * constructor

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: matteo
  * Date: 05/01/13
@@ -6,10 +7,11 @@
  *
  * Just for fun...
  */
+
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Branch;
+use GitElephant\TestCase;
+use GitElephant\Objects\Branch;
 
 /**
  * Branch tests

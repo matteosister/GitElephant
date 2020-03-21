@@ -20,10 +20,10 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Repository;
-use \GitElephant\Command\LsTreeCommand;
-use \GitElephant\Command\CatFileCommand;
-use \GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Repository;
+use GitElephant\Command\LsTreeCommand;
+use GitElephant\Command\CatFileCommand;
+use GitElephant\Command\Caller\CallerInterface;
 
 /**
  * An abstraction of a git tree

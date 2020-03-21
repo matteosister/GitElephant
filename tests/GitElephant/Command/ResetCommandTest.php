@@ -9,8 +9,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Commit;
-use \GitElephant\TestCase;
+use GitElephant\Objects\Commit;
+use GitElephant\TestCase;
 
 class ResetCommandTest extends TestCase
 {

@@ -20,7 +20,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Repository;
+use GitElephant\Repository;
 
 /**
  * Stash command generator
@@ -30,7 +30,7 @@ use \GitElephant\Repository;
  */
 class StashCommand extends BaseCommand
 {
-    const STASH_COMMAND = 'stash';
+    public const STASH_COMMAND = 'stash';
 
     /**
      * constructor

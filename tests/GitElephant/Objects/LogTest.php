@@ -13,9 +13,9 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Log;
-use \GitElephant\Command\LogCommand;
+use GitElephant\TestCase;
+use GitElephant\Objects\Log;
+use GitElephant\Command\LogCommand;
 
 /**
  * LogTest

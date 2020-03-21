@@ -15,8 +15,8 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Repository;
-use \GitElephant\Command\LogRangeCommand;
+use GitElephant\Repository;
+use GitElephant\Command\LogRangeCommand;
 
 /**
  * Git range log abstraction object

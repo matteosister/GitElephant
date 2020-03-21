@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -12,7 +13,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * Class RemoteCommandTest

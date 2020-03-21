@@ -2,7 +2,7 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 class TreeObjectTest extends TestCase
 {

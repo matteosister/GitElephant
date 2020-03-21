@@ -20,14 +20,14 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Repository;
-use \GitElephant\Command\MainCommand;
-use \GitElephant\Command\ShowCommand;
-use \GitElephant\Command\BranchCommand;
-use \GitElephant\Objects\Commit\Message;
-use \GitElephant\Command\RevListCommand;
-use \GitElephant\Command\RevParseCommand;
-use \GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Repository;
+use GitElephant\Command\MainCommand;
+use GitElephant\Command\ShowCommand;
+use GitElephant\Command\BranchCommand;
+use GitElephant\Objects\Commit\Message;
+use GitElephant\Command\RevListCommand;
+use GitElephant\Command\RevParseCommand;
+use GitElephant\Command\Caller\CallerInterface;
 
 /**
  * The Commit object represent a commit

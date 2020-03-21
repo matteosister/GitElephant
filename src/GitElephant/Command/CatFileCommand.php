@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,9 +20,9 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\NodeObject;
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Repository;
+use GitElephant\Objects\NodeObject;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * cat-file command generator
@@ -30,7 +31,7 @@ use \GitElephant\Repository;
  */
 class CatFileCommand extends BaseCommand
 {
-    const GIT_CAT_FILE = 'cat-file';
+    public const GIT_CAT_FILE = 'cat-file';
 
     /**
      * constructor

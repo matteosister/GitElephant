@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -17,19 +18,18 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\Remote;
-use \GitElephant\Repository;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\Remote;
+use GitElephant\Repository;
 
 /**
  * Class PullCommand
  */
 class PullCommand extends BaseCommand
 {
-    const GIT_PULL_COMMAND = 'pull';
+    public const GIT_PULL_COMMAND = 'pull';
 
     /**
      * constructor

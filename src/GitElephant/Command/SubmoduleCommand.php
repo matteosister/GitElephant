@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,7 +20,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Repository;
+use GitElephant\Repository;
 
 /**
  * Submodule command generator
@@ -28,13 +29,13 @@ use \GitElephant\Repository;
  */
 class SubmoduleCommand extends BaseCommand
 {
-    const SUBMODULE_COMMAND          = 'submodule';
-    const SUBMODULE_ADD_COMMAND      = 'add';
-    const SUBMODULE_INIT_COMMAND     = 'init';
-    const SUBMODULE_UPDATE_COMMAND   = 'update';
-    const SUBMODULE_OPTION_FORCE     = '--force';
-    const SUBMODULE_OPTION_INIT      = '--init';
-    const SUBMODULE_OPTION_RECURSIVE = '--recursive';
+    public const SUBMODULE_COMMAND          = 'submodule';
+    public const SUBMODULE_ADD_COMMAND      = 'add';
+    public const SUBMODULE_INIT_COMMAND     = 'init';
+    public const SUBMODULE_UPDATE_COMMAND   = 'update';
+    public const SUBMODULE_OPTION_FORCE     = '--force';
+    public const SUBMODULE_OPTION_INIT      = '--init';
+    public const SUBMODULE_OPTION_RECURSIVE = '--recursive';
 
     /**
      * constructor

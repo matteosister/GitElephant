@@ -13,19 +13,18 @@
 
 namespace GitElephant\Objects\Diff;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Diff\Diff;
-use \GitElephant\Objects\Diff\DiffObject;
-use \GitElephant\Objects\Diff\DiffChunk;
-use \GitElephant\Objects\Diff\DiffChunkLine;
-use \GitElephant\Objects\Diff\DiffChunkLineAdded;
-use \GitElephant\Objects\Diff\DiffChunkLineDeleted;
-use \GitElephant\Objects\Diff\DiffChunkLineUnchanged;
-use \GitElephant\Objects\Commit;
-
-use \GitElephant\Command\MainCommand;
-use \GitElephant\Command\DiffCommand;
-use \GitElephant\Command\ShowCommand;
+use GitElephant\TestCase;
+use GitElephant\Objects\Diff\Diff;
+use GitElephant\Objects\Diff\DiffObject;
+use GitElephant\Objects\Diff\DiffChunk;
+use GitElephant\Objects\Diff\DiffChunkLine;
+use GitElephant\Objects\Diff\DiffChunkLineAdded;
+use GitElephant\Objects\Diff\DiffChunkLineDeleted;
+use GitElephant\Objects\Diff\DiffChunkLineUnchanged;
+use GitElephant\Objects\Commit;
+use GitElephant\Command\MainCommand;
+use GitElephant\Command\DiffCommand;
+use GitElephant\Command\ShowCommand;
 
 /**
  * DiffTest

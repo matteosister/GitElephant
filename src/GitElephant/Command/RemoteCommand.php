@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,9 +20,9 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\Remote\AddSubCommand;
-use \GitElephant\Command\Remote\ShowSubCommand;
-use \GitElephant\Repository;
+use GitElephant\Command\Remote\AddSubCommand;
+use GitElephant\Command\Remote\ShowSubCommand;
+use GitElephant\Repository;
 
 /**
  * Class RemoteCommand
@@ -33,9 +34,9 @@ use \GitElephant\Repository;
  */
 class RemoteCommand extends BaseCommand
 {
-    const GIT_REMOTE = 'remote';
-    const GIT_REMOTE_OPTION_VERBOSE = '--verbose';
-    const GIT_REMOTE_OPTION_VERBOSE_SHORT = '-v';
+    public const GIT_REMOTE = 'remote';
+    public const GIT_REMOTE_OPTION_VERBOSE = '--verbose';
+    public const GIT_REMOTE_OPTION_VERBOSE_SHORT = '-v';
 
     /**
      * constructor

@@ -13,10 +13,10 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Repository;
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Log;
-use \GitElephant\Command\LogCommand;
+use GitElephant\Repository;
+use GitElephant\TestCase;
+use GitElephant\Objects\Log;
+use GitElephant\Command\LogCommand;
 
 /**
  * LogRangeTest

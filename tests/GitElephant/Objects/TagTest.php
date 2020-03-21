@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: matteo
  * Date: 28/10/12
@@ -9,8 +10,8 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Tag;
+use GitElephant\TestCase;
+use GitElephant\Objects\Tag;
 
 class TagTest extends TestCase
 {

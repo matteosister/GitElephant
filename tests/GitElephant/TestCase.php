@@ -13,15 +13,15 @@
 
 namespace GitElephant;
 
-use \Mockery as m;
-use \GitElephant\Repository;
-use \GitElephant\Objects\Author;
-use \GitElephant\Objects\Commit;
-use \GitElephant\Command\MvCommand;
-use \Symfony\Component\Finder\Finder;
-use \GitElephant\Command\Caller\Caller;
-use \PHPUnit\Framework\MockObject\MockObject;
-use \Symfony\Component\Filesystem\Filesystem;
+use Mockery as m;
+use GitElephant\Repository;
+use GitElephant\Objects\Author;
+use GitElephant\Objects\Commit;
+use GitElephant\Command\MvCommand;
+use Symfony\Component\Finder\Finder;
+use GitElephant\Command\Caller\Caller;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Filesystem\Filesystem;
 use GitElephant\Command\Caller\CallerInterface;
 
 /**
@@ -277,7 +277,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
                 null,
             )
         );
-        
+
         return $mockRepo;
     }
 
