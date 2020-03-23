@@ -299,7 +299,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @return mixed
      */
-    private function parseLine($line): void
+    private function parseLine(string $line): void
     {
         if ($line === '') {
             return;
