@@ -107,7 +107,7 @@ class SubCommandCommand extends BaseCommand
             $command .= ' ';
         }
         $subjects = $this->getCommandSubjects();
-        if ((is_countable($subjects) ? count($subjects) : 0) > 0) {
+        if (!empty($subjects)) {
             $command .= implode(' ', array_map('escapeshellarg', $subjects));
         }
         $command = preg_replace('/\\s{2,}/', ' ', $command);
