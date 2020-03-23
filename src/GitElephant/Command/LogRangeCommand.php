@@ -60,7 +60,7 @@ class LogRangeCommand extends BaseCommand
         $path = null,
         $limit = null,
         $offset = null,
-        $firstParent = false
+        bool $firstParent = false
     ): string {
         $this->clearAll();
 
