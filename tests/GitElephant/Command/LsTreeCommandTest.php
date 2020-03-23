@@ -25,7 +25,7 @@ use GitElephant\TestCase;
 class LsTreeCommandTest extends TestCase
 {
     /**
-     * @var \GitElephant\Command\LsTreeCommand ;
+     * @var \GitElephant\Command\LsTreeCommand
      */
     private $lsTreeCommand;
 
