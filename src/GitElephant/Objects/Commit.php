@@ -277,7 +277,7 @@ class Commit implements TreeishInterface, \Countable
      */
     public function isRoot(): bool
     {
-        return emtpy($this->parents);
+        return empty($this->parents);
     }
 
     /**
