@@ -74,7 +74,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      *
      * @var array
      */
-    private $lines;
+    private $lines = [];
 
     /**
      * Class constructor
@@ -273,7 +273,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      */
     public function count(): int
     {
-        return is_countable($this->lines) ? count($this->lines) : 0;
+        return count($this->lines);
     }
 
     /**

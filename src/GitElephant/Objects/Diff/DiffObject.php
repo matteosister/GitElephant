@@ -75,7 +75,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @var array
      */
-    private $chunks;
+    private $chunks = [];
 
     /**
      * Class constructor
@@ -90,7 +90,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
         $this->chunks = [];
 
         $this->findPath($lines[0]);
-        
+
         $sliceIndex = 4;
 
         if ($this->hasPathChanged()) {
@@ -313,7 +313,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      */
     public function count(): int
     {
-        return is_countable($this->chunks) ? count($this->chunks) : 0;
+        return count($this->chunks);
     }
 
     /**

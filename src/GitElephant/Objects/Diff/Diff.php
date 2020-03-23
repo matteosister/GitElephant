@@ -49,7 +49,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      *
      * @var array
      */
-    private $diffObjects;
+    private $diffObjects = [];
 
     /**
      * static generator to generate a Diff object
@@ -83,7 +83,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      * @param \GitElephant\Repository $repository  repository instance
      * @param null                    $diffObjects diff objects
      */
-    public function __construct(Repository $repository, array $diffObjects = null)
+    public function __construct(Repository $repository, array $diffObjects = [])
     {
         $this->position = 0;
         $this->repository = $repository;
@@ -232,7 +232,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      */
     public function count(): int
     {
-        return is_countable($this->diffObjects) ? count($this->diffObjects) : 0;
+        return count($this->diffObjects);
     }
 
     /**

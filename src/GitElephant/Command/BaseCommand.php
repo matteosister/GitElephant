@@ -303,7 +303,7 @@ class BaseCommand
                 $normalizedOptions[$switchOptions[$option]] = $switchOptions[$option];
             } else {
                 $parts = preg_split('/([\s=])+/', $option, 2, PREG_SPLIT_DELIM_CAPTURE);
-                if ((is_countable($parts) ? count($parts) : 0) > 0) {
+                if (!empty($parts) && is_array($parts)) {
                     $optionName = $parts[0];
                     if (in_array($optionName, $valueOptions)) {
                         $value = $parts[1] === '=' ? $option : [$parts[0], $parts[2]];
