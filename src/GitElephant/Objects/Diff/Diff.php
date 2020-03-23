@@ -228,7 +228,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     /**
      * Countable interface
      *
-     * @return int|void
+     * @return int
      */
     public function count(): int
     {
