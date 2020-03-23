@@ -65,7 +65,7 @@ class SubCommandCommand extends BaseCommand
 
     protected function getCommandSubjects()
     {
-        return $this->orderedSubjects !== [] ? $this->orderedSubjects : [];
+        return is_array($this->orderedSubjects) ? $this->orderedSubjects : [];
     }
 
     protected function extractArguments($args): string
