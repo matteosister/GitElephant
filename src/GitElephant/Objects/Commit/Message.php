@@ -78,7 +78,7 @@ class Message
      */
     public function toString(bool $full = false)
     {
-        if ((is_countable($this->message) ? count($this->message) : 0) === 0) {
+        if (empty($this->message)) {
             return null;
         }
         
