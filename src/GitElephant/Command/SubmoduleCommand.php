@@ -126,8 +126,12 @@ class SubmoduleCommand extends BaseCommand
      *
      * @return string
      */
-    public function update(bool $recursive = false, bool $init = false, bool $force = false, string $path = null): string
-    {
+    public function update(
+        bool $recursive = false,
+        bool $init = false,
+        bool $force = false,
+        string $path = null
+    ): string {
         $this->clearAll();
         $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_UPDATE_COMMAND));
         if ($recursive) {
