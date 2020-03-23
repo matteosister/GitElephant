@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -26,15 +27,15 @@ namespace GitElephant\Status;
  */
 class StatusFile
 {
-    const UNTRACKED = '?';
-    const IGNORED = '!';
-    const UNMODIFIED = '';
-    const MODIFIED = 'M';
-    const ADDED = 'A';
-    const DELETED = 'D';
-    const RENAMED = 'R';
-    const COPIED = 'C';
-    const UPDATED_BUT_UNMERGED = 'U';
+    public const UNTRACKED = '?';
+    public const IGNORED = '!';
+    public const UNMODIFIED = '';
+    public const MODIFIED = 'M';
+    public const ADDED = 'A';
+    public const DELETED = 'D';
+    public const RENAMED = 'R';
+    public const COPIED = 'C';
+    public const UPDATED_BUT_UNMERGED = 'U';
 
     /**
      * @var string
@@ -88,15 +89,19 @@ class StatusFile
      *
      * @return StatusFile
      */
-    public static function create(string $x, string $y, string $name, string $renamed = null)
-    {
+    public static function create(
+        string $x,
+        string $y,
+        string $name,
+        string $renamed = null
+    ): \GitElephant\Status\StatusFile {
         return new self($x, $y, $name, $renamed);
     }
 
     /**
      * @return bool
      */
-    public function isRenamed()
+    public function isRenamed(): bool
     {
         return $this->renamed !== null;
     }
@@ -106,7 +111,7 @@ class StatusFile
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -116,7 +121,7 @@ class StatusFile
      *
      * @return string
      */
-    public function getIndexStatus()
+    public function getIndexStatus(): ?string
     {
         return $this->x;
     }
@@ -124,9 +129,9 @@ class StatusFile
     /**
      * Get the status of the working tree
      *
-     * @return string
+     * @return string|null
      */
-    public function getWorkingTreeStatus()
+    public function getWorkingTreeStatus(): ?string
     {
         return $this->y;
     }
@@ -136,28 +141,28 @@ class StatusFile
      *
      * @return string
      */
-    public function calculateDescription()
+    public function calculateDescription(): void
     {
         $status = $this->x . $this->y;
         $matching = [
-            '/ [MD]/'   => 'not updated',
-            '/M[MD]/'   => 'updated in index',
-            '/A[MD]/'   => 'added to index',
-            '/D[M]/'    => 'deleted from index',
-            '/R[MD]/'   => 'renamed in index',
-            '/C[MD]/'   => 'copied in index',
+            '/ [MD]/' => 'not updated',
+            '/M[MD]/' => 'updated in index',
+            '/A[MD]/' => 'added to index',
+            '/D[M]/' => 'deleted from index',
+            '/R[MD]/' => 'renamed in index',
+            '/C[MD]/' => 'copied in index',
             '/[MARC] /' => 'index and work tree matches',
             '/[MARC]M/' => 'work tree changed since index',
             '/[MARC]D/' => 'deleted in work tree',
-            '/DD/'      => 'unmerged, both deleted',
-            '/AU/'      => 'unmerged, added by us',
-            '/UD/'      => 'unmerged, deleted by them',
-            '/UA/'      => 'unmerged, added by them',
-            '/DU/'      => 'unmerged, deleted by us',
-            '/AA/'      => 'unmerged, both added',
-            '/UU/'      => 'unmerged, both modified',
-            '/\?\?/'    => 'untracked',
-            '/!!/'      => 'ignored',
+            '/DD/' => 'unmerged, both deleted',
+            '/AU/' => 'unmerged, added by us',
+            '/UD/' => 'unmerged, deleted by them',
+            '/UA/' => 'unmerged, added by them',
+            '/DU/' => 'unmerged, deleted by us',
+            '/AA/' => 'unmerged, both added',
+            '/UU/' => 'unmerged, both modified',
+            '/\?\?/' => 'untracked',
+            '/!!/' => 'ignored',
         ];
         $out = [];
         foreach ($matching as $pattern => $label) {
@@ -174,7 +179,7 @@ class StatusFile
      *
      * @param string $description the description variable
      */
-    public function setDescription(string $description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
@@ -184,11 +189,12 @@ class StatusFile
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         if ($this->description === null) {
             $this->calculateDescription();
         }
+
         return $this->description;
     }
 
@@ -197,7 +203,7 @@ class StatusFile
      *
      * @param string $type the type variable
      */
-    public function setType(string $type)
+    public function setType(string $type): void
     {
         $this->type = $type;
     }
@@ -207,7 +213,7 @@ class StatusFile
      *
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }

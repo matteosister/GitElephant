@@ -13,9 +13,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\Caller\Caller;
-use \GitElephant\Command\MainCommand;
-use \GitElephant\TestCase;
+use GitElephant\Command\Caller\Caller;
+use GitElephant\TestCase;
 
 /**
  * CallerTest
@@ -35,7 +34,7 @@ class CallerTest extends TestCase
     /**
      * @covers GitElephant\Command\Caller\Caller::__construct
      */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $caller = new Caller(null, $this->getRepository()->getPath());
         $this->assertNotEmpty($caller->execute('--version'));
@@ -44,7 +43,7 @@ class CallerTest extends TestCase
     /**
      * testGetBinaryPath
      */
-    public function testGetBinaryPath()
+    public function testGetBinaryPath(): void
     {
         $c = new Caller(null, $this->repository->getPath());
         $this->assertEquals(exec('which git'), $c->getBinaryPath());
@@ -53,7 +52,7 @@ class CallerTest extends TestCase
     /**
      * testGetBinaryVersion
      */
-    public function testGetBinaryVersion()
+    public function testGetBinaryVersion(): void
     {
         $c = new Caller(null, $this->repository->getPath());
         $this->assertIsString($c->getBinaryVersion());
@@ -62,19 +61,17 @@ class CallerTest extends TestCase
     /**
      * testGetError
      */
-    public function testGetError()
+    public function testGetError(): void
     {
         $this->expectException(\RuntimeException::class);
-        $binary = null;
         $caller = new Caller(null, $this->getRepository()->getPath());
-        $mainCommand = new MainCommand();
         $caller->execute('foo');
     }
 
     /**
      * get output test
      */
-    public function testGetOutput()
+    public function testGetOutput(): void
     {
         $caller = new Caller(null, $this->getRepository()->getPath());
         $mainCommand = new MainCommand();
@@ -88,7 +85,7 @@ class CallerTest extends TestCase
     /**
      * testOutputLines
      */
-    public function testOutputLines()
+    public function testOutputLines(): void
     {
         $caller = new Caller(null, $this->getRepository()->getPath());
         $this->getRepository()->init();
@@ -105,7 +102,7 @@ class CallerTest extends TestCase
     /**
      * testGetRawOutput
      */
-    public function testGetRawOutput()
+    public function testGetRawOutput(): void
     {
         $this->getRepository()->init();
         $caller = new Caller(null, $this->getRepository()->getPath());
@@ -114,11 +111,11 @@ class CallerTest extends TestCase
     }
 
     /**
-     * testRepositoryValidation 
+     * testRepositoryValidation
      */
-    public function testRepositoryValidation()
+    public function testRepositoryValidation(): void
     {
         $this->expectException(\GitElephant\Exception\InvalidRepositoryPathException::class);
-        $caller = new Caller(null, 'someinvalidpath');
+        new Caller(null, 'someinvalidpath');
     }
 }

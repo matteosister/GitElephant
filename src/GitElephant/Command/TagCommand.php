@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Tag;
-use \GitElephant\Repository;
+use GitElephant\Objects\Tag;
+use GitElephant\Repository;
 
 /**
  * Tag command generator
@@ -29,12 +30,12 @@ use \GitElephant\Repository;
  */
 class TagCommand extends BaseCommand
 {
-    const TAG_COMMAND = 'tag';
+    public const TAG_COMMAND = 'tag';
 
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -52,10 +53,11 @@ class TagCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function create(string $name, $startPoint = null, $message = null)
+    public function create(string $name, $startPoint = null, $message = null): string
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
+
         if (null !== $message) {
             $this->addCommandArgument('-m');
             $this->addCommandArgument($message);
@@ -76,7 +78,7 @@ class TagCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function listTags()
+    public function listTags(): string
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
@@ -94,7 +96,7 @@ class TagCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function lists()
+    public function lists(): string
     {
         return $this->listTags();
     }
@@ -107,16 +109,16 @@ class TagCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function delete($tag)
+    public function delete($tag): string
     {
         $this->clearAll();
+        $this->addCommandName(self::TAG_COMMAND);
 
         $name = $tag;
         if ($tag instanceof Tag) {
             $name = $tag->getName();
         }
 
-        $this->addCommandName(self::TAG_COMMAND);
         $this->addCommandArgument('-d');
         $this->addCommandSubject($name);
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -20,7 +21,7 @@
 namespace GitElephant\Command\Caller;
 
 use GitElephant\Exception\InvalidRepositoryPathException;
-use \Symfony\Component\Process\Process;
+use Symfony\Component\Process\Process;
 
 /**
  * Caller
@@ -57,11 +58,9 @@ class Caller extends AbstractCaller
             $gitPath = exec('which git');
         }
         $this->setBinaryPath($gitPath);
-
         if (!is_dir($repositoryPath)) {
             throw new InvalidRepositoryPathException($repositoryPath);
         }
-
         $this->repositoryPath = $repositoryPath;
     }
 
@@ -70,7 +69,7 @@ class Caller extends AbstractCaller
      *
      * @param string $cmd               the command to execute
      * @param bool   $git               if the command is git or a generic command
-     * @param null   $cwd               the directory where the command must be executed
+     * @param string $cwd               the directory where the command must be executed
      * @param array  $acceptedExitCodes exit codes accepted to consider the command execution successful
      *
      * @throws \RuntimeException
@@ -80,8 +79,12 @@ class Caller extends AbstractCaller
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @return Caller
      */
-    public function execute($cmd, $git = true, $cwd = null, $acceptedExitCodes = array(0))
-    {
+    public function execute(
+        string $cmd,
+        bool $git = true,
+        string $cwd = null,
+        array $acceptedExitCodes = [0]
+    ): CallerInterface {
         if ($git) {
             $cmd = $this->getBinaryPath() . ' ' . $cmd;
         }
@@ -91,7 +94,17 @@ class Caller extends AbstractCaller
             $cmd = 'LC_ALL=C ' . $cmd;
         }
 
-        $process = new Process($cmd, is_null($cwd) ? $this->repositoryPath : $cwd);
+        if (is_null($cwd) || !is_dir($cwd)) {
+            $cwd = $this->repositoryPath;
+        }
+
+        if (method_exists(Process::class, 'fromShellCommandline')) {
+            $process = Process::fromShellCommandline($cmd, $cwd);
+        } else {
+            // compatibility fix required for symfony/process versions prior to v4.2.
+            $process = new Process($cmd, $cwd);
+        }
+
         $process->setTimeout(15000);
         $process->run();
         if (!in_array($process->getExitCode(), $acceptedExitCodes)) {
@@ -101,8 +114,8 @@ class Caller extends AbstractCaller
             $text .= "\n" . $process->getOutput();
             throw new \RuntimeException($text);
         }
+        
         $this->rawOutput = $process->getOutput();
-
         // rtrim values
         $values = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
         $this->outputLines = $values;
@@ -115,7 +128,7 @@ class Caller extends AbstractCaller
      *
      * @return string
      */
-    public function getOutput()
+    public function getOutput(): string
     {
         return implode("\n", $this->outputLines);
     }
@@ -127,10 +140,10 @@ class Caller extends AbstractCaller
      *
      * @return array
      */
-    public function getOutputLines($stripBlankLines = false)
+    public function getOutputLines(bool $stripBlankLines = false): array
     {
         if ($stripBlankLines) {
-            $output = array();
+            $output = [];
             foreach ($this->outputLines as $line) {
                 if ('' !== $line) {
                     $output[] = $line;
@@ -148,7 +161,7 @@ class Caller extends AbstractCaller
      *
      * @return string
      */
-    public function getRawOutput()
+    public function getRawOutput(): string
     {
         return $this->rawOutput;
     }

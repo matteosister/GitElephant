@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Repository;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * Diff command generator
@@ -29,12 +30,12 @@ use \GitElephant\Repository;
  */
 class DiffCommand extends BaseCommand
 {
-    const DIFF_COMMAND = 'diff';
+    public const DIFF_COMMAND = 'diff';
 
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -52,7 +53,7 @@ class DiffCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function diff($of, $with = null, $path = null)
+    public function diff($of, $with = null, $path = null): string
     {
         $this->clearAll();
         $this->addCommandName(self::DIFF_COMMAND);
@@ -70,19 +71,19 @@ class DiffCommand extends BaseCommand
         $subject = '';
 
         if (is_null($with)) {
-            $subject .= $of.'^..'.$of;
+            $subject .= $of . '^..' . $of;
         } else {
-            $subject .= $with.'..'.$of;
+            $subject .= $with . '..' . $of;
         }
 
-        if (! is_null($path)) {
+        if (!is_null($path)) {
             if (!is_string($path)) {
                 /** @var Object $path */
                 $path = $path->getPath();
             }
             $this->addPath($path);
         }
-
+        
         $this->addCommandSubject($subject);
 
         return $this->getCommand();

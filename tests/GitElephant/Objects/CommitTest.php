@@ -13,11 +13,9 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Commit;
-use \GitElephant\Command\ShowCommand;
-use \GitElephant\Command\MainCommand;
-use \GitElephant\Command\CommandContainer;
+use GitElephant\Command\MainCommand;
+use GitElephant\Command\ShowCommand;
+use GitElephant\TestCase;
 
 /**
  * CommitTest
@@ -28,7 +26,7 @@ use \GitElephant\Command\CommandContainer;
 class CommitTest extends TestCase
 {
     /**
-     * @var \GitElephant\Objects\Commit;
+     * @var \GitElephant\Objects\Commit ;
      */
     private $commit;
 
@@ -45,7 +43,7 @@ class CommitTest extends TestCase
     /**
      * commit tests
      */
-    public function testCommit()
+    public function testCommit(): void
     {
         $showCommand = new ShowCommand();
         $this->commit = Commit::pick($this->getRepository());
@@ -57,7 +55,7 @@ class CommitTest extends TestCase
         $this->assertInstanceOf('\GitElephant\Objects\Commit\Message', $this->commit->getMessage());
         $this->assertEquals('first commit', $this->commit->getMessage()->toString());
         $this->assertRegExp('/^\w{40}$/', $this->commit->getSha());
-        $this->assertEquals(array(), $this->commit->getParents());
+        $this->assertEquals([], $this->commit->getParents());
         $this->addFile('foo2');
         $mainCommand = new MainCommand();
         $this->getCaller()->execute($mainCommand->add());
@@ -71,16 +69,16 @@ class CommitTest extends TestCase
     /**
      * constructor regex test
      */
-    public function testCommitRegEx()
+    public function testCommitRegEx(): void
     {
-        $outputLines = array(
+        $outputLines = [
             "commit c277373174aa442af12a8e59de1812f3472c15f5",
             "tree 9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016",
             "author matt <matteog@gmail.com> 1326214449 +0100",
             "committer matt <matteog@gmail.com> 1326214449 +0100",
             "",
             "    first commit"
-        );
+        ];
 
         $mockRepo = $this->getMockRepository();
         $this->addOutputToMockRepo($mockRepo, $outputLines);
@@ -91,14 +89,14 @@ class CommitTest extends TestCase
         $this->assertEquals('matt', $committer->getName());
         $this->assertEquals('matt', $author->getName());
 
-        $outputLines = array(
+        $outputLines = [
             "commit c277373174aa442af12a8e59de1812f3472c15f5",
             "tree 9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016",
             "author matt jack <matteog@gmail.com> 1326214449 +0100",
             "committer matt jack <matteog@gmail.com> 1326214449 +0100",
             "",
             "    first commit"
-        );
+        ];
 
         $mockRepo = $this->getMockRepository();
         $this->addOutputToMockRepo($mockRepo, $outputLines);
@@ -121,16 +119,16 @@ class CommitTest extends TestCase
     /**
      * testCommitDate
      */
-    public function testCommitDate()
+    public function testCommitDate(): void
     {
-        $outputLines = array(
+        $outputLines = [
             "commit c277373174aa442af12a8e59de1812f3472c15f5",
             "tree c277373174aa442af12a8e59de1812f3472c15f6",
             "author John Doe <john.doe@example.org> 1326214449 +0100",
             "committer Jack Doe <jack.doe@example.org> 1326214449 +0100",
             "",
             "    First commit"
-        );
+        ];
 
         $mockRepo = $this->getMockRepository();
         $this->addOutputToMockRepo($mockRepo, $outputLines);
@@ -153,16 +151,16 @@ class CommitTest extends TestCase
     /**
      * testCreateFromOutputLines
      */
-    public function testCreateFromOutputLines()
+    public function testCreateFromOutputLines(): void
     {
-        $outputLines = array(
+        $outputLines = [
             "commit c277373174aa442af12a8e59de1812f3472c15f5",
             "tree 9d36a2d3c5d5bce9c6779a574ed2ba3d274d8016",
             "author John Doe <john.doe@example.org> 1326214000 +0100",
             "committer Jack Doe <jack.doe@example.org> 1326214100 +0100",
             "",
             "    Initial commit"
-        );
+        ];
 
         $commit = Commit::createFromOutputLines($this->getRepository(), $outputLines);
         $this->doCommitTest(
@@ -182,7 +180,7 @@ class CommitTest extends TestCase
     /**
      * testCreate
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');
@@ -194,7 +192,7 @@ class CommitTest extends TestCase
     /**
      * testGetDiff
      */
-    public function testGetDiff()
+    public function testGetDiff(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');
@@ -213,7 +211,7 @@ class CommitTest extends TestCase
         $this->assertCount(2, $diff);
     }
 
-    public function testRevParse()
+    public function testRevParse(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');
@@ -224,7 +222,7 @@ class CommitTest extends TestCase
         $this->assertEquals($commit->getSha(), $revParse[0]);
     }
 
-    public function testCommitWithoutTag()
+    public function testCommitWithoutTag(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');
@@ -233,7 +231,7 @@ class CommitTest extends TestCase
         $this->assertFalse($commit->tagged());
     }
 
-    public function testCommitWithTag()
+    public function testCommitWithTag(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');

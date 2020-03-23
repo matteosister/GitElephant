@@ -13,8 +13,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\BranchCommand;
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * BranchTest
@@ -41,7 +40,7 @@ class BranchCommandTest extends TestCase
      *
      * @covers GitElephant\Command\BranchCommand::create
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $branch = new BranchCommand();
         $this->assertEquals("branch 'test'", $branch->create('test'), 'create branch command');
@@ -58,7 +57,7 @@ class BranchCommandTest extends TestCase
      *
      * @covers GitElephant\Command\BranchCommand::listBranches
      */
-    public function testListBranches()
+    public function testListBranches(): void
     {
         $branch = new BranchCommand();
         $this->assertEquals($branch->listBranches(), "branch '-v' '--no-color' '--no-abbrev'");
@@ -71,7 +70,7 @@ class BranchCommandTest extends TestCase
      *
      * @covers GitElephant\Command\BranchCommand::lists
      */
-    public function testLists()
+    public function testLists(): void
     {
         $branch = new BranchCommand();
         $this->assertEquals($branch->lists(), "branch '-v' '--no-color' '--no-abbrev'");
@@ -82,7 +81,7 @@ class BranchCommandTest extends TestCase
     /**
      * testSingleInfo
      */
-    public function testSingleInfo()
+    public function testSingleInfo(): void
     {
         $bc = new BranchCommand();
         $this->assertEquals(
@@ -108,10 +107,18 @@ class BranchCommandTest extends TestCase
      *
      * @covers GitElephant\Command\BranchCommand::delete
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $branch = new BranchCommand();
-        $this->assertEquals("branch '-d' 'test-branch'", $branch->delete('test-branch'),       'list branch command without force');
-        $this->assertEquals("branch '-D' 'test-branch'", $branch->delete('test-branch', true), 'list branch command with force');
+        $this->assertEquals(
+            "branch '-d' 'test-branch'",
+            $branch->delete('test-branch'),
+            'list branch command without force'
+        );
+        $this->assertEquals(
+            "branch '-D' 'test-branch'",
+            $branch->delete('test-branch', true),
+            'list branch command with force'
+        );
     }
 }

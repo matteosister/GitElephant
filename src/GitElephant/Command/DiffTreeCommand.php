@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Commit;
-use \GitElephant\Repository;
+use GitElephant\Objects\Commit;
+use GitElephant\Repository;
 
 /**
  * DiffTreeCommand
@@ -31,12 +32,12 @@ use \GitElephant\Repository;
  */
 class DiffTreeCommand extends BaseCommand
 {
-    const DIFF_TREE_COMMAND = 'diff-tree';
+    public const DIFF_TREE_COMMAND = 'diff-tree';
 
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -53,7 +54,7 @@ class DiffTreeCommand extends BaseCommand
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function rootDiff(Commit $commit)
+    public function rootDiff(Commit $commit): string
     {
         if (!$commit->isRoot()) {
             throw new \InvalidArgumentException('rootDiff method accepts only root commits');

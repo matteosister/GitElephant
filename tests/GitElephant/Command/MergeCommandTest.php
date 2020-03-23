@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: matteo
  * Date: 28/05/13
@@ -8,7 +9,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * Class MergeCommandTest
@@ -32,23 +33,29 @@ class MergeCommandTest extends TestCase
     /**
      * testMerge
      */
-    public function testMerge()
+    public function testMerge(): void
     {
-        $mc     = MergeCommand::getInstance();
+        $mc = MergeCommand::getInstance();
         $branch = $this->getRepository()->getBranch('test');
         $this->assertEquals("merge 'refs/heads/test'", $mc->merge($branch));
         $this->assertEquals("merge '-m' 'test msg' 'refs/heads/test'", $mc->merge($branch, "test msg"));
-        $this->assertEquals("merge '--ff-only' '-m' 'test msg' 'refs/heads/test'", $mc->merge($branch, "test msg", array('--ff-only')));
-        $this->assertEquals("merge '--no-ff' '-m' 'test msg' 'refs/heads/test'", $mc->merge($branch, "test msg", array('--no-ff')));
+        $this->assertEquals(
+            "merge '--ff-only' '-m' 'test msg' 'refs/heads/test'",
+            $mc->merge($branch, "test msg", ['--ff-only'])
+        );
+        $this->assertEquals(
+            "merge '--no-ff' '-m' 'test msg' 'refs/heads/test'",
+            $mc->merge($branch, "test msg", ['--no-ff'])
+        );
     }
 
     /**
      * MergeCommand should throw an exception when both --ff-only and --no-ff flags were set.
      */
-    public function test_exception_when_calling_merge_with_conflicting_ff_arguments()
+    public function testExceptionWhenCallingMergeWithConflictingFfArguments(): void
     {
         $branch = $this->getRepository()->getBranch('test');
         $this->expectException(\Symfony\Component\Process\Exception\InvalidArgumentException::class);
-        MergeCommand::getInstance()->merge($branch, "test msg", array('--ff-only', '--no-ff'));
+        MergeCommand::getInstance()->merge($branch, "test msg", ['--ff-only', '--no-ff']);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -12,8 +13,7 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Remote;
+use GitElephant\TestCase;
 
 /**
  * Class RemoteTest
@@ -59,7 +59,7 @@ class RemoteTest extends TestCase
      *
      * @return string
      */
-    public function sampleRemoteVerbose()
+    public function sampleRemoteVerbose(): string
     {
         $name = $this->sampleRemoteShowRemoteName();
         $fetch = $this->sampleRemoteShowFetchURL();
@@ -78,7 +78,7 @@ EOM;
      *
      * @return string
      */
-    public function sampleRemoteShowFetchURL()
+    public function sampleRemoteShowFetchURL(): string
     {
         return 'git@foobar.baz:blurg/burpfetch.git';
     }
@@ -88,7 +88,7 @@ EOM;
      *
      * @return string
      */
-    public function sampleRemoteShowPushURL()
+    public function sampleRemoteShowPushURL(): string
     {
         return 'git@foobar.baz:blurg/burppush.git';
     }
@@ -98,7 +98,7 @@ EOM;
      *
      * @return string
      */
-    public function sampleRemoteShowRemoteName()
+    public function sampleRemoteShowRemoteName(): string
     {
         return 'delphi';
     }
@@ -108,7 +108,7 @@ EOM;
      *
      * @return string
      */
-    public function sampleRemoteShowRemoteHEAD()
+    public function sampleRemoteShowRemoteHEAD(): void
     {
         'Apollo';
     }
@@ -118,7 +118,7 @@ EOM;
      *
      * @return string
      */
-    public function sampleRemoteShow()
+    public function sampleRemoteShow(): string
     {
         $name = $this->sampleRemoteShowRemoteName();
         $fetch = $this->sampleRemoteShowFetchURL();
@@ -159,43 +159,43 @@ EOM;
      *
      * @return array
      */
-    public function sampleRemoteShowAsArray()
+    public function sampleRemoteShowAsArray(): array
     {
         return [
-            '11.30'                                => [
-                'pushes_to'   => '11.30',
+            '11.30' => [
+                'pushes_to' => '11.30',
                 'local_state' => '(local out of date)',
             ],
-            '11.30.6'                              => [
-                'pushes_to'          => '11.30.6',
-                'local_state'        => '(up to date)',
-                'merges_with'        => '11.30.6',
+            '11.30.6' => [
+                'pushes_to' => '11.30.6',
+                'local_state' => '(up to date)',
+                'merges_with' => '11.30.6',
                 'local_relationship' => 'tracked',
             ],
-            '11.32.0'                              => [
-                'pushes_to'          => '11.32.0',
-                'local_state'        => '(up to date)',
-                'merges_with'        => '11.32.0',
+            '11.32.0' => [
+                'pushes_to' => '11.32.0',
+                'local_state' => '(up to date)',
+                'merges_with' => '11.32.0',
                 'local_relationship' => 'tracked',
             ],
-            '11.32'                                => [
-                'pushes_to'          => '11.32',
-                'local_state'        => '(local out of date)',
+            '11.32' => [
+                'pushes_to' => '11.32',
+                'local_state' => '(local out of date)',
                 'local_relationship' => 'tracked',
             ],
-            '11.40'                                => [
-                'pushes_to'          => '11.40',
-                'merges_with'        => '11.40',
-                'local_state'        => '(local out of date)',
+            '11.40' => [
+                'pushes_to' => '11.40',
+                'merges_with' => '11.40',
+                'local_state' => '(local out of date)',
                 'local_relationship' => 'tracked',
             ],
-            'master'                               => [
-                'pushes_to'          => 'master',
-                'local_state'        => '(up to date)',
-                'merges_with'        => 'master',
+            'master' => [
+                'pushes_to' => 'master',
+                'local_state' => '(up to date)',
+                'merges_with' => 'master',
                 'local_relationship' => 'tracked',
             ],
-            'pbi_4371'                             => [
+            'pbi_4371' => [
                 'local_relationship' => 'tracked',
             ],
             'refs/remotes/upstream/58120-squashed' => [
@@ -207,7 +207,7 @@ EOM;
     /**
      * test name getter
      */
-    public function testGetName()
+    public function testGetName(): void
     {
         $sample = $this->sampleRemoteShow();
         $output = explode("\n", $sample);
@@ -221,7 +221,7 @@ EOM;
     /**
      * test name setter
      */
-    public function testSetName()
+    public function testSetName(): void
     {
         $expected = 'foobar';
         $remote = new Remote($this->getRepository());
@@ -233,7 +233,7 @@ EOM;
     /**
      * test fetch URL getter
      */
-    public function testGetFetchURL()
+    public function testGetFetchURL(): void
     {
         $sample = $this->sampleRemoteShow();
         $output = explode("\n", $sample);
@@ -247,7 +247,7 @@ EOM;
     /**
      * test fetch URL setter
      */
-    public function testSetFetchURL()
+    public function testSetFetchURL(): void
     {
         $expected = 'foobar';
         $remote = new Remote($this->getRepository());
@@ -259,7 +259,7 @@ EOM;
     /**
      * test push URL getter
      */
-    public function testGetPushURL()
+    public function testGetPushURL(): void
     {
         $sample = $this->sampleRemoteShow();
         $output = explode("\n", $sample);
@@ -277,7 +277,7 @@ EOM;
     /**
      * test push URL setter
      */
-    public function testSetPushURL()
+    public function testSetPushURL(): void
     {
         $expected = 'foobar';
         $remote = new Remote($this->getRepository());
@@ -289,7 +289,7 @@ EOM;
     /**
      * test remote HEAD branch getter
      */
-    public function testGetRemoteHEAD()
+    public function testGetRemoteHEAD(): void
     {
         $sample = $this->sampleRemoteShow();
         $output = explode("\n", $sample);
@@ -307,7 +307,7 @@ EOM;
     /**
      * test remote HEAD branch setter
      */
-    public function testSetRemoteHEAD()
+    public function testSetRemoteHEAD(): void
     {
         $expected = 'foobar';
         $remote = new Remote($this->getRepository());
@@ -319,7 +319,7 @@ EOM;
     /**
      * test branch detail parsing
      */
-    public function testParseOutputLines()
+    public function testParseOutputLines(): void
     {
         $sample = $this->sampleRemoteShow();
         $output = explode("\n", $sample);
@@ -383,7 +383,7 @@ EOM;
      * is flawed.  However, it should do the trick so other tests
      * that depend on the double will have supporting test data/failures
      */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $obj = $this->getMockRemote();
         $this->assertInstanceOf(Remote::class, $obj);
@@ -392,12 +392,12 @@ EOM;
     /**
      * verify name is produced with cast to a string
      */
-    public function testToString()
+    public function testToString(): void
     {
         $obj = $this->getMockRemote();
         $this->assertEquals(
             $this->sampleRemoteShowRemoteName(),
-            (string)$obj,
+            (string) $obj,
             'magic to string method provides the remote name'
         );
     }
@@ -406,7 +406,7 @@ EOM;
      * verify that we always get an array, even if empty, when getting
      * data from the underlying implementation
      */
-    public function testGetVerboseOutputReturnArray()
+    public function testGetVerboseOutputReturnArray(): void
     {
         $remote = new Remote($this->getRepository());
         $actual = $remote->getVerboseOutput();
@@ -417,7 +417,7 @@ EOM;
      * verify that we always get an array, even if empty, when getting
      * data from the underlying implementation
      */
-    public function testGetShowOutputReturnArray()
+    public function testGetShowOutputReturnArray(): void
     {
         $remote = new Remote($this->getRepository());
         $actual = $remote->getShowOutput();

@@ -13,8 +13,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\BranchCommand;
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * BranchTest
@@ -41,7 +40,7 @@ class CatFileCommandTest extends TestCase
     /**
      * CatFileCommand::content()
      */
-    public function testContent()
+    public function testContent(): void
     {
         $cfc = new CatFileCommand();
         $master = $this->getRepository()->getBranch('master');

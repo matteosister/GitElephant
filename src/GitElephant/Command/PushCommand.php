@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -17,24 +18,23 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\Remote;
-use \GitElephant\Repository;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\Remote;
+use GitElephant\Repository;
 
 /**
  * Class PushCommand
  */
 class PushCommand extends BaseCommand
 {
-    const GIT_PUSH_COMMAND = 'push';
+    public const GIT_PUSH_COMMAND = 'push';
 
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -49,20 +49,22 @@ class PushCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function push($remote = 'origin', $branch = 'master', string $args = null)
+    public function push($remote = 'origin', $branch = 'master', string $args = null): string
     {
+        $this->clearAll();
+
         if ($remote instanceof Remote) {
             $remote = $remote->getName();
         }
         if ($branch instanceof Branch) {
             $branch = $branch->getName();
         }
-        $this->clearAll();
+
         $this->addCommandName(self::GIT_PUSH_COMMAND);
         $this->addCommandSubject($remote);
         $this->addCommandSubject2($branch);
-
-        if(!is_null($args)) {
+        
+        if (!is_null($args)) {
             $this->addCommandArgument($args);
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,10 +20,10 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\NodeObject;
-use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Repository;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\NodeObject;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * Log command generator
@@ -32,12 +33,12 @@ use \GitElephant\Repository;
  */
 class LogCommand extends BaseCommand
 {
-    const GIT_LOG = 'log';
+    public const GIT_LOG = 'log';
 
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -56,7 +57,7 @@ class LogCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function showObjectLog(NodeObject $obj, $branch = null, $limit = null, $offset = null)
+    public function showObjectLog(NodeObject $obj, $branch = null, int $limit = null, int $offset = null): string
     {
         $subject = null;
         if (null !== $branch) {
@@ -78,12 +79,12 @@ class LogCommand extends BaseCommand
      *                                                                  repository root
      * @param int|null                                     $limit       limit to n entries
      * @param int|null                                     $offset      skip n entries
-     * @param boolean|false                                $firstParent skip commits brought in to branch by a merge
+     * @param bool                                         $firstParent skip commits brought in to branch by a merge
      *
      * @throws \RuntimeException
      * @return string
      */
-    public function showLog($ref, $path = null, $limit = null, $offset = null, $firstParent = false)
+    public function showLog($ref, $path = null, $limit = null, int $offset = null, bool $firstParent = false): string
     {
         $this->clearAll();
 
@@ -102,7 +103,7 @@ class LogCommand extends BaseCommand
             $this->addCommandArgument('--skip=' . $offset);
         }
 
-        if (true === $firstParent) {
+        if ($firstParent) {
             $this->addCommandArgument('--first-parent');
         }
 
@@ -113,7 +114,7 @@ class LogCommand extends BaseCommand
         if (null !== $path && !empty($path)) {
             $this->addPath($path);
         }
-
+        
         $this->addCommandSubject($ref);
 
         return $this->getCommand();

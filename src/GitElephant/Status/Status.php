@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,9 +20,9 @@
 
 namespace GitElephant\Status;
 
-use \GitElephant\Command\MainCommand;
-use \GitElephant\Repository;
-use \PhpCollection\Sequence;
+use GitElephant\Command\MainCommand;
+use GitElephant\Repository;
+use PhpCollection\Sequence;
 
 /**
  * Class Status
@@ -42,7 +43,7 @@ class Status
 
     /**
      * Private constructor in order to follow the singleton pattern
-     * 
+     *
      * @param Repository $repository
      *
      * @throws \RuntimeException
@@ -68,7 +69,7 @@ class Status
     /**
      * create from git command
      */
-    private function createFromCommand()
+    private function createFromCommand(): void
     {
         $command = MainCommand::getInstance($this->repository)->status(true);
         $lines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
@@ -80,7 +81,7 @@ class Status
      *
      * @return Sequence
      */
-    public function all()
+    public function all(): \PhpCollection\Sequence
     {
         return new Sequence($this->files);
     }
@@ -90,7 +91,7 @@ class Status
      *
      * @return Sequence
      */
-    public function untracked()
+    public function untracked(): \PhpCollection\Sequence
     {
         return $this->filterByType(StatusFile::UNTRACKED);
     }
@@ -100,7 +101,7 @@ class Status
      *
      * @return Sequence
      */
-    public function modified()
+    public function modified(): \PhpCollection\Sequence
     {
         return $this->filterByType(StatusFile::MODIFIED);
     }
@@ -110,7 +111,7 @@ class Status
      *
      * @return Sequence
      */
-    public function added()
+    public function added(): \PhpCollection\Sequence
     {
         return $this->filterByType(StatusFile::ADDED);
     }
@@ -120,7 +121,7 @@ class Status
      *
      * @return Sequence
      */
-    public function deleted()
+    public function deleted(): \PhpCollection\Sequence
     {
         return $this->filterByType(StatusFile::DELETED);
     }
@@ -130,7 +131,7 @@ class Status
      *
      * @return Sequence
      */
-    public function renamed()
+    public function renamed(): \PhpCollection\Sequence
     {
         return $this->filterByType(StatusFile::RENAMED);
     }
@@ -140,7 +141,7 @@ class Status
      *
      * @return Sequence
      */
-    public function copied()
+    public function copied(): \PhpCollection\Sequence
     {
         return $this->filterByType(StatusFile::COPIED);
     }
@@ -152,7 +153,7 @@ class Status
      *
      * @param array $lines
      */
-    private function parseOutputLines(array $lines)
+    private function parseOutputLines(array $lines): void
     {
         foreach ($lines as $line) {
             preg_match('/([MADRCU\? ])?([MADRCU\? ])?\ "?(\S+)"? ?( -> )?(\S+)?/', $line, $matches);
@@ -183,7 +184,7 @@ class Status
      *
      * @return Sequence
      */
-    protected function filterByType(string $type)
+    protected function filterByType(string $type): \PhpCollection\Sequence
     {
         if (!$this->files) {
             return new Sequence();

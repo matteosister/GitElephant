@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -33,7 +34,7 @@ interface CallerInterface
      *
      * @return CallerInterface
      */
-    public function execute($cmd, $git = true, $cwd = null);
+    public function execute(string $cmd, bool $git = true, string $cwd = null): CallerInterface;
 
     /**
      * after calling execute this method should return the output
@@ -42,19 +43,19 @@ interface CallerInterface
      *
      * @return array
      */
-    public function getOutputLines($stripBlankLines = false);
+    public function getOutputLines(bool $stripBlankLines = false): array;
 
     /**
      * Get the binary path
      *
      * @return string
      */
-    public function getBinaryPath();
+    public function getBinaryPath(): string;
 
     /**
      * Get the binary version
      *
      * @return string
      */
-    public function getBinaryVersion();
+    public function getBinaryVersion(): string;
 }

@@ -13,8 +13,7 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Author;
+use GitElephant\TestCase;
 
 /**
  * AuthorTest
@@ -27,7 +26,7 @@ class AuthorTest extends TestCase
     /**
      * testAuthor
      */
-    public function testAuthor()
+    public function testAuthor(): void
     {
         $author = new Author();
         $author->setEmail('foo@bar.com');

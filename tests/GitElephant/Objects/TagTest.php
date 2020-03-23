@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: matteo
  * Date: 28/10/12
@@ -9,15 +10,14 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Tag;
+use GitElephant\TestCase;
 
 class TagTest extends TestCase
 {
     /**
      * testTag
      */
-    public function testTag()
+    public function testTag(): void
     {
         $this->getRepository()->init();
         $this->addFile('foo');
@@ -33,7 +33,7 @@ class TagTest extends TestCase
     /**
      * testTagFromStartPoint
      */
-    public function testTagFromStartPoint()
+    public function testTagFromStartPoint(): void
     {
         $this->getRepository()->init();
         $this->addFile('foo');
@@ -51,20 +51,20 @@ class TagTest extends TestCase
     /**
      * testNonExistentTag
      */
-    public function testNonExistentTag()
+    public function testNonExistentTag(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->getRepository()->init();
         $this->addFile('foo');
         $this->getRepository()->commit('commit1', true);
         $this->getRepository()->createTag('test-tag');
-        $tag = new Tag($this->getRepository(), 'test-tag-non-existent');
+        new Tag($this->getRepository(), 'test-tag-non-existent');
     }
 
     /**
      * testCreate
      */
-    public function testCreate()
+    public function testCreate(): void
     {
         $this->getRepository()->init();
         $this->addFile('test');

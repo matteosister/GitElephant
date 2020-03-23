@@ -13,9 +13,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\DiffTreeCommand;
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Commit;
+use GitElephant\TestCase;
 
 /**
  * DiffTreeCommandTest
@@ -39,7 +37,7 @@ class DiffTreeCommandTest extends TestCase
     /**
      * set up
      */
-    public function testRootDiff()
+    public function testRootDiff(): void
     {
         $dtc = DiffTreeCommand::getInstance();
         $commit = $this->getRepository()->getCommit();

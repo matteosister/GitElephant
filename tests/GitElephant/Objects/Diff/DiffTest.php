@@ -13,19 +13,7 @@
 
 namespace GitElephant\Objects\Diff;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Diff\Diff,
-    \GitElephant\Objects\Diff\DiffObject,
-    \GitElephant\Objects\Diff\DiffChunk,
-    \GitElephant\Objects\Diff\DiffChunkLine,
-    \GitElephant\Objects\Diff\DiffChunkLineAdded,
-    \GitElephant\Objects\Diff\DiffChunkLineDeleted,
-    \GitElephant\Objects\Diff\DiffChunkLineUnchanged,
-    \GitElephant\Objects\Commit;
-
-use \GitElephant\Command\MainCommand,
-    \GitElephant\Command\DiffCommand,
-    \GitElephant\Command\ShowCommand;
+use GitElephant\TestCase;
 
 /**
  * DiffTest
@@ -40,11 +28,8 @@ class DiffTest extends TestCase
         $this->initRepository();
     }
 
-    public function testDiff()
+    public function testDiff(): void
     {
-        $mainCommand = new MainCommand();
-        $diffCommand = new DiffCommand();
-
         $this->getRepository()->init();
         $this->addFile('foo', null, "content line 1\ncontent line 2\ncontent line 3");
         $this->getRepository()->commit('commit1', true);
@@ -70,7 +55,7 @@ class DiffTest extends TestCase
         }
     }
 
-    private function assertArrayInterfaces($obj)
+    private function assertArrayInterfaces($obj): void
     {
         $this->assertInstanceOf('\Iterator', $obj);
         $this->assertInstanceOf('\Countable', $obj);

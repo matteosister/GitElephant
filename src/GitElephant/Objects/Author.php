@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -45,7 +46,7 @@ class Author
      *
      * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->name . ' <' . $this->email . '>';
     }
@@ -55,7 +56,7 @@ class Author
      *
      * @param string $email the email
      */
-    public function setEmail(string $email)
+    public function setEmail(string $email): void
     {
         $this->email = $email;
     }
@@ -65,7 +66,7 @@ class Author
      *
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -75,7 +76,7 @@ class Author
      *
      * @param string $name the author name
      */
-    public function setName(string $name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -85,7 +86,7 @@ class Author
      *
      * @return mixed
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }

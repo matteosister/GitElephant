@@ -13,8 +13,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\LogCommand;
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * DiffTreeCommandTest
@@ -40,7 +39,7 @@ class LogCommandTest extends TestCase
     /**
      * testShowObjectLog
      */
-    public function testShowObjectLog()
+    public function testShowObjectLog(): void
     {
         $branch = $this->getRepository()->getBranch('master');
         $obj = $this->getRepository()->getTree('HEAD', 'test-folder/test-file')->getBlob();

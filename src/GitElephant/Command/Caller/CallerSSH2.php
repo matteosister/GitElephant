@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -18,8 +19,6 @@
  */
 
 namespace GitElephant\Command\Caller;
-
-use GitElephant\Command\Caller\AbstractCaller;
 
 /**
  * Caller via ssh2 PECL extension
@@ -56,7 +55,7 @@ class CallerSSH2 extends AbstractCaller
      *
      * @return CallerInterface
      */
-    public function execute($cmd, $git = true, $cwd = null)
+    public function execute($cmd, $git = true, $cwd = null): \GitElephant\Command\Caller\CallerInterface
     {
         if ($git) {
             $cmd = $this->getBinaryPath() . ' ' . $cmd;
@@ -71,5 +70,4 @@ class CallerSSH2 extends AbstractCaller
 
         return $this;
     }
-
 }

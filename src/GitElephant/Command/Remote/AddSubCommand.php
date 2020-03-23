@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command\Remote;
 
-use \GitElephant\Command\SubCommandCommand;
-use \GitElephant\Repository;
+use GitElephant\Command\SubCommandCommand;
+use GitElephant\Repository;
 
 /**
  * Class AddRemoteCommand
@@ -33,18 +34,18 @@ use \GitElephant\Repository;
 
 class AddSubCommand extends SubCommandCommand
 {
-    const GIT_REMOTE_ADD = 'add';
-    const GIT_REMOTE_ADD_OPTION_FETCH = '-f';
-    const GIT_REMOTE_ADD_OPTION_TAGS = '--tags';
-    const GIT_REMOTE_ADD_OPTION_NOTAGS = '--no-tags';
-    const GIT_REMOTE_ADD_OPTION_MIRROR = '--mirror';
-    const GIT_REMOTE_ADD_OPTION_SETHEAD = '-m';
-    const GIT_REMOTE_ADD_OPTION_TRACK = '-t';
+    public const GIT_REMOTE_ADD = 'add';
+    public const GIT_REMOTE_ADD_OPTION_FETCH = '-f';
+    public const GIT_REMOTE_ADD_OPTION_TAGS = '--tags';
+    public const GIT_REMOTE_ADD_OPTION_NOTAGS = '--no-tags';
+    public const GIT_REMOTE_ADD_OPTION_MIRROR = '--mirror';
+    public const GIT_REMOTE_ADD_OPTION_SETHEAD = '-m';
+    public const GIT_REMOTE_ADD_OPTION_TRACK = '-t';
 
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -57,13 +58,13 @@ class AddSubCommand extends SubCommandCommand
      *
      * @return array Array of all value-required options
      */
-    public function addCmdValueOptions()
+    public function addCmdValueOptions(): array
     {
-        return array(
+        return [
             self::GIT_REMOTE_ADD_OPTION_TRACK => self::GIT_REMOTE_ADD_OPTION_TRACK,
             self::GIT_REMOTE_ADD_OPTION_MIRROR => self::GIT_REMOTE_ADD_OPTION_MIRROR,
             self::GIT_REMOTE_ADD_OPTION_SETHEAD => self::GIT_REMOTE_ADD_OPTION_SETHEAD,
-        );
+        ];
     }
 
     /**
@@ -71,13 +72,13 @@ class AddSubCommand extends SubCommandCommand
      *
      * @return array
      */
-    public function addCmdSwitchOptions()
+    public function addCmdSwitchOptions(): array
     {
-        return array(
+        return [
             self::GIT_REMOTE_ADD_OPTION_TAGS => self::GIT_REMOTE_ADD_OPTION_TAGS,
             self::GIT_REMOTE_ADD_OPTION_NOTAGS => self::GIT_REMOTE_ADD_OPTION_NOTAGS,
             self::GIT_REMOTE_ADD_OPTION_FETCH => self::GIT_REMOTE_ADD_OPTION_FETCH,
-        );
+        ];
     }
 
     /**
@@ -89,14 +90,14 @@ class AddSubCommand extends SubCommandCommand
      *
      * @return string
      */
-    public function prepare($name, $url, $options = array())
+    public function prepare($name, $url, $options = []): self
     {
         $options = $this->normalizeOptions(
             $options,
             $this->addCmdSwitchOptions(),
             $this->addCmdValueOptions()
         );
-
+        
         $this->addCommandName(self::GIT_REMOTE_ADD);
         $this->addCommandSubject($name);
         $this->addCommandSubject($url);

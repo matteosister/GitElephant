@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,9 +20,9 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Tag;
-use \GitElephant\Objects\Commit;
-use \GitElephant\Repository;
+use GitElephant\Objects\Commit;
+use GitElephant\Objects\Tag;
+use GitElephant\Repository;
 
 /**
  * RevList Command generator
@@ -30,12 +31,12 @@ use \GitElephant\Repository;
  */
 class RevListCommand extends BaseCommand
 {
-    const GIT_REVLIST = 'rev-list';
+    public const GIT_REVLIST = 'rev-list';
 
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -51,7 +52,7 @@ class RevListCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function getTagCommit(Tag $tag)
+    public function getTagCommit(Tag $tag): string
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_REVLIST);
@@ -71,7 +72,7 @@ class RevListCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function commitPath(Commit $commit, $max = 1000)
+    public function commitPath(Commit $commit, $max = 1000): string
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_REVLIST);

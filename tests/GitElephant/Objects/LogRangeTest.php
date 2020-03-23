@@ -13,10 +13,7 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Repository;
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Log;
-use \GitElephant\Command\LogCommand;
+use GitElephant\TestCase;
 
 /**
  * LogRangeTest
@@ -61,7 +58,7 @@ class LogRangeTest extends TestCase
         $this->secondCommit = $log[8];
     }
 
-    public function testCreateFromCommand()
+    public function testCreateFromCommand(): void
     {
         $logRange = new LogRange($this->getRepository(0), $this->firstCommit, $this->lastCommit);
         $this->assertInstanceOf('\ArrayAccess', $logRange);
@@ -69,20 +66,20 @@ class LogRangeTest extends TestCase
         $this->assertInstanceOf('\Iterator', $logRange);
     }
 
-    public function testToArray()
+    public function testToArray(): void
     {
         $logRange = new LogRange($this->getRepository(0), $this->firstCommit, $this->lastCommit);
         $this->assertIsArray($logRange->toArray());
         $this->assertCount(9, $logRange->toArray());
     }
 
-    public function testIndex()
+    public function testIndex(): void
     {
         $logRange = new LogRange($this->getRepository(0), $this->firstCommit, $this->lastCommit);
         $this->assertEquals($this->lastCommit, $logRange->index(0));
     }
 
-    public function testArrayAccess()
+    public function testArrayAccess(): void
     {
         $logRange = new LogRange($this->getRepository(0), $this->firstCommit, $this->lastCommit);
         $this->assertEquals($this->lastCommit, $logRange->first());
@@ -102,7 +99,7 @@ class LogRangeTest extends TestCase
     /**
      * testExceptionOnSet
      */
-    public function testExceptionOnSet()
+    public function testExceptionOnSet(): void
     {
         $this->expectException(\RuntimeException::class);
         $logRange = new LogRange($this->getRepository(0), $this->firstCommit, $this->lastCommit);
@@ -112,7 +109,7 @@ class LogRangeTest extends TestCase
     /**
      * testExceptionOnUnSet
      */
-    public function testExceptionOnUnset()
+    public function testExceptionOnUnset(): void
     {
         $this->expectException(\RuntimeException::class);
         $logRange = new LogRange($this->getRepository(0), $this->firstCommit, $this->lastCommit);

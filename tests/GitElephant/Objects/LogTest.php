@@ -13,9 +13,8 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Log;
-use \GitElephant\Command\LogCommand;
+use GitElephant\Command\LogCommand;
+use GitElephant\TestCase;
 
 /**
  * LogTest
@@ -40,7 +39,7 @@ class LogTest extends TestCase
     /**
      * testLogCountable
      */
-    public function testLogCountable()
+    public function testLogCountable(): void
     {
         $log = $this->getRepository()->getLog();
         $this->assertEquals($log->count(), count($log));
@@ -49,7 +48,7 @@ class LogTest extends TestCase
     /**
      * parents created by log
      */
-    public function testParents()
+    public function testParents(): void
     {
         $log = $this->getRepository()->getLog();
         $lastCommit = $this->repository->getCommit();
@@ -74,7 +73,7 @@ class LogTest extends TestCase
     /**
      * testLogCountLimit
      */
-    public function testLogCountLimit()
+    public function testLogCountLimit(): void
     {
         $log = $this->getRepository()->getLog();
         $this->assertEquals(10, $log->count());
@@ -107,7 +106,7 @@ class LogTest extends TestCase
     /**
      * testLogOffset
      */
-    public function testLogOffset()
+    public function testLogOffset(): void
     {
         $log = $this->getRepository()->getLog('HEAD', null, 15, 0);
         $this->assertEquals(10, $log->count());
@@ -125,7 +124,7 @@ class LogTest extends TestCase
     /**
      * testLogIndex
      */
-    public function testLogIndex()
+    public function testLogIndex(): void
     {
         $log = $this->getRepository()->getLog();
 
@@ -138,7 +137,7 @@ class LogTest extends TestCase
     /**
      * testLogToArray
      */
-    public function testLogToArray()
+    public function testLogToArray(): void
     {
         $log = $this->getRepository()->getLog();
 
@@ -150,23 +149,25 @@ class LogTest extends TestCase
     /**
      * testObjectLog
      */
-    public function testObjectLog()
+    public function testObjectLog(): void
     {
         $tree = $this->getRepository()->getTree();
         $file = $tree[0];
+
+        $this->assertInstanceOf(TreeObject::class, $file);
     }
 
     /**
      * testLogCreatedFromOutputLines
      */
-    public function testLogCreatedFromOutputLines()
+    public function testLogCreatedFromOutputLines(): void
     {
         $tree = $this->getRepository()->getTree();
         $obj = $tree[count($tree) - 1];
         $logCommand = new LogCommand();
         $command = $logCommand->showObjectLog($obj);
         $log = Log::createFromOutputLines($this->getRepository(), $this->caller->execute($command)->getOutputLines());
-        $this->assertInstanceOf('GitElephant\Objects\Log', $log);
+        $this->assertInstanceOf(Log::class, $log);
         $this->assertCount(1, $log);
     }
 }

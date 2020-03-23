@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -17,24 +18,23 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\Remote;
-use \GitElephant\Repository;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\Remote;
+use GitElephant\Repository;
 
 /**
  * Class PullCommand
  */
 class PullCommand extends BaseCommand
 {
-    const GIT_PULL_COMMAND = 'pull';
+    public const GIT_PULL_COMMAND = 'pull';
 
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -50,7 +50,7 @@ class PullCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function pull($remote = null, $branch = null, $rebase = false)
+    public function pull($remote = null, $branch = null, $rebase = false): string
     {
         if ($remote instanceof Remote) {
             $remote = $remote->getName();

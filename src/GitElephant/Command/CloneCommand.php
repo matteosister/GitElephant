@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -29,7 +30,7 @@ use GitElephant\Repository;
  */
 class CloneCommand extends BaseCommand
 {
-    const GIT_CLONE_COMMAND = 'clone';
+    public const GIT_CLONE_COMMAND = 'clone';
 
     /**
      * constructor
@@ -54,10 +55,15 @@ class CloneCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string command
      */
-    public function cloneUrl(string $url, string $to = null, string $repoReference = null, int $depth = null, bool $recursive = false)
-    {
+    public function cloneUrl(
+        string $url,
+        string $to = null,
+        string $repoReference = null,
+        int $depth = null,
+        bool $recursive = false
+    ): string {
         // get binary version before reset
-        $v = $this->getBinaryVersion();
+        $version = $this->getBinaryVersion();
 
         $this->clearAll();
         $this->addCommandName(static::GIT_CLONE_COMMAND);
@@ -68,9 +74,9 @@ class CloneCommand extends BaseCommand
 
         if (null !== $repoReference) {
             // git documentation says the --branch was added in 2.0.0, but it exists undocumented at least back to 1.8.3.1
-            if (version_compare($v, '1.8.3.1', '<')) {
+            if (version_compare($version, '1.8.3.1', '<')) {
                 throw new \RuntimeException(
-                    'Please upgrade to git v1.8.3.1 or newer to support cloning a specific branch. You have ' . $v . '.'
+                    'Please upgrade to git v1.8.3.1 or newer to support cloning a specific branch. You have ' . $version . '.'
                 );
             }
             $this->addCommandArgument('--branch=' . $repoReference);
@@ -80,11 +86,11 @@ class CloneCommand extends BaseCommand
             $this->addCommandArgument('--depth=' . $depth);
             // shallow-submodules is a nice to have feature. Just ignoring if git version not high enough
             // It would be nice if this had a logger injected for us to log notices
-            if (version_compare($v, '2.9.0', '>=') && $recursive && 1 == $depth) {
+            if (version_compare($version, '2.9.0', '>=') && $recursive && 1 == $depth) {
                 $this->addCommandArgument('--shallow-submodules');
             }
         }
-
+        
         if ($recursive) {
             $this->addCommandArgument('--recursive');
         }

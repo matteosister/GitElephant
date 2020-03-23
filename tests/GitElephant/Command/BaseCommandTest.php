@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: matteo
  * Date: 20/05/13
@@ -8,8 +9,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\TestCase;
-use \ReflectionClass;
+use GitElephant\TestCase;
 
 /**
  * Class BaseCommandTest
@@ -23,7 +23,7 @@ class BaseCommandTest extends TestCase
      *
      * @covers GitElephant\Command\BaseCommand::__construct
      */
-    public function testConstructor()
+    public function testConstructor(): void
     {
         $bc1 = new BaseCommand();
         $this->assertInstanceOf("\\GitElephant\\Command\\BaseCommand", $bc1);
@@ -65,13 +65,13 @@ class BaseCommandTest extends TestCase
      *
      * @covers GitElephant\Command\BaseCommand::getInstance
      */
-    public function testGetInstance()
+    public function testGetInstance(): void
     {
         $bc = BaseCommand::getInstance();
         $this->assertInstanceOf("\\GitElephant\\Command\\BaseCommand", $bc);
     }
 
-    public function testAddGlobalConfigs()
+    public function testAddGlobalConfigs(): void
     {
         $configs = ['one' => 1, 'two' => 2, 'three' => 3];
         $bc = BaseCommand::getInstance();
@@ -87,7 +87,7 @@ class BaseCommandTest extends TestCase
         $this->assertSame($configs, $ref_bc_cfg_prop->getValue($bc));
     }
 
-    public function testAddGlobalOptions()
+    public function testAddGlobalOptions(): void
     {
         $options = ['one' => 1, 'two' => 2, 'three' => 3];
         $bc = BaseCommand::getInstance();
@@ -103,7 +103,7 @@ class BaseCommandTest extends TestCase
         $this->assertSame($options, $ref_bc_opt_prop->getValue($bc));
     }
 
-    public function testAddGlobalCommandArguments()
+    public function testAddGlobalCommandArguments(): void
     {
         $arguments = ['one', 'two', 'three'];
         $bc = BaseCommand::getInstance();
@@ -121,7 +121,7 @@ class BaseCommandTest extends TestCase
         $this->assertSame($arguments, $ref_bc_arg_prop->getValue($bc));
     }
 
-    public function testGetCommand()
+    public function testGetCommand(): void
     {
         $name = 'command';
         $bc = BaseCommand::getInstance();
@@ -142,14 +142,14 @@ class BaseCommandTest extends TestCase
     /**
      * testGetCommandException
      */
-    public function testGetCommandException()
+    public function testGetCommandException(): void
     {
         $bc = BaseCommand::getInstance();
         $this->expectException('RuntimeException');
         $this->fail($bc->getCommand());
     }
 
-    public function testGetCLICommandArguments()
+    public function testGetCLICommandArguments(): void
     {
         $args = ['--first', '--second', '--third'];
         $bc = BaseCommand::getInstance();
@@ -170,7 +170,7 @@ class BaseCommandTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGetCLICommandName()
+    public function testGetCLICommandName(): void
     {
         $name = 'command';
         $bc = BaseCommand::getInstance();
@@ -188,7 +188,7 @@ class BaseCommandTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGetCLIConfigs()
+    public function testGetCLIConfigs(): void
     {
         $globals = ['global.first' => 'a', 'global.second' => 'b'];
         $locals = ['local.first' => 'c', 'local.second' => 'd'];
@@ -216,7 +216,7 @@ class BaseCommandTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGetCLIGlobalOptions()
+    public function testGetCLIGlobalOptions(): void
     {
         $options = ['first' => 'a', 'second' => 'b', 'third' => 'c'];
         $bc = BaseCommand::getInstance();
@@ -237,7 +237,7 @@ class BaseCommandTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGetCLIPath()
+    public function testGetCLIPath(): void
     {
         $path = '/path/to/something';
         $bc = BaseCommand::getInstance();
@@ -255,7 +255,7 @@ class BaseCommandTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGetCLISubjects()
+    public function testGetCLISubjects(): void
     {
         $subject1 = 'first';
         $subject2 = 'second';
@@ -278,7 +278,7 @@ class BaseCommandTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
-    public function testGetBinaryVersion()
+    public function testGetBinaryVersion(): void
     {
         $repo = $this->getRepository();
         $bc = BaseCommand::getInstance($repo);

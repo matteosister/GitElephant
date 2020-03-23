@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: matteo
  * Date: 06/06/13
@@ -8,7 +9,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * Class MvCommandTest
@@ -32,7 +33,7 @@ class MvCommandTest extends TestCase
     /**
      * testRename
      */
-    public function testRename()
+    public function testRename(): void
     {
         $mc = MvCommand::getInstance();
         $this->assertEquals("mv '-k' 'a' 'b'", $mc->rename('a', 'b'));

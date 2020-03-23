@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,7 +20,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Repository;
+use GitElephant\Repository;
 
 /**
  * Submodule command generator
@@ -28,18 +29,18 @@ use \GitElephant\Repository;
  */
 class SubmoduleCommand extends BaseCommand
 {
-    const SUBMODULE_COMMAND          = 'submodule';
-    const SUBMODULE_ADD_COMMAND      = 'add';
-    const SUBMODULE_INIT_COMMAND     = 'init';
-    const SUBMODULE_UPDATE_COMMAND   = 'update';
-    const SUBMODULE_OPTION_FORCE     = '--force';
-    const SUBMODULE_OPTION_INIT      = '--init';
-    const SUBMODULE_OPTION_RECURSIVE = '--recursive';
+    public const SUBMODULE_COMMAND = 'submodule';
+    public const SUBMODULE_ADD_COMMAND = 'add';
+    public const SUBMODULE_INIT_COMMAND = 'init';
+    public const SUBMODULE_UPDATE_COMMAND = 'update';
+    public const SUBMODULE_OPTION_FORCE = '--force';
+    public const SUBMODULE_OPTION_INIT = '--init';
+    public const SUBMODULE_OPTION_RECURSIVE = '--recursive';
 
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -56,7 +57,7 @@ class SubmoduleCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function add($gitUrl, $path = null)
+    public function add($gitUrl, $path = null): string
     {
         $this->clearAll();
         $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_ADD_COMMAND));
@@ -75,7 +76,7 @@ class SubmoduleCommand extends BaseCommand
      *
      * @return string
      */
-    public function init($path = null)
+    public function init($path = null): string
     {
         $this->clearAll();
         $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_INIT_COMMAND));
@@ -92,7 +93,7 @@ class SubmoduleCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function listSubmodules()
+    public function listSubmodules(): string
     {
         $this->clearAll();
         $this->addCommandName(self::SUBMODULE_COMMAND);
@@ -110,7 +111,7 @@ class SubmoduleCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function lists()
+    public function lists(): string
     {
         return $this->listSubmodules();
     }
@@ -125,17 +126,21 @@ class SubmoduleCommand extends BaseCommand
      *
      * @return string
      */
-    public function update($recursive = false, $init = false, $force = false, $path = null)
-    {
+    public function update(
+        bool $recursive = false,
+        bool $init = false,
+        bool $force = false,
+        string $path = null
+    ): string {
         $this->clearAll();
         $this->addCommandName(sprintf('%s %s', self::SUBMODULE_COMMAND, self::SUBMODULE_UPDATE_COMMAND));
-        if ($recursive === true) {
+        if ($recursive) {
             $this->addCommandArgument(self::SUBMODULE_OPTION_RECURSIVE);
         }
-        if ($init === true) {
+        if ($init) {
             $this->addCommandArgument(self::SUBMODULE_OPTION_INIT);
         }
-        if ($force === true) {
+        if ($force) {
             $this->addCommandArgument(self::SUBMODULE_OPTION_FORCE);
         }
         if ($path !== null) {

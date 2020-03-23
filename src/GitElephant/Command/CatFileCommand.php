@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,9 +20,9 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\NodeObject;
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Repository;
+use GitElephant\Objects\NodeObject;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * cat-file command generator
@@ -30,12 +31,12 @@ use \GitElephant\Repository;
  */
 class CatFileCommand extends BaseCommand
 {
-    const GIT_CAT_FILE = 'cat-file';
+    public const GIT_CAT_FILE = 'cat-file';
 
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -52,14 +53,10 @@ class CatFileCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function content(NodeObject $object, $treeish)
+    public function content(NodeObject $object, $treeish): string
     {
         $this->clearAll();
-        if ($treeish instanceof TreeishInterface) {
-            $sha = $treeish->getSha();
-        } else {
-            $sha = $treeish;
-        }
+        $sha = $treeish instanceof TreeishInterface ? $treeish->getSha() : $treeish;
         $this->addCommandName(static::GIT_CAT_FILE);
         // pretty format
         $this->addCommandArgument('-p');
@@ -76,7 +73,7 @@ class CatFileCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function contentBySha($sha)
+    public function contentBySha($sha): string
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_CAT_FILE);

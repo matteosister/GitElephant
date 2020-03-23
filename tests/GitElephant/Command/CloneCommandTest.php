@@ -13,8 +13,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\CloneCommand;
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * CloneCommandTest
@@ -41,7 +40,7 @@ class CloneCommandTest extends TestCase
     /**
      * set up
      */
-    public function testCloneUrl()
+    public function testCloneUrl(): void
     {
         $cc = CloneCommand::getInstance($this->getRepository());
         $this->assertEquals(

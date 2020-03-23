@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -12,7 +13,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * Class RemoteCommandTest
@@ -43,7 +44,7 @@ class RemoteCommandTest extends TestCase
     /**
      * Validate generated command when no arguements and no repository are used
      */
-    public function testRemoteNoArgs()
+    public function testRemoteNoArgs(): void
     {
         $actual = RemoteCommand::getInstance()->remote();
         $expected = "remote";
@@ -53,7 +54,7 @@ class RemoteCommandTest extends TestCase
     /**
      * validate git-remote show [name]
      */
-    public function testShow()
+    public function testShow(): void
     {
         $remotename = 'foobar';
         $actual = RemoteCommand::getInstance()->show($remotename);
@@ -68,7 +69,7 @@ class RemoteCommandTest extends TestCase
     /**
      * validate git-remote --verbose
      */
-    public function testVerbose()
+    public function testVerbose(): void
     {
         $actual = RemoteCommand::getInstance()->verbose();
         $expected = "remote '--verbose'";
@@ -78,15 +79,15 @@ class RemoteCommandTest extends TestCase
     /**
      * validate git-remote add [options] <name> <url>
      */
-    public function testAdd()
+    public function testAdd(): void
     {
         $name = 'foobar';
         $url = 'git@foobar.com:/Foo/Bar.git';
-        $options = array(
+        $options = [
             '-t bazblurg',
             '--mirror=fetch',
             '--tags'
-        );
+        ];
         $actual = RemoteCommand::getInstance()->add($name, $url, $options);
         $expected = "remote add '-t' 'bazblurg' '--mirror=fetch' '--tags' '$name' '$url'";
         $this->assertEquals($expected, $actual, 'add() builds remote command with add subcommand');

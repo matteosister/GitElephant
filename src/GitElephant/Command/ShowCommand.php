@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,7 +20,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Repository;
+use GitElephant\Repository;
 
 /**
  * show command generator
@@ -28,12 +29,12 @@ use \GitElephant\Repository;
  */
 class ShowCommand extends BaseCommand
 {
-    const GIT_SHOW = 'show';
+    public const GIT_SHOW = 'show';
 
     /**
      * constructor
      *
-     * @param \GitElephant\Repository $repo The repository object this command 
+     * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
     public function __construct(Repository $repo = null)
@@ -49,10 +50,10 @@ class ShowCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function showCommit($ref)
+    public function showCommit($ref): string
     {
         $this->clearAll();
-
+        
         $this->addCommandName(self::GIT_SHOW);
         $this->addCommandArgument('-s');
         $this->addCommandArgument('--pretty=raw');

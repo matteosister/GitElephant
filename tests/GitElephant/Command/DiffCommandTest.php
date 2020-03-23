@@ -13,8 +13,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\DiffCommand;
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * DiffCommandTest
@@ -25,7 +24,7 @@ use \GitElephant\TestCase;
 class DiffCommandTest extends TestCase
 {
     /**
-     * @var \GitElephant\Command\DiffCommand;
+     * @var \GitElephant\Command\DiffCommand
      */
     private $diffCommand;
 
@@ -44,7 +43,7 @@ class DiffCommandTest extends TestCase
     /**
      * diff test
      */
-    public function testDiff()
+    public function testDiff(): void
     {
         $commit = $this->getRepository()->init()->getCommit();
         $this->assertEquals(

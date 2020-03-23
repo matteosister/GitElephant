@@ -13,13 +13,15 @@
 
 namespace GitElephant;
 
-use \GitElephant\Command\Caller\Caller;
-use \GitElephant\Command\MvCommand;
-use \GitElephant\Objects\Commit;
-use \GitElephant\Repository;
-use \Mockery as m;
-use \Symfony\Component\Filesystem\Filesystem;
-use \Symfony\Component\Finder\Finder;
+use GitElephant\Command\Caller\Caller;
+use GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Command\MvCommand;
+use GitElephant\Objects\Author;
+use GitElephant\Objects\Commit;
+use Mockery as m;
+use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Class TestCase
@@ -49,11 +51,11 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected $finder;
 
     /**
-     * @param null $name
+     * @param string $name
      *
      * @return \GitElephant\Repository
      */
-    protected function getRepository($name = null)
+    protected function getRepository(string $name = null)
     {
         if ($this->repository == null) {
             $this->initRepository($name);
@@ -66,9 +68,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \GitElephant\Command\Caller\Caller
+     * @return CallerInterface the real/not mocked caller
      */
-    protected function getCaller()
+    protected function getCaller(): CallerInterface
     {
         if ($this->caller == null) {
             $this->initRepository();
@@ -83,10 +85,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function initRepository($name = null, $index = null)
+    protected function initRepository(string $name = null, int $index = null): void
     {
         $tempDir = realpath(sys_get_temp_dir());
-        $tempName = null === $name ? tempnam($tempDir, 'gitelephant') : $tempDir . DIRECTORY_SEPARATOR . $name;
+        $tempName = null === $name
+            ? tempnam($tempDir, 'gitelephant')
+            : $tempDir . DIRECTORY_SEPARATOR . $name;
         $this->path = $tempName;
         @unlink($this->path);
         $fs = new Filesystem();
@@ -94,13 +98,13 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->caller = new Caller(null, $this->path);
         if (is_null($index)) {
             $this->repository = Repository::open($this->path);
-            $this->assertInstanceOf('GitElephant\Repository', $this->repository);
+            $this->assertInstanceOf(Repository::class, $this->repository);
         } else {
             if (!is_array($this->repository)) {
-                $this->repository = array();
+                $this->repository = [];
             }
             $this->repository[$index] = Repository::open($this->path);
-            $this->assertInstanceOf('GitElephant\Repository', $this->repository[$index]);
+            $this->assertInstanceOf(Repository::class, $this->repository[$index]);
         }
     }
 
@@ -125,17 +129,18 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function addFile($name, $folder = null, $content = null, $repository = null)
-    {
-        if (is_null($repository)) {
-            $path = $this->path;
-        } else {
-            $path = $repository->getPath();
-        }
-        $filename = $folder == null ?
-            $path . DIRECTORY_SEPARATOR . $name : $path . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $name;
+    protected function addFile(
+        string $name,
+        string $folder = null,
+        string $content = null,
+        Repository $repository = null
+    ): void {
+        $path = is_null($repository) ? $this->path : $repository->getPath();
+        $filename = $folder == null
+            ? $path . DIRECTORY_SEPARATOR . $name
+            : $path . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $name;
         $handle = fopen($filename, 'w');
-        $fileContent = $content == null ? 'test content' : $content;
+        $fileContent = $content === null ? 'test content' : $content;
         $this->assertTrue(false !== fwrite($handle, $fileContent), sprintf('unable to write the file %s', $name));
         fclose($handle);
     }
@@ -145,7 +150,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @param string $name
      */
-    protected function removeFile($name)
+    protected function removeFile(string $name): void
     {
         $filename = $this->path . DIRECTORY_SEPARATOR . $name;
         $this->assertTrue(unlink($filename));
@@ -157,7 +162,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      * @param string $name    file name
      * @param string $content content
      */
-    protected function updateFile($name, $content)
+    protected function updateFile(string $name, string $content): void
     {
         $filename = $this->path . DIRECTORY_SEPARATOR . $name;
         $this->assertTrue(false !== file_put_contents($filename, $content));
@@ -170,10 +175,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
      * @param string $targetName new file name
      * @param bool   $gitMv      use git mv, otherwise uses php rename function (with the Filesystem component)
      */
-    protected function renameFile($originName, $targetName, $gitMv = true)
+    protected function renameFile(string $originName, string $targetName, bool $gitMv = true): void
     {
         if ($gitMv) {
-            $this->getRepository()->getCaller()->execute(MvCommand::getInstance()->rename($originName, $targetName));
+            $this->getRepository()
+                ->getCaller()
+                ->execute(MvCommand::getInstance()->rename($originName, $targetName));
 
             return;
         }
@@ -188,13 +195,13 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    protected function addFolder($name)
+    protected function addFolder($name): void
     {
         $fs = new Filesystem();
         $fs->mkdir($this->path . DIRECTORY_SEPARATOR . $name);
     }
 
-    protected function addSubmodule($url, $path)
+    protected function addSubmodule($url, $path): void
     {
         $this->getRepository()->addSubmodule($url, $path);
     }
@@ -202,9 +209,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * @param $classname
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject
      */
-    protected function getMock($classname)
+    protected function getMock($classname): MockObject
     {
         return $this
             ->getMockBuilder($classname)
@@ -218,65 +225,60 @@ class TestCase extends \PHPUnit\Framework\TestCase
      * @param string $command command
      * @param string $output  output
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject
      */
-    protected function getMockCaller($command, $output)
+    protected function getMockCaller($command, $output): MockObject
     {
-        $mock = $this->getMock('GitElephant\Command\Caller\CallerInterface');
+        $mock = $this->createMock(CallerInterface::class);
         $mock
             ->expects($this->any())
             ->method('execute')
-            ->will($this->returnValue($mock));
+            ->willReturn($mock);
         $mock
             ->expects($this->any())
             ->method('getOutputLines')
-            ->will($this->returnValue($output));
+            ->willReturn($output);
 
         return $mock;
     }
 
-    protected function getMockContainer()
-    {
-        return $this->getMock('GitElephant\Command\CommandContainer');
-    }
-
-    protected function addCommandToMockContainer(\PHPUnit\Framework\MockObject\MockObject $container, $commandName)
+    protected function addCommandToMockContainer(MockObject $container, string $commandName): void
     {
         $container
             ->expects($this->any())
             ->method('get')
             ->with($this->equalTo($commandName))
-            ->will($this->returnValue($this->getMockCommand()));
+            ->willReturn($this->getMockCommand());
     }
 
-    protected function addOutputToMockRepo(\PHPUnit\Framework\MockObject\MockObject $repo, $output)
+    protected function addOutputToMockRepo(MockObject $repo, array $output): void
     {
         $repo
             ->expects($this->any())
             ->method('getCaller')
-            ->will($this->returnValue($this->getMockCaller('', $output)));
+            ->willReturn($this->getMockCaller('', $output));
     }
 
-    protected function getMockCommand()
+    protected function getMockCommand(): MockObject
     {
-        $command = $this->getMock('Command', array('showCommit'));
+        $command = $this->getMock('Command', ['showCommit']);
         $command
             ->expects($this->any())
             ->method('showCommit')
-            ->will($this->returnValue(''));
+            ->willReturn('');
 
         return $command;
     }
 
-    protected function getMockRepository()
+    protected function getMockRepository(): MockObject
     {
         return $this->getMock(
-            'GitElephant\Repository',
-            array(),
-            array(
+            Repository::class,
+            [],
+            [
                 $this->repository->getPath(),
                 null,
-            )
+            ]
         );
     }
 
@@ -291,19 +293,19 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $datetimeAuthor,
         $datetimeCommitter,
         $message
-    ) {
-        $this->assertInstanceOf('GitElephant\Objects\Commit', $commit);
+    ): void {
+        $this->assertInstanceOf(Commit::class, $commit);
         $this->assertEquals($sha, $commit->getSha());
         $this->assertEquals($tree, $commit->getTree());
-        $this->assertInstanceOf('GitElephant\Objects\Author', $commit->getAuthor());
+        $this->assertInstanceOf(Author::class, $commit->getAuthor());
         $this->assertEquals($author, $commit->getAuthor()->getName());
         $this->assertEquals($emailAuthor, $commit->getAuthor()->getEmail());
-        $this->assertInstanceOf('GitElephant\Objects\Author', $commit->getCommitter());
+        $this->assertInstanceOf(Author::class, $commit->getCommitter());
         $this->assertEquals($committer, $commit->getCommitter()->getName());
         $this->assertEquals($emailCommitter, $commit->getCommitter()->getEmail());
-        $this->assertInstanceOf('\Datetime', $commit->getDatetimeAuthor());
+        $this->assertInstanceOf(\DateTime::class, $commit->getDatetimeAuthor());
         $this->assertEquals($datetimeAuthor, $commit->getDatetimeAuthor()->format('U'));
-        $this->assertInstanceOf('\Datetime', $commit->getDatetimeCommitter());
+        $this->assertInstanceOf(\DateTime::class, $commit->getDatetimeCommitter());
         $this->assertEquals($datetimeCommitter, $commit->getDatetimeCommitter()->format('U'));
         $this->assertEquals($message, $commit->getMessage()->getShortMessage());
     }
