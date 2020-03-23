@@ -24,7 +24,7 @@ use GitElephant\TestCase;
 class DiffCommandTest extends TestCase
 {
     /**
-     * @var \GitElephant\Command\DiffCommand ;
+     * @var \GitElephant\Command\DiffCommand
      */
     private $diffCommand;
 
