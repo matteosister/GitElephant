@@ -13,8 +13,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\BranchCommand;
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * BranchTest

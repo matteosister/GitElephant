@@ -14,10 +14,10 @@
 namespace GitElephant;
 
 use GitElephant\Command\ResetCommand;
-use \GitElephant\Objects\Branch;
+use GitElephant\Objects\Branch;
 use GitElephant\Objects\Log;
-use \GitElephant\Objects\NodeObject;
-use \GitElephant\Objects\Tag;
+use GitElephant\Objects\NodeObject;
+use GitElephant\Objects\Tag;
 
 /**
  * RepositoryTest
@@ -436,7 +436,7 @@ class RepositoryTest extends TestCase
 
         $tree = $repo->getTree();
 
-        /* @var $treeObj NodeObject */
+        /** @var NodeObject $treeObj */
         foreach ($tree as $treeObj) {
             $name = $treeObj->getName();
             $log = $repo->getObjectLog($treeObj, null, 10);
@@ -898,7 +898,7 @@ class RepositoryTest extends TestCase
         }
         $this->assertSame($configs, $repo->getGlobalConfigs());
 
-        foreach ($configs as $configName => $configValue) {
+        foreach (array_keys($configs) as $configName) {
             $repo->removeGlobalConfig($configName);
         }
         $this->assertEmpty($repo->getGlobalConfigs());
@@ -971,7 +971,7 @@ class RepositoryTest extends TestCase
         }
         $this->assertSame($options, $repo->getGlobalOptions());
 
-        foreach ($options as $configName => $configValue) {
+        foreach (array_keys($options) as $configName) {
             $repo->removeGlobalOption($configName);
         }
         $this->assertEmpty($repo->getGlobalOptions());

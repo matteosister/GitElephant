@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -14,8 +15,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Repository;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * Log Range command generator
@@ -26,7 +27,7 @@ use \GitElephant\Repository;
  */
 class LogRangeCommand extends BaseCommand
 {
-    const GIT_LOG = 'log';
+    public const GIT_LOG = 'log';
 
     /**
      * constructor
@@ -53,8 +54,14 @@ class LogRangeCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function showLog($refStart, $refEnd, $path = null, $limit = null, $offset = null, $firstParent = false): string
-    {
+    public function showLog(
+        $refStart,
+        $refEnd,
+        $path = null,
+        $limit = null,
+        $offset = null,
+        $firstParent = false
+    ): string {
         $this->clearAll();
 
         $this->addCommandName(self::GIT_LOG);
@@ -63,12 +70,12 @@ class LogRangeCommand extends BaseCommand
         $this->addCommandArgument('--no-color');
 
         if (null !== $limit) {
-            $limit = (int)$limit;
+            $limit = (int) $limit;
             $this->addCommandArgument('--max-count=' . $limit);
         }
 
         if (null !== $offset) {
-            $offset = (int)$offset;
+            $offset = (int) $offset;
             $this->addCommandArgument('--skip=' . $offset);
         }
 
@@ -87,7 +94,7 @@ class LogRangeCommand extends BaseCommand
         if (null !== $path && !empty($path)) {
             $this->addPath($path);
         }
-
+        
         $this->addCommandSubject($refStart . '..' . $refEnd);
 
         return $this->getCommand();

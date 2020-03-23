@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,10 +20,10 @@
 
 namespace GitElephant\Objects\Diff;
 
-use \GitElephant\Utilities;
-use \GitElephant\Repository;
-use \GitElephant\Command\DiffTreeCommand;
-use \GitElephant\Command\DiffCommand;
+use GitElephant\Command\DiffCommand;
+use GitElephant\Command\DiffTreeCommand;
+use GitElephant\Repository;
+use GitElephant\Utilities;
 
 /**
  * Represent a collection of diffs between two trees
@@ -63,8 +64,12 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Diff
      */
-    public static function create(Repository $repository, $commit1 = null, $commit2 = null, string $path = null): \GitElephant\Objects\Diff\Diff
-    {
+    public static function create(
+        Repository $repository,
+        $commit1 = null,
+        $commit2 = null,
+        string $path = null
+    ): \GitElephant\Objects\Diff\Diff {
         $commit = new self($repository);
         $commit->createFromCommand($commit1, $commit2, $path);
 
@@ -121,7 +126,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
             }
             $command = DiffCommand::getInstance($this->repository)->diff($commit1, $commit2, $path);
         }
-
+        
         $outputLines = $this->getCaller()->execute($command)->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
@@ -137,6 +142,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     {
         $this->diffObjects = [];
         $splitArray = Utilities::pregSplitArray($outputLines, '/^diff --git SRC\/(.*) DST\/(.*)$/');
+
         foreach ($splitArray as $diffObjectLines) {
             $this->diffObjects[] = new DiffObject($diffObjectLines);
         }

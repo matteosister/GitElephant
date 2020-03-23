@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,9 +20,9 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Tag;
-use \GitElephant\Objects\Commit;
-use \GitElephant\Repository;
+use GitElephant\Objects\Commit;
+use GitElephant\Objects\Tag;
+use GitElephant\Repository;
 
 /**
  * RevList Command generator
@@ -30,7 +31,7 @@ use \GitElephant\Repository;
  */
 class RevListCommand extends BaseCommand
 {
-    const GIT_REVLIST = 'rev-list';
+    public const GIT_REVLIST = 'rev-list';
 
     /**
      * constructor

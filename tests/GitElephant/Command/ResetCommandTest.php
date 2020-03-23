@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: christian
@@ -8,8 +9,7 @@
 
 namespace GitElephant\Command;
 
-use GitElephant\Objects\Commit;
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 class ResetCommandTest extends TestCase
 {
@@ -28,6 +28,6 @@ class ResetCommandTest extends TestCase
     public function testResetHard(): void
     {
         $rstc = ResetCommand::getInstance();
-        $this->assertEquals("reset '--hard' 'dbeac'", $rstc->reset('dbeac', array(ResetCommand::OPTION_HARD)));
+        $this->assertEquals("reset '--hard' 'dbeac'", $rstc->reset('dbeac', [ResetCommand::OPTION_HARD]));
     }
 }

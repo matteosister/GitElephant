@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,9 +20,10 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Repository;
-use \GitElephant\Command\LsTreeCommand;
-use \GitElephant\Command\CatFileCommand;
+use GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Command\CatFileCommand;
+use GitElephant\Command\LsTreeCommand;
+use GitElephant\Repository;
 
 /**
  * An abstraction of a git tree
@@ -134,14 +136,16 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
         foreach ($outputLines as $line) {
             $this->parseLine($line);
         }
-        usort($this->children, [$this, 'sortChildren']);
+        usort($this->children, function ($a, $b) {
+            return self::sortChildren($a, $b);
+        });
         $this->scanPathsForBlob($outputLines);
     }
 
     /**
-     * @return \GitElephant\Command\Caller\Caller
+     * @return CallerInterface
      */
-    private function getCaller(): \GitElephant\Command\Caller\Caller
+    private function getCaller(): CallerInterface
     {
         return $this->getRepository()->getCaller();
     }
@@ -276,13 +280,13 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @return int
      */
-    private function sortChildren(NodeObject $a, NodeObject $b): int
+    private static function sortChildren(NodeObject $a, NodeObject $b): int
     {
         if ($a->getType() === $b->getType()) {
             $names = [$a->getName(), $b->getName()];
             sort($names);
 
-            return ($a->getName() === $names[0]) ? -1 : 1;
+            return $a->getName() === $names[0] ? -1 : 1;
         }
 
         return $a->getType() === NodeObject::TYPE_TREE || $b->getType() === NodeObject::TYPE_BLOB ? -1 : 1;

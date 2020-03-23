@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: matteo
  * Date: 06/06/13
@@ -8,7 +9,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * Class StashCommandTest
@@ -24,7 +25,10 @@ class StashCommandTest extends TestCase
     {
         $command = StashCommand::getInstance();
         $this->assertEquals("stash save 'Test'", $command->save('Test'));
-        $this->assertEquals("stash save '--include-untracked' '--keep-index' 'Test'", $command->save('Test', true, true));
+        $this->assertEquals(
+            "stash save '--include-untracked' '--keep-index' 'Test'",
+            $command->save('Test', true, true)
+        );
     }
 
     /**
@@ -34,7 +38,7 @@ class StashCommandTest extends TestCase
     {
         $command = StashCommand::getInstance();
         $this->assertEquals("stash list", $command->listStashes());
-        $this->assertEquals("stash list '-p'", $command->listStashes(array('-p')));
+        $this->assertEquals("stash list '-p'", $command->listStashes(['-p']));
     }
 
     /**

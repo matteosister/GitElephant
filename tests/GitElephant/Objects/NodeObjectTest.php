@@ -1,12 +1,12 @@
 <?php
+
 /**
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Objects\NodeObject;
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 class NodeObjectTest extends TestCase
 {

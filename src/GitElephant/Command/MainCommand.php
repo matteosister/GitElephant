@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,10 +20,10 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Author;
-use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Repository;
+use GitElephant\Objects\Author;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\TreeishInterface;
+use GitElephant\Repository;
 
 /**
  * Main command generator (init, status, add, commit, checkout)
@@ -31,14 +32,14 @@ use \GitElephant\Repository;
  */
 class MainCommand extends BaseCommand
 {
-    const GIT_INIT     = 'init';
-    const GIT_STATUS   = 'status';
-    const GIT_ADD      = 'add';
-    const GIT_COMMIT   = 'commit';
-    const GIT_CHECKOUT = 'checkout';
-    const GIT_MOVE     = 'mv';
-    const GIT_REMOVE   = 'rm';
-    const GIT_RESET    = 'reset';
+    public const GIT_INIT = 'init';
+    public const GIT_STATUS = 'status';
+    public const GIT_ADD = 'add';
+    public const GIT_COMMIT = 'commit';
+    public const GIT_CHECKOUT = 'checkout';
+    public const GIT_MOVE = 'mv';
+    public const GIT_REMOVE = 'rm';
+    public const GIT_RESET = 'reset';
 
     /**
      * constructor
@@ -85,7 +86,7 @@ class MainCommand extends BaseCommand
         if ($porcelain) {
             $this->addCommandArgument('--porcelain');
         } else {
-            $this->addConfigs(array('color.status' => 'false'));
+            $this->addConfigs(['color.status' => 'false']);
         }
 
         return $this->getCommand();
@@ -141,6 +142,7 @@ class MainCommand extends BaseCommand
     public function commit($message, $stageAll = false, $author = null, $allowEmpty = false): string
     {
         $this->clearAll();
+
         if (trim($message) === '' || is_null($message)) {
             throw new \InvalidArgumentException(sprintf('You can\'t commit without message'));
         }
@@ -236,7 +238,7 @@ class MainCommand extends BaseCommand
     public function remove($path, $recursive, $force): string
     {
         $this->clearAll();
-
+        
         $path = trim($path);
         if (!$this->validatePath($path)) {
             throw new \InvalidArgumentException('Invalid path');
@@ -251,7 +253,7 @@ class MainCommand extends BaseCommand
         if ($force) {
             $this->addCommandArgument('-f');
         }
-
+        
         $this->addPath($path);
 
         return $this->getCommand();

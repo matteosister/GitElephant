@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -18,8 +19,6 @@
  */
 
 namespace GitElephant\Command\Caller;
-
-use GitElephant\Command\Caller\AbstractCaller;
 
 /**
  * Caller via ssh2 PECL extension

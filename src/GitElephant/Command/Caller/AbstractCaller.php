@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -45,7 +46,7 @@ abstract class AbstractCaller implements CallerInterface
      *
      * @var array
      */
-    protected $outputLines = array();
+    protected $outputLines = [];
 
     /**
      * @inheritdoc
@@ -101,10 +102,10 @@ abstract class AbstractCaller implements CallerInterface
      *
      * @return array
      */
-    public function getOutputLines($stripBlankLines = false): array
+    public function getOutputLines(bool $stripBlankLines = false): array
     {
         if ($stripBlankLines) {
-            $output = array();
+            $output = [];
             foreach ($this->outputLines as $line) {
                 if ('' !== $line) {
                     $output[] = $line;

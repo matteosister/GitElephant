@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Commit;
-use \GitElephant\Repository;
+use GitElephant\Objects\Commit;
+use GitElephant\Repository;
 
 /**
  * DiffTreeCommand
@@ -31,7 +32,7 @@ use \GitElephant\Repository;
  */
 class DiffTreeCommand extends BaseCommand
 {
-    const DIFF_TREE_COMMAND = 'diff-tree';
+    public const DIFF_TREE_COMMAND = 'diff-tree';
 
     /**
      * constructor

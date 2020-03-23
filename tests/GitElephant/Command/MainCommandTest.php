@@ -14,8 +14,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\TestCase;
-use \GitElephant\Command\MainCommand;
+use GitElephant\TestCase;
 
 /**
  * MainTest

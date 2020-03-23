@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Tag;
-use \GitElephant\Repository;
+use GitElephant\Objects\Tag;
+use GitElephant\Repository;
 
 /**
  * Tag command generator
@@ -29,7 +30,7 @@ use \GitElephant\Repository;
  */
 class TagCommand extends BaseCommand
 {
-    const TAG_COMMAND = 'tag';
+    public const TAG_COMMAND = 'tag';
 
     /**
      * constructor
@@ -56,6 +57,7 @@ class TagCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
+
         if (null !== $message) {
             $this->addCommandArgument('-m');
             $this->addCommandArgument($message);
@@ -110,13 +112,13 @@ class TagCommand extends BaseCommand
     public function delete($tag): string
     {
         $this->clearAll();
+        $this->addCommandName(self::TAG_COMMAND);
 
         $name = $tag;
         if ($tag instanceof Tag) {
             $name = $tag->getName();
         }
 
-        $this->addCommandName(self::TAG_COMMAND);
         $this->addCommandArgument('-d');
         $this->addCommandSubject($name);
 

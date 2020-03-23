@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: christian
@@ -10,15 +11,15 @@ namespace GitElephant\Command;
 
 use GitElephant\Objects\Commit;
 use GitElephant\Objects\TreeishInterface;
-use \GitElephant\Repository;
+use GitElephant\Repository;
 
 class ResetCommand extends BaseCommand
 {
-    const GIT_RESET_COMMAND = 'reset';
+    public const GIT_RESET_COMMAND = 'reset';
 
-    const OPTION_HARD  = '--hard';
-    const OPTION_MERGE = '--merge';
-    const OPTION_SOFT  = '--soft';
+    public const OPTION_HARD = '--hard';
+    public const OPTION_MERGE = '--merge';
+    public const OPTION_SOFT = '--soft';
 
     /**
      * constructor
@@ -38,17 +39,17 @@ class ResetCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function reset($arg = null, array $options = array()): string
+    public function reset($arg = null, array $options = []): string
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_RESET_COMMAND);
         // if there are options add them.
-        if (! is_null($options)) {
+        if (!is_null($options)) {
             foreach ($options as $option) {
                 $this->addCommandArgument($option);
             }
         }
-        if ($arg!=null) {
+        if ($arg != null) {
             $this->addCommandSubject2($arg);
         }
 

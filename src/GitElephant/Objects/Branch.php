@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -78,8 +79,11 @@ class Branch extends NodeObject implements TreeishInterface
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Branch
      */
-    public static function create(Repository $repository, string $name, string $startPoint = null): \GitElephant\Objects\Branch
-    {
+    public static function create(
+        Repository $repository,
+        string $name,
+        string $startPoint = null
+    ): \GitElephant\Objects\Branch {
         $repository
             ->getCaller()
             ->execute(BranchCommand::getInstance($repository)->create($name, $startPoint));
@@ -197,7 +201,6 @@ class Branch extends NodeObject implements TreeishInterface
     public static function getMatches(string $branchString): array
     {
         $branchString = trim($branchString);
-
         $regexList = [
             '/^\*?\ *?(\S+)\ +(\S{40})\ +(.+)$/',
             '/^\*?\ *?\(.*(detached).*\)\ +(\S{40})\ +(.+)$/',
@@ -207,7 +210,7 @@ class Branch extends NodeObject implements TreeishInterface
         while (empty($matches) and $regex = array_pop($regexList)) {
             preg_match($regex, trim($branchString), $matches);
         }
-
+        
         if (empty($matches)) {
             throw new \InvalidArgumentException(sprintf('the branch string is not valid: %s', $branchString));
         }

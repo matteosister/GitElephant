@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,7 +20,7 @@
 
 namespace GitElephant\Objects\Diff;
 
-use \GitElephant\Utilities;
+use GitElephant\Utilities;
 
 /**
  * Represent a diff for a single object in the repository
@@ -28,11 +29,11 @@ use \GitElephant\Utilities;
  */
 class DiffObject implements \ArrayAccess, \Countable, \Iterator
 {
-    const MODE_INDEX = 'index';
-    const MODE_MODE = 'mode';
-    const MODE_NEW_FILE = 'new_file';
-    const MODE_DELETED_FILE = 'deleted_file';
-    const MODE_RENAMED = 'renamed_file';
+    public const MODE_INDEX = 'index';
+    public const MODE_MODE = 'mode';
+    public const MODE_NEW_FILE = 'new_file';
+    public const MODE_DELETED_FILE = 'deleted_file';
+    public const MODE_RENAMED = 'renamed_file';
 
     /**
      * the cursor position
@@ -89,8 +90,9 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
         $this->chunks = [];
 
         $this->findPath($lines[0]);
-
+        
         $sliceIndex = 4;
+
         if ($this->hasPathChanged()) {
             $this->findSimilarityIndex($lines[1]);
             if (isset($lines[4]) && !empty($lines[4])) {
@@ -237,7 +239,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      */
     public function hasPathChanged(): bool
     {
-        return ($this->originalPath !== $this->destinationPath);
+        return $this->originalPath !== $this->destinationPath;
     }
 
     /**

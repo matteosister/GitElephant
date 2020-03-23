@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -29,7 +30,7 @@ use GitElephant\Repository;
  */
 class StashCommand extends BaseCommand
 {
-    const STASH_COMMAND = 'stash';
+    public const STASH_COMMAND = 'stash';
 
     /**
      * constructor
@@ -54,7 +55,9 @@ class StashCommand extends BaseCommand
     public function save($message = null, $includeUntracked = false, $keepIndex = false): string
     {
         $this->clearAll();
+
         $this->addCommandName(self::STASH_COMMAND . ' save');
+
         if (!is_null($message)) {
             $this->addCommandSubject($message);
         }
@@ -80,10 +83,13 @@ class StashCommand extends BaseCommand
     public function listStashes(array $options = null): string
     {
         $this->clearAll();
+
         $this->addCommandName(self::STASH_COMMAND . ' list');
+        
         if (null !== $options) {
             $this->addCommandSubject($options);
         }
+
         return $this->getCommand();
     }
 
@@ -100,6 +106,7 @@ class StashCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' show');
         $this->addCommandSubject($stash);
+
         return $this->getCommand();
     }
 
@@ -116,6 +123,7 @@ class StashCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' drop');
         $this->addCommandSubject($stash);
+
         return $this->getCommand();
     }
 
@@ -136,6 +144,7 @@ class StashCommand extends BaseCommand
         if ($index) {
             $this->addCommandArgument('--index');
         }
+
         return $this->getCommand();
     }
 
@@ -156,6 +165,7 @@ class StashCommand extends BaseCommand
         if ($index) {
             $this->addCommandArgument('--index');
         }
+
         return $this->getCommand();
     }
 
@@ -174,6 +184,7 @@ class StashCommand extends BaseCommand
         $this->addCommandName(self::STASH_COMMAND . ' branch');
         $this->addCommandSubject($branch);
         $this->addCommandSubject2($stash);
+
         return $this->getCommand();
     }
 
@@ -184,6 +195,7 @@ class StashCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' clear');
+
         return $this->getCommand();
     }
 
@@ -195,6 +207,7 @@ class StashCommand extends BaseCommand
     {
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' create');
+
         return $this->getCommand();
     }
 
@@ -208,6 +221,7 @@ class StashCommand extends BaseCommand
         if (0 !== strpos($stash, 'stash@{')) {
             $stash = 'stash@{' . $stash . '}';
         }
+
         return $stash;
     }
 }

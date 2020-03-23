@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -85,7 +86,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     public function __construct(array $lines)
     {
         $this->position = 0;
-
+        
         $this->getLinesNumbers($lines[0]);
         $this->parseLines(array_slice($lines, 1));
     }

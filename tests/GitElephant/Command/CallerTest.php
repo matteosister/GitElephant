@@ -13,9 +13,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\Caller\Caller;
-use \GitElephant\Command\MainCommand;
-use \GitElephant\TestCase;
+use GitElephant\Command\Caller\Caller;
+use GitElephant\TestCase;
 
 /**
  * CallerTest
@@ -65,9 +64,7 @@ class CallerTest extends TestCase
     public function testGetError(): void
     {
         $this->expectException(\RuntimeException::class);
-        $binary = null;
         $caller = new Caller(null, $this->getRepository()->getPath());
-        $mainCommand = new MainCommand();
         $caller->execute('foo');
     }
 
@@ -119,6 +116,6 @@ class CallerTest extends TestCase
     public function testRepositoryValidation(): void
     {
         $this->expectException(\GitElephant\Exception\InvalidRepositoryPathException::class);
-        $caller = new Caller(null, 'someinvalidpath');
+        new Caller(null, 'someinvalidpath');
     }
 }

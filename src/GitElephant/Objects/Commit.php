@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,14 +20,14 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Command\BranchCommand;
+use GitElephant\Command\BranchCommand;
 use GitElephant\Command\Caller\CallerInterface;
-use \GitElephant\Command\MainCommand;
-use \GitElephant\Command\RevListCommand;
-use \GitElephant\Command\RevParseCommand;
-use \GitElephant\Command\ShowCommand;
-use \GitElephant\Objects\Commit\Message;
-use \GitElephant\Repository;
+use GitElephant\Command\MainCommand;
+use GitElephant\Command\RevListCommand;
+use GitElephant\Command\RevParseCommand;
+use GitElephant\Command\ShowCommand;
+use GitElephant\Objects\Commit\Message;
+use GitElephant\Repository;
 
 /**
  * The Commit object represent a commit
@@ -64,26 +65,26 @@ class Commit implements TreeishInterface, \Countable
      *
      * @var array
      */
-    private $parents;
+    private $parents = [];
 
     /**
      * the Author instance for author
      *
-     * @var \GitElephant\Objects\Author
+     * @var  Author
      */
     private $author;
 
     /**
      * the Author instance for committer
      *
-     * @var \GitElephant\Objects\Author
+     * @var  Author
      */
     private $committer;
 
     /**
      * the Message instance
      *
-     * @var \GitElephant\Objects\Commit\Message
+     * @var Commit\Message
      */
     private $message;
 
@@ -129,8 +130,12 @@ class Commit implements TreeishInterface, \Countable
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Commit
      */
-    public static function create(Repository $repository, string $message, bool $stageAll = false, $author = null): \GitElephant\Objects\Commit
-    {
+    public static function create(
+        Repository $repository,
+        string $message,
+        bool $stageAll = false,
+        $author = null
+    ): Commit {
         $repository->getCaller()->execute(MainCommand::getInstance($repository)->commit($message, $stageAll, $author));
 
         return $repository->getCommit();
@@ -146,7 +151,7 @@ class Commit implements TreeishInterface, \Countable
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Commit
      */
-    public static function pick(Repository $repository, $treeish = null): \GitElephant\Objects\Commit
+    public static function pick(Repository $repository, $treeish = null): Commit
     {
         $commit = new self($repository, $treeish);
         $commit->createFromCommand();
@@ -162,7 +167,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @return Commit
      */
-    public static function createFromOutputLines(Repository $repository, array $outputLines): \GitElephant\Objects\Commit
+    public static function createFromOutputLines(Repository $repository, array $outputLines): Commit
     {
         $commit = new self($repository);
         $commit->parseOutputLines($outputLines);
@@ -191,7 +196,7 @@ class Commit implements TreeishInterface, \Countable
     {
         $command = BranchCommand::getInstance($this->getRepository())->contains($this->getSha());
 
-        return array_map('trim', (array)$this->getCaller()->execute($command)->getOutputLines(true));
+        return array_map('trim', (array) $this->getCaller()->execute($command)->getOutputLines(true));
     }
 
     /**
@@ -318,7 +323,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @return Author
      */
-    public function getAuthor(): \GitElephant\Objects\Author
+    public function getAuthor(): ?Author
     {
         return $this->author;
     }
@@ -328,7 +333,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @return Author
      */
-    public function getCommitter(): \GitElephant\Objects\Author
+    public function getCommitter(): ?Author
     {
         return $this->committer;
     }
@@ -336,9 +341,9 @@ class Commit implements TreeishInterface, \Countable
     /**
      * message getter
      *
-     * @return \GitElephant\Objects\Commit\Message
+     * @return Message
      */
-    public function getMessage(): \GitElephant\Objects\Commit\Message
+    public function getMessage(): ?Message
     {
         return $this->message;
     }
@@ -360,7 +365,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @return string
      */
-    public function getSha(bool $short = false): string
+    public function getSha(bool $short = false): ?string
     {
         return $short ? substr($this->sha, 0, 7) : $this->sha;
     }
@@ -370,7 +375,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @return string
      */
-    public function getTree(): string
+    public function getTree(): ?string
     {
         return $this->tree;
     }
@@ -380,7 +385,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @return \DateTime
      */
-    public function getDatetimeAuthor(): \DateTime
+    public function getDatetimeAuthor(): ?\DateTime
     {
         return $this->datetimeAuthor;
     }
@@ -390,7 +395,7 @@ class Commit implements TreeishInterface, \Countable
      *
      * @return \DateTime
      */
-    public function getDatetimeCommitter(): \DateTime
+    public function getDatetimeCommitter(): ?\DateTime
     {
         return $this->datetimeCommitter;
     }

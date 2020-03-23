@@ -20,9 +20,9 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Repository;
-use \GitElephant\Command\LogCommand;
-use \GitElephant\Utilities;
+use GitElephant\Command\LogCommand;
+use GitElephant\Repository;
+use GitElephant\Utilities;
 
 /**
  * Git log abstraction object
@@ -104,8 +104,13 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @see ShowCommand::commitInfo
      */
-    private function createFromCommand($ref, $path = null, int $limit = null, int $offset = null, bool $firstParent = false): void
-    {
+    private function createFromCommand(
+        $ref,
+        $path = null,
+        int $limit = null,
+        int $offset = null,
+        bool $firstParent = false
+    ): void {
         $command = LogCommand::getInstance($this->getRepository())
             ->showLog($ref, $path, $limit, $offset, $firstParent);
 

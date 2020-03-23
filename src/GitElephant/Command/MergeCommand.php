@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Branch;
-use \GitElephant\Repository;
+use GitElephant\Objects\Branch;
+use GitElephant\Repository;
 
 /**
  * Merge command generator
@@ -29,9 +30,9 @@ use \GitElephant\Repository;
  */
 class MergeCommand extends BaseCommand
 {
-    const MERGE_COMMAND = 'merge';
-    const MERGE_OPTION_FF_ONLY = '--ff-only';
-    const MERGE_OPTION_NO_FF = '--no-ff';
+    public const MERGE_COMMAND = 'merge';
+    public const MERGE_OPTION_FF_ONLY = '--ff-only';
+    public const MERGE_OPTION_NO_FF = '--no-ff';
 
     /**
      * constructor
@@ -54,11 +55,14 @@ class MergeCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function merge(Branch $with, $message = '', Array $options = array()): string
+    public function merge(Branch $with, $message = '', array $options = []): string
     {
         if (in_array(self::MERGE_OPTION_FF_ONLY, $options) && in_array(self::MERGE_OPTION_NO_FF, $options)) {
-            throw new \Symfony\Component\Process\Exception\InvalidArgumentException("Invalid options: cannot use flags --ff-only and --no-ff together.");
+            throw new \Symfony\Component\Process\Exception\InvalidArgumentException(
+                "Invalid options: cannot use flags --ff-only and --no-ff together."
+            );
         }
+
         $normalizedOptions = $this->normalizeOptions($options, $this->mergeCmdSwitchOptions());
 
         $this->clearAll();
@@ -72,7 +76,7 @@ class MergeCommand extends BaseCommand
             $this->addCommandArgument('-m');
             $this->addCommandArgument($message);
         }
-
+        
         $this->addCommandSubject($with->getFullRef());
 
         return $this->getCommand();
@@ -85,9 +89,9 @@ class MergeCommand extends BaseCommand
      */
     public function mergeCmdSwitchOptions(): array
     {
-        return array(
+        return [
             self::MERGE_OPTION_FF_ONLY => self::MERGE_OPTION_FF_ONLY,
             self::MERGE_OPTION_NO_FF => self::MERGE_OPTION_NO_FF,
-        );
+        ];
     }
 }

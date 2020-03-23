@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Command\RemoteCommand;
-use \GitElephant\Repository;
+use GitElephant\Command\RemoteCommand;
+use GitElephant\Repository;
 
 /**
  * Class Remote
@@ -102,8 +103,11 @@ class Remote
      *
      * @return \GitElephant\Objects\Remote
      */
-    public static function pick(Repository $repository, string $name = null, bool $queryRemotes = true): \GitElephant\Objects\Remote
-    {
+    public static function pick(
+        Repository $repository,
+        string $name = null,
+        bool $queryRemotes = true
+    ): \GitElephant\Objects\Remote {
         return new self($repository, $name, $queryRemotes);
     }
 
@@ -144,8 +148,11 @@ class Remote
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function getShowOutput(string $name = null, RemoteCommand $remoteCmd = null, bool $queryRemotes = true): array
-    {
+    public function getShowOutput(
+        string $name = null,
+        RemoteCommand $remoteCmd = null,
+        bool $queryRemotes = true
+    ): array {
         if ($remoteCmd === null) {
             $remoteCmd = RemoteCommand::getInstance($this->repository);
         }
@@ -200,11 +207,13 @@ class Remote
     {
         array_filter($remoteDetails);
         $name = array_shift($remoteDetails);
-        $name = (is_string($name)) ? trim($name) : '';
+        $name = is_string($name) ? trim($name) : '';
         $name = $this->parseName($name);
+
         if ($name === '') {
             throw new \UnexpectedValueException(sprintf('Invalid data provided for remote detail parsing'));
         }
+
         $this->name = $name;
         $fetchURLPattern = '/^Fetch\s+URL:\s*(.*)$/';
         $fetchURL = null;
@@ -220,8 +229,8 @@ class Remote
         $localRefPushHeaderPattern = '/^Local\sref(?:s)?\sconfigured\sfor\s\'git\spush\':$/';
         $groups = [
             'remoteBranches' => null,
-            'localBranches'  => null,
-            'localRefs'      => null,
+            'localBranches' => null,
+            'localRefs' => null,
         ];
 
         foreach ($remoteDetails as $lineno => $line) {
@@ -241,7 +250,7 @@ class Remote
                 $groups['localRefs'] = $lineno;
             }
         }
-
+        
         $this->setBranches($this->aggregateBranchDetails($groups, $remoteDetails));
     }
 
@@ -388,11 +397,11 @@ class Remote
      * @throws \InvalidArgumentException
      * @return array
      */
-    public static function getMatches($remoteString): array
+    public static function getMatches(string $remoteString): array
     {
         $matches = [];
         preg_match('/^(\S+)\s*(\S[^\( ]+)\s*\((.+)\)$/', trim($remoteString), $matches);
-        if (count($matches) === 0) {
+        if (empty($matches)) {
             throw new \InvalidArgumentException(sprintf('the remote string is not valid: %s', $remoteString));
         }
 
@@ -504,7 +513,7 @@ class Remote
      *
      * @param array $branches
      */
-    public function setBranches(Array $branches): void
+    public function setBranches(array $branches): void
     {
         $this->branches = $branches;
     }

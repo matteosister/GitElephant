@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,7 +20,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Repository;
+use GitElephant\Repository;
 
 /**
  * Branch command generator
@@ -28,7 +29,7 @@ use \GitElephant\Repository;
  */
 class BranchCommand extends BaseCommand
 {
-    const BRANCH_COMMAND = 'branch';
+    public const BRANCH_COMMAND = 'branch';
 
     /**
      * constructor
@@ -49,7 +50,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function contains($reference): string
+    public function contains(string $reference): string
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -68,7 +69,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function create($name, $startPoint = null): string
+    public function create(string $name, string $startPoint = null): string
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -89,7 +90,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function listBranches($all = false, $simple = false): string
+    public function listBranches(bool $all = false, bool $simple = false): string
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -118,7 +119,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function lists($all = false, $simple = false): string
+    public function lists($all = false, bool $simple = false): string
     {
         return $this->listBranches($all, $simple);
     }
@@ -134,7 +135,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function singleInfo($name, $all = false, $simple = false, $verbose = false): string
+    public function singleInfo(string $name, bool $all = false, bool $simple = false, bool $verbose = false): string
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -164,9 +165,9 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function delete($name, $force = false): string
+    public function delete(string $name, bool $force = false): string
     {
-        $arg = ($force) ? '-D' : '-d';
+        $arg = $force ? '-D' : '-d';
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
         $this->addCommandArgument($arg);

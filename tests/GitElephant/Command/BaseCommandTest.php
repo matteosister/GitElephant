@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: matteo
  * Date: 20/05/13
@@ -8,8 +9,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\TestCase;
-use \ReflectionClass;
+use GitElephant\TestCase;
 
 /**
  * Class BaseCommandTest

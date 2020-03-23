@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -12,7 +13,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * Class RemoteCommandTest
@@ -61,7 +62,7 @@ class SubCommandCommandTest extends TestCase
 
         $rmeth = new \ReflectionMethod($subcmd, 'addCommandArgument');
         $rmeth->setAccessible(true);
-        $rmeth->invoke($subcmd, array($argTwo, $argTwoValue));
+        $rmeth->invoke($subcmd, [$argTwo, $argTwoValue]);
 
         $actual = $subcmd->getCommand();
         $this->assertEquals(

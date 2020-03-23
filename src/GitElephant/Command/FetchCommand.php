@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -17,20 +18,19 @@
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
 
-
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\Remote;
-use \GitElephant\Repository;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\Remote;
+use GitElephant\Repository;
 
 /**
  * Class FetchCommand
  */
 class FetchCommand extends BaseCommand
 {
-    const GIT_FETCH_COMMAND = 'fetch';
-    const GIT_FETCH_OPTION_TAGS = '--tags';
+    public const GIT_FETCH_COMMAND = 'fetch';
+    public const GIT_FETCH_OPTION_TAGS = '--tags';
 
     /**
      * constructor
@@ -51,7 +51,7 @@ class FetchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function fetch($remote = null, $branch = null, Array $options = array()): string
+    public function fetch($remote = null, $branch = null, array $options = []): string
     {
         if ($remote instanceof Remote) {
             $remote = $remote->getName();
@@ -59,6 +59,7 @@ class FetchCommand extends BaseCommand
         if ($branch instanceof Branch) {
             $branch = $branch->getName();
         }
+
         $normalizedOptions = $this->normalizeOptions($options, $this->fetchCmdSwitchOptions());
 
         $this->clearAll();
@@ -67,7 +68,7 @@ class FetchCommand extends BaseCommand
         foreach ($normalizedOptions as $value) {
             $this->addCommandArgument($value);
         }
-
+        
         if (!is_null($remote)) {
             $this->addCommandSubject($remote);
         }
@@ -85,8 +86,8 @@ class FetchCommand extends BaseCommand
      */
     public function fetchCmdSwitchOptions(): array
     {
-        return array(
+        return [
             self::GIT_FETCH_OPTION_TAGS => self::GIT_FETCH_OPTION_TAGS,
-        );
+        ];
     }
 }

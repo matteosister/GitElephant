@@ -13,8 +13,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\DiffCommand;
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * DiffCommandTest

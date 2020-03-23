@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Command\RevParseCommand;
-use \GitElephant\Repository;
+use GitElephant\Command\RevParseCommand;
+use GitElephant\Repository;
 
 /**
  * A Object instance represents a node in the git tree repository
@@ -30,9 +31,9 @@ use \GitElephant\Repository;
  */
 class NodeObject implements TreeishInterface
 {
-    const TYPE_BLOB = 'blob';
-    const TYPE_TREE = 'tree';
-    const TYPE_LINK = 'commit';
+    public const TYPE_BLOB = 'blob';
+    public const TYPE_TREE = 'tree';
+    public const TYPE_LINK = 'commit';
 
     /**
      * @var \GitElephant\Repository
@@ -143,10 +144,10 @@ class NodeObject implements TreeishInterface
 
         return [
             'permissions' => $permissions,
-            'type'        => $type,
-            'sha'         => $sha,
-            'size'        => $size,
-            'fullPath'    => $fullPath,
+            'type' => $type,
+            'sha' => $sha,
+            'size' => $size,
+            'fullPath' => $fullPath,
         ];
     }
 
@@ -186,7 +187,7 @@ class NodeObject implements TreeishInterface
      */
     public function __toString(): string
     {
-        return (string)$this->name;
+        return (string) $this->name;
     }
 
     /**

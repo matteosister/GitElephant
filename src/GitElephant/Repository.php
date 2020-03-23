@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,42 +20,42 @@
 
 namespace GitElephant;
 
+use GitElephant\Command\BranchCommand;
+use GitElephant\Command\Caller\Caller;
+use GitElephant\Command\Caller\CallerInterface;
+use GitElephant\Command\CatFileCommand;
+use GitElephant\Command\FetchCommand;
+use GitElephant\Command\LogCommand;
+use GitElephant\Command\LsTreeCommand;
+use GitElephant\Command\MainCommand;
+use GitElephant\Command\MergeCommand;
+use GitElephant\Command\PullCommand;
+use GitElephant\Command\PushCommand;
+use GitElephant\Command\RemoteCommand;
 use GitElephant\Command\ResetCommand;
+use GitElephant\Command\RevParseCommand;
 use GitElephant\Command\StashCommand;
+use GitElephant\Command\SubmoduleCommand;
+use GitElephant\Command\TagCommand;
+use GitElephant\Objects\Author;
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\Commit;
+use GitElephant\Objects\Diff\Diff;
+use GitElephant\Objects\Log;
+use GitElephant\Objects\LogRange;
+use GitElephant\Objects\NodeObject;
+use GitElephant\Objects\Remote;
+use GitElephant\Objects\Tag;
+use GitElephant\Objects\Tree;
+use GitElephant\Objects\TreeishInterface;
 use GitElephant\Objects\TreeObject;
+use GitElephant\Status\Status;
+use GitElephant\Status\StatusIndex;
+use GitElephant\Status\StatusWorkingTree;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Process\Exception\InvalidArgumentException;
-use \GitElephant\Command\BranchCommand;
-use \GitElephant\Command\Caller\Caller;
-use \GitElephant\Command\CatFileCommand;
-use \GitElephant\Command\CloneCommand;
-use \GitElephant\Command\FetchCommand;
-use \GitElephant\Command\LogCommand;
-use \GitElephant\Command\LsTreeCommand;
-use \GitElephant\Command\MainCommand;
-use \GitElephant\Command\MergeCommand;
-use \GitElephant\Command\PullCommand;
-use \GitElephant\Command\PushCommand;
-use \GitElephant\Command\RemoteCommand;
-use \GitElephant\Command\RevParseCommand;
-use \GitElephant\Command\SubmoduleCommand;
-use \GitElephant\Command\TagCommand;
-use \GitElephant\Objects\Author;
-use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\Commit;
-use \GitElephant\Objects\Diff\Diff;
-use \GitElephant\Objects\Log;
-use \GitElephant\Objects\LogRange;
-use \GitElephant\Objects\NodeObject;
-use \GitElephant\Objects\Remote;
-use \GitElephant\Objects\Tag;
-use \GitElephant\Objects\Tree;
-use \GitElephant\Objects\TreeishInterface;
-use \GitElephant\Status\Status;
-use \GitElephant\Status\StatusIndex;
-use \GitElephant\Status\StatusWorkingTree;
-use \Symfony\Component\Filesystem\Filesystem;
-use \Symfony\Component\Finder\Finder;
-use \Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Repository
@@ -84,7 +85,7 @@ class Repository
     /**
      * A general repository name
      *
-     * @var string $name the repository name
+     * @var string the repository name
      */
     private $name;
 
@@ -152,8 +153,12 @@ class Repository
      * @throws \Symfony\Component\Filesystem\Exception\IOException
      * @return Repository
      */
-    public static function createFromRemote($git, $repositoryPath = null, string $binary = null, $name = null): \GitElephant\Repository
-    {
+    public static function createFromRemote(
+        $git,
+        $repositoryPath = null,
+        string $binary = null,
+        $name = null
+    ): \GitElephant\Repository {
         if (null === $repositoryPath) {
             $tempDir = realpath(sys_get_temp_dir());
             $repositoryPath = sprintf('%s%s%s', $tempDir, DIRECTORY_SEPARATOR, sha1(uniqid()));
@@ -534,12 +539,13 @@ class Repository
         $actualBranch = $this->getMainBranch();
         $actualBranches = $this->getBranches(true, false);
         $allBranches = $this->getBranches(true, true);
+
         $realBranches = array_filter(
             $allBranches,
             function (string $branch) use ($actualBranches) {
                 return !in_array($branch, $actualBranches)
-                && preg_match('/^remotes(.+)$/', $branch)
-                && !preg_match('/^(.+)(HEAD)(.*?)$/', $branch);
+                    && preg_match('/^remotes(.+)$/', $branch)
+                    && !preg_match('/^(.+)(HEAD)(.*?)$/', $branch);
             }
         );
 
@@ -572,6 +578,7 @@ class Repository
             'ff-only', // force fast forward merge
             'no-ff', // force 3-way merge
         ];
+
         if (!in_array($mode, $valid_modes)) {
             throw new InvalidArgumentException("Invalid merge mode: $mode.");
         }
@@ -698,6 +705,7 @@ class Repository
     {
         $tags = [];
         $this->caller->execute(TagCommand::getInstance($this)->listTags());
+
         foreach ($this->caller->getOutputLines() as $tagString) {
             if ($tagString != '') {
                 $tags[] = new Tag($this, trim($tagString));
@@ -752,7 +760,7 @@ class Repository
 
         $files = iterator_to_array($finder->getIterator(), false);
         $files = array_reverse($files);
-        /** @var $firstFile SplFileInfo */
+        /** @var SplFileInfo $firstFile */
         $firstFile = $files[0];
         $tagName = $firstFile->getFilename();
 
@@ -774,7 +782,11 @@ class Repository
         if (in_array($name, $this->getBranches(true))) {
             return new Branch($this, $name);
         }
-        $tagFinderOutput = $this->caller->execute(TagCommand::getInstance($this)->listTags())->getOutputLines(true);
+
+        $tagFinderOutput = $this->caller
+            ->execute(TagCommand::getInstance($this)
+            ->listTags())->getOutputLines(true);
+        
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
                 return new Tag($this, $name);
@@ -881,8 +893,12 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return \GitElephant\Objects\Log
      */
-    public function getObjectLog(NodeObject $obj, $branch = null, int $limit = 1, int $offset = null): \GitElephant\Objects\Log
-    {
+    public function getObjectLog(
+        NodeObject $obj,
+        $branch = null,
+        int $limit = 1,
+        int $offset = null
+    ): \GitElephant\Objects\Log {
         $command = LogCommand::getInstance($this)->showObjectLog($obj, $branch, $limit, $offset);
 
         return Log::createFromOutputLines($this, $this->caller->execute($command)->getOutputLines());
@@ -949,8 +965,11 @@ class Repository
      * @throws \InvalidArgumentException
      * @return Objects\Diff\Diff
      */
-    public function getDiff(string $commit1 = null, string $commit2 = null, string $path = null): \GitElephant\Objects\Diff\Diff
-    {
+    public function getDiff(
+        string $commit1 = null,
+        string $commit2 = null,
+        string $path = null
+    ): \GitElephant\Objects\Diff\Diff {
         return Diff::create($this, $commit1, $commit2, $path);
     }
 
@@ -969,10 +988,17 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function cloneFrom(string $url, string $to = null, string $repoReference = null, int $depth = null, bool $recursive = false): self
-    {
-        $command = (Command\CloneCommand::getInstance($this))->cloneUrl($url, $to, $repoReference, $depth, $recursive);
+    public function cloneFrom(
+        string $url,
+        string $to = null,
+        string $repoReference = null,
+        int $depth = null,
+        bool $recursive = false
+    ): self {
+        $command = Command\CloneCommand::getInstance($this)
+            ->cloneUrl($url, $to, $repoReference, $depth, $recursive);
         $this->caller->execute($command);
+
         return $this;
     }
 
@@ -1168,9 +1194,9 @@ class Repository
     /**
      * Caller setter
      *
-     * @param \GitElephant\Command\Caller\Caller $caller the caller variable
+     * @param CallerInterface $caller the caller variable
      */
-    public function setCaller(Caller $caller): void
+    public function setCaller(CallerInterface $caller): void
     {
         $this->caller = $caller;
     }
@@ -1178,9 +1204,9 @@ class Repository
     /**
      * Caller getter
      *
-     * @return \GitElephant\Command\Caller\Caller
+     * @return CallerInterface the caller to use to call commands
      */
-    public function getCaller(): \GitElephant\Command\Caller\Caller
+    public function getCaller(): CallerInterface
     {
         return $this->caller;
     }

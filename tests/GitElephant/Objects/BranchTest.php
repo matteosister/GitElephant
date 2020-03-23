@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: matteo
  * Date: 05/01/13
@@ -6,10 +7,10 @@
  *
  * Just for fun...
  */
+
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Branch;
+use GitElephant\TestCase;
 
 /**
  * Branch tests
@@ -36,7 +37,9 @@ class BranchTest extends TestCase
         $this->assertEquals('45eac8c31adfbbf633824cee6ce8cc5040b33513', $matches[2]);
         $this->assertEquals('test "message" with?', $matches[3]);
 
-        $matches = Branch::getMatches("* (detached from 7a02066) 7a020660489a31ed9d0d6a42d5a0f0379334ba82 Merge branch 'PERFORM' into 'master'");
+        $matches = Branch::getMatches(
+            "* (detached from 7a02066) 7a020660489a31ed9d0d6a42d5a0f0379334ba82 Merge branch 'PERFORM' into 'master'"
+        );
         $this->assertEquals('detached', $matches[1]);
         $this->assertEquals('7a020660489a31ed9d0d6a42d5a0f0379334ba82', $matches[2]);
         $this->assertEquals("Merge branch 'PERFORM' into 'master'", $matches[3]);
@@ -49,7 +52,7 @@ class BranchTest extends TestCase
     {
         // short sha
         $this->expectException(\InvalidArgumentException::class);
-        $matches = Branch::getMatches('* develop 45eac8c31adfbbf633824cee6ce8cc5040b3351 test message');
+        Branch::getMatches('* develop 45eac8c31adfbbf633824cee6ce8cc5040b3351 test message');
     }
 
     /**
@@ -58,7 +61,7 @@ class BranchTest extends TestCase
     public function testGetMatchesNoSpaceError(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $matches = Branch::getMatches('* develop 45eac8c31adfbbf633824cee6ce8cc5040b33511test message');
+        Branch::getMatches('* develop 45eac8c31adfbbf633824cee6ce8cc5040b33511test message');
     }
 
     /**

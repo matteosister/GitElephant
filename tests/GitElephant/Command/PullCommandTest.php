@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,11 +20,9 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Branch;
-use \GitElephant\Objects\Remote;
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Commit;
-use \Mockery as m;
+use GitElephant\Objects\Branch;
+use GitElephant\TestCase;
+use Mockery as m;
 
 /**
  * CloneCommandTest

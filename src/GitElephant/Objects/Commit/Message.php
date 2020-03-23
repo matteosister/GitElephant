@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -80,7 +81,7 @@ class Message
         if ((is_countable($this->message) ? count($this->message) : 0) === 0) {
             return null;
         }
-
+        
         if ($full) {
             return implode(PHP_EOL, $this->message);
         } else {

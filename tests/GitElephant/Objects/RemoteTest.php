@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -12,8 +13,7 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\TestCase;
-use \GitElephant\Objects\Remote;
+use GitElephant\TestCase;
 
 /**
  * Class RemoteTest
@@ -162,40 +162,40 @@ EOM;
     public function sampleRemoteShowAsArray(): array
     {
         return [
-            '11.30'                                => [
-                'pushes_to'   => '11.30',
+            '11.30' => [
+                'pushes_to' => '11.30',
                 'local_state' => '(local out of date)',
             ],
-            '11.30.6'                              => [
-                'pushes_to'          => '11.30.6',
-                'local_state'        => '(up to date)',
-                'merges_with'        => '11.30.6',
+            '11.30.6' => [
+                'pushes_to' => '11.30.6',
+                'local_state' => '(up to date)',
+                'merges_with' => '11.30.6',
                 'local_relationship' => 'tracked',
             ],
-            '11.32.0'                              => [
-                'pushes_to'          => '11.32.0',
-                'local_state'        => '(up to date)',
-                'merges_with'        => '11.32.0',
+            '11.32.0' => [
+                'pushes_to' => '11.32.0',
+                'local_state' => '(up to date)',
+                'merges_with' => '11.32.0',
                 'local_relationship' => 'tracked',
             ],
-            '11.32'                                => [
-                'pushes_to'          => '11.32',
-                'local_state'        => '(local out of date)',
+            '11.32' => [
+                'pushes_to' => '11.32',
+                'local_state' => '(local out of date)',
                 'local_relationship' => 'tracked',
             ],
-            '11.40'                                => [
-                'pushes_to'          => '11.40',
-                'merges_with'        => '11.40',
-                'local_state'        => '(local out of date)',
+            '11.40' => [
+                'pushes_to' => '11.40',
+                'merges_with' => '11.40',
+                'local_state' => '(local out of date)',
                 'local_relationship' => 'tracked',
             ],
-            'master'                               => [
-                'pushes_to'          => 'master',
-                'local_state'        => '(up to date)',
-                'merges_with'        => 'master',
+            'master' => [
+                'pushes_to' => 'master',
+                'local_state' => '(up to date)',
+                'merges_with' => 'master',
                 'local_relationship' => 'tracked',
             ],
-            'pbi_4371'                             => [
+            'pbi_4371' => [
                 'local_relationship' => 'tracked',
             ],
             'refs/remotes/upstream/58120-squashed' => [
@@ -397,7 +397,7 @@ EOM;
         $obj = $this->getMockRemote();
         $this->assertEquals(
             $this->sampleRemoteShowRemoteName(),
-            (string)$obj,
+            (string) $obj,
             'magic to string method provides the remote name'
         );
     }

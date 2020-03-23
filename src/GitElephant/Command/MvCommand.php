@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,8 +20,8 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\NodeObject;
-use \GitElephant\Repository;
+use GitElephant\Objects\NodeObject;
+use GitElephant\Repository;
 
 /**
  * Class MvCommand
@@ -29,7 +30,7 @@ use \GitElephant\Repository;
  */
 class MvCommand extends BaseCommand
 {
-    const MV_COMMAND = 'mv';
+    public const MV_COMMAND = 'mv';
 
     /**
      * constructor

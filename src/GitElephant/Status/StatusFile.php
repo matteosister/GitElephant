@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -26,15 +27,15 @@ namespace GitElephant\Status;
  */
 class StatusFile
 {
-    const UNTRACKED = '?';
-    const IGNORED = '!';
-    const UNMODIFIED = '';
-    const MODIFIED = 'M';
-    const ADDED = 'A';
-    const DELETED = 'D';
-    const RENAMED = 'R';
-    const COPIED = 'C';
-    const UPDATED_BUT_UNMERGED = 'U';
+    public const UNTRACKED = '?';
+    public const IGNORED = '!';
+    public const UNMODIFIED = '';
+    public const MODIFIED = 'M';
+    public const ADDED = 'A';
+    public const DELETED = 'D';
+    public const RENAMED = 'R';
+    public const COPIED = 'C';
+    public const UPDATED_BUT_UNMERGED = 'U';
 
     /**
      * @var string
@@ -88,8 +89,12 @@ class StatusFile
      *
      * @return StatusFile
      */
-    public static function create(string $x, string $y, string $name, string $renamed = null): \GitElephant\Status\StatusFile
-    {
+    public static function create(
+        string $x,
+        string $y,
+        string $name,
+        string $renamed = null
+    ): \GitElephant\Status\StatusFile {
         return new self($x, $y, $name, $renamed);
     }
 
@@ -140,24 +145,24 @@ class StatusFile
     {
         $status = $this->x . $this->y;
         $matching = [
-            '/ [MD]/'   => 'not updated',
-            '/M[MD]/'   => 'updated in index',
-            '/A[MD]/'   => 'added to index',
-            '/D[M]/'    => 'deleted from index',
-            '/R[MD]/'   => 'renamed in index',
-            '/C[MD]/'   => 'copied in index',
+            '/ [MD]/' => 'not updated',
+            '/M[MD]/' => 'updated in index',
+            '/A[MD]/' => 'added to index',
+            '/D[M]/' => 'deleted from index',
+            '/R[MD]/' => 'renamed in index',
+            '/C[MD]/' => 'copied in index',
             '/[MARC] /' => 'index and work tree matches',
             '/[MARC]M/' => 'work tree changed since index',
             '/[MARC]D/' => 'deleted in work tree',
-            '/DD/'      => 'unmerged, both deleted',
-            '/AU/'      => 'unmerged, added by us',
-            '/UD/'      => 'unmerged, deleted by them',
-            '/UA/'      => 'unmerged, added by them',
-            '/DU/'      => 'unmerged, deleted by us',
-            '/AA/'      => 'unmerged, both added',
-            '/UU/'      => 'unmerged, both modified',
-            '/\?\?/'    => 'untracked',
-            '/!!/'      => 'ignored',
+            '/DD/' => 'unmerged, both deleted',
+            '/AU/' => 'unmerged, added by us',
+            '/UD/' => 'unmerged, deleted by them',
+            '/UA/' => 'unmerged, added by them',
+            '/DU/' => 'unmerged, deleted by us',
+            '/AA/' => 'unmerged, both added',
+            '/UU/' => 'unmerged, both modified',
+            '/\?\?/' => 'untracked',
+            '/!!/' => 'ignored',
         ];
         $out = [];
         foreach ($matching as $pattern => $label) {
@@ -189,6 +194,7 @@ class StatusFile
         if ($this->description === null) {
             $this->calculateDescription();
         }
+
         return $this->description;
     }
 

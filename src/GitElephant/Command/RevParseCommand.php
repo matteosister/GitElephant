@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2014  John Schlick John_Schlick@hotmail.com
@@ -19,53 +20,53 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Objects\Branch;
-use \GitElephant\Repository;
+use GitElephant\Objects\Branch;
+use GitElephant\Repository;
 
 /**
  * Class RevParseCommand
  */
 class RevParseCommand extends BaseCommand
 {
-    const GIT_REV_PARSE_COMMAND = 'rev-parse';
+    public const GIT_REV_PARSE_COMMAND = 'rev-parse';
 
-    const OPTION_ALL = '--all';
-    const OPTION_KEEP_DASHDASH = '--keep-dashdash';
-    const OPTION_STOP_AT_NON_OPTION = '--stop-at-non-option';
-    const OPTION_SQ_QUOTE = '--sq-quote';
-    const OPTION_REVS_ONLY = '--revs-only';
-    const OPTION_NO_REVS = '--no-revs';
-    const OPTION_FLAGS = '--flags';
-    const OPTION_NO_FLAGS = '--no-flags';
-    const OPTION_DEFAULT = '--default';
-    const OPTION_VERIFY = '--verify';
-    const OPTION_QUIET = '--quiet';
-    const OPTION_SQ = '--sq';
-    const OPTION_NOT = '--not';
-    const OPTION_SYMBOLIC = '--symbolic';
-    const OPTION_SYMBOLIC_FULL_NAME = '--symbolic-full-name';
-    const OPTION_ABBREV_REF = '--abbrev-ref';
-    const OPTION_DISAMBIGUATE = '--disambiguate';
-    const OPTION_BRANCHES = '--branches';
-    const OPTION_TAGS = '--tags';
-    const OPTION_REMOTES = '--remotes';
-    const OPTION_GLOB = '--glob';
-    const OPTION_SHOW_TOPLEVEL = '--show-toplevel';
-    const OPTION_SHOW_PREFIX = '--show-prefix';
-    const OPTION_SHOW_CDUP = '--show-cdup';
-    const OPTION_GIT_DIR = '--git-dir';
-    const OPTION_IS_INSIDE_GIT_DIR = '--is-inside-git-dir';
-    const OPTION_IS_INSIDE_WORK_TREE = '--is-inside-work-tree';
-    const OPTION_IS_BARE_REPOSIORY = '--is-bare-repository';
-    const OPTION_LCOAL_ENV_VARS = '--local-env-vars';
-    const OPTION_SHORT = '--short';
-    const OPTION_SINCE = '--since';
-    const OPTION_AFTER = '--after';
-    const OPTION_UNTIL = '--until';
-    const OPTION_BEFORE = '--before';
-    const OPTION_RESOLVE_GIT_DIR = '--resolve-git-dir';
+    public const OPTION_ALL = '--all';
+    public const OPTION_KEEP_DASHDASH = '--keep-dashdash';
+    public const OPTION_STOP_AT_NON_OPTION = '--stop-at-non-option';
+    public const OPTION_SQ_QUOTE = '--sq-quote';
+    public const OPTION_REVS_ONLY = '--revs-only';
+    public const OPTION_NO_REVS = '--no-revs';
+    public const OPTION_FLAGS = '--flags';
+    public const OPTION_NO_FLAGS = '--no-flags';
+    public const OPTION_DEFAULT = '--default';
+    public const OPTION_VERIFY = '--verify';
+    public const OPTION_QUIET = '--quiet';
+    public const OPTION_SQ = '--sq';
+    public const OPTION_NOT = '--not';
+    public const OPTION_SYMBOLIC = '--symbolic';
+    public const OPTION_SYMBOLIC_FULL_NAME = '--symbolic-full-name';
+    public const OPTION_ABBREV_REF = '--abbrev-ref';
+    public const OPTION_DISAMBIGUATE = '--disambiguate';
+    public const OPTION_BRANCHES = '--branches';
+    public const OPTION_TAGS = '--tags';
+    public const OPTION_REMOTES = '--remotes';
+    public const OPTION_GLOB = '--glob';
+    public const OPTION_SHOW_TOPLEVEL = '--show-toplevel';
+    public const OPTION_SHOW_PREFIX = '--show-prefix';
+    public const OPTION_SHOW_CDUP = '--show-cdup';
+    public const OPTION_GIT_DIR = '--git-dir';
+    public const OPTION_IS_INSIDE_GIT_DIR = '--is-inside-git-dir';
+    public const OPTION_IS_INSIDE_WORK_TREE = '--is-inside-work-tree';
+    public const OPTION_IS_BARE_REPOSIORY = '--is-bare-repository';
+    public const OPTION_LCOAL_ENV_VARS = '--local-env-vars';
+    public const OPTION_SHORT = '--short';
+    public const OPTION_SINCE = '--since';
+    public const OPTION_AFTER = '--after';
+    public const OPTION_UNTIL = '--until';
+    public const OPTION_BEFORE = '--before';
+    public const OPTION_RESOLVE_GIT_DIR = '--resolve-git-dir';
 
-    const TAG_HEAD = "HEAD";
+    public const TAG_HEAD = "HEAD";
 
     /**
      * constructor
@@ -85,17 +86,17 @@ class RevParseCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function revParse($arg = null, Array $options = array()): string
+    public function revParse($arg = null, array $options = []): string
     {
         $this->clearAll();
         $this->addCommandName(self::GIT_REV_PARSE_COMMAND);
         // if there are options add them.
-        if (! is_null($options)) {
+        if (!is_null($options)) {
             foreach ($options as $option) {
                 $this->addCommandArgument($option);
             }
         }
-        if (! is_null($arg)) {
+        if (!is_null($arg)) {
             $this->addCommandSubject2($arg);
         }
 

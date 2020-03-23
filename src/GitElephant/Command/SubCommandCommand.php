@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,7 +20,7 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Repository;
+use GitElephant\Repository;
 
 /**
  * SubCommandCommand
@@ -32,11 +33,10 @@ use \GitElephant\Repository;
  */
 class SubCommandCommand extends BaseCommand
 {
-
     /**
      * Subjects to a subcommand name
      */
-    private $orderedSubjects = array();
+    private $orderedSubjects = [];
 
     /**
      * constructor
@@ -65,12 +65,12 @@ class SubCommandCommand extends BaseCommand
 
     protected function getCommandSubjects()
     {
-        return ($this->orderedSubjects !== []) ? $this->orderedSubjects : array();
+        return $this->orderedSubjects !== [] ? $this->orderedSubjects : [];
     }
 
     protected function extractArguments($args): string
     {
-        $orderArgs = array();
+        $orderArgs = [];
         foreach ($args as $arg) {
             if (is_array($arg)) {
                 foreach ($arg as $value) {

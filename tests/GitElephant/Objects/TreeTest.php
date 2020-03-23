@@ -13,8 +13,8 @@
 
 namespace GitElephant\Objects;
 
-use \GitElephant\Repository;
-use \GitElephant\TestCase;
+use GitElephant\Repository;
+use GitElephant\TestCase;
 
 /**
  * TreeTest

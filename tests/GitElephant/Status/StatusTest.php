@@ -1,4 +1,5 @@
 <?php
+
 /**
  * User: matteo
  * Date: 28/05/13
@@ -8,7 +9,7 @@
 
 namespace GitElephant\Status;
 
-use \GitElephant\TestCase;
+use GitElephant\TestCase;
 
 /**
  * Class StatusTest

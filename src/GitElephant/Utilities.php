@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,6 +17,8 @@ declare(strict_types=1);
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
+
+declare(strict_types=1);
 
 namespace GitElephant;
 

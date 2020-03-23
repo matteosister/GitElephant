@@ -1,4 +1,5 @@
 <?php
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -19,9 +20,9 @@
 
 namespace GitElephant\Command;
 
-use \GitElephant\Command\Remote\AddSubCommand;
-use \GitElephant\Command\Remote\ShowSubCommand;
-use \GitElephant\Repository;
+use GitElephant\Command\Remote\AddSubCommand;
+use GitElephant\Command\Remote\ShowSubCommand;
+use GitElephant\Repository;
 
 /**
  * Class RemoteCommand
@@ -33,9 +34,9 @@ use \GitElephant\Repository;
  */
 class RemoteCommand extends BaseCommand
 {
-    const GIT_REMOTE = 'remote';
-    const GIT_REMOTE_OPTION_VERBOSE = '--verbose';
-    const GIT_REMOTE_OPTION_VERBOSE_SHORT = '-v';
+    public const GIT_REMOTE = 'remote';
+    public const GIT_REMOTE_OPTION_VERBOSE = '--verbose';
+    public const GIT_REMOTE_OPTION_VERBOSE_SHORT = '-v';
 
     /**
      * constructor
@@ -61,18 +62,17 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string Command string to pass to caller
      */
-    public function remote(SubCommandCommand $subcommand = null, Array $options = array()): string
+    public function remote(SubCommandCommand $subcommand = null, array $options = []): string
     {
         $normalizedOptions = $this->normalizeOptions($options, $this->remoteCmdSwitchOptions());
-
+        
         $this->clearAll();
-
+        
         $this->addCommandName(self::GIT_REMOTE);
 
         foreach ($normalizedOptions as $value) {
             $this->addCommandArgument($value);
         }
-
         if ($subcommand !== null) {
             $this->addCommandSubject($subcommand);
         }
@@ -87,10 +87,10 @@ class RemoteCommand extends BaseCommand
      */
     public function remoteCmdSwitchOptions(): array
     {
-        return array(
+        return [
             self::GIT_REMOTE_OPTION_VERBOSE => self::GIT_REMOTE_OPTION_VERBOSE,
             self::GIT_REMOTE_OPTION_VERBOSE_SHORT => self::GIT_REMOTE_OPTION_VERBOSE,
-        );
+        ];
     }
 
     /**
@@ -101,7 +101,7 @@ class RemoteCommand extends BaseCommand
      */
     public function verbose(): string
     {
-        return $this->remote(null, array(self::GIT_REMOTE_OPTION_VERBOSE));
+        return $this->remote(null, [self::GIT_REMOTE_OPTION_VERBOSE]);
     }
 
     /**
@@ -116,7 +116,7 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function show($name = null, $queryRemotes = true): string
+    public function show($name = null, bool $queryRemotes = true): string
     {
         $subcmd = new ShowSubCommand();
         $subcmd->prepare($name, $queryRemotes);
@@ -134,7 +134,7 @@ class RemoteCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function add($name, $url, $options = array()): string
+    public function add($name, $url, $options = []): string
     {
         $subcmd = new AddSubCommand();
         $subcmd->prepare($name, $url, $options);
