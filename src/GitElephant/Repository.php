@@ -671,22 +671,6 @@ class Repository
         return $this;
     }
 
-    public function getSubmodules(): array
-    {
-        $submodules = [];
-        $this->caller->execute(SubmoduleCommand::getInstance($this)->listSubmodules());
-
-        var_dump($this->caller->getOutputLines());
-
-        foreach ($this->caller->getOutputLines() as $submoduleString) {
-            if ($submoduleString != '') {
-                $submodules[] = new Submodule($this, trim($submoduleString));
-            }
-        }
-
-        return $submodules;
-    }
-
     /**
      * update submodules
      *
