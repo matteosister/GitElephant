@@ -323,7 +323,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
      * @param string $message
      * @return void
      */
-    protected function myAssertMatchesRegularExpression($pattern, $string, $message)
+    protected function myAssertMatchesRegularExpression($pattern, $string, $message = '')
     {
         if (method_exists($this, 'assertMatchesRegularExpression')) {
             $this->assertMatchesRegularExpression($pattern, $string, $message);
