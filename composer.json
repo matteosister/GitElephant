@@ -28,9 +28,8 @@
         "php": ">=7.2.0",
         "phpunit/phpunit": "~8.0|~9.0",
         "mockery/mockery": "~1.1",
-        "symfony/var-dumper": "~3.0|~4.0|~5.0",
-        "rector/rector": "^0.7.6",
-        "symplify/easy-coding-standard": "^v7.2.5"
+        "rector/rector": "^v0.7.11",
+        "symplify/easy-coding-standard": "^v7.2.12"
     },
     "minimum-stability": "stable",
     "autoload": {

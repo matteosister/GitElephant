@@ -1,7 +1,7 @@
 name: Code_Checks
 
 on:
-    pull_request: null
+    pull_request:
     push:
         branches:
             - master
@@ -11,36 +11,44 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                php: ['7.2', '7.3', '7.4']
+                php: ["7.2", "7.3", "7.4"]
+                symfony: [2.*, 3.*, 4.*, 5.*]
+                dependency-version: [prefer-lowest, prefer-stable]
 
-        name: PHP ${{ matrix.php }} tests
+        name: PHP ${{ matrix.php }} - S ${{ matrix.symfony }} - ${{ matrix.dependency-version }} - tests
         steps:
             # basically git clone
-            -   uses: actions/checkout@v2
+            - uses: actions/checkout@v2
 
-            # use PHP of specific version
-            -   uses: shivammathur/setup-php@v1
-                with:
-                    php-version: ${{ matrix.php }}
-                    coverage: none # disable xdebug, pcov
-            
-            -   run: git --version
-            -   run: git config --global user.email "test@github.com"
-            -   run: git config --global user.name "GitHub Action"
-            -   run: git --version
+            - name: Setup Git
+            - run: git --version
+            - run: git config --global user.email "test@github.com"
+            - run: git config --global user.name "GitHub Action"
+            - run: git --version
 
-            # if we 2 steps like this, we can better see if composer failed or tests
-            -   run: composer install --no-progress
+            - name: Setup PHP
+              # use PHP of specific version
+              uses: shivammathur/setup-php@v1
+              with:
+                  php-version: ${{ matrix.php }}
+                  coverage: none # disable xdebug, pcov
+                  tools: composer
 
-            -   run: composer tests
+            - name: Install Composer Dependencies
+              run: |
+                  composer require "symfony/process:${{ matrix.symfony }}" "symfony/filesystem:${{ matrix.symfony }}" "symfony/finder:${{ matrix.symfony }}" --no-interaction --no-update
+                  composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+
+            - name: Run PHPUnit Tests
+              run: composer tests
 
     code_style:
         runs-on: ubuntu-latest
         steps:
-            -   uses: actions/checkout@v2
-            -   uses: shivammathur/setup-php@v1
-                with:
-                    php-version: 7.3
-                    coverage: none # disable xdebug, pcov
-            -   run: composer install --no-progress
-            -   run: composer check-cs
+            - uses: actions/checkout@v2
+            - uses: shivammathur/setup-php@v1
+              with:
+                  php-version: 7.3
+                  coverage: none # disable xdebug, pcov
+            - run: composer install --no-progress
+            - run: composer check-cs
