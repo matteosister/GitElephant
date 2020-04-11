@@ -671,6 +671,22 @@ class Repository
         return $this;
     }
 
+    public function getSubmodules(): array
+    {
+        $submodules = [];
+        $this->caller->execute(SubmoduleCommand::getInstance($this)->listSubmodules());
+
+        var_dump($this->caller->getOutputLines());
+
+        foreach ($this->caller->getOutputLines() as $submoduleString) {
+            if ($submoduleString != '') {
+                $submodules[] = new Submodule($this, trim($submoduleString));
+            }
+        }
+
+        return $submodules;
+    }
+
     /**
      * update submodules
      *
@@ -785,8 +801,8 @@ class Repository
 
         $tagFinderOutput = $this->caller
             ->execute(TagCommand::getInstance($this)
-            ->listTags())->getOutputLines(true);
-        
+                ->listTags())->getOutputLines(true);
+
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
                 return new Tag($this, $name);

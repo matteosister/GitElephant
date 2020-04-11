@@ -54,7 +54,7 @@ class CommitTest extends TestCase
         $this->assertInstanceOf('\Datetime', $this->commit->getDatetimeCommitter());
         $this->assertInstanceOf('\GitElephant\Objects\Commit\Message', $this->commit->getMessage());
         $this->assertEquals('first commit', $this->commit->getMessage()->toString());
-        $this->assertMatchesRegularExpression('/^\w{40}$/', $this->commit->getSha());
+        $this->myAssertMatchesRegularExpression('/^\w{40}$/', $this->commit->getSha());
         $this->assertEquals([], $this->commit->getParents());
         $this->addFile('foo2');
         $mainCommand = new MainCommand();
@@ -63,7 +63,7 @@ class CommitTest extends TestCase
         $this->getCaller()->execute($showCommand->showCommit('HEAD'));
         $this->commit = Commit::pick($this->getRepository());
         $parents = $this->commit->getParents();
-        $this->assertMatchesRegularExpression('/^\w{40}$/', $parents[0]);
+        $this->myAssertMatchesRegularExpression('/^\w{40}$/', $parents[0]);
     }
 
     /**

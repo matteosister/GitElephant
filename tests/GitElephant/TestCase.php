@@ -312,4 +312,23 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->assertEquals($datetimeCommitter, $commit->getDatetimeCommitter()->format('U'));
         $this->assertEquals($message, $commit->getMessage()->getShortMessage());
     }
+
+    /**
+     * Compatibility function for PHP 7.2:
+     * PHPUnit 9. only supports PHP >= 7.3,
+     * but has a different compatibility regarding the assertRegex function
+     *
+     * @param string $pattern
+     * @param string $string
+     * @param string $message
+     * @return void
+     */
+    protected function myAssertMatchesRegularExpression($pattern, $string, $message)
+    {
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression($pattern, $string, $message);
+        } else {
+            $this->assertRegExp($pattern, $string, $message);
+        }
+    }
 }

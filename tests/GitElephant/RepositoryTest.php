@@ -686,7 +686,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->commit('commit 1', true);
         $this->getRepository()->move('foo', 'bar');
         $status = $this->getRepository()->getStatusOutput();
-        $this->assertMatchesRegularExpression('/(.*):    foo -> bar/', implode("\n", $status));
+        $this->myAssertMatchesRegularExpression('/(.*):    foo -> bar/', implode("\n", $status));
     }
 
     /**
@@ -700,7 +700,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->remove('foo');
         $status = $this->getRepository()->getStatusOutput();
 
-        $this->assertMatchesRegularExpression('/(.*):    foo/', implode("\n", $status));
+        $this->myAssertMatchesRegularExpression('/(.*):    foo/', implode("\n", $status));
     }
 
     /**

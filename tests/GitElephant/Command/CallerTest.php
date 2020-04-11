@@ -76,7 +76,7 @@ class CallerTest extends TestCase
         $caller = new Caller(null, $this->getRepository()->getPath());
         $mainCommand = new MainCommand();
         $caller->execute($mainCommand->init());
-        $this->assertMatchesRegularExpression(
+        $this->myAssertMatchesRegularExpression(
             sprintf('/^(.*)%s/', str_replace('/', '\/', $this->getRepository()->getPath())),
             $caller->getOutput()
         );
@@ -107,7 +107,7 @@ class CallerTest extends TestCase
         $this->getRepository()->init();
         $caller = new Caller(null, $this->getRepository()->getPath());
         $caller->execute('status');
-        $this->assertMatchesRegularExpression('/master/', $caller->getRawOutput($caller->getRawOutput()));
+        $this->myAssertMatchesRegularExpression('/master/', $caller->getRawOutput($caller->getRawOutput()));
     }
 
     /**
