@@ -61,12 +61,12 @@ class DiffTest extends TestCase
         $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffChunkLineAdded', $chunk[3]);
         $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffChunkLineUnchanged', $chunk[4]);
         
-        $this->assertEquals(1, ($chunk[0])->getOriginNumber());
-        $this->assertEquals(1, ($chunk[0])->getDestNumber());
-        $this->assertEquals(2, ($chunk[1])->getNumber());
-        $this->assertEquals(2, ($chunk[1])->getOriginNumber());
-        $this->assertEquals(3, ($chunk[4])->getDestNumber());
-        $this->assertEquals(4, ($chunk[4])->getOriginNumber());
+        $this->assertEquals(1, $chunk[0]->getOriginNumber());
+        $this->assertEquals(1, $chunk[0]->getDestNumber());
+        $this->assertEquals(2, $chunk[1]->getNumber());
+        $this->assertEquals(2, $chunk[1]->getOriginNumber());
+        $this->assertEquals(3, $chunk[4]->getDestNumber());
+        $this->assertEquals(4, $chunk[4]->getOriginNumber());
     }
 
     private function assertArrayInterfaces($obj): void

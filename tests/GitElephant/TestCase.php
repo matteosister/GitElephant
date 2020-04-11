@@ -124,7 +124,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * Write to file. Creates the file if not existing.
      * Overwrites content if already existing.
-     * 
+     *
      * @param string      $name       file name
      * @param string|null $folder     folder name
      * @param null        $content    content

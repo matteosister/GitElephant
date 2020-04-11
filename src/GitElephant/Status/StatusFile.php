@@ -186,8 +186,8 @@ class StatusFile
 
     /**
      * Get Description.
-     * Note that in certain environments, git might 
-     * format the output differently, leading to the description 
+     * Note that in certain environments, git might
+     * format the output differently, leading to the description
      * being an empty string. Use setDescription(string) to set it yourself.
      *
      * @see #calulcateDescription()
