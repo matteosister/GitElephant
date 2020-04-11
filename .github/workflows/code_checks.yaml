@@ -11,9 +11,18 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                php: ["7.2", "7.3", "7.4"]
-                symfony: [2.*, 3.*, 4.*, 5.*]
-                dependency-version: [prefer-lowest, prefer-stable]
+                php:
+                    - "7.2"
+                    - "7.3"
+                    - "7.4"
+                symfony:
+                    - 2.*
+                    - 3.*
+                    - 4.*
+                    - 5.*
+                dependency-version:
+                    # - prefer-lowest
+                    - prefer-stable
 
         name: PHP ${{ matrix.php }} - S ${{ matrix.symfony }} - ${{ matrix.dependency-version }} - tests
         steps:
@@ -36,7 +45,10 @@ jobs:
                   tools: composer
 
             - name: Install Composer Dependencies
+              # first, remove the ones that are not relevant for the tests, whose dependencies could interfer with
+              # the to-be-re-required symfony versions
               run: |
+                  composer remove --dev "rector/rector" "symplify/easy-coding-standard" --no-interaction --no-update
                   composer require "symfony/process:${{ matrix.symfony }}" "symfony/filesystem:${{ matrix.symfony }}" "symfony/finder:${{ matrix.symfony }}" --no-interaction --no-update
                   composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
 
