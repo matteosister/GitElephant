@@ -37,7 +37,7 @@ class Status
     private $repository;
 
     /**
-     * @var array
+     * @var array<StatusFile>
      */
     protected $files;
 
@@ -79,7 +79,7 @@ class Status
     /**
      * all files
      *
-     * @return Sequence
+     * @return Sequence<StatusFile>
      */
     public function all(): \PhpCollection\Sequence
     {
@@ -89,7 +89,7 @@ class Status
     /**
      * untracked files
      *
-     * @return Sequence
+     * @return Sequence<StatusFile>
      */
     public function untracked(): \PhpCollection\Sequence
     {
@@ -99,7 +99,7 @@ class Status
     /**
      * modified files
      *
-     * @return Sequence
+     * @return Sequence<StatusFile>
      */
     public function modified(): \PhpCollection\Sequence
     {
@@ -109,7 +109,7 @@ class Status
     /**
      * added files
      *
-     * @return Sequence
+     * @return Sequence<StatusFile>
      */
     public function added(): \PhpCollection\Sequence
     {
@@ -119,7 +119,7 @@ class Status
     /**
      * deleted files
      *
-     * @return Sequence
+     * @return Sequence<StatusFile>
      */
     public function deleted(): \PhpCollection\Sequence
     {
@@ -129,7 +129,7 @@ class Status
     /**
      * renamed files
      *
-     * @return Sequence
+     * @return Sequence<StatusFile>
      */
     public function renamed(): \PhpCollection\Sequence
     {
@@ -139,7 +139,7 @@ class Status
     /**
      * copied files
      *
-     * @return Sequence
+     * @return Sequence<StatusFile>
      */
     public function copied(): \PhpCollection\Sequence
     {
@@ -168,7 +168,7 @@ class Status
     /**
      * @param string $line
      *
-     * @return mixed
+     * @return array<string>|null
      */
     protected function splitStatusLine(string $line)
     {
@@ -182,7 +182,7 @@ class Status
      *
      * @param string $type
      *
-     * @return Sequence
+     * @return Sequence<StatusFile>
      */
     protected function filterByType(string $type): \PhpCollection\Sequence
     {

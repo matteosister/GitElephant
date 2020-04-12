@@ -88,7 +88,7 @@ class TreeTest extends TestCase
      */
     public function testSubmodule(): void
     {
-        $tempDir = realpath(sys_get_temp_dir()) . 'gitelephant_' . md5(uniqid(rand(), 1));
+        $tempDir = realpath(sys_get_temp_dir()) . 'gitelephant_' . md5(uniqid());
         // horrible hack because php is beautiful.
         $tempName = @tempnam($tempDir, 'gitelephant');
         $path = $tempName;

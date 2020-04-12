@@ -48,7 +48,7 @@ class DiffCommand extends BaseCommand
      *
      * @param TreeishInterface      $of   the reference to diff
      * @param TreeishInterface|null $with the source reference to diff with $of, if not specified is the current HEAD
-     * @param null                  $path the path to diff, if not specified the full repository
+     * @param string|null                 $path the path to diff, if not specified the full repository
      *
      * @throws \RuntimeException
      * @return string
@@ -83,7 +83,7 @@ class DiffCommand extends BaseCommand
             }
             $this->addPath($path);
         }
-        
+
         $this->addCommandSubject($subject);
 
         return $this->getCommand();

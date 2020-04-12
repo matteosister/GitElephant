@@ -139,7 +139,7 @@ class StatusFile
     /**
      * description of the status
      *
-     * @return string
+     * @return void
      */
     public function calculateDescription(): void
     {

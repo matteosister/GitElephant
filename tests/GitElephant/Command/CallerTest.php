@@ -107,7 +107,7 @@ class CallerTest extends TestCase
         $this->getRepository()->init();
         $caller = new Caller(null, $this->getRepository()->getPath());
         $caller->execute('status');
-        $this->myAssertMatchesRegularExpression('/master/', $caller->getRawOutput($caller->getRawOutput()));
+        $this->myAssertMatchesRegularExpression('/master/', $caller->getRawOutput());
     }
 
     /**

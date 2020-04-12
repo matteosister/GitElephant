@@ -108,9 +108,9 @@ EOM;
      *
      * @return string
      */
-    public function sampleRemoteShowRemoteHEAD(): void
+    public function sampleRemoteShowRemoteHEAD(): string
     {
-        'Apollo';
+        return 'Apollo';
     }
 
     /**

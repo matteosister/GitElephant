@@ -67,7 +67,7 @@ class Remote
     private $remoteHEAD = null;
 
     /**
-     * @var array
+     * @var array<Branch>
      */
     private $branches;
 
@@ -75,13 +75,12 @@ class Remote
      * Class constructor
      *
      * @param \GitElephant\Repository $repository   repository instance
-     * @param string                  $name         remote name
+     * @param string|null                  $name         remote name
      * @param bool                    $queryRemotes Do not fetch new information from remotes
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \UnexpectedValueException
-     * @return \GitElephant\Objects\Remote
      */
     public function __construct(Repository $repository, string $name = null, bool $queryRemotes = true)
     {
@@ -90,8 +89,6 @@ class Remote
             $this->name = trim($name);
             $this->createFromCommand($queryRemotes);
         }
-
-        return $this;
     }
 
     /**
@@ -120,7 +117,7 @@ class Remote
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return array
+     * @return array<string>
      */
     public function getVerboseOutput(RemoteCommand $remoteCmd = null): array
     {
@@ -146,7 +143,7 @@ class Remote
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return array
+     * @return array<string>
      */
     public function getShowOutput(
         string $name = null,
@@ -199,11 +196,11 @@ class Remote
     /**
      * parse details from remote show
      *
-     * @param array|string $remoteDetails Output lines for a remote show
+     * @param array $remoteDetails Output lines for a remote show
      *
      * @throws \UnexpectedValueException
      */
-    public function parseOutputLines(array $remoteDetails)
+    public function parseOutputLines(array $remoteDetails): void
     {
         array_filter($remoteDetails);
         $name = array_shift($remoteDetails);
@@ -250,7 +247,7 @@ class Remote
                 $groups['localRefs'] = $lineno;
             }
         }
-        
+
         $this->setBranches($this->aggregateBranchDetails($groups, $remoteDetails));
     }
 
@@ -262,7 +259,7 @@ class Remote
      *                             are respective of the "group" detail present in $remoteDetails
      * @param array $remoteDetails Output of git-remote show [name]
      *
-     * @return array
+     * @return array<array<string>>
      */
     protected function aggregateBranchDetails($groupLines, $remoteDetails): array
     {
@@ -301,9 +298,9 @@ class Remote
     /**
      * parse the details related to remote branch references
      *
-     * @param array $lines
+     * @param array<string> $lines
      *
-     * @return array
+     * @return array // <string, array<string, string>>
      */
     public function parseRemoteBranches(array $lines): array
     {
@@ -325,9 +322,9 @@ class Remote
      * parse the details related to local branches and the remotes that they
      * merge with
      *
-     * @param array $lines
+     * @param array<string> $lines
      *
-     * @return array
+     * @return array // <array<string>>
      */
     public function parseLocalPullBranches($lines): array
     {
@@ -349,9 +346,9 @@ class Remote
      * parse the details related to local branches and the remotes that they
      * push to
      *
-     * @param array $lines
+     * @param array<string> $lines
      *
-     * @return array
+     * @return array // <array<string>>
      */
     public function parseLocalPushRefs($lines): array
     {

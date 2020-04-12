@@ -84,9 +84,12 @@ class Branch extends NodeObject implements TreeishInterface
         string $name,
         string $startPoint = null
     ): \GitElephant\Objects\Branch {
+        /** @var BranchCommand */
+        $branchCommand = BranchCommand::getInstance($repository);
+
         $repository
             ->getCaller()
-            ->execute(BranchCommand::getInstance($repository)->create($name, $startPoint));
+            ->execute($branchCommand->create($name, $startPoint));
 
         return new self($repository, $name);
     }
@@ -151,7 +154,7 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @throws \InvalidArgumentException
      */
-    private function createFromCommand()
+    private function createFromCommand(): void
     {
         $command = BranchCommand::getInstance($this->getRepository())->listBranches();
         $outputLines = $this->repository->getCaller()->execute($command)->getOutputLines(true);
@@ -210,7 +213,7 @@ class Branch extends NodeObject implements TreeishInterface
         while (empty($matches) and $regex = array_pop($regexList)) {
             preg_match($regex, trim($branchString), $matches);
         }
-        
+
         if (empty($matches)) {
             throw new \InvalidArgumentException(sprintf('the branch string is not valid: %s', $branchString));
         }

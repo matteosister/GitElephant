@@ -34,16 +34,37 @@ interface CallerInterface
      *
      * @return CallerInterface
      */
-    public function execute(string $cmd, bool $git = true, string $cwd = null): CallerInterface;
+    public function execute(
+        string $cmd,
+        bool $git = true,
+        string $cwd = null,
+        array $acceptedExitCodes = [0]
+    ): CallerInterface;
 
     /**
      * after calling execute this method should return the output
      *
      * @param bool $stripBlankLines strips the blank lines
      *
-     * @return array
+     * @return array<string>
      */
     public function getOutputLines(bool $stripBlankLines = false): array;
+
+    /**
+     * Returns the output of the last executed command.
+     * May be adjusted, such as trimmed.
+     *
+     * @return string
+     */
+    public function getOutput(): string;
+
+    /**
+     * Returns the output of the last executed command.
+     * May not be adjusted, not trimmed or anything, really raw.
+     *
+     * @return string
+     */
+    public function getRawOutput(): string;
 
     /**
      * Get the binary path

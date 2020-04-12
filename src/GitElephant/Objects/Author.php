@@ -64,9 +64,9 @@ class Author
     /**
      * email getter
      *
-     * @return string
+     * @return string|null
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -84,9 +84,9 @@ class Author
     /**
      * name getter
      *
-     * @return mixed
+     * @return string|null
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }

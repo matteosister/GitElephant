@@ -32,12 +32,12 @@ interface TreeishInterface
      *
      * @abstract
      */
-    public function getSha();
+    public function getSha(): ?string;
 
     /**
      * toString magic method, should return the sha of the treeish
      *
      * @abstract
      */
-    public function __toString();
+    public function __toString(): string;
 }

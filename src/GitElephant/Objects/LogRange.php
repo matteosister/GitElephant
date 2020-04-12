@@ -52,9 +52,9 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * @param \GitElephant\Repository $repository  repo
      * @param string                  $refStart    starting reference (excluded from the range)
      * @param string                  $refEnd      ending reference
-     * @param null                    $path        path
+     * @param string|null                   $path        path
      * @param int                     $limit       limit
-     * @param null                    $offset      offset
+     * @param int|null                   $offset      offset
      * @param boolean                 $firstParent first parent
      *
      * @throws \RuntimeException
@@ -66,7 +66,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
         $refEnd,
         $path = null,
         int $limit = 15,
-        int $offset = null,
+        ?int $offset = null,
         bool $firstParent = false
     ) {
         $this->repository = $repository;
@@ -80,7 +80,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * @param string  $refEnd      treeish reference
      * @param string  $path        path
      * @param int     $limit       limit
-     * @param string  $offset      offset
+     * @param int|null  $offset      offset
      * @param boolean $firstParent first parent
      *
      * @throws \RuntimeException
@@ -94,7 +94,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
         $refEnd,
         $path = null,
         int $limit = 15,
-        int $offset = null,
+        ?int $offset = null,
         bool $firstParent = false
     ): void {
         $command = LogRangeCommand::getInstance($this->getRepository())->showLog(
@@ -205,6 +205,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * @param int   $offset offset
      * @param mixed $value  value
      *
+     * @return void
      * @throws \RuntimeException
      */
     public function offsetSet($offset, $value)
@@ -217,6 +218,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      *
      * @param int $offset offset
      *
+     * @return void
      * @throws \RuntimeException
      */
     public function offsetUnset($offset)
@@ -227,7 +229,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
     /**
      * Countable interface
      *
-     * @return int|void
+     * @return int
      */
     public function count(): int
     {

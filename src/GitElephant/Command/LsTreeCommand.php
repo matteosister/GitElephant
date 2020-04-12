@@ -74,7 +74,7 @@ class LsTreeCommand extends BaseCommand
     /**
      * tree of a given path
      *
-     * @param string            $ref  reference
+     * @param string|TreeishInterface        $ref  reference
      * @param string|NodeObject $path path
      *
      * @throws \RuntimeException

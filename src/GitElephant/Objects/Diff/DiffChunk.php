@@ -72,7 +72,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     /**
      * array of lines
      *
-     * @var array
+     * @var array<DiffChunkLine>
      */
     private $lines = [];
 
@@ -86,7 +86,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     public function __construct(array $lines)
     {
         $this->position = 0;
-        
+
         $this->getLinesNumbers($lines[0]);
         $this->parseLines(array_slice($lines, 1));
     }
@@ -98,7 +98,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      *
      * @throws \Exception
      */
-    private function parseLines(array $lines)
+    private function parseLines(array $lines): void
     {
         $originUnchanged = $this->originStartLine;
         $destUnchanged = $this->destStartLine;
@@ -234,7 +234,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      *
      * @param int $offset offset
      *
-     * @return null
+     * @return DiffChunkLine|null
      */
     public function offsetGet($offset)
     {
@@ -244,7 +244,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     /**
      * ArrayAccess interface
      *
-     * @param int   $offset offset
+     * @param int|null   $offset offset
      * @param mixed $value  value
      */
     public function offsetSet($offset, $value): void
@@ -269,7 +269,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     /**
      * Countable interface
      *
-     * @return int|void
+     * @return int
      */
     public function count(): int
     {

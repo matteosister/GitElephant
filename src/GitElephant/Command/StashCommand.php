@@ -96,7 +96,7 @@ class StashCommand extends BaseCommand
     /**
      * Shows details for a specific stash
      *
-     * @param string $stash
+     * @param string|int $stash
      *
      * @return string
      */
@@ -212,7 +212,7 @@ class StashCommand extends BaseCommand
     }
 
     /**
-     * @param $stash
+     * @param int|string $stash
      *
      * @return string
      */

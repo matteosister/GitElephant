@@ -38,35 +38,35 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * the cursor position
      *
-     * @var int
+     * @var int|null
      */
     private $position;
 
     /**
      * the original file path for the diff object
      *
-     * @var string
+     * @var string|null
      */
     private $originalPath;
 
     /**
      * the destination path for the diff object
      *
-     * @var string
+     * @var string|null
      */
     private $destinationPath;
 
     /**
      * rename similarity index
      *
-     * @var int
+     * @var int|null
      */
     private $similarityIndex;
 
     /**
      * the diff mode
      *
-     * @var string
+     * @var string|null
      */
     private $mode;
 
@@ -116,9 +116,9 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * toString magic method
      *
-     * @return mixed
+     * @return string|null
      */
-    public function __toString(): string
+    public function __toString(): ?string
     {
         return $this->originalPath;
     }
@@ -274,7 +274,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @param int $offset offset
      *
-     * @return null
+     * @return DiffChunk|null
      */
     public function offsetGet($offset)
     {
@@ -284,7 +284,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * ArrayAccess interface
      *
-     * @param int   $offset offset
+     * @param int|null   $offset offset
      * @param mixed $value  value
      */
     public function offsetSet($offset, $value): void

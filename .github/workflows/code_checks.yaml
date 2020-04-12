@@ -48,12 +48,23 @@ jobs:
               # first, remove the ones that are not relevant for the tests, whose dependencies could interfer with
               # the to-be-re-required symfony versions
               run: |
-                  composer remove --dev "rector/rector" "symplify/easy-coding-standard" --no-interaction --no-update
+                  composer remove --dev "rector/rector" "symplify/easy-coding-standard" "phpstan/phpstan" "phpstan/phpstan-phpunit" --no-interaction --no-update
                   composer require "symfony/process:${{ matrix.symfony }}" "symfony/filesystem:${{ matrix.symfony }}" "symfony/finder:${{ matrix.symfony }}" --no-interaction --no-update
                   composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
 
             - name: Run PHPUnit Tests
               run: composer tests
+
+    static_tests:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - uses: shivammathur/setup-php@v1
+              with:
+                  php-version: 7.3
+                  coverage: none # disable xdebug, pcov
+            - run: composer install --no-progress
+            - run: ./vendor/bin/phpstan analyse -c phpstan.neon
 
     code_style:
         runs-on: ubuntu-latest

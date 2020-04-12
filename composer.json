@@ -29,7 +29,9 @@
         "phpunit/phpunit": "~8.0|~9.0",
         "mockery/mockery": "~1.1",
         "rector/rector": "^v0.7.11",
-        "symplify/easy-coding-standard": "^v7.2.12"
+        "symplify/easy-coding-standard": "^v7.2.12",
+        "phpstan/phpstan": "^0.12.18",
+        "phpstan/phpstan-phpunit": "^0.12.6"
     },
     "minimum-stability": "stable",
     "autoload": {
