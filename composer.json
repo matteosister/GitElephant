@@ -19,10 +19,10 @@
     ],
     "require": {
         "php": ">=7.2.0",
-        "symfony/process": "~2.8|~3.0|~4.0|~5.0",
-        "symfony/filesystem": "~2.8|~3.0|~4.0|~5.0",
-        "symfony/finder": "~2.8|~3.0|~4.0|~5.0",
-        "phpcollection/phpcollection": "~0.4|~5.0"
+        "symfony/process": "~3.4|~4.0|~5.0",
+        "symfony/filesystem": "~3.4|~4.0|~5.0",
+        "symfony/finder": "~3.4|~4.0|~5.0",
+        "phpcollection/phpcollection": "~4.0|~5.0"
     },
     "require-dev": {
         "php": ">=7.2.0",
