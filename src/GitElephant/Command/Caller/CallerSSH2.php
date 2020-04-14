@@ -52,18 +52,13 @@ class CallerSSH2 extends AbstractCaller
      * @param string      $cmd the command
      * @param bool        $git prepend git to the command
      * @param null|string $cwd directory where the command should be executed
-     * @param array       $acceptedExitCodes the exit codes to accept.
-     *                      The exit checked is from stream_get_contents:
-     *                      if it returns false, a error is thrown if this array does not contain '1'.
-     *                      For backwards compatibility it does accept false by stream_get_contents by default
      *
      * @return CallerInterface
      */
     public function execute(
         $cmd,
         $git = true,
-        $cwd = null,
-        array $acceptedExitCodes = [0, 1]
+        $cwd = null
     ): \GitElephant\Command\Caller\CallerInterface {
         if ($git) {
             $cmd = $this->getBinaryPath() . ' ' . $cmd;
@@ -72,7 +67,7 @@ class CallerSSH2 extends AbstractCaller
         stream_set_blocking($stream, true);
         $data = stream_get_contents($stream);
         fclose($stream);
-        if ($data === false && !in_array(1, $acceptedExitCodes)) {
+        if ($data === false) {
             throw new \RuntimeException("Error upon execution of CallerSSH2: stream_get_contents returned false.", 1);
         }
         $this->rawOutput = $data === false ? '' : $data;

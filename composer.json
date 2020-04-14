@@ -28,10 +28,10 @@
         "php": ">=7.2.0",
         "phpunit/phpunit": "~8.0|~9.0",
         "mockery/mockery": "~1.1",
-        "rector/rector": "^v0.7.14",
-        "symplify/easy-coding-standard": "^v7.2.12",
-        "phpstan/phpstan": "^0.12.18",
-        "phpstan/phpstan-phpunit": "^0.12.7"
+        "rector/rector": "*",
+        "symplify/easy-coding-standard": "*",
+        "phpstan/phpstan": "*",
+        "phpstan/phpstan-phpunit": "*"
     },
     "minimum-stability": "stable",
     "autoload": {
