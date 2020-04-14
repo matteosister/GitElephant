@@ -67,9 +67,7 @@ class CallerSSH2 extends AbstractCaller
         stream_set_blocking($stream, true);
         $data = stream_get_contents($stream);
         fclose($stream);
-        if ($data === false) {
-            throw new \RuntimeException("Error upon execution of CallerSSH2: stream_get_contents returned false.", 1);
-        }
+        
         $this->rawOutput = $data === false ? '' : $data;
         // rtrim values
         $values = array_map('rtrim', explode(PHP_EOL, $this->rawOutput));

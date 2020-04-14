@@ -224,7 +224,11 @@ class Repository
      */
     public function unstage($path): self
     {
-        $this->caller->execute(MainCommand::getInstance($this)->unstage($path), true, null, [0, 1]);
+        if ($this->caller instanceof Caller) {
+            $this->caller->execute(MainCommand::getInstance($this)->unstage($path), true, null, [0, 1]);
+        } else {
+            $this->caller->execute(MainCommand::getInstance($this)->unstage($path), true, null);
+        }
 
         return $this;
     }
