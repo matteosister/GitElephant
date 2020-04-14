@@ -788,8 +788,8 @@ class Repository
         }
 
         $tagFinderOutput = $this->caller
-            ->execute(TagCommand::getInstance($this)
-                ->listTags())->getOutputLines(true);
+            ->execute(TagCommand::getInstance($this)->listTags())
+            ->getOutputLines(true);
 
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
