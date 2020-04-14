@@ -94,7 +94,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
         $refEnd,
         $path = null,
         int $limit = 15,
-        ?int $offset = null,
+        int $offset = 0,
         bool $firstParent = false
     ): void {
         $command = LogRangeCommand::getInstance($this->getRepository())->showLog(
