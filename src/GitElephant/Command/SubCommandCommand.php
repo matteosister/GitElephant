@@ -104,10 +104,6 @@ class SubCommandCommand extends BaseCommand
     {
         $command = $this->getCommandName();
 
-        if (is_null($command)) {
-            throw new \RuntimeException("commandName must be specified to build a subcommand");
-        }
-
         $command .= ' ';
         $args = $this->getCommandArguments();
         if (count($args) > 0) {
