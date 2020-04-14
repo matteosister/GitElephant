@@ -54,7 +54,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * @param string                  $refEnd      ending reference
      * @param string|null                   $path        path
      * @param int                     $limit       limit
-     * @param int|null                   $offset      offset
+     * @param int                   $offset      offset
      * @param boolean                 $firstParent first parent
      *
      * @throws \RuntimeException
@@ -80,7 +80,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * @param string  $refEnd      treeish reference
      * @param string  $path        path
      * @param int     $limit       limit
-     * @param int|null  $offset      offset
+     * @param int  $offset      offset
      * @param boolean $firstParent first parent
      *
      * @throws \RuntimeException
