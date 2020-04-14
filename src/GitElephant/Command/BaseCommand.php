@@ -169,7 +169,7 @@ class BaseCommand
      *
      * @return string
      */
-    protected function getCommandName(): ?string
+    protected function getCommandName(): string
     {
         return $this->commandName;
     }

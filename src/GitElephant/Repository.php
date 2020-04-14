@@ -45,7 +45,6 @@ use GitElephant\Objects\Log;
 use GitElephant\Objects\LogRange;
 use GitElephant\Objects\NodeObject;
 use GitElephant\Objects\Remote;
-use GitElephant\Objects\Submodule;
 use GitElephant\Objects\Tag;
 use GitElephant\Objects\Tree;
 use GitElephant\Objects\TreeishInterface;
