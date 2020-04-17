@@ -397,6 +397,7 @@ class RepositoryTest extends TestCase
         $repo->commit('added E.txt', true);
 
         $tree = $repo->getTree();
+        /** @var NodeObject */
         $obj = $tree[0];
 
         $log = $this->getRepository()->getObjectLog($obj);
@@ -686,7 +687,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->commit('commit 1', true);
         $this->getRepository()->move('foo', 'bar');
         $status = $this->getRepository()->getStatusOutput();
-        $this->assertRegExp('/(.*):    foo -> bar/', implode("\n", $status));
+        $this->myAssertMatchesRegularExpression('/(.*):    foo -> bar/', implode("\n", $status));
     }
 
     /**
@@ -700,7 +701,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->remove('foo');
         $status = $this->getRepository()->getStatusOutput();
 
-        $this->assertRegExp('/(.*):    foo/', implode("\n", $status));
+        $this->myAssertMatchesRegularExpression('/(.*):    foo/', implode("\n", $status));
     }
 
     /**

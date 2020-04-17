@@ -33,7 +33,7 @@ class Utilities
      * @param string[] $list  a flat array
      * @param string $pattern a regular expression
      *
-     * @return string[]
+     * @return array<int, array<int, string>>
      */
     public static function pregSplitArray(array $list, string $pattern): array
     {
@@ -56,7 +56,7 @@ class Utilities
      * @param string[] $list  a flat array
      * @param string $pattern a regular expression
      *
-     * @return string[]
+     * @return array<int, array<int, string>>
      */
     public static function pregSplitFlatArray(array $list, string $pattern): array
     {

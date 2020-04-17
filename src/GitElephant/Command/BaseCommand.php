@@ -35,7 +35,7 @@ class BaseCommand
     /**
      * the command name
      *
-     * @var string
+     * @var string|null
      */
     private $commandName = null;
 
@@ -77,31 +77,31 @@ class BaseCommand
     /**
      * the command subject
      *
-     * @var string|SubCommandCommand
+     * @var string|SubCommandCommand|null
      */
     private $commandSubject = null;
 
     /**
      * the command second subject (i.e. for branch)
      *
-     * @var string|SubCommandCommand
+     * @var string|SubCommandCommand|null
      */
     private $commandSubject2 = null;
 
     /**
      * the path
      *
-     * @var string
+     * @var string|null
      */
     private $path = null;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $binaryVersion;
 
     /**
-     * @var Repository
+     * @var Repository|null
      */
     private $repo;
 
@@ -143,6 +143,12 @@ class BaseCommand
         $this->binaryVersion = null;
     }
 
+    /**
+     * Get a new instance of this command
+     *
+     * @param Repository $repo
+     * @return static
+     */
     public static function getInstance(Repository $repo = null)
     {
         return new static($repo);
@@ -153,7 +159,7 @@ class BaseCommand
      *
      * @param string $commandName the command name
      */
-    protected function addCommandName($commandName): void
+    protected function addCommandName(string $commandName): void
     {
         $this->commandName = $commandName;
     }
@@ -456,9 +462,11 @@ class BaseCommand
     }
 
     /**
+     * Get the version of the git binary
+     *
      * @return string|null
      */
-    public function getBinaryVersion(): string
+    public function getBinaryVersion(): ?string
     {
         if (is_null($this->binaryVersion)) {
             $this->binaryVersion = $this->repo->getCaller()->getBinaryVersion();

@@ -1,0 +1,20 @@
+parameters:
+	level: 6
+	paths:
+		- src
+		# - tests
+	
+	# things we disable for the moement, but one day...
+	inferPrivatePropertyTypeFromConstructor: true
+	checkMissingIterableValueType: false
+	checkGenericClassInNonGenericObjectType: false
+	ignoreErrors:
+		- 
+			message: '#Unsafe usage of new static\(\).#'
+			path: %currentWorkingDirectory%
+		-
+			message: '#Parameter \#1 \$command of class Symfony\\Component\\Process\\Process constructor expects array, string given.#'
+			path: src/GitElephant/Command/Caller/Caller.php
+
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon

@@ -30,7 +30,7 @@ use PhpCollection\Sequence;
 class StatusIndex extends Status
 {
     /**
-     * @return Sequence
+     * @return Sequence<StatusFile>
      */
     public function untracked(): \PhpCollection\Sequence
     {
@@ -40,7 +40,7 @@ class StatusIndex extends Status
     /**
      * all files with modified status in the index
      *
-     * @return Sequence
+     * @return Sequence<StatusFile>
      */
     public function all(): \PhpCollection\Sequence
     {
@@ -59,7 +59,7 @@ class StatusIndex extends Status
      *
      * @param string $type
      *
-     * @return Sequence
+     * @return Sequence<StatusFile>
      */
     protected function filterByType(string $type): \PhpCollection\Sequence
     {

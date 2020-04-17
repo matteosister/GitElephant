@@ -68,7 +68,7 @@ abstract class DiffChunkLine
     /**
      * type getter
      *
-     * @return mixed
+     * @return string
      */
     public function getType(): string
     {
@@ -88,7 +88,7 @@ abstract class DiffChunkLine
     /**
      * content getter
      *
-     * @return mixed
+     * @return string
      */
     public function getContent(): string
     {

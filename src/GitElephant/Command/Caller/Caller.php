@@ -39,13 +39,6 @@ class Caller extends AbstractCaller
     private $repositoryPath;
 
     /**
-     * raw output
-     *
-     * @var string
-     */
-    private $rawOutput;
-
-    /**
      * Class constructor
      *
      * @param string|null   $gitPath the physical path to the git binary

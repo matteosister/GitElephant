@@ -35,6 +35,8 @@ class SubCommandCommand extends BaseCommand
 {
     /**
      * Subjects to a subcommand name
+     *
+     * @var array<SubCommandCommand|array|string>
      */
     private $orderedSubjects = [];
 
@@ -55,9 +57,15 @@ class SubCommandCommand extends BaseCommand
     public function clearAll(): void
     {
         parent::clearAll();
-        $this->orderedSubjects = null;
+        $this->orderedSubjects = [];
     }
 
+    /**
+     * Add a subject to this subcommand
+     *
+     * @param SubCommandCommand|array|string $subject
+     * @return void
+     */
     protected function addCommandSubject($subject): void
     {
         $this->orderedSubjects[] = $subject;
@@ -65,10 +73,10 @@ class SubCommandCommand extends BaseCommand
 
     protected function getCommandSubjects(): array
     {
-        return is_array($this->orderedSubjects) ? $this->orderedSubjects : [];
+        return $this->orderedSubjects;
     }
 
-    protected function extractArguments($args): string
+    protected function extractArguments(array $args): string
     {
         $orderArgs = [];
         foreach ($args as $arg) {
@@ -95,10 +103,6 @@ class SubCommandCommand extends BaseCommand
     public function getCommand(): string
     {
         $command = $this->getCommandName();
-
-        if (is_null($command)) {
-            throw new \RuntimeException("commandName must be specified to build a subcommand");
-        }
 
         $command .= ' ';
         $args = $this->getCommandArguments();

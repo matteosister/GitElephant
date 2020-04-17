@@ -95,7 +95,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * @param string  $ref         treeish reference
      * @param string  $path        path
      * @param int     $limit       limit
-     * @param string  $offset      offset
+     * @param int  $offset      offset
      * @param boolean $firstParent first parent
      *
      * @throws \RuntimeException
@@ -128,11 +128,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
         $commits = Utilities::pregSplitFlatArray($outputLines, '/^commit (\w+)$/');
 
         foreach ($commits as $commitOutputLines) {
-            if (is_string($commitOutputLines)) {
-                $this->commits[] = Commit::createFromOutputLines($this->getRepository(), [$commitOutputLines]);
-            } elseif (is_iterable($commitOutputLines)) {
-                $this->commits[] = Commit::createFromOutputLines($this->getRepository(), $commitOutputLines);
-            }
+            $this->commits[] = Commit::createFromOutputLines($this->getRepository(), $commitOutputLines);
         }
     }
 
@@ -208,6 +204,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * @param int   $offset offset
      * @param mixed $value  value
      *
+     * @return void
      * @throws \RuntimeException
      */
     public function offsetSet($offset, $value)
@@ -220,6 +217,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      *
      * @param int $offset offset
      *
+     * @return void
      * @throws \RuntimeException
      */
     public function offsetUnset($offset)

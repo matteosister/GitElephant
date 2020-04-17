@@ -20,6 +20,7 @@
 
 namespace GitElephant\Objects\Diff;
 
+use GitElephant\Command\Caller\CallerInterface;
 use GitElephant\Command\DiffCommand;
 use GitElephant\Command\DiffTreeCommand;
 use GitElephant\Repository;
@@ -47,7 +48,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     /**
      * DiffObject instances
      *
-     * @var array
+     * @var array<DiffObject>
      */
     private $diffObjects = [];
 
@@ -81,7 +82,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      * bare Diff object
      *
      * @param \GitElephant\Repository $repository  repository instance
-     * @param null                    $diffObjects diff objects
+     * @param array<DiffObject>                  $diffObjects  array of diff objects
      */
     public function __construct(Repository $repository, array $diffObjects = [])
     {
@@ -93,9 +94,9 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     /**
      * get the commit properties from command
      *
-     * @param null $commit1 commit 1
-     * @param null $commit2 commit 2
-     * @param null $path    path
+     * @param string|null$commit1 commit 1
+     * @param string|null$commit2 commit 2
+     * @param string|null$path    path
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
@@ -126,7 +127,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
             }
             $command = DiffCommand::getInstance($this->repository)->diff($commit1, $commit2, $path);
         }
-        
+
         $outputLines = $this->getCaller()->execute($command)->getOutputLines();
         $this->parseOutputLines($outputLines);
     }
@@ -149,9 +150,9 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     }
 
     /**
-     * @return \GitElephant\Command\Caller\Caller
+     * @return \GitElephant\Command\Caller\CallerInterface
      */
-    private function getCaller(): \GitElephant\Command\Caller\Caller
+    private function getCaller(): CallerInterface
     {
         return $this->getRepository()->getCaller();
     }
@@ -203,7 +204,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     /**
      * ArrayAccess interface
      *
-     * @param int   $offset offset
+     * @param int|null   $offset offset
      * @param mixed $value  value
      */
     public function offsetSet($offset, $value): void

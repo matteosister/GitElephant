@@ -36,28 +36,28 @@ use GitElephant\Repository;
 class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $ref;
 
     /**
      * the cursor position
      *
-     * @var int
+     * @var int|null
      */
     private $position;
 
     /**
      * the tree subject
      *
-     * @var NodeObject
+     * @var NodeObject|null
      */
     private $subject;
 
     /**
      * tree children
      *
-     * @var array
+     * @var array<TreeObject>
      */
     private $children = [];
 
@@ -71,7 +71,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * the blob of the actual tree
      *
-     * @var \GitElephant\Objects\NodeObject
+     * @var \GitElephant\Objects\NodeObject|null
      */
     private $blob;
 
@@ -249,7 +249,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @param array $outputLines output lines
      *
-     * @return mixed
+     * @return void
      */
     private function scanPathsForBlob(array $outputLines): void
     {
@@ -297,7 +297,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @param string $line a single line output from the git binary
      *
-     * @return mixed
+     * @return void
      */
     private function parseLine(string $line): void
     {
@@ -393,7 +393,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * get the tree object for this tree
      *
-     * @return \GitElephant\Objects\NodeObject
+     * @return \GitElephant\Objects\NodeObject|null
      */
     public function getObject(): ?\GitElephant\Objects\NodeObject
     {
@@ -403,9 +403,9 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * Blob getter
      *
-     * @return \GitElephant\Objects\NodeObject
+     * @return \GitElephant\Objects\NodeObject|null
      */
-    public function getBlob(): \GitElephant\Objects\NodeObject
+    public function getBlob(): ?\GitElephant\Objects\NodeObject
     {
         return $this->blob;
     }
@@ -413,9 +413,9 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * Get Subject
      *
-     * @return \GitElephant\Objects\NodeObject
+     * @return \GitElephant\Objects\NodeObject|null
      */
-    public function getSubject(): \GitElephant\Objects\NodeObject
+    public function getSubject(): ?\GitElephant\Objects\NodeObject
     {
         return $this->subject;
     }
@@ -423,9 +423,9 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * Get Ref
      *
-     * @return string
+     * @return string|null
      */
-    public function getRef(): string
+    public function getRef(): ?string
     {
         return $this->ref;
     }
@@ -448,7 +448,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @param int $offset offset
      *
-     * @return null
+     * @return NodeObject|null
      */
     public function offsetGet($offset)
     {
@@ -458,8 +458,8 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * ArrayAccess interface
      *
-     * @param int   $offset offset
-     * @param mixed $value  value
+     * @param int|null   $offset offset
+     * @param TreeObject $value  value
      */
     public function offsetSet($offset, $value): void
     {
@@ -493,9 +493,9 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * Iterator interface
      *
-     * @return mixed
+     * @return TreeObject|null
      */
-    public function current()
+    public function current(): ?TreeObject
     {
         return $this->children[$this->position];
     }
