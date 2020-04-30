@@ -143,6 +143,12 @@ class RepositoryTest extends TestCase
             }
         }
         $this->assertTrue($match, 'commit error, git status should give nothing to commit');
+
+        // Commit something with a custom date.
+        $this->addFile('test3');
+        $this->getRepository()->commit('commit 3', true, 'develop', null, false, new \DateTimeImmutable('1981-09-24'));
+        $log = $this->getRepository()->getLog('develop', null, 1)->current();
+        $this->assertEquals('1981-09-24', $log->getDatetimeAuthor()->format('Y-m-d'));
     }
 
     /**
