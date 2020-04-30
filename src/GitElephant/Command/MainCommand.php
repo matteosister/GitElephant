@@ -141,8 +141,13 @@ class MainCommand extends BaseCommand
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function commit(?string $message, bool $stageAll = false, $author = null, bool $allowEmpty = false, \DateTimeInterface $date = null): string
-    {
+    public function commit(
+        ?string $message,
+        bool $stageAll = false,
+        $author = null,
+        bool $allowEmpty = false,
+        \DateTimeInterface $date = null
+    ): string {
         $this->clearAll();
 
         if (trim($message) === '' || is_null($message)) {
