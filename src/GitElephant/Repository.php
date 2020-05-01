@@ -277,19 +277,26 @@ class Repository
     /**
      * Commit content to the repository, eventually staging all unstaged content
      *
-     * @param string        $message    the commit message
-     * @param bool          $stageAll   whether to stage on not everything before commit
-     * @param string|null   $ref        the reference to commit to (checkout -> commit -> checkout previous)
-     * @param string|Author $author     override the author for this commit
-     * @param bool          $allowEmpty override the author for this commit
+     * @param string                  $message    the commit message
+     * @param bool                    $stageAll   whether to stage on not everything before commit
+     * @param string|null             $ref        the reference to commit to (checkout -> commit -> checkout previous)
+     * @param string|Author           $author     override the author for this commit
+     * @param bool                    $allowEmpty override the author for this commit
+     * @param \DateTimeInterface|null $date
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function commit(string $message, $stageAll = false, $ref = null, $author = null, $allowEmpty = false): self
-    {
+    public function commit(
+        string $message,
+        $stageAll = false,
+        $ref = null,
+        $author = null,
+        $allowEmpty = false,
+        \DateTimeInterface $date = null
+    ): self {
         $currentBranch = null;
         if (!is_null($ref)) {
             $currentBranch = $this->getMainBranch();
@@ -298,7 +305,9 @@ class Repository
         if ($stageAll) {
             $this->stage();
         }
-        $this->caller->execute(MainCommand::getInstance($this)->commit($message, $stageAll, $author, $allowEmpty));
+        $this->caller->execute(
+            MainCommand::getInstance($this)->commit($message, $stageAll, $author, $allowEmpty, $date)
+        );
         if (!is_null($ref)) {
             $this->checkout($currentBranch);
         }

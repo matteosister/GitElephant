@@ -131,17 +131,23 @@ class MainCommand extends BaseCommand
     /**
      * Commit
      *
-     * @param string|null        $message  the commit message
-     * @param bool          $stageAll commit all changes
-     * @param string|Author $author   override the author for this commit
-     * @param bool $allowEmpty whether to add param `--allow-empty` to commit command
+     * @param string|null             $message the commit message
+     * @param bool                    $stageAll commit all changes
+     * @param string|Author           $author override the author for this commit
+     * @param bool                    $allowEmpty whether to add param `--allow-empty` to commit command
+     * @param \DateTimeInterface|null $date
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function commit(?string $message, bool $stageAll = false, $author = null, bool $allowEmpty = false): string
-    {
+    public function commit(
+        ?string $message,
+        bool $stageAll = false,
+        $author = null,
+        bool $allowEmpty = false,
+        \DateTimeInterface $date = null
+    ): string {
         $this->clearAll();
 
         if (trim($message) === '' || is_null($message)) {
@@ -160,6 +166,11 @@ class MainCommand extends BaseCommand
 
         if ($allowEmpty) {
             $this->addCommandArgument('--allow-empty');
+        }
+        
+        if (null !== $date) {
+            $this->addCommandArgument('--date');
+            $this->addCommandArgument($date->format(\DateTimeInterface::RFC822));
         }
 
         $this->addCommandArgument('-m');
