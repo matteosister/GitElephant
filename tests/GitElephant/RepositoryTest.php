@@ -143,6 +143,12 @@ class RepositoryTest extends TestCase
             }
         }
         $this->assertTrue($match, 'commit error, git status should give nothing to commit');
+
+        // Commit something with a custom date.
+        $this->addFile('test3');
+        $this->getRepository()->commit('commit 3', true, 'develop', null, false, new \DateTimeImmutable('1981-09-24'));
+        $log = $this->getRepository()->getLog('develop', null, 1)->current();
+        $this->assertEquals('1981-09-24', $log->getDatetimeAuthor()->format('Y-m-d'));
     }
 
     /**
@@ -397,6 +403,7 @@ class RepositoryTest extends TestCase
         $repo->commit('added E.txt', true);
 
         $tree = $repo->getTree();
+        /** @var NodeObject */
         $obj = $tree[0];
 
         $log = $this->getRepository()->getObjectLog($obj);
@@ -686,7 +693,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->commit('commit 1', true);
         $this->getRepository()->move('foo', 'bar');
         $status = $this->getRepository()->getStatusOutput();
-        $this->assertRegExp('/(.*):    foo -> bar/', implode("\n", $status));
+        $this->myAssertMatchesRegularExpression('/(.*):    foo -> bar/', implode("\n", $status));
     }
 
     /**
@@ -700,7 +707,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->remove('foo');
         $status = $this->getRepository()->getStatusOutput();
 
-        $this->assertRegExp('/(.*):    foo/', implode("\n", $status));
+        $this->myAssertMatchesRegularExpression('/(.*):    foo/', implode("\n", $status));
     }
 
     /**

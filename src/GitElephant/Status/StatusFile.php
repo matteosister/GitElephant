@@ -107,7 +107,7 @@ class StatusFile
     }
 
     /**
-     * Get Name
+     * Get the file name
      *
      * @return string
      */
@@ -139,7 +139,7 @@ class StatusFile
     /**
      * description of the status
      *
-     * @return string
+     * @return void
      */
     public function calculateDescription(): void
     {
@@ -185,8 +185,13 @@ class StatusFile
     }
 
     /**
-     * Get Description
+     * Get Description.
+     * Note that in certain environments, git might
+     * format the output differently, leading to the description
+     * being an empty string. Use setDescription(string) to set it yourself.
      *
+     * @see #calulcateDescription()
+     * @see #setDescription($description)
      * @return string
      */
     public function getDescription(): string
@@ -209,11 +214,12 @@ class StatusFile
     }
 
     /**
-     * Get Type
+     * Get the Type of status/change.
+     * Please note that this type might not be set by default.
      *
      * @return string
      */
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }

@@ -58,7 +58,7 @@ class MainCommand extends BaseCommand
      * @param bool $bare
      *
      * @throws \RuntimeException
-     * @return MainCommand
+     * @return string
      */
     public function init($bare = false): string
     {
@@ -131,16 +131,23 @@ class MainCommand extends BaseCommand
     /**
      * Commit
      *
-     * @param string        $message  the commit message
-     * @param bool          $stageAll commit all changes
-     * @param string|Author $author   override the author for this commit
+     * @param string|null             $message the commit message
+     * @param bool                    $stageAll commit all changes
+     * @param string|Author           $author override the author for this commit
+     * @param bool                    $allowEmpty whether to add param `--allow-empty` to commit command
+     * @param \DateTimeInterface|null $date
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @return string
      */
-    public function commit($message, $stageAll = false, $author = null, $allowEmpty = false): string
-    {
+    public function commit(
+        ?string $message,
+        bool $stageAll = false,
+        $author = null,
+        bool $allowEmpty = false,
+        \DateTimeInterface $date = null
+    ): string {
         $this->clearAll();
 
         if (trim($message) === '' || is_null($message)) {
@@ -160,6 +167,11 @@ class MainCommand extends BaseCommand
         if ($allowEmpty) {
             $this->addCommandArgument('--allow-empty');
         }
+        
+        if (null !== $date) {
+            $this->addCommandArgument('--date');
+            $this->addCommandArgument($date->format(\DateTimeInterface::RFC822));
+        }
 
         $this->addCommandArgument('-m');
         $this->addCommandSubject($message);
@@ -170,7 +182,7 @@ class MainCommand extends BaseCommand
     /**
      * Checkout a treeish reference
      *
-     * @param string|Branch $ref the reference to checkout
+     * @param string|Branch|TreeishInterface $ref the reference to checkout
      *
      * @throws \RuntimeException
      * @return string
@@ -238,7 +250,7 @@ class MainCommand extends BaseCommand
     public function remove($path, $recursive, $force): string
     {
         $this->clearAll();
-        
+
         $path = trim($path);
         if (!$this->validatePath($path)) {
             throw new \InvalidArgumentException('Invalid path');
@@ -253,7 +265,7 @@ class MainCommand extends BaseCommand
         if ($force) {
             $this->addCommandArgument('-f');
         }
-        
+
         $this->addPath($path);
 
         return $this->getCommand();

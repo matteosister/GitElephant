@@ -30,14 +30,14 @@ abstract class AbstractCaller implements CallerInterface
     /**
      * Git binary path
      *
-     * @var string
+     * @var string|null
      */
     protected $binaryPath;
 
     /**
      * Git binary version
      *
-     * @var string
+     * @var string|null
      */
     protected $binaryVersion;
 
@@ -47,6 +47,13 @@ abstract class AbstractCaller implements CallerInterface
      * @var array
      */
     protected $outputLines = [];
+
+    /**
+     * raw output of the command
+     *
+     * @var string
+     */
+    protected $rawOutput;
 
     /**
      * @inheritdoc
@@ -116,5 +123,15 @@ abstract class AbstractCaller implements CallerInterface
         }
 
         return $this->outputLines;
+    }
+
+    /**
+     * Get RawOutput
+     *
+     * @return string
+     */
+    public function getRawOutput(): string
+    {
+        return $this->rawOutput;
     }
 }

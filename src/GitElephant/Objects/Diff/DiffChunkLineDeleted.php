@@ -45,8 +45,8 @@ class DiffChunkLineDeleted extends DiffChunkLineChanged
      *
      * @return int
      */
-    public function getDestNumber(): int
+    public function getDestNumber(): ?int
     {
-        return '';
+        return null;
     }
 }

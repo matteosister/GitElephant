@@ -88,7 +88,7 @@ class AddSubCommand extends SubCommandCommand
      * @param string $url     URL of remote
      * @param array  $options options for the add subcommand
      *
-     * @return string
+     * @return AddSubCommand
      */
     public function prepare($name, $url, $options = []): self
     {

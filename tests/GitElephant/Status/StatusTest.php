@@ -187,6 +187,28 @@ On new git version this is not happening anymore.'
     }
 
     /**
+     * Test the name, type and describe getter & setter
+     *
+     * @return void
+     */
+    public function testStatusFiles(): void
+    {
+        $this->addFile('test');
+        $this->repository->stage();
+        $s = $this->repository->getStatus();
+        $files = $s->all();
+        $this->assertCount(1, $files);
+        foreach ($files as $file) {
+            $this->assertEquals('test', $file->getName());
+            $this->assertEquals(null, $file->getType());
+            $file->setDescription('test');
+            $this->assertEquals('test', $file->getDescription());
+            $file->setType(StatusFile::UNMODIFIED);
+            $this->assertEquals(StatusFile::UNMODIFIED, $file->getType());
+        }
+    }
+
+    /**
      * @param mixed $subject
      */
     private function assertInterfaces($subject): void

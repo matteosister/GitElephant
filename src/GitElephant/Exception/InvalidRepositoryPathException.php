@@ -27,6 +27,11 @@ namespace GitElephant\Exception;
  */
 class InvalidRepositoryPathException extends \InvalidArgumentException
 {
+    /**
+     * The exception message template
+     *
+     * @var string
+     */
     protected $messageTpl = 'The path provided (%s) is not a valid git repository path';
 
     /**

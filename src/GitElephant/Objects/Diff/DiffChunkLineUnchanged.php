@@ -73,7 +73,7 @@ class DiffChunkLineUnchanged extends DiffChunkLine
      *
      * @return int
      */
-    public function getOriginNumber(): int
+    public function getOriginNumber(): ?int
     {
         return $this->originNumber;
     }
@@ -93,7 +93,7 @@ class DiffChunkLineUnchanged extends DiffChunkLine
      *
      * @return int
      */
-    public function getDestNumber(): int
+    public function getDestNumber(): ?int
     {
         return $this->destNumber;
     }

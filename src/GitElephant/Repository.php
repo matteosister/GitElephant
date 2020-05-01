@@ -78,7 +78,7 @@ class Repository
     /**
      * the caller instance
      *
-     * @var \GitElephant\Command\Caller\Caller
+     * @var \GitElephant\Command\Caller\CallerInterface
      */
     private $caller;
 
@@ -145,9 +145,9 @@ class Repository
      * and save it in a temp folder
      *
      * @param string|Repository $git            the git remote url, or the filesystem path
-     * @param null              $repositoryPath path
+     * @param string|null             $repositoryPath path
      * @param string|null $binary         the path to the git binary
-     * @param null              $name           repository name
+     * @param string|null             $name           repository name
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Filesystem\Exception\IOException
@@ -224,7 +224,11 @@ class Repository
      */
     public function unstage($path): self
     {
-        $this->caller->execute(MainCommand::getInstance($this)->unstage($path), true, null, [0, 1]);
+        if ($this->caller instanceof Caller) {
+            $this->caller->execute(MainCommand::getInstance($this)->unstage($path), true, null, [0, 1]);
+        } else {
+            $this->caller->execute(MainCommand::getInstance($this)->unstage($path), true, null);
+        }
 
         return $this;
     }
@@ -273,19 +277,26 @@ class Repository
     /**
      * Commit content to the repository, eventually staging all unstaged content
      *
-     * @param string        $message    the commit message
-     * @param bool          $stageAll   whether to stage on not everything before commit
-     * @param string|null   $ref        the reference to commit to (checkout -> commit -> checkout previous)
-     * @param string|Author $author     override the author for this commit
-     * @param bool          $allowEmpty override the author for this commit
+     * @param string                  $message    the commit message
+     * @param bool                    $stageAll   whether to stage on not everything before commit
+     * @param string|null             $ref        the reference to commit to (checkout -> commit -> checkout previous)
+     * @param string|Author           $author     override the author for this commit
+     * @param bool                    $allowEmpty override the author for this commit
+     * @param \DateTimeInterface|null $date
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function commit(string $message, $stageAll = false, $ref = null, $author = null, $allowEmpty = false): self
-    {
+    public function commit(
+        string $message,
+        $stageAll = false,
+        $ref = null,
+        $author = null,
+        $allowEmpty = false,
+        \DateTimeInterface $date = null
+    ): self {
         $currentBranch = null;
         if (!is_null($ref)) {
             $currentBranch = $this->getMainBranch();
@@ -294,7 +305,9 @@ class Repository
         if ($stageAll) {
             $this->stage();
         }
-        $this->caller->execute(MainCommand::getInstance($this)->commit($message, $stageAll, $author, $allowEmpty));
+        $this->caller->execute(
+            MainCommand::getInstance($this)->commit($message, $stageAll, $author, $allowEmpty, $date)
+        );
         if (!is_null($ref)) {
             $this->checkout($currentBranch);
         }
@@ -313,7 +326,7 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return array
      */
-    public function revParse(string $arg = null, array $options = []): array
+    public function revParse($arg = null, array $options = []): array
     {
         $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
 
@@ -408,7 +421,7 @@ class Repository
      * Create a new branch
      *
      * @param string $name       the new branch name
-     * @param null   $startPoint the reference to create the branch from
+     * @param string|null  $startPoint the reference to create the branch from
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
@@ -603,8 +616,8 @@ class Repository
      * This function change the state of the repository on the filesystem
      *
      * @param string $name       The new tag name
-     * @param null   $startPoint The reference to create the tag from
-     * @param null   $message    the tag message
+     * @param string|null  $startPoint The reference to create the tag from
+     * @param string|null  $message    the tag message
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
@@ -784,9 +797,9 @@ class Repository
         }
 
         $tagFinderOutput = $this->caller
-            ->execute(TagCommand::getInstance($this)
-            ->listTags())->getOutputLines(true);
-        
+            ->execute(TagCommand::getInstance($this)->listTags())
+            ->getOutputLines(true);
+
         foreach ($tagFinderOutput as $line) {
             if ($line === $name) {
                 return new Tag($this, $name);
@@ -830,7 +843,7 @@ class Repository
      *
      * @param string|TreeishInterface|array $ref         the treeish to check, as a string, as an object or as an array
      * @param string|NodeObject             $path        the physical path to the tree relative to the repository root
-     * @param int|null                      $limit       limit to n entries
+     * @param int                      $limit       limit to n entries
      * @param int|null                      $offset      skip n entries
      * @param boolean|false                 $firstParent skip commits brought in to branch by a merge
      *
@@ -840,7 +853,7 @@ class Repository
         $ref = 'HEAD',
         $path = null,
         int $limit = 10,
-        int $offset = null,
+        ?int $offset = null,
         bool $firstParent = false
     ): \GitElephant\Objects\Log {
         return new Log($this, $ref, $path, $limit, $offset, $firstParent);
@@ -852,7 +865,7 @@ class Repository
      * @param string            $refStart
      * @param string            $refEnd
      * @param string|NodeObject $path        the physical path to the tree relative to the repository root
-     * @param int|null          $limit       limit to n entries
+     * @param int          $limit       limit to n entries
      * @param int|null          $offset      skip n entries
      * @param boolean|false     $firstParent skip commits brought in to branch by a merge
      *
@@ -957,8 +970,8 @@ class Repository
     /**
      * Get a Diff object for a commit with its parent, by default the diff is between the current head and its parent
      *
-     * @param \GitElephant\Objects\Commit|string      $commit1 A TreeishInterface instance
-     * @param \GitElephant\Objects\Commit|string|null $commit2 A TreeishInterface instance
+     * @param \GitElephant\Objects\Commit|TreeishInterface|string|null $commit1 The first commit to compare
+     * @param \GitElephant\Objects\Commit|TreeishInterface|string|null $commit2 The commit to compare to
      * @param null|string|NodeObject                  $path    The path to get the diff for or a Object instance
      *
      * @throws \RuntimeException
@@ -966,9 +979,9 @@ class Repository
      * @return Objects\Diff\Diff
      */
     public function getDiff(
-        string $commit1 = null,
-        string $commit2 = null,
-        string $path = null
+        $commit1 = null,
+        $commit2 = null,
+        $path = null
     ): \GitElephant\Objects\Diff\Diff {
         return Diff::create($this, $commit1, $commit2, $path);
     }
@@ -977,7 +990,7 @@ class Repository
      * Clone a repository
      *
      * @param string      $url           the repository url (i.e. git://github.com/matteosister/GitElephant.git)
-     * @param null        $to            where to clone the repo
+     * @param string|null       $to            where to clone the repo
      * @param string|null $repoReference Repo reference to clone. Required if performing a shallow clone.
      * @param int|null    $depth         Depth to clone repo. Specify 1 to perform a shallow clone
      * @param bool        $recursive     Whether to recursively clone child repos.
@@ -1346,11 +1359,11 @@ class Repository
     /**
      * Shows details for a stash
      *
-     * @param string $stash
+     * @param string|int $stash
      *
      * @return string
      */
-    public function stashShow(string $stash): string
+    public function stashShow($stash): string
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->show($stash);
@@ -1362,9 +1375,9 @@ class Repository
     /**
      * Drops a stash
      *
-     * @param string $stash
+     * @param string|int $stash
      */
-    public function stashDrop(string $stash): void
+    public function stashDrop($stash): void
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->drop($stash);
@@ -1374,10 +1387,10 @@ class Repository
     /**
      * Applies a stash
      *
-     * @param string  $stash
+     * @param string|int $stash
      * @param boolean $index
      */
-    public function stashApply(string $stash, bool $index = false): void
+    public function stashApply($stash, bool $index = false): void
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->apply($stash, $index);
@@ -1387,10 +1400,10 @@ class Repository
     /**
      *  Applies a stash, then removes it from the stash
      *
-     * @param string  $stash
+     * @param string|int $stash
      * @param boolean $index
      */
-    public function stashPop(string $stash, bool $index = false): void
+    public function stashPop($stash, bool $index = false): void
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->pop($stash, $index);
@@ -1401,9 +1414,9 @@ class Repository
      *  Creates and checks out a new branch named <branchname> starting from the commit at which the <stash> was originally created
      *
      * @param string $branch
-     * @param string $stash
+     * @param string|int $stash
      */
-    public function stashBranch(string $branch, string $stash): void
+    public function stashBranch(string $branch, $stash): void
     {
         $stashCommand = StashCommand::getInstance($this);
         $command = $stashCommand->branch($branch, $stash);

@@ -55,17 +55,22 @@ class CallerSSH2 extends AbstractCaller
      *
      * @return CallerInterface
      */
-    public function execute($cmd, $git = true, $cwd = null): \GitElephant\Command\Caller\CallerInterface
-    {
+    public function execute(
+        $cmd,
+        $git = true,
+        $cwd = null
+    ): \GitElephant\Command\Caller\CallerInterface {
         if ($git) {
             $cmd = $this->getBinaryPath() . ' ' . $cmd;
         }
         $stream = ssh2_exec($this->resource, $cmd);
-        stream_set_blocking($stream, 1);
+        stream_set_blocking($stream, true);
         $data = stream_get_contents($stream);
         fclose($stream);
+        
+        $this->rawOutput = $data === false ? '' : $data;
         // rtrim values
-        $values = array_map('rtrim', explode(PHP_EOL, $data));
+        $values = array_map('rtrim', explode(PHP_EOL, $this->rawOutput));
         $this->outputLines = $values;
 
         return $this;

@@ -36,7 +36,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected $caller;
 
     /**
-     * @var Repository
+     * @var Repository|array<Repository>
      */
     protected $repository;
 
@@ -51,11 +51,11 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected $finder;
 
     /**
-     * @param string $name
+     * @param string|int|null $name the name or index of the repository
      *
      * @return \GitElephant\Repository
      */
-    protected function getRepository(string $name = null)
+    protected function getRepository($name = null)
     {
         if ($this->repository == null) {
             $this->initRepository($name);
@@ -122,9 +122,12 @@ class TestCase extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * Write to file. Creates the file if not existing.
+     * Overwrites content if already existing.
+     *
      * @param string      $name       file name
      * @param string|null $folder     folder name
-     * @param null        $content    content
+     * @param string|null        $content    content
      * @param Repository  $repository repository to add file to
      *
      * @return void
@@ -201,17 +204,17 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $fs->mkdir($this->path . DIRECTORY_SEPARATOR . $name);
     }
 
-    protected function addSubmodule($url, $path): void
+    protected function addSubmodule(string $url, string $path): void
     {
         $this->getRepository()->addSubmodule($url, $path);
     }
 
     /**
-     * @param $classname
+     * @param string $classname
      *
      * @return MockObject
      */
-    protected function getMock($classname): MockObject
+    protected function getMock(string $classname): MockObject
     {
         return $this
             ->getMockBuilder($classname)
@@ -251,7 +254,13 @@ class TestCase extends \PHPUnit\Framework\TestCase
             ->willReturn($this->getMockCommand());
     }
 
-    protected function addOutputToMockRepo(MockObject $repo, array $output): void
+    /**
+     *
+     * @param MockObject $repo
+     * @param string|array $output
+     * @return void
+     */
+    protected function addOutputToMockRepo(MockObject $repo, $output): void
     {
         $repo
             ->expects($this->any())
@@ -282,17 +291,32 @@ class TestCase extends \PHPUnit\Framework\TestCase
         );
     }
 
+    /**
+     * Do a test on a certain commit
+     *
+     * @param Commit $commit the commit to test
+     * @param string $sha
+     * @param string $tree
+     * @param string $author the name of the author
+     * @param string $committer the name of the committer
+     * @param string $emailAuthor
+     * @param string $emailCommitter
+     * @param integer $datetimeAuthor
+     * @param integer $datetimeCommitter
+     * @param string $message
+     * @return void
+     */
     protected function doCommitTest(
         Commit $commit,
-        $sha,
-        $tree,
-        $author,
-        $committer,
-        $emailAuthor,
-        $emailCommitter,
-        $datetimeAuthor,
-        $datetimeCommitter,
-        $message
+        string $sha,
+        string $tree,
+        string $author,
+        string $committer,
+        string $emailAuthor,
+        string $emailCommitter,
+        int $datetimeAuthor,
+        int $datetimeCommitter,
+        string $message
     ): void {
         $this->assertInstanceOf(Commit::class, $commit);
         $this->assertEquals($sha, $commit->getSha());
@@ -308,5 +332,24 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->assertInstanceOf(\DateTime::class, $commit->getDatetimeCommitter());
         $this->assertEquals($datetimeCommitter, $commit->getDatetimeCommitter()->format('U'));
         $this->assertEquals($message, $commit->getMessage()->getShortMessage());
+    }
+
+    /**
+     * Compatibility function for PHP 7.2:
+     * PHPUnit 9. only supports PHP >= 7.3,
+     * but has a different compatibility regarding the assertRegex function
+     *
+     * @param string $pattern
+     * @param string $string
+     * @param string $message
+     * @return void
+     */
+    protected function myAssertMatchesRegularExpression($pattern, $string, $message = '')
+    {
+        if (method_exists($this, 'assertMatchesRegularExpression')) {
+            $this->assertMatchesRegularExpression($pattern, $string, $message);
+        } else {
+            $this->assertRegExp($pattern, $string, $message);
+        }
     }
 }

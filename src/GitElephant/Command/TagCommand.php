@@ -48,7 +48,7 @@ class TagCommand extends BaseCommand
      *
      * @param string      $name       The new tag name
      * @param string|null $startPoint the new tag start point.
-     * @param null        $message    the tag message
+     * @param string|null       $message    the tag message
      *
      * @throws \RuntimeException
      * @return string the command

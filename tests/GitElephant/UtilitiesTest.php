@@ -20,6 +20,11 @@ namespace GitElephant;
  */
 final class UtilitiesTest extends TestCase
 {
+    /**
+     * An array containing chars
+     *
+     * @var array<string>
+     */
     private $arr = [
         'a',
         'b',
@@ -34,6 +39,11 @@ final class UtilitiesTest extends TestCase
      * @dataProvider pregSplitArrayProvider()
      *
      * @covers \GitElephant\Utilities::pregSplitArray
+     *
+     * @param array<string> $expected
+     * @param array<string> $list
+     * @param string $pattern
+     * @return void
      */
     public function testPregSplitArray(array $expected, array $list, string $pattern): void
     {
@@ -47,7 +57,11 @@ final class UtilitiesTest extends TestCase
     }
 
     /**
+     *
+     *
      * @dataProvider
+     *
+     * @return void
      */
     public function testPregSplitFlatArray(): void
     {
@@ -61,6 +75,11 @@ final class UtilitiesTest extends TestCase
         );
     }
 
+    /**
+     * Get the array test contents
+     *
+     * @return array
+     */
     public function pregSplitArrayProvider(): array
     {
         return [
