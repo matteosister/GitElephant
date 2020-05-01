@@ -1,4 +1,4 @@
-name: Code_Checks
+name: Tests
 
 on:
     pull_request:
@@ -50,25 +50,3 @@ jobs:
 
             - name: Run PHPUnit Tests
               run: composer tests
-
-    static_tests:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: shivammathur/setup-php@v1
-              with:
-                  php-version: 7.3
-                  coverage: none # disable xdebug, pcov
-            - run: composer install --no-progress
-            - run: ./vendor/bin/phpstan analyse -c phpstan.neon
-
-    code_style:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v2
-            - uses: shivammathur/setup-php@v1
-              with:
-                  php-version: 7.3
-                  coverage: none # disable xdebug, pcov
-            - run: composer install --no-progress
-            - run: composer check-cs

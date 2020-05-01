@@ -1,0 +1,30 @@
+name: Code Style Check
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+
+jobs:
+  code_style:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v1
+        with:
+          php-version: 7.3
+          coverage: none # disable xdebug, pcov
+      - run: composer install --no-progress
+      # fix code style, automatically
+      - run: composer fix-cs
+      # push changes back
+      # note that this might not work with PRs from forks:
+      # https://github.com/stefanzweifel/git-auto-commit-action/issues/25
+      - uses: stefanzweifel/git-auto-commit-action@v4.1.6
+        with:
+          commit_message: Automatic Fix of Code Style
+          branch: ${{ github.head_ref }}
+
+      # check if some unfixable code style issues remain
+      - run: composer check-cs
