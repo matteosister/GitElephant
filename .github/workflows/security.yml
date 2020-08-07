@@ -1,0 +1,16 @@
+name: Security Check
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "0 6 1 * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: The PHP Security Checker
+        uses: symfonycorp/security-checker-action@v2
