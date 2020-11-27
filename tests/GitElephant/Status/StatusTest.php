@@ -117,8 +117,8 @@ class StatusTest extends TestCase
         $s = $this->repository->getStatus();
         $this->assertCount(1, $s->renamed());
         $this->assertTrue($s->renamed()->first()->get()->isRenamed());
-        $this->assertEquals('test',$s->renamed()->first()->get()->getName());
-        $this->assertEquals('test2',$s->renamed()->first()->get()->getRenamed());
+        $this->assertEquals('test', $s->renamed()->first()->get()->getName());
+        $this->assertEquals('test2', $s->renamed()->first()->get()->getRenamed());
         $this->assertInterfaces($s->renamed());
         foreach ($s->renamed() as $file) {
             $this->assertInstanceOf('GitElephant\Status\StatusFile', $file);
