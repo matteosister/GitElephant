@@ -15,9 +15,9 @@ jobs:
         with:
           php-version: 7.3
           coverage: none # disable xdebug, pcov
-      - run: composer install --no-progress
+      - run: composer install --no-progress --ansi
       # fix code style, automatically
-      - run: composer fix-cs
+      - run: composer fix-cs --ansi
       # push changes back
       # note that this might not work with PRs from forks:
       # https://github.com/stefanzweifel/git-auto-commit-action/issues/25
@@ -27,4 +27,4 @@ jobs:
           branch: ${{ github.head_ref }}
 
       # check if some unfixable code style issues remain
-      - run: composer check-cs
+      - run: composer check-cs --ansi
