@@ -117,6 +117,16 @@ class StatusFile
     }
 
     /**
+     * Get the renamed
+     *
+     * @return string|null
+     */
+    public function getRenamed(): ?string
+    {
+        return $this->renamed;
+    }
+
+    /**
      * Get the status of the index
      *
      * @return string
