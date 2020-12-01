@@ -156,12 +156,14 @@ class Status
     private function parseOutputLines(array $lines): void
     {
         foreach ($lines as $line) {
-            preg_match('/([MADRCU\? ])?([MADRCU\? ])?\ "?(\S+)"? ?( -> )?(\S+)?/', $line, $matches);
-            $x = isset($matches[1]) ? $matches[1] : null;
-            $y = isset($matches[2]) ? $matches[2] : null;
-            $file = isset($matches[3]) ? $matches[3] : null;
-            $renamedFile = isset($matches[4]) ? $matches[4] : null;
-            $this->files[] = StatusFile::create($x, $y, $file, $renamedFile);
+            $matches = $this->splitStatusLine($line);
+            if ($matches) {
+                $x = isset($matches[1]) ? $matches[1] : null;
+                $y = isset($matches[2]) ? $matches[2] : null;
+                $file = isset($matches[3]) ? $matches[3] : null;
+                $renamedFile = isset($matches[5]) ? $matches[5] : null;
+                $this->files[] = StatusFile::create($x, $y, $file, $renamedFile);
+            }
         }
     }
 
@@ -172,8 +174,7 @@ class Status
      */
     protected function splitStatusLine(string $line)
     {
-        preg_match('/([MADRCU\?])?([MADRCU\?])?\ "?(\S+)"? ?( -> )?(\S+)?/', $line, $matches);
-
+        preg_match('/^([MADRCU\? ])?([MADRCU\? ])?\ "?([^"]+?)"?( -> "?([^"]+?)"?)?$/', $line, $matches);
         return $matches;
     }
 
