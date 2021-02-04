@@ -97,6 +97,6 @@ class Message
     public function __toString(): string
     {
         $thisString = $this->toString();
-        return $thisString !== null ? $thisString : "";
+        return $thisString === null ? "" : $thisString;
     }
 }
