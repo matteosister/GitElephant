@@ -76,12 +76,12 @@ class Message
      *
      * @return string|null
      */
-    public function toString(bool $full = false)
+    public function toString(bool $full = false): ?string
     {
         if (empty($this->message)) {
             return null;
         }
-        
+
         if ($full) {
             return implode(PHP_EOL, $this->message);
         } else {
@@ -92,10 +92,11 @@ class Message
     /**
      * String representation equals short message
      *
-     * @return string|null
+     * @return string
      */
-    public function __toString(): ?string
+    public function __toString(): string
     {
-        return $this->toString();
+        $thisString = $this->toString();
+        return $thisString !== null ? $thisString : "";
     }
 }
