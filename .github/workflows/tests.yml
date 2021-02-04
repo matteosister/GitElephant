@@ -22,6 +22,8 @@ jobs:
         dependency-version:
           # - prefer-lowest
           - prefer-stable
+        exclude:
+          - {php: "8.0", symfony: "3.*"}
 
     name: PHP ${{ matrix.php }} - S ${{ matrix.symfony }} - ${{ matrix.dependency-version }} - tests
     steps:
