@@ -403,7 +403,7 @@ class RepositoryTest extends TestCase
         $repo->commit('added E.txt', true);
 
         $tree = $repo->getTree();
-        /** @var NodeObject */
+        /** @var NodeObject $obj */
         $obj = $tree[0];
 
         $log = $this->getRepository()->getObjectLog($obj);
