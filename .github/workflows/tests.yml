@@ -39,7 +39,7 @@ jobs:
 
       - name: Setup PHP
         # use PHP of specific version
-        uses: shivammathur/setup-php@v1
+        uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
           coverage: none # disable xdebug, pcov

@@ -4,7 +4,7 @@ parameters:
 		- src
 		# - tests
 	
-	# things we disable for the moement, but one day...
+	# things we disable for the moment, but one day...
 	inferPrivatePropertyTypeFromConstructor: true
 	checkMissingIterableValueType: false
 	checkGenericClassInNonGenericObjectType: false
