@@ -128,7 +128,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
             $commitLines[] = $line;
         }
 
-        if (null !== $commitLines && count($commitLines) > 0) {
+        if (is_array($commitLines) && count($commitLines) !== 0) {
             $this->rangeCommits[] = Commit::createFromOutputLines($this->getRepository(), $commitLines);
         }
     }
