@@ -115,7 +115,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
             array_map(function (Repository $repo) use ($fs) {
                 $fs->remove($repo->getPath());
             }, $this->repository);
-        } else {
+        } else if ($this->path) {
             $fs->remove($this->path);
         }
         m::close();

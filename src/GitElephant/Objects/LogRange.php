@@ -116,7 +116,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
 
     private function parseOutputLines(array $outputLines): void
     {
-        $commitLines = null;
+        $commitLines = [];
         $this->rangeCommits = [];
         foreach ($outputLines as $line) {
             if (preg_match('/^commit (\w+)$/', $line) > 0) {
@@ -128,7 +128,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
             $commitLines[] = $line;
         }
 
-        if (null !== $commitLines && count($commitLines) > 0) {
+        if (!empty($commitLines)) {
             $this->rangeCommits[] = Commit::createFromOutputLines($this->getRepository(), $commitLines);
         }
     }
