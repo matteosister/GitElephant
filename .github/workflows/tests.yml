@@ -22,7 +22,6 @@ jobs:
           - prefer-stable
         exclude:
           - {php: "7.4", symfony: "6.*"}
-          - {php: "8.0", symfony: "3.*"}
 
     name: PHP ${{ matrix.php }} - S ${{ matrix.symfony }} - ${{ matrix.dependency-version }} - tests
     steps:
