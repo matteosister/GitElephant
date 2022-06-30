@@ -40,7 +40,8 @@ class StatusWorkingTree extends Status
             array_filter(
                 $this->files,
                 function (StatusFile $statusFile) {
-                    return $statusFile->getWorkingTreeStatus();
+                    $status = $statusFile->getWorkingTreeStatus();
+                    return $status !== null && $status != "";
                 }
             )
         );

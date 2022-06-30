@@ -116,11 +116,11 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * toString magic method
      *
-     * @return string|null
+     * @return string
      */
-    public function __toString(): ?string
+    public function __toString(): string
     {
-        return $this->originalPath;
+        return $this->originalPath == null ? "" : $this->originalPath;
     }
 
     /**
