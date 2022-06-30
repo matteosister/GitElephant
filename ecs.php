@@ -1,19 +1,24 @@
 <?php
 
-use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
-use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Option;
+use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
+use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return static function (ContainerConfigurator $containerConfigurator): void {
-    $parameters = $containerConfigurator->parameters();
-    $parameters->set(Option::PATHS, [__DIR__ . '/src', __DIR__ . '/tests']);
+return static function (ECSConfig $configurator): void {
+    $configurator->paths([__DIR__ . '/src', __DIR__ . '/tests']);
 
     // A. full sets
-    $containerConfigurator->import(SetList::PSR_12);
+    $configurator->sets([
+        SetList::CLEAN_CODE,
+        SetList::PSR_12
+    ]);
 
     // B. standalone rule
-    $services = $containerConfigurator->services();
-    $services->set(ArraySyntaxFixer::class)
-             ->call('configure', [[ 'syntax' => 'short', ]]);
+    $configurator->ruleWithConfiguration(ArraySyntaxFixer::class, [
+        'syntax' => 'short',
+    ]);
+
+    $configurator->skip(['Unused variable $deleted.' => ['src/GitElephant/Objects/Diff/DiffChunk.php'], 'Unused variable $new.' => ['src/GitElephant/Objects/Diff/DiffChunk.php']]);
 };
