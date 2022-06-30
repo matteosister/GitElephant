@@ -30,7 +30,7 @@ use GitElephant\Utilities;
  * @author Matteo Giachino <matteog@gmail.com>
  * @author Dhaval Patel <tech.dhaval@gmail.com>
  */
-class Log implements \ArrayAccess, \Countable, \Iterator: void
+class Log implements \ArrayAccess, \Countable, \Iterator
 {
     /**
      * @var \GitElephant\Repository
@@ -207,7 +207,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator: void
      * @return void
      * @throws \RuntimeException
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \RuntimeException('Can\'t set elements on logs');
     }
@@ -220,7 +220,7 @@ class Log implements \ArrayAccess, \Countable, \Iterator: void
      * @return void
      * @throws \RuntimeException
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \RuntimeException('Can\'t unset elements on logs');
     }

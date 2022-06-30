@@ -208,7 +208,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * @return void
      * @throws \RuntimeException
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         throw new \RuntimeException('Can\'t set elements on logs');
     }
@@ -221,7 +221,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
      * @return void
      * @throws \RuntimeException
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         throw new \RuntimeException('Can\'t unset elements on logs');
     }
