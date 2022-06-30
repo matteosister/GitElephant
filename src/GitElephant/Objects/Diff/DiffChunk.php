@@ -136,7 +136,8 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
             $this->originStartLine = $matches[1];
             $this->originEndLine = $matches[1];
         } else {
-            [$this->originStartLine, $this->originEndLine] = explode(',', $matches[1]);
+            $this->originStartLine = (int) explode(',', $matches[1])[0];
+            $this->originEndLine = (int) explode(',', $matches[1])[1];
         }
 
         if (!strpos($matches[2], ',')) {
@@ -144,7 +145,8 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
             $this->destStartLine = $matches[2];
             $this->destEndLine = $matches[2];
         } else {
-            [$this->destStartLine, $this->destEndLine] = explode(',', $matches[2]);
+            $this->destStartLine = (int) explode(',', $matches[2])[0];
+            $this->destEndLine = (int) explode(',', $matches[2])[1];
         }
     }
 
