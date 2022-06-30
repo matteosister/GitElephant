@@ -30,7 +30,7 @@ use GitElephant\Utilities;
  * @author Matteo Giachino <matteog@gmail.com>
  * @author Dhaval Patel <tech.dhaval@gmail.com>
  */
-class Log implements \ArrayAccess, \Countable, \Iterator
+class Log implements \ArrayAccess, \Countable, \Iterator: void
 {
     /**
      * @var \GitElephant\Repository
