@@ -30,7 +30,7 @@ class BranchCommandTest extends TestCase
     public function setUp(): void
     {
         $this->initRepository();
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('first commit', true);
     }

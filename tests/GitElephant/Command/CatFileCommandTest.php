@@ -30,7 +30,7 @@ class CatFileCommandTest extends TestCase
     public function setUp(): void
     {
         $this->initRepository();
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test', null, 'test content');
         $this->addFolder('test-folder');
         $this->addFile('test2', 'test-folder', 'test content 2');

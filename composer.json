@@ -3,6 +3,7 @@
     "description": "An abstraction layer for git written in PHP",
     "scripts": {
         "tests": "./vendor/bin/phpunit",
+        "static-tests": "./vendor/bin/phpstan analyse -c phpstan.neon",
         "check-cs": "./vendor/bin/ecs check",
         "fix-cs": "./vendor/bin/ecs check --fix"
     },

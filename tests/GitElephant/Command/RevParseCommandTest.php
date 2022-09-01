@@ -37,7 +37,7 @@ class RevParseCommandTest extends TestCase
     {
         $this->initRepository(null, 0);
         $repo = $this->getRepository(0);
-        $repo->init();
+        $repo->init(false, 'master');
 
         $options = [RevParseCommand::OPTION_IS_BARE_REPOSIORY];
         $c = RevParseCommand::getInstance()->revParse(null, $options);

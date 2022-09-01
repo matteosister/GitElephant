@@ -71,7 +71,7 @@ class NodeObject implements TreeishInterface
     /**
      * name
      *
-     * @var string
+     * @var string|null
      */
     private $name;
 
@@ -255,7 +255,7 @@ class NodeObject implements TreeishInterface
     public function getFullPath(): string
     {
         return rtrim(
-            '' == $this->path ? $this->name : $this->path . DIRECTORY_SEPARATOR . $this->name,
+            ('' == $this->path ? $this->name : $this->path . DIRECTORY_SEPARATOR . $this->name) ?? '',
             DIRECTORY_SEPARATOR
         );
     }

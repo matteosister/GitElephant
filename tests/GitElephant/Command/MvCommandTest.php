@@ -23,7 +23,7 @@ class MvCommandTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->addFolder('test_folder');
         $this->addFile('test2', 'test_folder');

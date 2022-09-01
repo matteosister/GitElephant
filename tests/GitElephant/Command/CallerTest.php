@@ -88,7 +88,7 @@ class CallerTest extends TestCase
     public function testOutputLines(): void
     {
         $caller = new Caller(null, $this->getRepository()->getPath());
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         for ($i = 1; $i <= 50; $i++) {
             $this->addFile('test' . $i, null, 'this is the content');
         }
@@ -104,10 +104,10 @@ class CallerTest extends TestCase
      */
     public function testGetRawOutput(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $caller = new Caller(null, $this->getRepository()->getPath());
         $caller->execute('status');
-        $this->myAssertMatchesRegularExpression('/master/', $caller->getRawOutput());
+        $this->myAssertMatchesRegularExpression('/master|main/', $caller->getRawOutput());
     }
 
     /**

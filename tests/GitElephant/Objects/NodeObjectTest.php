@@ -13,7 +13,7 @@ class NodeObjectTest extends TestCase
     public function setUp(): void
     {
         $this->initRepository();
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('first commit', true);
     }

@@ -69,7 +69,7 @@ class BranchTest extends TestCase
      */
     public function testConstructor(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('test commit', true);
         $b = new Branch($this->getRepository(), 'master');
@@ -90,7 +90,7 @@ class BranchTest extends TestCase
      */
     public function testBranchCreate(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('test', true);
         Branch::create($this->getRepository(), 'test-branch');
@@ -103,7 +103,7 @@ class BranchTest extends TestCase
      */
     public function testToString(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('test commit', true);
         $b = Branch::checkout($this->getRepository(), 'master');
@@ -115,7 +115,7 @@ class BranchTest extends TestCase
      */
     public function testCreate(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->repository->commit('test', true);
         $this->assertCount(1, $this->repository->getBranches(true));

@@ -186,9 +186,9 @@ class Repository
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @return Repository
      */
-    public function init($bare = false): self
+    public function init($bare = false, ?string $initialBranchName = null): self
     {
-        $this->caller->execute(MainCommand::getInstance($this)->init($bare));
+        $this->caller->execute(MainCommand::getInstance($this)->init($bare, $initialBranchName));
 
         return $this;
     }

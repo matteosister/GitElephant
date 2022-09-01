@@ -9,7 +9,7 @@ class TreeObjectTest extends TestCase
     public function setUp(): void
     {
         $this->initRepository();
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFolder('test');
         $this->addFile('test-file', 'test');
         $this->getRepository()->commit('first commit', true);

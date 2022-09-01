@@ -32,7 +32,7 @@ class TreeTest extends TestCase
     public function setUp(): void
     {
         $this->initRepository();
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFolder('test');
         $this->addFile('test/1');
         $this->addFile('test/1-2');
@@ -95,7 +95,7 @@ class TreeTest extends TestCase
         unlink($path);
         mkdir($path);
         $repository = new Repository($path);
-        $repository->init();
+        $repository->init(false, 'master');
         $repository->addSubmodule($this->repository->getPath());
         $repository->commit('test', true);
         $tree = $repository->getTree();
@@ -111,7 +111,7 @@ class TreeTest extends TestCase
     public function testIsRoot(): void
     {
         $this->initRepository();
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFolder('test');
         $this->addFile('test/1');
         $this->getRepository()->commit('test', true);

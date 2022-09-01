@@ -196,7 +196,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      *
      * @return null|mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return isset($this->diffObjects[$offset]) ? $this->diffObjects[$offset] : null;
     }
@@ -241,7 +241,7 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      *
      * @return mixed
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->diffObjects[$this->position];
     }

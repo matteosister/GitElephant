@@ -34,7 +34,7 @@ class DiffCommandTest extends TestCase
     public function setUp(): void
     {
         $this->initRepository();
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('foo');
         $this->getRepository()->commit('first commit', true);
         $this->diffCommand = new DiffCommand();
@@ -45,7 +45,7 @@ class DiffCommandTest extends TestCase
      */
     public function testDiff(): void
     {
-        $commit = $this->getRepository()->init()->getCommit();
+        $commit = $this->getRepository()->init(false, 'master')->getCommit();
         $this->assertEquals(
             DiffCommand::DIFF_COMMAND . " '--full-index' '--no-color' '--no-ext-diff' '-M' '--dst-prefix=DST/' '--src-prefix=SRC/' 'HEAD^..HEAD'",
             $this->diffCommand->diff('HEAD')

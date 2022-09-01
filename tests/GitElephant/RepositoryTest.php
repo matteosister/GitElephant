@@ -56,7 +56,7 @@ class RepositoryTest extends TestCase
      */
     public function testInit(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $match = false;
 
         // Force US/EN locale
@@ -84,7 +84,7 @@ class RepositoryTest extends TestCase
      */
     public function testStage(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->stage();
         $match = false;
@@ -101,7 +101,7 @@ class RepositoryTest extends TestCase
      */
     public function testUnstage(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('first commit', true);
         $this->addFile('test2');
@@ -121,7 +121,7 @@ class RepositoryTest extends TestCase
      */
     public function testCommit(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->stage();
         $this->getRepository()->commit('initial import');
@@ -156,7 +156,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetStatus(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('test commit', true);
         $output = $this->getRepository()->getStatusOutput();
@@ -171,7 +171,7 @@ class RepositoryTest extends TestCase
      */
     public function testCreateBranch(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('foo', true);
         $this->getRepository()->createBranch('test-branch');
@@ -183,7 +183,7 @@ class RepositoryTest extends TestCase
      */
     public function testDeleteBranch(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->getRepository()->createBranch('branch2');
@@ -203,7 +203,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetBranches(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->stage();
         $this->getRepository()->commit('initial import', true);
@@ -245,7 +245,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetMainBranch(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->assertEquals('master', $this->getRepository()->getMainBranch()->getName());
@@ -256,7 +256,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetBranch(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->assertInstanceOf('GitElephant\Objects\Branch', $this->getRepository()->getBranch('master'));
@@ -268,7 +268,7 @@ class RepositoryTest extends TestCase
      */
     public function testMerge(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->assertEquals(1, count($this->getRepository()->getTree()));
@@ -317,7 +317,7 @@ class RepositoryTest extends TestCase
      */
     public function testTags(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->assertEquals(0, count($this->getRepository()->getTags()));
@@ -334,7 +334,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetLastTag(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->getRepository()->createTag('0.0.2');
@@ -359,7 +359,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetCommit(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->assertInstanceOf('GitElephant\Objects\Commit', $this->getRepository()->getCommit());
@@ -367,7 +367,7 @@ class RepositoryTest extends TestCase
 
     public function testGetBranchOrTag(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->getRepository()->createBranch('branch2');
@@ -383,7 +383,7 @@ class RepositoryTest extends TestCase
     public function testGetObjectLog(): void
     {
         $repo = $this->getRepository();
-        $repo->init();
+        $repo->init(false, 'master');
 
         $this->addFolder('test');
 
@@ -425,7 +425,7 @@ class RepositoryTest extends TestCase
     public function testGetObjectLogFolders(): void
     {
         $repo = $this->getRepository();
-        $repo->init();
+        $repo->init(false, 'master');
 
         $this->addFolder('A');
         $this->addFile('A1.txt', 'A');
@@ -466,7 +466,7 @@ class RepositoryTest extends TestCase
     public function testGetObjectLogBranches(): void
     {
         $repo = $this->getRepository();
-        $repo->init();
+        $repo->init(false, 'master');
 
         $this->addFolder('A');
         $this->addFile('A1.txt', 'A');
@@ -505,7 +505,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetLog(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
 
         for ($i = 0; $i < 50; $i++) {
             $this->addFile('test file ' . $i);
@@ -522,7 +522,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetLogForBranch(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test file 0');
         $this->getRepository()->commit('first commit', true);
         $this->getRepository()->checkout('test-branch', true);
@@ -542,7 +542,7 @@ class RepositoryTest extends TestCase
      */
     public function testCheckout(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->assertEquals('master', $this->getRepository()->getMainBranch()->getName());
@@ -556,7 +556,7 @@ class RepositoryTest extends TestCase
      */
     public function testCheckoutTag(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->getRepository()->createTag('v0.0.1');
@@ -578,7 +578,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetTree(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->addFolder('test-folder');
         $this->addFile('test2', 'test-folder');
@@ -636,7 +636,7 @@ class RepositoryTest extends TestCase
      */
     public function testGetDiff(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('commit 1', true);
         $commit1 = $this->getRepository()->getCommit();
@@ -658,7 +658,7 @@ class RepositoryTest extends TestCase
         $this->initRepository(null, 0);
         $this->initRepository(null, 1);
         $remote = $this->getRepository(0);
-        $remote->init();
+        $remote->init(false, 'master');
         $this->addFile('test', null, null, $remote);
         $remote->commit('test', true);
         $local = $this->getRepository(1);
@@ -674,7 +674,7 @@ class RepositoryTest extends TestCase
     public function testOutputContent(): void
     {
         $this->initRepository();
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('file1', null, 'file content');
         $this->getRepository()->commit('first commit', true);
         $branch = $this->getRepository()->getBranch('master');
@@ -688,7 +688,7 @@ class RepositoryTest extends TestCase
      */
     public function testMove(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('foo');
         $this->getRepository()->commit('commit 1', true);
         $this->getRepository()->move('foo', 'bar');
@@ -701,7 +701,7 @@ class RepositoryTest extends TestCase
      */
     public function testRemove(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('foo');
         $this->getRepository()->commit('commit 1', true);
         $this->getRepository()->remove('foo');
@@ -715,7 +715,7 @@ class RepositoryTest extends TestCase
      */
     public function testCountCommits(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('foo');
         $this->getRepository()->commit('commit 1', true);
         $this->assertEquals(1, $this->getRepository()->countCommits());
@@ -748,7 +748,7 @@ class RepositoryTest extends TestCase
     {
         $this->initRepository(null, 0);
         $remote = $this->getRepository(0);
-        $remote->init();
+        $remote->init(false, 'master');
         $this->addFile('test', null, null, $remote);
         $remote->commit('test', true);
         $remote->createBranch('develop');
@@ -776,7 +776,7 @@ class RepositoryTest extends TestCase
         $remote = $this->getRepository(0);
         $remote->init(true);
         $this->initRepository();
-        $this->repository->init();
+        $this->repository->init(false, 'master');
         $this->repository->addRemote('github', $remote->getPath());
         $this->assertInstanceOf('GitElephant\Objects\Remote', $this->repository->getRemote('github'));
         $this->repository->addRemote('github2', $remote->getPath());
@@ -791,7 +791,7 @@ class RepositoryTest extends TestCase
         $this->initRepository(null, 0);
         $this->initRepository(null, 1);
         $r1 = $this->getRepository(0);
-        $r1->init();
+        $r1->init(false, 'master');
         $this->addFile('test1', null, null, $r1);
         $r1->commit('test commit', true);
         $r1->createBranch('tag-test');
@@ -799,7 +799,7 @@ class RepositoryTest extends TestCase
         $r1->commit('another test commit', true);
         $r1->createTag('test-tag');
         $r2 = $this->getRepository(1);
-        $r2->init();
+        $r2->init(false, 'master');
         $r2->addRemote('origin', $r1->getPath());
         $this->assertEmpty($r2->getBranches(true, true));
         $r2->fetch();
@@ -816,11 +816,11 @@ class RepositoryTest extends TestCase
         $this->initRepository(null, 0);
         $this->initRepository(null, 1);
         $r1 = $this->getRepository(0);
-        $r1->init();
+        $r1->init(false, 'master');
         $this->addFile('test1', null, null, $r1);
         $r1->commit('test commit', true);
         $r2 = $this->getRepository(1);
-        $r2->init();
+        $r2->init(false, 'master');
         $r2->addRemote('origin', $r1->getPath());
         $r2->pull('origin', 'master');
         $this->assertEquals('test commit', $r2->getLog()->last()->getMessage());
@@ -837,7 +837,7 @@ class RepositoryTest extends TestCase
         $this->initRepository(null, 2);
         // commit on r1
         $r1 = $this->getRepository(0);
-        $r1->init();
+        $r1->init(false, 'master');
         $this->addFile('test1', null, null, $r1);
         $r1->commit('test commit', true);
         // push from r1 to r2
@@ -847,7 +847,7 @@ class RepositoryTest extends TestCase
         $r1->push('origin', 'master');
         // pull from r2 to r3 should get the same result
         $r3 = $this->getRepository(2);
-        $r3->init();
+        $r3->init(false, 'master');
         $r3->addRemote('origin', $r2->getPath());
         $r3->pull('origin', 'master');
 
@@ -859,7 +859,7 @@ class RepositoryTest extends TestCase
     {
         $this->initRepository(null, 0);
         $r = $this->getRepository(0);
-        $r->init();
+        $r->init(false, 'master');
         $this->addFile('test1', null, null, $r);
         $r->commit('test commit', true);
         $master = $r->getBranch('master');
@@ -871,7 +871,7 @@ class RepositoryTest extends TestCase
     {
         $this->initRepository(null, 0);
         $r = $this->getRepository(0);
-        $r->init();
+        $r->init(false, 'master');
 
         $this->assertEquals(false, $r->isBare());
 
@@ -918,7 +918,7 @@ class RepositoryTest extends TestCase
     {
         $this->initRepository();
         $repo = $this->getRepository();
-        $repo->init();
+        $repo->init(false, 'master');
         $this->addFile('file1');
         $repo->stage();
         $repo->commit('message1');
@@ -940,7 +940,7 @@ class RepositoryTest extends TestCase
     {
         $this->initRepository();
         $repo = $this->getRepository();
-        $repo->init();
+        $repo->init(false, 'master');
         $this->addFile('file1');
         $repo->stage();
         $repo->commit('message1');
@@ -1018,7 +1018,7 @@ class RepositoryTest extends TestCase
      */
     public function testStashThrowsExceptionIfNoCommits(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
 
         $this->expectException('RuntimeException');
@@ -1030,7 +1030,7 @@ class RepositoryTest extends TestCase
      */
     public function testStash(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('Test commit', true);
         $this->addFile('test2');
@@ -1045,7 +1045,7 @@ class RepositoryTest extends TestCase
      */
     public function testStashList(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('Test commit', true);
         $this->addFile('test2');
@@ -1058,7 +1058,7 @@ class RepositoryTest extends TestCase
      */
     public function testStashShow(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('Test commit', true);
         $this->addFile('test2');
@@ -1071,7 +1071,7 @@ class RepositoryTest extends TestCase
      */
     public function testStashDrop(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('Test commit', true);
         $this->addFile('test2');
@@ -1085,7 +1085,7 @@ class RepositoryTest extends TestCase
      */
     public function testStashPop(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('Test commit', true);
         $this->addFile('test2');
@@ -1100,7 +1100,7 @@ class RepositoryTest extends TestCase
      */
     public function testStashApply(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('Test commit', true);
         $this->addFile('test2');
@@ -1115,7 +1115,7 @@ class RepositoryTest extends TestCase
      */
     public function testStashBranch(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('Test commit', true);
         $this->addFile('test2');
@@ -1129,7 +1129,7 @@ class RepositoryTest extends TestCase
      */
     public function testStashCreate(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('Test commit', true);
         $objectName = $this->getRepository()->stashCreate();
@@ -1141,7 +1141,7 @@ class RepositoryTest extends TestCase
      */
     public function testStashClear(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('Test commit', true);
         $this->addFile('test2');

@@ -60,11 +60,14 @@ class MainCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string
      */
-    public function init($bare = false): string
+    public function init($bare = false, ?string $initialBranchName = null): string
     {
         $this->clearAll();
         if ($bare) {
             $this->addCommandArgument('--bare');
+        }
+        if ($initialBranchName) {
+            $this->addCommandArgument('--initial-branch=' . $initialBranchName);
         }
         $this->addCommandName(self::GIT_INIT);
 
