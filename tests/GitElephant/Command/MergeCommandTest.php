@@ -24,7 +24,7 @@ class MergeCommandTest extends TestCase
     public function setUp(): void
     {
         $this->initRepository();
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('test', true);
         $this->getRepository()->createBranch('test', 'master');

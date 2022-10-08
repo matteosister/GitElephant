@@ -30,7 +30,7 @@ class DiffTest extends TestCase
 
     public function testDiff(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('foo', null, "content line 1\ncontent line 2\ncontent line 3");
         $this->getRepository()->commit('commit1', true);
         $this->addFile('foo', null, "content line 1\ncontent line 2 changed");

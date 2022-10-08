@@ -29,7 +29,7 @@ class DiffTreeCommandTest extends TestCase
     public function setUp(): void
     {
         $this->initRepository();
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('foo');
         $this->getRepository()->commit('first commit', true);
     }

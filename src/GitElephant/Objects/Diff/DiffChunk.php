@@ -238,7 +238,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      *
      * @return DiffChunkLine|null
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): ?DiffChunkLine
     {
         return isset($this->lines[$offset]) ? $this->lines[$offset] : null;
     }
@@ -281,9 +281,9 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     /**
      * Iterator interface
      *
-     * @return mixed
+     * @return DiffChunkLine|null
      */
-    public function current()
+    public function current(): ?DiffChunkLine
     {
         return $this->lines[$this->position];
     }

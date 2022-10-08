@@ -29,7 +29,7 @@ class LogCommandTest extends TestCase
     public function setUp(): void
     {
         $this->initRepository();
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('foo');
         $this->addFolder('test-folder');
         $this->addFile('test-file', 'test-folder', 'test');
@@ -41,7 +41,9 @@ class LogCommandTest extends TestCase
      */
     public function testShowObjectLog(): void
     {
-        $branch = $this->getRepository()->getBranch('master');
+        // TODO: generalize the "main" branch fetch
+        $branchName = 'master';
+        $branch = $this->getRepository()->getBranch($branchName);
         $obj = $this->getRepository()->getTree('HEAD', 'test-folder/test-file')->getBlob();
         $lc = LogCommand::getInstance();
         $this->assertEquals(
@@ -49,7 +51,7 @@ class LogCommandTest extends TestCase
             $lc->showObjectLog($obj)
         );
         $this->assertEquals(
-            "log '-s' '--pretty=raw' '--no-color' 'master' -- 'test-folder/test-file'",
+            "log '-s' '--pretty=raw' '--no-color' '$branchName' -- 'test-folder/test-file'",
             $lc->showObjectLog($obj, $branch)
         );
     }

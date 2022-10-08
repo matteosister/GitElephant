@@ -28,7 +28,7 @@ class LogTest extends TestCase
      */
     public function setUp(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
 
         for ($i = 0; $i < 10; $i++) {
             $this->addFile('test file ' . $i);

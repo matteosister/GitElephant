@@ -33,7 +33,7 @@ class RemoteCommandTest extends TestCase
     {
         $this->initRepository();
         $repo = $this->getRepository();
-        $repo->init();
+        $repo->init(false, 'master');
         $this->addFile('test');
         $repo->commit('test', true);
         $repo->createTag($this->startTagName);

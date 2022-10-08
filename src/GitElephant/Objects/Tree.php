@@ -450,7 +450,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @return NodeObject|null
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return isset($this->children[$offset]) ? $this->children[$offset] : null;
     }

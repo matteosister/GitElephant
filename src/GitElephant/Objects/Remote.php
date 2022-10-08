@@ -266,7 +266,7 @@ class Remote
         $configuredRefs = [];
         arsort($groupLines);
         foreach ($groupLines as $type => $lineno) {
-            $configuredRefs[$type] = array_splice($remoteDetails, $lineno);
+            $configuredRefs[$type] = $lineno === null ? [] : array_splice($remoteDetails, $lineno);
             array_shift($configuredRefs[$type]);
         }
 

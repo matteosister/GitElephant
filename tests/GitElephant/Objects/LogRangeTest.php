@@ -45,7 +45,7 @@ class LogRangeTest extends TestCase
         $this->initRepository(null, 0);
         $this->initRepository(null, 1);
         $r1 = $this->getRepository(0);
-        $r1->init();
+        $r1->init(false, 'master');
 
         for ($i = 0; $i < 10; $i++) {
             $this->addFile('test file ' . $i, null, null, $r1);

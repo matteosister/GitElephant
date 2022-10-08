@@ -182,7 +182,7 @@ class CommitTest extends TestCase
      */
     public function testCreate(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->repository->stage();
         $commit = Commit::create($this->repository, 'first commit', true);
@@ -194,7 +194,7 @@ class CommitTest extends TestCase
      */
     public function testGetDiff(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->repository->stage();
         $commit = Commit::create($this->repository, 'first commit', true);
@@ -213,7 +213,7 @@ class CommitTest extends TestCase
 
     public function testRevParse(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->repository->stage();
         $commit = Commit::create($this->repository, 'first commit', true);
@@ -224,7 +224,7 @@ class CommitTest extends TestCase
 
     public function testCommitWithoutTag(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->repository->stage();
         $commit = Commit::create($this->repository, 'first commit', true);
@@ -233,7 +233,7 @@ class CommitTest extends TestCase
 
     public function testCommitWithTag(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->repository->stage();
         $commit = Commit::create($this->repository, 'first commit', true);

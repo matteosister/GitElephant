@@ -276,7 +276,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @return DiffChunk|null
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): ?DiffChunk
     {
         return isset($this->chunks[$offset]) ? $this->chunks[$offset] : null;
     }
@@ -319,9 +319,9 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * Iterator interface
      *
-     * @return mixed
+     * @return DiffChunk|null
      */
-    public function current()
+    public function current(): ?DiffChunk
     {
         return $this->chunks[$this->position];
     }

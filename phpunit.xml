@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<phpunit bootstrap="tests/bootstrap.php"
-        colors="true"
-        stopOnFailure="true">
-    <testsuites>
-        <testsuite name="GitElephant Test Suite">
-            <directory>tests/GitElephant/</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src/GitElephant/</directory>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="tests/bootstrap.php" colors="true" stopOnFailure="true" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">src/GitElephant/</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="GitElephant Test Suite">
+      <directory>tests/GitElephant/</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>

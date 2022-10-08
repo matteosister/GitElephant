@@ -19,7 +19,7 @@ class TagTest extends TestCase
      */
     public function testTag(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('foo');
         $this->getRepository()->commit('commit1', true);
         $this->getRepository()->createTag('test-tag');
@@ -35,7 +35,7 @@ class TagTest extends TestCase
      */
     public function testTagFromStartPoint(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('foo');
         $this->repository->commit('commit1', true);
         Tag::create($this->repository, 'tag1', $this->repository->getCommit());
@@ -54,7 +54,7 @@ class TagTest extends TestCase
     public function testNonExistentTag(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('foo');
         $this->getRepository()->commit('commit1', true);
         $this->getRepository()->createTag('test-tag');
@@ -66,7 +66,7 @@ class TagTest extends TestCase
      */
     public function testCreate(): void
     {
-        $this->getRepository()->init();
+        $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->repository->commit('test', true);
         $this->assertCount(0, $this->repository->getTags());
