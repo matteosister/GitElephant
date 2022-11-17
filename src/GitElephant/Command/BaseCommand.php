@@ -21,7 +21,6 @@
 namespace GitElephant\Command;
 
 use GitElephant\Repository;
-use PhpCollection\Map;
 
 /**
  * BaseCommand
@@ -177,7 +176,7 @@ class BaseCommand
     /**
      * Set Configs
      *
-     * @param array|Map $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
+     * @param array $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
      */
     public function addConfigs($configs): void
     {
@@ -189,7 +188,7 @@ class BaseCommand
     /**
      * Set global configs
      *
-     * @param array|Map $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
+     * @param array $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
      */
     protected function addGlobalConfigs($configs): void
     {
@@ -203,7 +202,7 @@ class BaseCommand
     /**
      * Set global option
      *
-     * @param array|Map $options a global option
+     * @param array $options a global option
      */
     protected function addGlobalOptions($options): void
     {

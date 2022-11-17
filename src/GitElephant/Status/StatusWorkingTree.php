@@ -20,7 +20,7 @@
 
 namespace GitElephant\Status;
 
-use PhpCollection\Sequence;
+use GitElephant\Sequence\Sequence;
 
 /**
  * Class StatusWorkingTree
@@ -34,7 +34,7 @@ class StatusWorkingTree extends Status
      *
      * @return Sequence
      */
-    public function all(): \PhpCollection\Sequence
+    public function all(): \GitElephant\Sequence\Sequence
     {
         return new Sequence(
             array_filter(
@@ -54,7 +54,7 @@ class StatusWorkingTree extends Status
      *
      * @return Sequence
      */
-    protected function filterByType(string $type): \PhpCollection\Sequence
+    protected function filterByType(string $type): \GitElephant\Sequence\Sequence
     {
         if (!$this->files) {
             return new Sequence();
