@@ -19,20 +19,11 @@
 namespace GitElephant\Sequence;
 
 /**
- * Unsorted sequence implementation.
- *
- * Characteristics:
- *
- *     - Keys: consequentially numbered, without gaps
- *     - Values: anything, duplicates allowed
- *     - Ordering: same as input unless when explicitly sorted
+ * Interface for sortable collections.
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class Sequence extends AbstractSequence implements SortableInterface
+interface SortableInterface
 {
-    public function sortWith($callable): void
-    {
-        usort($this->elements, $callable);
-    }
+    public function sortWith($callable);
 }

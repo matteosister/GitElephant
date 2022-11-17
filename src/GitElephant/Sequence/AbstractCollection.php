@@ -24,7 +24,7 @@ use PhpOption\Some;
 
 abstract class AbstractCollection
 {
-    public function contains($searchedElem)
+    public function contains($searchedElem): bool
     {
         foreach ($this as $elem) {
             if ($elem === $searchedElem) {
@@ -35,13 +35,13 @@ abstract class AbstractCollection
         return false;
     }
 
-    public function find($callable)
+    public function find($callable): LazyOption
     {
         $self = $this;
 
         return new LazyOption(function () use ($callable, $self) {
             foreach ($self as $elem) {
-                if (call_user_func($callable, $elem) === true) {
+                if ($callable($elem) === true) {
                     return new Some($elem);
                 }
             }
