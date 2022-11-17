@@ -20,6 +20,7 @@ namespace GitElephant\Sequence;
 
 use OutOfBoundsException;
 use PhpOption\None;
+use PhpOption\Option;
 use PhpOption\Some;
 
 /**
@@ -44,12 +45,13 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         $this->elements = array_values($elements);
     }
 
-    public function addSequence(SequenceInterface $seq)
+    public function addSequence(SequenceInterface $seq): SequenceInterface
     {
         $this->addAll($seq->all());
+        return $this;
     }
 
-    public function indexOf($elem)
+    public function indexOf($elem): int
     {
         foreach ($this->elements as $i => $element) {
             if ($elem === $element) {
@@ -71,7 +73,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return -1;
     }
 
-    public function reverse(): CollectionInterface
+    public function reverse(): SequenceInterface
     {
         return $this->createNew(array_reverse($this->elements));
     }
@@ -181,7 +183,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return -1;
     }
 
-    public function last()
+    public function last(): Option
     {
         if (empty($this->elements)) {
             return None::create();
@@ -190,7 +192,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return new Some(end($this->elements));
     }
 
-    public function first()
+    public function first(): Option
     {
         if (empty($this->elements)) {
             return None::create();
@@ -204,11 +206,6 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return array_keys($this->elements);
     }
 
-    /**
-     * Returns an element based on its index (0-based).
-     *
-     * @param integer $index
-     */
     public function get(int $index)
     {
         if (!isset($this->elements[$index])) {
@@ -218,13 +215,6 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->elements[$index];
     }
 
-    /**
-     * Removes the element at the given index, and returns it.
-     *
-     * @param int $index
-     *
-     * @throws \OutOfBoundsException If there is no element at the given index.
-     */
     public function remove(int $index)
     {
         if (!isset($this->elements[$index])) {
@@ -238,12 +228,6 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $element;
     }
 
-    /**
-     * Updates the element at the given index (0-based).
-     *
-     * @param integer $index
-     * @param mixed $value
-     */
     public function update(int $index, $value): void
     {
         if (!isset($this->elements[$index])) {
@@ -307,7 +291,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew($newElements);
     }
 
-    public function drop(int $number): CollectionInterface
+    public function drop(int $number): SequenceInterface
     {
         if ($number <= 0) {
             throw new \InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
@@ -316,7 +300,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew(array_slice($this->elements, $number));
     }
 
-    public function dropRight(int $number): CollectionInterface
+    public function dropRight(int $number): SequenceInterface
     {
         if ($number <= 0) {
             throw new \InvalidArgumentException(sprintf('The number must be greater than 0, but got %d.', $number));
@@ -325,7 +309,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew(array_slice($this->elements, 0, -1 * $number));
     }
 
-    public function dropWhile(callable $callable): CollectionInterface
+    public function dropWhile(callable $callable): SequenceInterface
     {
         $i = 0;
         foreach ($this->elements as $i => $iValue) {
@@ -358,7 +342,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return new \ArrayIterator($this->elements ?: []);
     }
 
-    protected function createNew(array $elements): CollectionInterface
+    protected function createNew(array $elements): SequenceInterface
     {
         return new static($elements);
     }
