@@ -33,8 +33,11 @@ use PhpOption\Some;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  */
-class AbstractSequence extends AbstractCollection implements \IteratorAggregate, SequenceInterface
+class AbstractSequence extends AbstractCollection implements SequenceInterface
 {
+    /**
+     * @var array
+     */
     protected $elements;
 
     /**
@@ -119,7 +122,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->filterInternal($callable, false);
     }
 
-    private function filterInternal($callable, $booleanKeep): CollectionInterface
+    private function filterInternal(callable $callable, bool $booleanKeep): CollectionInterface
     {
         $newElements = [];
         foreach ($this->elements as $element) {
@@ -321,7 +324,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
         return $this->createNew(array_slice($this->elements, $i));
     }
 
-    public function exists($callable): bool
+    public function exists(callable $callable): bool
     {
         foreach ($this as $elem) {
             if ($callable($elem) === true) {

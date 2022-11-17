@@ -31,7 +31,7 @@ namespace GitElephant\Sequence;
  */
 class Sequence extends AbstractSequence implements SortableInterface
 {
-    public function sortWith($callable): void
+    public function sortWith(callable $callable): void
     {
         usort($this->elements, $callable);
     }

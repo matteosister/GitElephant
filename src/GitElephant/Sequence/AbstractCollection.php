@@ -22,8 +22,13 @@ use PhpOption\LazyOption;
 use PhpOption\None;
 use PhpOption\Some;
 
-abstract class AbstractCollection
+abstract class AbstractCollection implements \IteratorAggregate
 {
+    /**
+     * @param mixed $searchedElem
+     *
+     * @return bool
+     */
     public function contains($searchedElem): bool
     {
         foreach ($this as $elem) {
@@ -35,7 +40,12 @@ abstract class AbstractCollection
         return false;
     }
 
-    public function find($callable): LazyOption
+  /**
+   * @param callable $callable
+   *
+   * @return \PhpOption\LazyOption
+   */
+    public function find(callable $callable): LazyOption
     {
         $self = $this;
 
