@@ -18,9 +18,9 @@
 
 namespace GitElephant\Sequence;
 
-use PhpOption\Some;
-use PhpOption\None;
 use OutOfBoundsException;
+use PhpOption\None;
+use PhpOption\Some;
 
 /**
  * A sequence with numerically indexed elements.
@@ -39,7 +39,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
     /**
      * @param array $elements
      */
-    public function __construct(array $elements = array())
+    public function __construct(array $elements = [])
     {
         $this->elements = array_values($elements);
     }
@@ -62,7 +62,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     public function lastIndexOf($searchedElement)
     {
-        for ($i=count($this->elements)-1; $i>=0; $i--) {
+        for ($i = count($this->elements) - 1; $i >= 0; $i--) {
             if ($this->elements[$i] === $searchedElement) {
                 return $i;
             }
@@ -95,7 +95,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     public function map($callable)
     {
-        $newElements = array();
+        $newElements = [];
         foreach ($this->elements as $i => $element) {
             $newElements[$i] = $callable($element);
         }
@@ -117,7 +117,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     private function filterInternal($callable, $booleanKeep)
     {
-        $newElements = array();
+        $newElements = [];
         foreach ($this->elements as $element) {
             if ($booleanKeep !== call_user_func($callable, $element)) {
                 continue;
@@ -169,7 +169,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     public function lastIndexWhere($callable)
     {
-        for ($i=count($this->elements)-1; $i>=0; $i--) {
+        for ($i = count($this->elements) - 1; $i >= 0; $i--) {
             if (call_user_func($callable, $this->elements[$i]) === true) {
                 return $i;
             }
@@ -210,7 +210,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      */
     public function get($index)
     {
-        if ( ! isset($this->elements[$index])) {
+        if (!isset($this->elements[$index])) {
             throw new OutOfBoundsException(sprintf('The index "%s" does not exist in this sequence.', $index));
         }
 
@@ -228,7 +228,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      */
     public function remove($index)
     {
-        if ( ! isset($this->elements[$index])) {
+        if (!isset($this->elements[$index])) {
             throw new OutOfBoundsException(sprintf('The index "%d" is not in the interval [0, %d).', $index, count($this->elements)));
         }
 
@@ -247,7 +247,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      */
     public function update($index, $value)
     {
-        if ( ! isset($this->elements[$index])) {
+        if (!isset($this->elements[$index])) {
             throw new \InvalidArgumentException(sprintf('There is no element at index "%d".', $index));
         }
 
@@ -294,9 +294,9 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
      */
     public function takeWhile($callable)
     {
-        $newElements = array();
+        $newElements = [];
 
-        for ($i=0,$c=count($this->elements); $i<$c; $i++) {
+        for ($i = 0,$c = count($this->elements); $i < $c; $i++) {
             if (call_user_func($callable, $this->elements[$i]) !== true) {
                 break;
             }
@@ -327,7 +327,7 @@ class AbstractSequence extends AbstractCollection implements \IteratorAggregate,
 
     public function dropWhile($callable)
     {
-        for ($i=0,$c=count($this->elements); $i<$c; $i++) {
+        for ($i = 0,$c = count($this->elements); $i < $c; $i++) {
             if (true !== call_user_func($callable, $this->elements[$i])) {
                 break;
             }

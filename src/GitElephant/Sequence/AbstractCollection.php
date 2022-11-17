@@ -19,8 +19,8 @@
 namespace GitElephant\Sequence;
 
 use PhpOption\LazyOption;
-use PhpOption\Some;
 use PhpOption\None;
+use PhpOption\Some;
 
 abstract class AbstractCollection
 {
@@ -39,7 +39,7 @@ abstract class AbstractCollection
     {
         $self = $this;
 
-        return new LazyOption(function() use ($callable, $self) {
+        return new LazyOption(function () use ($callable, $self) {
             foreach ($self as $elem) {
                 if (call_user_func($callable, $elem) === true) {
                     return new Some($elem);
