@@ -159,7 +159,7 @@ If you build a GitElephant\Status\Status class, you will get a nice api for gett
 $status = $repo->getStatus();
 $status = GitElephant\Status\Status::get($repo); // it's the same...
 
-$status->all(); // A PhpCollection of StatusFile objects
+$status->all(); // A Sequence of StatusFile objects
 $status->untracked();
 $status->modified();
 $status->added();
@@ -168,7 +168,7 @@ $status->renamed();
 $status->copied();
 ```
 
-all this methods returns a [PhpCollection](https://github.com/schmittjoh/php-collection) of StatusFile objects
+all this methods returns a Sequence of StatusFile objects, credit to [PhpCollection](https://github.com/schmittjoh/php-collection)
 
 a StatusFile instance has all the information about the tree node changes. File names (and new file names for renamed objects), index and working tree status, and also a "git style" description like: *added to index* or *deleted in work tree*
 
@@ -354,7 +354,7 @@ Dependencies
 - [symfony/process](https://packagist.org/packages/symfony/process)
 - [symfony/filesystem](https://packagist.org/packages/symfony/filesystem)
 - [symfony/finder](https://packagist.org/packages/symfony/finder)
-- [phpcollection/phpcollection](https://github.com/schmittjoh/php-collection)
+- [phpoption/phpoption](https://github.com/schmittjoh/php-option)
 
 *for tests*
 

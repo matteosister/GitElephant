@@ -188,7 +188,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     {
         $matches = [];
         if (preg_match('/^similarity index (.*)\%$/', $line, $matches)) {
-            $this->similarityIndex = $matches[1];
+            $this->similarityIndex = (int) $matches[1];
         }
     }
 

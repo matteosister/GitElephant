@@ -133,8 +133,8 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
         preg_match('/@@ -(.*) \+(.*) @@?(.*)/', $line, $matches);
         if (!strpos($matches[1], ',')) {
             // one line
-            $this->originStartLine = $matches[1];
-            $this->originEndLine = $matches[1];
+            $this->originStartLine = (int) $matches[1];
+            $this->originEndLine = (int) $matches[1];
         } else {
             $this->originStartLine = (int) explode(',', $matches[1])[0];
             $this->originEndLine = (int) explode(',', $matches[1])[1];
@@ -142,8 +142,8 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 
         if (!strpos($matches[2], ',')) {
             // one line
-            $this->destStartLine = $matches[2];
-            $this->destEndLine = $matches[2];
+            $this->destStartLine = (int) $matches[2];
+            $this->destEndLine = (int) $matches[2];
         } else {
             $this->destStartLine = (int) explode(',', $matches[2])[0];
             $this->destEndLine = (int) explode(',', $matches[2])[1];

@@ -22,7 +22,7 @@ namespace GitElephant\Status;
 
 use GitElephant\Command\MainCommand;
 use GitElephant\Repository;
-use PhpCollection\Sequence;
+use GitElephant\Sequence\Sequence;
 
 /**
  * Class Status
@@ -81,7 +81,7 @@ class Status
      *
      * @return Sequence<StatusFile>
      */
-    public function all(): \PhpCollection\Sequence
+    public function all(): \GitElephant\Sequence\Sequence
     {
         return new Sequence($this->files);
     }
@@ -91,7 +91,7 @@ class Status
      *
      * @return Sequence<StatusFile>
      */
-    public function untracked(): \PhpCollection\Sequence
+    public function untracked(): \GitElephant\Sequence\Sequence
     {
         return $this->filterByType(StatusFile::UNTRACKED);
     }
@@ -101,7 +101,7 @@ class Status
      *
      * @return Sequence<StatusFile>
      */
-    public function modified(): \PhpCollection\Sequence
+    public function modified(): \GitElephant\Sequence\Sequence
     {
         return $this->filterByType(StatusFile::MODIFIED);
     }
@@ -111,7 +111,7 @@ class Status
      *
      * @return Sequence<StatusFile>
      */
-    public function added(): \PhpCollection\Sequence
+    public function added(): \GitElephant\Sequence\Sequence
     {
         return $this->filterByType(StatusFile::ADDED);
     }
@@ -121,7 +121,7 @@ class Status
      *
      * @return Sequence<StatusFile>
      */
-    public function deleted(): \PhpCollection\Sequence
+    public function deleted(): \GitElephant\Sequence\Sequence
     {
         return $this->filterByType(StatusFile::DELETED);
     }
@@ -131,7 +131,7 @@ class Status
      *
      * @return Sequence<StatusFile>
      */
-    public function renamed(): \PhpCollection\Sequence
+    public function renamed(): \GitElephant\Sequence\Sequence
     {
         return $this->filterByType(StatusFile::RENAMED);
     }
@@ -141,7 +141,7 @@ class Status
      *
      * @return Sequence<StatusFile>
      */
-    public function copied(): \PhpCollection\Sequence
+    public function copied(): \GitElephant\Sequence\Sequence
     {
         return $this->filterByType(StatusFile::COPIED);
     }
@@ -185,7 +185,7 @@ class Status
      *
      * @return Sequence<StatusFile>
      */
-    protected function filterByType(string $type): \PhpCollection\Sequence
+    protected function filterByType(string $type): \GitElephant\Sequence\Sequence
     {
         if (!$this->files) {
             return new Sequence();

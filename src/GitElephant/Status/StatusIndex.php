@@ -20,7 +20,7 @@
 
 namespace GitElephant\Status;
 
-use PhpCollection\Sequence;
+use GitElephant\Sequence\Sequence;
 
 /**
  * Class StatusIndex
@@ -32,7 +32,7 @@ class StatusIndex extends Status
     /**
      * @return Sequence<StatusFile>
      */
-    public function untracked(): \PhpCollection\Sequence
+    public function untracked(): \GitElephant\Sequence\Sequence
     {
         return new Sequence();
     }
@@ -42,7 +42,7 @@ class StatusIndex extends Status
      *
      * @return Sequence<StatusFile>
      */
-    public function all(): \PhpCollection\Sequence
+    public function all(): \GitElephant\Sequence\Sequence
     {
         return new Sequence(
             array_filter(
@@ -61,7 +61,7 @@ class StatusIndex extends Status
      *
      * @return Sequence<StatusFile>
      */
-    protected function filterByType(string $type): \PhpCollection\Sequence
+    protected function filterByType(string $type): \GitElephant\Sequence\Sequence
     {
         if (!$this->files) {
             return new Sequence();
