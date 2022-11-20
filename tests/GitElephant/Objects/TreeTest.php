@@ -96,6 +96,8 @@ class TreeTest extends TestCase
         mkdir($path);
         $repository = new Repository($path);
         $repository->init(false, 'master');
+        // required for newer git versions, 
+        // see e.g. https://bugs.launchpad.net/ubuntu/+source/git/+bug/1993586
         $repository->addGlobalConfig("protocol.file.allow", "always");
         $repository->addSubmodule($this->repository->getPath());
         $repository->commit('test', true);
