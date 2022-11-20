@@ -96,6 +96,7 @@ class TreeTest extends TestCase
         mkdir($path);
         $repository = new Repository($path);
         $repository->init(false, 'master');
+        $repository->addGlobalConfig("protocol.file.allow", "always");
         $repository->addSubmodule($this->repository->getPath());
         $repository->commit('test', true);
         $tree = $repository->getTree();
