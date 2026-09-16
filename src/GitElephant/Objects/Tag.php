@@ -108,7 +108,6 @@ class Tag extends NodeObject
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
-     * @internal param string $line a single tag line from the git binary
      */
     public function __construct(Repository $repository, string $name)
     {
