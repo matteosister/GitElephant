@@ -1,14 +1,28 @@
+build:
+    environment:
+        php:
+            version: 8.4.4
+            ini:
+                xdebug.mode: coverage
+    tests:
+        override:
+            -
+                command: 'vendor/bin/phpunit --coverage-clover=coverage.clover'
+                coverage:
+                    file: 'coverage.clover'
+                    format: 'clover'
+
 before_commands:
     - git --version
     - git config --global user.email "git-elephant@scrutinizer-ci.com"
     - git config --global user.name "git-elephant"
     - composer install
+
 filter:
     excluded_paths:
         - 'vendor/*'
+
 tools:
-    external_code_coverage:
-        timeout: 600
     php_code_sniffer:
         enabled: true
         filter:
@@ -29,6 +43,6 @@ tools:
         filter:
             paths: [ src/ ]
     php_analyzer: true
-    sensiolabs_security_checker: true
+    sensiolabs_security_checker: false
     php_pdepend: true
     php_loc: true

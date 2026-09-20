@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Objects\Commit;
 
 /**
@@ -18,10 +19,9 @@ namespace GitElephant\Objects\Commit;
  *
  * @author Mathias Geat <mathias@ailoo.net>
  */
-class MessageTest extends \PHPUnit\Framework\TestCase
+final class MessageTest extends \PHPUnit\Framework\TestCase
 {
     protected $shortMsg;
-    protected $longMsg;
     protected $fullMsg;
 
     /**
@@ -32,36 +32,27 @@ class MessageTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         $this->shortMsg = 'This is the short message';
-        $this->longMsg = <<<HDOC
+        $longMsg = <<<HDOC
 Lorem ipsum dolor sit amet, consetetur sadipscing elitr,
 sed diam nonumy eirmod tempor invidunt ut labore et dolore
 magna aliquyam erat, sed diam voluptua. At vero eos et accusam
 et justo duo dolores et ea rebum.
 HDOC;
 
-        $this->fullMsg = $this->shortMsg . PHP_EOL . PHP_EOL . $this->longMsg;
+        $this->fullMsg = $this->shortMsg . PHP_EOL . PHP_EOL . $longMsg;
         $this->msg = new Message(explode(PHP_EOL, $this->fullMsg));
     }
 
-    /**
-     * @covers GitElephant\Objects\Commit\Message::getShortMessage
-     */
     public function testGetShortMessage(): void
     {
         $this->assertEquals($this->shortMsg, $this->msg->getShortMessage());
     }
 
-    /**
-     * @covers GitElephant\Objects\Commit\Message::getFullMessage
-     */
     public function testGetFullMessage(): void
     {
         $this->assertEquals($this->fullMsg, $this->msg->getFullMessage());
     }
 
-    /**
-     * @covers GitElephant\Objects\Commit\Message::toString
-     */
     public function testToString(): void
     {
         $this->assertEquals($this->shortMsg, $this->msg->toString());

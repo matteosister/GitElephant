@@ -64,7 +64,6 @@ class SubCommandCommand extends BaseCommand
      * Add a subject to this subcommand
      *
      * @param SubCommandCommand|array|string $subject
-     * @return void
      */
     protected function addCommandSubject($subject): void
     {
@@ -97,7 +96,6 @@ class SubCommandCommand extends BaseCommand
     /**
      * Get the sub command
      *
-     * @return string
      * @throws \RuntimeException
      */
     public function getCommand(): string
@@ -111,8 +109,8 @@ class SubCommandCommand extends BaseCommand
             $command .= ' ';
         }
         $subjects = $this->getCommandSubjects();
-        if (!empty($subjects)) {
-            $command .= implode(' ', array_map('escapeshellarg', $subjects));
+        if ($subjects !== []) {
+            $command .= implode(' ', array_map(escapeshellarg(...), $subjects));
         }
         $command = preg_replace('/\\s{2,}/', ' ', $command);
 

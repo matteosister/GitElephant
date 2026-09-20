@@ -26,8 +26,6 @@ abstract class AbstractCollection implements \IteratorAggregate
 {
     /**
      * @param mixed $searchedElem
-     *
-     * @return bool
      */
     public function contains($searchedElem): bool
     {
@@ -40,11 +38,6 @@ abstract class AbstractCollection implements \IteratorAggregate
         return false;
     }
 
-    /**
-     * @param callable $callable
-     *
-     * @return \PhpOption\LazyOption
-     */
     public function find(callable $callable): LazyOption
     {
         $self = $this;

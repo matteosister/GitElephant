@@ -46,10 +46,8 @@ class Caller extends AbstractCaller
      */
     public function __construct($gitPath, $repositoryPath)
     {
-        if (is_null($gitPath)) {
-            // unix only!
-            $gitPath = exec('which git');
-        }
+        // unix only!
+        $gitPath ??= exec('which git');
         $this->setBinaryPath($gitPath);
         if (!is_dir($repositoryPath)) {
             throw new InvalidRepositoryPathException($repositoryPath);
@@ -91,12 +89,7 @@ class Caller extends AbstractCaller
             $cwd = $this->repositoryPath;
         }
 
-        if (method_exists(Process::class, 'fromShellCommandline')) {
-            $process = Process::fromShellCommandline($cmd, $cwd);
-        } else {
-            // compatibility fix required for symfony/process versions prior to v4.2.
-            $process = new Process($cmd, $cwd);
-        }
+        $process = Process::fromShellCommandline($cmd, $cwd);
 
         $process->setTimeout(15000);
         $process->run();
@@ -110,7 +103,7 @@ class Caller extends AbstractCaller
 
         $this->rawOutput = $process->getOutput();
         // rtrim values
-        $values = array_map('rtrim', explode(PHP_EOL, $process->getOutput()));
+        $values = array_map(rtrim(...), explode(PHP_EOL, $process->getOutput()));
         $this->outputLines = $values;
 
         return $this;
@@ -118,8 +111,6 @@ class Caller extends AbstractCaller
 
     /**
      * returns the output of the last executed command
-     *
-     * @return string
      */
     public function getOutput(): string
     {
@@ -130,8 +121,6 @@ class Caller extends AbstractCaller
      * returns the output of the last executed command as an array of lines
      *
      * @param bool $stripBlankLines remove the blank lines
-     *
-     * @return array
      */
     public function getOutputLines(bool $stripBlankLines = false): array
     {
@@ -151,8 +140,6 @@ class Caller extends AbstractCaller
 
     /**
      * Get RawOutput
-     *
-     * @return string
      */
     public function getRawOutput(): string
     {

@@ -50,7 +50,6 @@ class RevListCommand extends BaseCommand
      * @param \GitElephant\Objects\Tag $tag a tag instance
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function getTagCommit(Tag $tag): string
     {
@@ -70,7 +69,6 @@ class RevListCommand extends BaseCommand
      * @param int                         $max    max count
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function commitPath(Commit $commit, $max = 1000): string
     {

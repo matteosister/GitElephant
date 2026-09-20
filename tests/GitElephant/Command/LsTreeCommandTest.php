@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\TestCase;
@@ -22,7 +23,9 @@ use GitElephant\TestCase;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class LsTreeCommandTest extends TestCase
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Command\LsTreeCommand::class, 'tree')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Command\LsTreeCommand::class, 'listAll')]
+final class LsTreeCommandTest extends TestCase
 {
     /**
      * @var \GitElephant\Command\LsTreeCommand
@@ -39,8 +42,6 @@ class LsTreeCommandTest extends TestCase
 
     /**
      * fullTree test
-     *
-     * @covers \GitElephant\Command\LsTreeCommand::tree
      */
     public function testFullTree(): void
     {
@@ -49,8 +50,6 @@ class LsTreeCommandTest extends TestCase
 
     /**
      * tree test
-     *
-     * @covers \GitElephant\Command\LsTreeCommand::tree
      */
     public function testTree(): void
     {
@@ -59,8 +58,6 @@ class LsTreeCommandTest extends TestCase
 
     /**
      * listAll test
-     *
-     * @covers \GitElephant\Command\LsTreeCommand::listAll
      */
     public function testListAll(): void
     {

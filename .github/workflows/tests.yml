@@ -1,10 +1,8 @@
 name: Tests
 
 on:
-  pull_request:
   push:
-    branches:
-      - master
+  pull_request:
 
 jobs:
   tests:
@@ -12,27 +10,27 @@ jobs:
     strategy:
       matrix:
         php:
-          - "8.0"
           - "8.1"
           - "8.2"
           - "8.3"
           - "8.4"
+          - "8.5"
         symfony:
-          - 5.*
           - 6.*
           - 7.*
+          - 8.*
         dependency-version:
           # - prefer-lowest
           - prefer-stable
         exclude:
-          - {php: "8.0", symfony: "7.*"}
           - {php: "8.1", symfony: "7.*"}
-          - {php: "8.2", symfony: "5.*"}
+          - {php: "8.1", symfony: "8.*"}
+          - {php: "8.2", symfony: "8.*"}
+          - {php: "8.3", symfony: "8.*"}
 
     name: PHP ${{ matrix.php }} - S ${{ matrix.symfony }} - ${{ matrix.dependency-version }} - tests
     steps:
-      # basically git clone
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
       - name: Setup Git
         run: |
@@ -42,17 +40,15 @@ jobs:
           git --version
 
       - name: Setup PHP
-        # use PHP of specific version
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          coverage: none # disable xdebug, pcov
           tools: composer
 
       - name: Install Composer Dependencies
         run: |
           composer require "symfony/process:${{ matrix.symfony }}" "symfony/filesystem:${{ matrix.symfony }}" "symfony/finder:${{ matrix.symfony }}" --no-interaction --no-update
-          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Run PHPUnit Tests
         run: composer tests

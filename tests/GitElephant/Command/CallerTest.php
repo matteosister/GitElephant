@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\Command\Caller\Caller;
@@ -21,7 +22,7 @@ use GitElephant\TestCase;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class CallerTest extends TestCase
+final class CallerTest extends TestCase
 {
     /**
      * setUp
@@ -31,9 +32,6 @@ class CallerTest extends TestCase
         $this->initRepository();
     }
 
-    /**
-     * @covers GitElephant\Command\Caller\Caller::__construct
-     */
     public function testConstructor(): void
     {
         $caller = new Caller(null, $this->getRepository()->getPath());
@@ -95,7 +93,7 @@ class CallerTest extends TestCase
         $this->getRepository()->commit('first commit', true);
         $command = new LsTreeCommand();
         $outputLines = $caller->execute($command->fullTree($this->getRepository()->getMainBranch()))->getOutputLines();
-        $this->assertTrue(is_array($outputLines));
+        $this->assertIsArray($outputLines);
         $this->assertEquals(range(0, count($outputLines) - 1), array_keys($outputLines));
     }
 

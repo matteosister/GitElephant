@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
@@ -23,7 +24,7 @@ use GitElephant\TestCase;
  * @package GitElephant\Command
  * @author  David Neimeyer <davidneimeyer@gmail.com>
  */
-class RemoteTest extends TestCase
+final class RemoteTest extends TestCase
 {
     /**
      * test double branch name
@@ -56,8 +57,6 @@ class RemoteTest extends TestCase
 
     /**
      * return sample output of git-remote --verbose
-     *
-     * @return string
      */
     public function sampleRemoteVerbose(): string
     {
@@ -75,8 +74,6 @@ EOM;
 
     /**
      * test double fetch URL
-     *
-     * @return string
      */
     public function sampleRemoteShowFetchURL(): string
     {
@@ -85,8 +82,6 @@ EOM;
 
     /**
      * test double push URL
-     *
-     * @return string
      */
     public function sampleRemoteShowPushURL(): string
     {
@@ -95,8 +90,6 @@ EOM;
 
     /**
      * test double remote name
-     *
-     * @return string
      */
     public function sampleRemoteShowRemoteName(): string
     {
@@ -105,8 +98,6 @@ EOM;
 
     /**
      * test double remote HEAD branch
-     *
-     * @return string
      */
     public function sampleRemoteShowRemoteHEAD(): string
     {
@@ -115,8 +106,6 @@ EOM;
 
     /**
      * sample output of git-remote show <remoteName>
-     *
-     * @return string
      */
     public function sampleRemoteShow(): string
     {
@@ -156,8 +145,6 @@ EOM;
     /**
      * expected branch structure produced when
      * parsing the sample output of git-remote show <remoteName>
-     *
-     * @return array
      */
     public function sampleRemoteShowAsArray(): array
     {
@@ -215,7 +202,7 @@ EOM;
         $remote->parseOutputLines($output);
         $actual = $remote->getName();
         $expected = $this->sampleRemoteShowRemoteName();
-        $this->assertEquals($expected, $actual, 'parseOutputLines() proper digests git-remote show <remote> name');
+        $this->assertSame($expected, $actual, 'parseOutputLines() proper digests git-remote show <remote> name');
     }
 
     /**
@@ -227,7 +214,7 @@ EOM;
         $remote = new Remote($this->getRepository());
         $remote->setName($expected);
         $actual = $remote->getName();
-        $this->assertEquals($expected, $actual, 'can set remote name');
+        $this->assertSame($expected, $actual, 'can set remote name');
     }
 
     /**
@@ -241,7 +228,7 @@ EOM;
         $remote->parseOutputLines($output);
         $actual = $remote->getFetchURL();
         $expected = $this->sampleRemoteShowFetchURL();
-        $this->assertEquals($expected, $actual, 'parseOutputLines() proper digests git-remote show <remote> fetch URL');
+        $this->assertSame($expected, $actual, 'parseOutputLines() proper digests git-remote show <remote> fetch URL');
     }
 
     /**
@@ -253,7 +240,7 @@ EOM;
         $remote = new Remote($this->getRepository());
         $remote->setFetchURL($expected);
         $actual = $remote->getFetchURL();
-        $this->assertEquals($expected, $actual, 'can set fetch URL property');
+        $this->assertSame($expected, $actual, 'can set fetch URL property');
     }
 
     /**
@@ -267,7 +254,7 @@ EOM;
         $remote->parseOutputLines($output);
         $actual = $remote->getPushURL();
         $expected = $this->sampleRemoteShowPushURL();
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $actual,
             'parseOutputLines() proper digests git-remote show <remote> push URL'
@@ -283,7 +270,7 @@ EOM;
         $remote = new Remote($this->getRepository());
         $remote->setPushURL($expected);
         $actual = $remote->getPushURL();
-        $this->assertEquals($expected, $actual, 'can set push URL property');
+        $this->assertSame($expected, $actual, 'can set push URL property');
     }
 
     /**
@@ -297,7 +284,7 @@ EOM;
         $remote->parseOutputLines($output);
         $actual = $remote->getRemoteHEAD();
         $expected = $this->sampleRemoteShowRemoteHEAD();
-        $this->assertEquals(
+        $this->assertSame(
             $expected,
             $actual,
             'parseOutputLines() proper digests git-remote show <remote> remote HEAD'
@@ -313,7 +300,7 @@ EOM;
         $remote = new Remote($this->getRepository());
         $remote->setRemoteHEAD($expected);
         $actual = $remote->getRemoteHEAD();
-        $this->assertEquals($expected, $actual, 'can set remote HEAD property');
+        $this->assertSame($expected, $actual, 'can set remote HEAD property');
     }
 
     /**
@@ -354,15 +341,15 @@ EOM;
 
         $mockRemote = $this->getMockBuilder(Remote::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getShowOutput', 'getVerboseOutput'])
+            ->onlyMethods(['getShowOutput', 'getVerboseOutput'])
             ->getMock();
 
-        $mockRemote->expects($this->any())
+        $mockRemote
             ->method('getShowOutput')
-            ->will($this->returnValue($showOutput));
-        $mockRemote->expects($this->any())
+            ->willReturn($showOutput);
+        $mockRemote
             ->method('getVerboseOutput')
-            ->will($this->returnValue($verboseOutput));
+            ->willReturn($verboseOutput);
 
         $name = $this->sampleRemoteShowRemoteName();
         $mockRemote->__construct($this->getRepository(), $name);
@@ -395,7 +382,7 @@ EOM;
     public function testToString(): void
     {
         $obj = $this->getMockRemote();
-        $this->assertEquals(
+        $this->assertSame(
             $this->sampleRemoteShowRemoteName(),
             (string) $obj,
             'magic to string method provides the remote name'
@@ -410,7 +397,7 @@ EOM;
     {
         $remote = new Remote($this->getRepository());
         $actual = $remote->getVerboseOutput();
-        $this->assertTrue(is_array($actual), 'getVerboseOutput() returns array');
+        $this->assertIsArray($actual, 'getVerboseOutput() returns array');
     }
 
     /**
@@ -421,6 +408,6 @@ EOM;
     {
         $remote = new Remote($this->getRepository());
         $actual = $remote->getShowOutput();
-        $this->assertTrue(is_array($actual), 'getShowOutput() returns array');
+        $this->assertIsArray($actual, 'getShowOutput() returns array');
     }
 }

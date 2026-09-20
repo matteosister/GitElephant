@@ -48,7 +48,6 @@ class PullCommand extends BaseCommand
      * @param bool          $rebase
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function pull($remote = null, $branch = null, $rebase = false): string
     {

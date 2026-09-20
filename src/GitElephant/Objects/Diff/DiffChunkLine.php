@@ -25,7 +25,7 @@ namespace GitElephant\Objects\Diff;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-abstract class DiffChunkLine
+abstract class DiffChunkLine implements \Stringable
 {
     public const UNCHANGED = "unchanged";
     public const ADDED = "added";
@@ -67,8 +67,6 @@ abstract class DiffChunkLine
 
     /**
      * type getter
-     *
-     * @return string
      */
     public function getType(): string
     {
@@ -87,8 +85,6 @@ abstract class DiffChunkLine
 
     /**
      * content getter
-     *
-     * @return string
      */
     public function getContent(): string
     {

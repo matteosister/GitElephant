@@ -40,47 +40,12 @@ class NodeObject implements TreeishInterface
      */
     protected $repository;
 
-    /**
-     * permissions
-     *
-     * @var string
-     */
-    private $permissions;
-
-    /**
-     * type
-     *
-     * @var string
-     */
-    private $type;
-
-    /**
-     * sha
-     *
-     * @var string
-     */
-    private $sha;
-
-    /**
-     * size
-     *
-     * @var string
-     */
-    private $size;
-
-    /**
-     * name
-     *
-     * @var string|null
-     */
-    private $name;
-
-    /**
-     * path
-     *
-     * @var string
-     */
-    private $path;
+    private string $permissions = '';
+    private string $type = '';
+    private string $sha = '';
+    private string $size = '';
+    private ?string $name = null;
+    private string $path = '';
 
     /**
      * create a Object from a single outputLine of the git ls-tree command
@@ -119,8 +84,6 @@ class NodeObject implements TreeishInterface
      * Take a line and turn it in slices
      *
      * @param string $line a single line output from the git binary
-     *
-     * @return array
      */
     public static function getLineSlices(string $line): array
     {
@@ -164,12 +127,12 @@ class NodeObject implements TreeishInterface
      */
     public function __construct(
         Repository $repository,
-        string $permissions,
-        string $type,
-        string $sha,
-        string $size,
-        string $name,
-        string $path
+        string $permissions = '',
+        string $type = '',
+        string $sha = '',
+        string $size = '',
+        string $name = '',
+        string $path = ''
     ) {
         $this->repository = $repository;
         $this->permissions = $permissions;
@@ -182,8 +145,6 @@ class NodeObject implements TreeishInterface
 
     /**
      * toString magic method
-     *
-     * @return string
      */
     public function __toString(): string
     {
@@ -204,66 +165,52 @@ class NodeObject implements TreeishInterface
 
     /**
      * get extension if it's a blob
-     *
-     * @return string|null
      */
     public function getExtension(): ?string
     {
         $pos = strrpos($this->name, '.');
         if ($pos === false) {
             return null;
-        } else {
-            return substr($this->name, $pos + 1);
         }
+        return substr($this->name, $pos + 1);
     }
 
     /**
      * whether the node is a tree
-     *
-     * @return bool
      */
     public function isTree(): bool
     {
-        return self::TYPE_TREE == $this->getType();
+        return self::TYPE_TREE === $this->getType();
     }
 
     /**
      * whether the node is a link
-     *
-     * @return bool
      */
     public function isLink(): bool
     {
-        return self::TYPE_LINK == $this->getType();
+        return self::TYPE_LINK === $this->getType();
     }
 
     /**
      * whether the node is a blob
-     *
-     * @return bool
      */
     public function isBlob(): bool
     {
-        return self::TYPE_BLOB == $this->getType();
+        return self::TYPE_BLOB === $this->getType();
     }
 
     /**
      * Full path getter
-     *
-     * @return string
      */
     public function getFullPath(): string
     {
-        return rtrim(
-            ('' == $this->path ? $this->name : $this->path . DIRECTORY_SEPARATOR . $this->name) ?? '',
-            DIRECTORY_SEPARATOR
-        );
+        $path = '' === $this->path ? (string) $this->name : $this->path . DIRECTORY_SEPARATOR . $this->name;
+
+        return rtrim($path, DIRECTORY_SEPARATOR);
     }
 
     /**
      * permissions getter
-     *
-     * @return string
      */
     public function getPermissions(): string
     {
@@ -272,8 +219,6 @@ class NodeObject implements TreeishInterface
 
     /**
      * sha getter
-     *
-     * @return string
      */
     public function getSha(): string
     {
@@ -282,8 +227,6 @@ class NodeObject implements TreeishInterface
 
     /**
      * type getter
-     *
-     * @return string
      */
     public function getType(): string
     {
@@ -292,8 +235,6 @@ class NodeObject implements TreeishInterface
 
     /**
      * name getter
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -302,8 +243,6 @@ class NodeObject implements TreeishInterface
 
     /**
      * path getter
-     *
-     * @return string
      */
     public function getPath(): string
     {
@@ -312,8 +251,6 @@ class NodeObject implements TreeishInterface
 
     /**
      * size getter
-     *
-     * @return string
      */
     public function getSize(): string
     {
@@ -340,7 +277,6 @@ class NodeObject implements TreeishInterface
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return array
      */
     public function revParse(array $options = []): array
     {
@@ -348,7 +284,7 @@ class NodeObject implements TreeishInterface
         $caller = $this->repository->getCaller();
         $caller->execute($c);
 
-        return array_map('trim', $caller->getOutputLines(true));
+        return array_map(trim(...), $caller->getOutputLines(true));
     }
 
     /*
@@ -363,8 +299,6 @@ class NodeObject implements TreeishInterface
 
     /**
      * Repository getter
-     *
-     * @return \GitElephant\Repository
      */
     public function getRepository(): \GitElephant\Repository
     {

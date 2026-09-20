@@ -49,8 +49,6 @@ class StashCommand extends BaseCommand
      * @param string|null $message
      * @param boolean $includeUntracked
      * @param boolean $keepIndex
-     *
-     * @return string
      */
     public function save($message = null, $includeUntracked = false, $keepIndex = false): string
     {
@@ -76,9 +74,7 @@ class StashCommand extends BaseCommand
     /**
      * Shows stash list
      *
-     * @param array|null $options
      *
-     * @return string
      */
     public function listStashes(?array $options = null): string
     {
@@ -97,8 +93,6 @@ class StashCommand extends BaseCommand
      * Shows details for a specific stash
      *
      * @param string|int $stash
-     *
-     * @return string
      */
     public function show($stash): string
     {
@@ -114,8 +108,6 @@ class StashCommand extends BaseCommand
      * Drops a stash
      *
      * @param string $stash
-     *
-     * @return string
      */
     public function drop($stash): string
     {
@@ -132,8 +124,6 @@ class StashCommand extends BaseCommand
      *
      * @param string $stash
      * @param boolean $index
-     *
-     * @return string
      */
     public function apply($stash, $index = false): string
     {
@@ -153,8 +143,6 @@ class StashCommand extends BaseCommand
      *
      * @param string $stash
      * @param boolean $index
-     *
-     * @return string
      */
     public function pop($stash, $index = false): string
     {
@@ -174,8 +162,6 @@ class StashCommand extends BaseCommand
      *
      * @param string $branch
      * @param string $stash
-     *
-     * @return string
      */
     public function branch($branch, $stash): string
     {
@@ -213,13 +199,11 @@ class StashCommand extends BaseCommand
 
     /**
      * @param int|string $stash
-     *
-     * @return string
      */
     private function normalizeStashName($stash): string
     {
-        if (0 !== strpos($stash, 'stash@{')) {
-            $stash = 'stash@{' . $stash . '}';
+        if (!str_starts_with($stash, 'stash@{')) {
+            return 'stash@{' . $stash . '}';
         }
 
         return $stash;

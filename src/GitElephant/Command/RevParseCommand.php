@@ -80,11 +80,8 @@ class RevParseCommand extends BaseCommand
     }
 
     /**
-     * @param array $options
      * @param Branch|string $arg
-     *
      * @throws \RuntimeException
-     * @return string
      */
     public function revParse($arg = null, array $options = []): string
     {

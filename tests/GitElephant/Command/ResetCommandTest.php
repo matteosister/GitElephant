@@ -1,17 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: christian
  * Date: 3/2/16
  * Time: 1:11 PM
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\TestCase;
 
-class ResetCommandTest extends TestCase
+final class ResetCommandTest extends TestCase
 {
     /**
      * setUp
@@ -28,6 +29,6 @@ class ResetCommandTest extends TestCase
     public function testResetHard(): void
     {
         $rstc = ResetCommand::getInstance();
-        $this->assertEquals("reset '--hard' 'dbeac'", $rstc->reset('dbeac', [ResetCommand::OPTION_HARD]));
+        $this->assertSame("reset '--hard' 'dbeac'", $rstc->reset('dbeac', [ResetCommand::OPTION_HARD]));
     }
 }

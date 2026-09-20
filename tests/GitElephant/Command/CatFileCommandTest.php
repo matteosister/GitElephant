@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\TestCase;
@@ -22,7 +23,7 @@ use GitElephant\TestCase;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class CatFileCommandTest extends TestCase
+final class CatFileCommandTest extends TestCase
 {
     /**
      * setUp, called on every method
@@ -45,7 +46,8 @@ class CatFileCommandTest extends TestCase
         $cfc = new CatFileCommand();
         $master = $this->getRepository()->getBranch('master');
         $tree = $this->getRepository()->getTree('HEAD', 'test-folder/test2');
-        $this->assertEquals(
+        $this->assertInstanceOf(\GitElephant\Objects\Branch::class, $master);
+        $this->assertSame(
             sprintf(
                 "cat-file '-p' '%s:test-folder/test2'",
                 $master->getSha()
@@ -54,14 +56,15 @@ class CatFileCommandTest extends TestCase
         );
         $this->getRepository()->createTag('test-tag');
         $tag = $this->getRepository()->getTag('test-tag');
-        $this->assertEquals(
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $tag);
+        $this->assertSame(
             sprintf(
                 "cat-file '-p' '%s:test-folder/test2'",
                 $tag->getSha()
             ),
             $cfc->content($tree->getBlob(), $tag)
         );
-        $this->assertEquals(
+        $this->assertSame(
             sprintf(
                 "cat-file '-p' '%s:test-folder/test2'",
                 $tag->getSha()

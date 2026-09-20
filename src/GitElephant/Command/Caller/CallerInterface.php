@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -17,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
-
 namespace GitElephant\Command\Caller;
 
 /**
@@ -31,8 +32,6 @@ interface CallerInterface
      * @param string      $cmd the command
      * @param bool        $git prepend git to the command
      * @param null|string $cwd directory where the command should be executed
-     *
-     * @return CallerInterface
      */
     public function execute(
         string $cmd,
@@ -52,30 +51,22 @@ interface CallerInterface
     /**
      * Returns the output of the last executed command.
      * May be adjusted, such as trimmed.
-     *
-     * @return string
      */
     public function getOutput(): string;
 
     /**
      * Returns the output of the last executed command.
      * May not be adjusted, not trimmed or anything, really raw.
-     *
-     * @return string
      */
     public function getRawOutput(): string;
 
     /**
      * Get the binary path
-     *
-     * @return string
      */
     public function getBinaryPath(): string;
 
     /**
      * Get the binary version
-     *
-     * @return string
      */
     public function getBinaryVersion(): string;
 }

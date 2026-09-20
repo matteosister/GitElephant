@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * GitElephant - An abstraction layer for git written in PHP
  * Copyright (C) 2013  Matteo Giachino
@@ -17,7 +19,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see [http://www.gnu.org/licenses/].
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\Objects\Branch;
@@ -30,7 +31,7 @@ use Mockery as m;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class PushCommandTest extends TestCase
+final class PushCommandTest extends TestCase
 {
     /**
      * set up
@@ -53,7 +54,7 @@ class PushCommandTest extends TestCase
         $this->assertEquals("push 'github' 'master'", $pc->push('github'));
         $this->assertEquals("push 'github' 'develop'", $pc->push('github', 'develop'));
         $this->getRepository()->addRemote('test-remote', 'git@github.com:matteosister/GitElephant.git');
-        $remote = m::mock('GitElephant\Objects\Remote')
+        $remote = m::mock(\GitElephant\Objects\Remote::class)
             ->shouldReceive('getName')->andReturn('test-remote')->getMock();
         $this->assertEquals("push 'test-remote' 'develop'", $pc->push($remote, 'develop'));
         $branch = Branch::create($this->getRepository(), 'test-branch');

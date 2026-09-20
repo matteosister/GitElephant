@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -11,7 +13,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\TestCase;
@@ -24,7 +25,7 @@ use GitElephant\TestCase;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class MainCommandTest extends TestCase
+final class MainCommandTest extends TestCase
 {
     /**
      * @var \GitElephant\Command\MainCommand ;
