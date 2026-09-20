@@ -1,11 +1,8 @@
 name: Static Tests
 
 on:
-  pull_request:
   push:
-    branches:
-      - master
-      - develop
+  pull_request:
 
 jobs:
   static_tests:

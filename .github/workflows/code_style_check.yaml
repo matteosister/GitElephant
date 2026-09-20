@@ -1,11 +1,8 @@
 name: Code Style Check
 
 on:
-  pull_request:
   push:
-    branches:
-      - master
-      - develop
+  pull_request:
 
 jobs:
   code_style:
@@ -25,7 +22,7 @@ jobs:
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Automatic Fix of Code Style
-          branch: ${{ github.head_ref }}
+          branch: ${{ github.head_ref || github.ref_name }}
 
       # check if some unfixable code style issues remain
       - run: composer check-cs
