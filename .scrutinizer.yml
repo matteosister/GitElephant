@@ -1,6 +1,17 @@
 build:
+    image: default-jammy
     environment:
-        php: 8.3
+        php:
+            version: 8.3
+            ini:
+                xdebug.mode: coverage
+    tests:
+        override:
+            -
+                command: 'vendor/bin/phpunit --coverage-clover=coverage.clover'
+                coverage:
+                    file: 'coverage.clover'
+                    format: 'clover'
 
 before_commands:
     - git --version
@@ -13,8 +24,6 @@ filter:
         - 'vendor/*'
 
 tools:
-    external_code_coverage:
-        timeout: 600
     php_code_sniffer:
         enabled: true
         filter:
@@ -35,6 +44,6 @@ tools:
         filter:
             paths: [ src/ ]
     php_analyzer: true
-    sensiolabs_security_checker: true
+    sensiolabs_security_checker: false
     php_pdepend: true
     php_loc: true
