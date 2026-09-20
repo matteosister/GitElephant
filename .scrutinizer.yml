@@ -1,7 +1,7 @@
 build:
     environment:
         php:
-            version: 8.3.3
+            version: 8.4.4
             ini:
                 xdebug.mode: coverage
     tests:
