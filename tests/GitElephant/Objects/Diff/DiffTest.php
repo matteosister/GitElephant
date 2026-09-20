@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Objects\Diff;
 
 use GitElephant\TestCase;
@@ -21,7 +22,7 @@ use GitElephant\TestCase;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class DiffTest extends TestCase
+final class DiffTest extends TestCase
 {
     public function setUp(): void
     {
@@ -39,34 +40,32 @@ class DiffTest extends TestCase
 
         $diff = Diff::create($this->getRepository(), $commit);
 
-        $this->assertInstanceOf('\GitElephant\Objects\Diff\Diff', $diff);
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\Diff::class, $diff);
         $this->assertArrayInterfaces($diff);
         $this->assertCount(1, $diff);
         $object = $diff[0];
-        $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffObject', $object);
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\DiffObject::class, $object);
         $this->assertArrayInterfaces($object);
         $this->assertCount(1, $object);
         $chunk = $object[0];
-        $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffChunk', $chunk);
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\DiffChunk::class, $chunk);
         $this->assertArrayInterfaces($chunk);
         $this->assertCount(5, $chunk);
 
-        foreach ($chunk as $chunkLine) {
-            $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffChunkLine', $chunkLine);
-        }
+        $this->assertContainsOnlyInstancesOf(\GitElephant\Objects\Diff\DiffChunkLine::class, $chunk);
 
-        $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffChunkLineUnchanged', $chunk[0]);
-        $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffChunkLineChanged', $chunk[1]);
-        $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffChunkLineDeleted', $chunk[2]);
-        $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffChunkLineAdded', $chunk[3]);
-        $this->assertInstanceOf('\GitElephant\Objects\Diff\DiffChunkLineUnchanged', $chunk[4]);
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\DiffChunkLineUnchanged::class, $chunk[0]);
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\DiffChunkLineChanged::class, $chunk[1]);
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\DiffChunkLineDeleted::class, $chunk[2]);
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\DiffChunkLineAdded::class, $chunk[3]);
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\DiffChunkLineUnchanged::class, $chunk[4]);
         
-        $this->assertEquals(1, $chunk[0]->getOriginNumber());
-        $this->assertEquals(1, $chunk[0]->getDestNumber());
-        $this->assertEquals(2, $chunk[1]->getNumber());
-        $this->assertEquals(2, $chunk[1]->getOriginNumber());
-        $this->assertEquals(3, $chunk[4]->getDestNumber());
-        $this->assertEquals(4, $chunk[4]->getOriginNumber());
+        $this->assertSame(1, $chunk[0]->getOriginNumber());
+        $this->assertSame(1, $chunk[0]->getDestNumber());
+        $this->assertSame(2, $chunk[1]->getNumber());
+        $this->assertSame(2, $chunk[1]->getOriginNumber());
+        $this->assertSame(3, $chunk[4]->getDestNumber());
+        $this->assertSame(4, $chunk[4]->getOriginNumber());
     }
 
     private function assertArrayInterfaces($obj): void

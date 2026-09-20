@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Objects;
 
 use GitElephant\Command\MainCommand;
@@ -23,7 +24,7 @@ use GitElephant\TestCase;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class CommitTest extends TestCase
+final class CommitTest extends TestCase
 {
     /**
      * @var \GitElephant\Objects\Commit ;
@@ -47,13 +48,13 @@ class CommitTest extends TestCase
     {
         $showCommand = new ShowCommand();
         $this->commit = Commit::pick($this->getRepository());
-        $this->assertInstanceOf('\GitElephant\Objects\Commit', $this->commit);
-        $this->assertInstanceOf('\GitElephant\Objects\Author', $this->commit->getAuthor());
-        $this->assertInstanceOf('\GitElephant\Objects\Author', $this->commit->getCommitter());
+        $this->assertInstanceOf(\GitElephant\Objects\Commit::class, $this->commit);
+        $this->assertInstanceOf(\GitElephant\Objects\Author::class, $this->commit->getAuthor());
+        $this->assertInstanceOf(\GitElephant\Objects\Author::class, $this->commit->getCommitter());
         $this->assertInstanceOf('\Datetime', $this->commit->getDatetimeAuthor());
         $this->assertInstanceOf('\Datetime', $this->commit->getDatetimeCommitter());
-        $this->assertInstanceOf('\GitElephant\Objects\Commit\Message', $this->commit->getMessage());
-        $this->assertEquals('first commit', $this->commit->getMessage()->toString());
+        $this->assertInstanceOf(\GitElephant\Objects\Commit\Message::class, $this->commit->getMessage());
+        $this->assertSame('first commit', $this->commit->getMessage()->toString());
         $this->myAssertMatchesRegularExpression('/^\w{40}$/', $this->commit->getSha());
         $this->assertEquals([], $this->commit->getParents());
         $this->addFile('foo2');
@@ -86,8 +87,10 @@ class CommitTest extends TestCase
         $commit = Commit::pick($mockRepo);
         $committer = $commit->getCommitter();
         $author = $commit->getAuthor();
-        $this->assertEquals('matt', $committer->getName());
-        $this->assertEquals('matt', $author->getName());
+        $this->assertInstanceOf(\GitElephant\Objects\Author::class, $committer);
+        $this->assertSame('matt', $committer->getName());
+        $this->assertInstanceOf(\GitElephant\Objects\Author::class, $author);
+        $this->assertSame('matt', $author->getName());
 
         $outputLines = [
             "commit c277373174aa442af12a8e59de1812f3472c15f5",
@@ -110,8 +113,8 @@ class CommitTest extends TestCase
             'matt jack',
             'matteog@gmail.com',
             'matteog@gmail.com',
-            '1326214449',
-            '1326214449',
+            1326214449,
+            1326214449,
             'first commit'
         );
     }
@@ -142,8 +145,8 @@ class CommitTest extends TestCase
             'Jack Doe',
             'john.doe@example.org',
             'jack.doe@example.org',
-            '1326214449',
-            '1326214449',
+            1326214449,
+            1326214449,
             'First commit'
         );
     }
@@ -171,8 +174,8 @@ class CommitTest extends TestCase
             'Jack Doe',
             'john.doe@example.org',
             'jack.doe@example.org',
-            '1326214000',
-            '1326214100',
+            1326214000,
+            1326214100,
             'Initial commit'
         );
     }
@@ -199,7 +202,7 @@ class CommitTest extends TestCase
         $this->repository->stage();
         $commit = Commit::create($this->repository, 'first commit', true);
         $diff = $commit->getDiff();
-        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $diff);
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\Diff::class, $diff);
         $this->assertCount(1, $diff);
 
         $this->addFile('test2');
@@ -207,7 +210,7 @@ class CommitTest extends TestCase
         $this->repository->stage();
         $commit = Commit::create($this->repository, 'second commit', true);
         $diff = $commit->getDiff();
-        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $diff);
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\Diff::class, $diff);
         $this->assertCount(2, $diff);
     }
 

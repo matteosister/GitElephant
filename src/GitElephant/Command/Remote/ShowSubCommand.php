@@ -55,8 +55,6 @@ class ShowSubCommand extends SubCommandCommand
      *
      * @param string $name
      * @param bool   $queryRemotes Fetch new information from remotes
-     *
-     * @return ShowSubCommand
      */
     public function prepare($name = null, $queryRemotes = true): self
     {

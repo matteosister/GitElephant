@@ -133,7 +133,6 @@ class BranchCommand extends BaseCommand
      * @param bool   $verbose verbose, show also the upstream branch
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function singleInfo(string $name, bool $all = false, bool $simple = false, bool $verbose = false): string
     {

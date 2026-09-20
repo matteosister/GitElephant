@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant;
 
 use GitElephant\Command\ResetCommand;
@@ -26,7 +27,48 @@ use GitElephant\Objects\Tag;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class RepositoryTest extends TestCase
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, '__construct')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getPath')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'init')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'stage')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'unstage')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'commit')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getStatusOutput')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'createBranch')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'deleteBranch')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getBranches')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getMainBranch')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getBranch')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'merge')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getTags')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getTag')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'createTag')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'deleteTag')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getCommit')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getObjectLog')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getLog')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'checkout')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getTree')]
+#[\PHPUnit\Framework\Attributes\CoversClass(\GitElephant\Objects\Tree::class)]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getDiff')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'addGlobalConfig')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getGlobalConfigs')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'removeGlobalConfig')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'addGlobalOption')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getGlobalOptions')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'removeGlobalOption')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'addGlobalCommandArgument')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'getGlobalCommandArguments')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'removeGlobalCommandArgument')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'stash')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'stashList')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'stashShow')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'stashDrop')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'stashPop')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'stashApply')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'stashBranch')]
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Repository::class, 'stashCreate')]
+final class RepositoryTest extends TestCase
 {
     /**
      * setUp
@@ -36,24 +78,17 @@ class RepositoryTest extends TestCase
         $this->initRepository();
     }
 
-    /**
-     * @covers \GitElephant\Repository::__construct
-     * @covers \GitElephant\Repository::getPath
-     */
     public function testConstruct(): void
     {
         $this->assertEquals($this->getRepository()->getPath(), $this->path);
 
-        $this->expectException('GitElephant\Exception\InvalidRepositoryPathException');
+        $this->expectException(\GitElephant\Exception\InvalidRepositoryPathException::class);
         $repo = new Repository('non-existent-path');
 
         $repo = Repository::open($this->path);
-        $this->assertInstanceOf('GitElephant\Repository', $repo);
+        $this->assertInstanceOf(\GitElephant\Repository::class, $repo);
     }
 
-    /**
-     * @covers \GitElephant\Repository::init
-     */
     public function testInit(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -79,9 +114,6 @@ class RepositoryTest extends TestCase
         $this->assertEquals('test-repo', $this->getRepository()->getName());
     }
 
-    /**
-     * @covers \GitElephant\Repository::stage
-     */
     public function testStage(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -96,9 +128,6 @@ class RepositoryTest extends TestCase
         $this->assertTrue($match, 'stageAll error, git status should give Changes to be committed');
     }
 
-    /**
-     * @covers \GitElephant\Repository::unstage
-     */
     public function testUnstage(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -115,10 +144,6 @@ class RepositoryTest extends TestCase
         $this->assertCount(0, $this->getRepository()->getStatus()->added());
     }
 
-    /**
-     * @covers \GitElephant\Repository::commit
-     * @covers \GitElephant\Repository::getStatusOutput
-     */
     public function testCommit(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -151,9 +176,6 @@ class RepositoryTest extends TestCase
         $this->assertEquals('1981-09-24', $log->getDatetimeAuthor()->format('Y-m-d'));
     }
 
-    /**
-     * @covers \GitElephant\Repository::getStatusOutput
-     */
     public function testGetStatus(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -166,41 +188,32 @@ class RepositoryTest extends TestCase
         $this->assertContains('file2', $output);
     }
 
-    /**
-     * @covers \GitElephant\Repository::createBranch
-     */
     public function testCreateBranch(): void
     {
         $this->getRepository()->init(false, 'master');
         $this->addFile('test');
         $this->getRepository()->commit('foo', true);
         $this->getRepository()->createBranch('test-branch');
-        $this->assertEquals(2, count($this->getRepository()->getBranches()));
+        $this->assertCount(2, $this->getRepository()->getBranches());
     }
 
-    /**
-     * @covers \GitElephant\Repository::deleteBranch
-     */
     public function testDeleteBranch(): void
     {
         $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
         $this->getRepository()->createBranch('branch2');
-        $this->assertEquals(2, count($this->getRepository()->getBranches(true)));
+        $this->assertCount(2, $this->getRepository()->getBranches(true));
         $this->getRepository()->deleteBranch('branch2');
-        $this->assertEquals(1, count($this->getRepository()->getBranches(true)));
+        $this->assertCount(1, $this->getRepository()->getBranches(true));
         $this->addFile('test-file2');
         $this->getRepository()->commit('test2', true);
         $this->getRepository()->createBranch('branch3');
-        $this->assertEquals(2, count($this->getRepository()->getBranches(true)));
+        $this->assertCount(2, $this->getRepository()->getBranches(true));
         $this->getRepository()->deleteBranch('branch3', true);
-        $this->assertEquals(1, count($this->getRepository()->getBranches(true)));
+        $this->assertCount(1, $this->getRepository()->getBranches(true));
     }
 
-    /**
-     * @covers \GitElephant\Repository::getBranches
-     */
     public function testGetBranches(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -221,7 +234,7 @@ class RepositoryTest extends TestCase
         $this->getRepository()->deleteBranch('test-branch');
         $this->assertCount(1, $this->getRepository()->getBranches(), 'one branch expected');
         $this->assertInstanceOf(
-            'GitElephant\Objects\Branch',
+            \GitElephant\Objects\Branch::class,
             $this->getRepository()->getMainBranch(),
             'main branch should be an instance of Branch'
         );
@@ -240,9 +253,6 @@ class RepositoryTest extends TestCase
         $this->assertContains('develop', $this->getRepository()->getBranches(true));
     }
 
-    /**
-     * @covers \GitElephant\Repository::getMainBranch
-     */
     public function testGetMainBranch(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -251,81 +261,69 @@ class RepositoryTest extends TestCase
         $this->assertEquals('master', $this->getRepository()->getMainBranch()->getName());
     }
 
-    /**
-     * @covers \GitElephant\Repository::getBranch
-     */
     public function testGetBranch(): void
     {
         $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
-        $this->assertInstanceOf('GitElephant\Objects\Branch', $this->getRepository()->getBranch('master'));
+        $this->assertInstanceOf(\GitElephant\Objects\Branch::class, $this->getRepository()->getBranch('master'));
         $this->assertNull($this->getRepository()->getBranch('a-branch-that-do-not-exists'));
     }
 
-    /**
-     * @covers \GitElephant\Repository::merge
-     */
     public function testMerge(): void
     {
         $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
-        $this->assertEquals(1, count($this->getRepository()->getTree()));
+        $this->assertCount(1, $this->getRepository()->getTree());
         $this->getRepository()->createBranch('branch2');
         $this->getRepository()->checkout('branch2');
         $this->addFile('file2');
         $this->getRepository()->commit('test2', true);
-        $this->assertEquals(2, count($this->getRepository()->getTree()));
+        $this->assertCount(2, $this->getRepository()->getTree());
         $this->getRepository()->checkout('master');
-        $this->assertEquals(1, count($this->getRepository()->getTree()));
+        $this->assertCount(1, $this->getRepository()->getTree());
         $this->getRepository()->merge($this->getRepository()->getBranch('branch2'));
-        $this->assertEquals(2, count($this->getRepository()->getTree()));
+        $this->assertCount(2, $this->getRepository()->getTree());
 
         // attempt to merge a different branch by forcing a 3-way merge and verify the merge commit message
         $this->getRepository()->createBranch('branch3');
         $this->getRepository()->checkout('branch3');
         $this->addFile('file3');
         $this->getRepository()->commit('test3', true);
-        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        $this->assertCount(3, $this->getRepository()->getTree());
         $this->getRepository()->checkout('master');
-        $this->assertEquals(2, count($this->getRepository()->getTree()));
+        $this->assertCount(2, $this->getRepository()->getTree());
         $this->getRepository()->merge($this->getRepository()->getBranch('branch3'), 'test msg', 'no-ff');
-        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        $this->assertCount(3, $this->getRepository()->getTree());
         $this->assertEquals('test msg', $this->getRepository()->getCommit()->getMessage()->getFullMessage());
 
         // attempt a fast forward merge where a 3-way is necessary and trap the resulting exception
         $this->getRepository()->checkout('branch2');
         $this->addFile('file4');
         $this->getRepository()->commit('test4', true);
-        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        $this->assertCount(3, $this->getRepository()->getTree());
         $this->getRepository()->checkout('master');
-        $this->assertEquals(3, count($this->getRepository()->getTree()));
+        $this->assertCount(3, $this->getRepository()->getTree());
         try {
             $this->getRepository()->merge($this->getRepository()->getBranch('branch2'), '', 'ff-only');
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException) {
             return;
         }
         $this->fail("Merge should have produced a runtime exception.");
     }
 
-    /**
-     * @covers \GitElephant\Repository::getTags
-     * @covers \GitElephant\Repository::getTag
-     * @covers \GitElephant\Repository::createTag
-     * @covers \GitElephant\Repository::deleteTag
-     */
     public function testTags(): void
     {
         $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
-        $this->assertEquals(0, count($this->getRepository()->getTags()));
+        $this->assertCount(0, $this->getRepository()->getTags());
         $this->getRepository()->createTag('test-tag');
-        $this->assertEquals(1, count($this->getRepository()->getTags()));
-        $this->assertInstanceOf('GitElephant\Objects\Tag', $this->getRepository()->getTag('test-tag'));
+        $this->assertCount(1, $this->getRepository()->getTags());
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $this->getRepository()->getTag('test-tag'));
         $this->getRepository()->deleteTag('test-tag');
-        $this->assertEquals(0, count($this->getRepository()->getTags()));
+        $this->assertCount(0, $this->getRepository()->getTags());
         $this->assertNull($this->getRepository()->getTag('a-tag-that-do-not-exists'));
     }
 
@@ -354,15 +352,12 @@ class RepositoryTest extends TestCase
         $this->assertEquals(Tag::pick($this->getRepository(), '0.0.1'), $this->getRepository()->getLastTag());
     }
 
-    /**
-     * @covers \GitElephant\Repository::getCommit
-     */
     public function testGetCommit(): void
     {
         $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('test', true);
-        $this->assertInstanceOf('GitElephant\Objects\Commit', $this->getRepository()->getCommit());
+        $this->assertInstanceOf(\GitElephant\Objects\Commit::class, $this->getRepository()->getCommit());
     }
 
     public function testGetBranchOrTag(): void
@@ -372,14 +367,11 @@ class RepositoryTest extends TestCase
         $this->getRepository()->commit('test', true);
         $this->getRepository()->createBranch('branch2');
         $this->getRepository()->createTag('tag1');
-        $this->assertInstanceOf('\GitElephant\Objects\Branch', $this->getRepository()->getBranchOrTag('branch2'));
-        $this->assertInstanceOf('\GitElephant\Objects\Tag', $this->getRepository()->getBranchOrTag('tag1'));
+        $this->assertInstanceOf(\GitElephant\Objects\Branch::class, $this->getRepository()->getBranchOrTag('branch2'));
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $this->getRepository()->getBranchOrTag('tag1'));
         $this->assertNull($this->getRepository()->getBranchOrTag('not-exists'));
     }
 
-    /**
-     * @covers \GitElephant\Repository::getObjectLog
-     */
     public function testGetObjectLog(): void
     {
         $repo = $this->getRepository();
@@ -408,10 +400,10 @@ class RepositoryTest extends TestCase
 
         $log = $this->getRepository()->getObjectLog($obj);
         $this->assertInstanceOf(Log::class, $log);
-        $this->assertEquals(1, $log->count());
+        $this->assertCount(1, $log);
 
         $log = $this->getRepository()->getObjectLog($obj, null, 10);
-        $this->assertEquals(5, $log->count());
+        $this->assertCount(5, $log);
 
         $this->assertEquals('added E.txt', $log->first()->getMessage()->toString());
         $this->assertEquals('added A.txt', $log->last()->getMessage()->toString());
@@ -419,8 +411,6 @@ class RepositoryTest extends TestCase
 
     /**
      * Test logs on different tree objects
-     *
-     * @covers \GitElephant\Repository::getObjectLog
      */
     public function testGetObjectLogFolders(): void
     {
@@ -448,7 +438,7 @@ class RepositoryTest extends TestCase
             $name = $treeObj->getName();
             $log = $repo->getObjectLog($treeObj, null, 10);
 
-            $this->assertEquals(2, $log->count());
+            $this->assertCount(2, $log);
 
             $i = 2;
             foreach ($log as $commit) {
@@ -460,8 +450,6 @@ class RepositoryTest extends TestCase
 
     /**
      * Test logs on different branches
-     *
-     * @covers \GitElephant\Repository::getObjectLog
      */
     public function testGetObjectLogBranches(): void
     {
@@ -487,7 +475,7 @@ class RepositoryTest extends TestCase
         $dir = $tree[0];
         $log = $repo->getObjectLog($dir, null, 10);
 
-        $this->assertEquals(2, $log->count());
+        $this->assertCount(2, $log);
         $this->assertEquals('A/A2', $log->first()->getMessage()->toString());
 
         // test branch
@@ -496,13 +484,10 @@ class RepositoryTest extends TestCase
         $dir = $tree[0];
         $log = $repo->getObjectLog($dir, null, 10);
 
-        $this->assertEquals(3, $log->count());
+        $this->assertCount(3, $log);
         $this->assertEquals('A/A3', $log->first()->getMessage()->toString());
     }
 
-    /**
-     * @covers \GitElephant\Repository::getLog
-     */
     public function testGetLog(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -513,13 +498,10 @@ class RepositoryTest extends TestCase
         }
 
         $log = $this->getRepository()->getLog();
-        $this->assertInstanceOf('GitElephant\Objects\Log', $this->getRepository()->getLog());
+        $this->assertInstanceOf(\GitElephant\Objects\Log::class, $this->getRepository()->getLog());
         $this->assertGreaterThan(0, $log->count());
     }
 
-    /**
-     * @covers \GitElephant\Repository::getLog
-     */
     public function testGetLogForBranch(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -533,13 +515,10 @@ class RepositoryTest extends TestCase
         }
 
         $log = $this->getRepository()->getLog(['test-branch', '^master']);
-        $this->assertInstanceOf('GitElephant\Objects\Log', $this->getRepository()->getLog());
-        $this->assertEquals(2, $log->count());
+        $this->assertInstanceOf(\GitElephant\Objects\Log::class, $this->getRepository()->getLog());
+        $this->assertCount(2, $log);
     }
 
-    /**
-     * @covers \GitElephant\Repository::checkout
-     */
     public function testCheckout(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -551,9 +530,6 @@ class RepositoryTest extends TestCase
         $this->assertEquals('branch2', $this->getRepository()->getMainBranch()->getName());
     }
 
-    /**
-     * @covers \GitElephant\Repository::checkout
-     */
     public function testCheckoutTag(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -563,7 +539,7 @@ class RepositoryTest extends TestCase
         $this->addFile('test-file2');
         $this->getRepository()->commit('test2', true);
         $tag = $this->getRepository()->getTag('v0.0.1');
-        $this->assertInstanceOf('GitElephant\Objects\Tag', $tag);
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $tag);
         $lastCommit = $this->getRepository()->getCommit();
         $this->assertStringNotContainsString('detached', implode(' ', $this->getRepository()->getStatusOutput()));
         $this->getRepository()->checkout($tag);
@@ -572,10 +548,6 @@ class RepositoryTest extends TestCase
         $this->assertStringContainsString('detached', implode(' ', $this->getRepository()->getStatusOutput()));
     }
 
-    /**
-     * @covers \GitElephant\Repository::getTree
-     * @covers \GitElephant\Objects\Tree
-     */
     public function testGetTree(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -592,22 +564,22 @@ class RepositoryTest extends TestCase
         $this->assertCount(2, $tree, 'One file in the repository');
         $firstNode = $tree[0];
         $this->assertInstanceOf(
-            'GitElephant\Objects\NodeObject',
+            \GitElephant\Objects\NodeObject::class,
             $firstNode,
             'array access on tree should give always a node type'
         );
-        $this->assertEquals(
+        $this->assertSame(
             'test-folder',
             $firstNode->getName(),
             'First repository file should be named "test"'
         );
         $secondNode = $tree[1];
         $this->assertInstanceOf(
-            'GitElephant\Objects\NodeObject',
+            \GitElephant\Objects\NodeObject::class,
             $secondNode,
             'array access on tree should give always a node type'
         );
-        $this->assertEquals(
+        $this->assertSame(
             NodeObject::TYPE_BLOB,
             $secondNode->getType(),
             'second node should be of type tree'
@@ -615,39 +587,36 @@ class RepositoryTest extends TestCase
         $subtree = $this->getRepository()->getTree('master', 'test-folder');
         $subnode = $subtree[0];
         $this->assertInstanceOf(
-            'GitElephant\Objects\NodeObject',
+            \GitElephant\Objects\NodeObject::class,
             $subnode,
             'array access on tree should give always a node type'
         );
-        $this->assertEquals(
+        $this->assertSame(
             NodeObject::TYPE_BLOB,
             $subnode->getType(),
             'subnode should be of type blob'
         );
-        $this->assertEquals(
+        $this->assertSame(
             'test2',
             $subnode->getName(),
             'subnode should be named "test2"'
         );
     }
 
-    /**
-     * @covers \GitElephant\Repository::getDiff
-     */
     public function testGetDiff(): void
     {
         $this->getRepository()->init(false, 'master');
         $this->addFile('test-file');
         $this->getRepository()->commit('commit 1', true);
         $commit1 = $this->getRepository()->getCommit();
-        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getDiff($commit1));
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\Diff::class, $this->getRepository()->getDiff($commit1));
         $this->addFile('test-file2');
         $this->getRepository()->commit('commit 2', true);
         $commit2 = $this->getRepository()->getCommit();
-        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getDiff($commit2));
-        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $this->getRepository()->getDiff($commit2, $commit1));
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\Diff::class, $this->getRepository()->getDiff($commit2));
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\Diff::class, $this->getRepository()->getDiff($commit2, $commit1));
         $shaHead = $this->getRepository()->getCommit();
-        $this->assertInstanceOf('GitElephant\Objects\Diff\Diff', $diff = $this->getRepository()->getDiff($shaHead));
+        $this->assertInstanceOf(\GitElephant\Objects\Diff\Diff::class, $diff = $this->getRepository()->getDiff($shaHead));
     }
 
     /**
@@ -678,8 +647,10 @@ class RepositoryTest extends TestCase
         $this->addFile('file1', null, 'file content');
         $this->getRepository()->commit('first commit', true);
         $branch = $this->getRepository()->getBranch('master');
+        $this->assertInstanceOf(\GitElephant\Objects\Branch::class, $branch);
         $tree = $this->getRepository()->getTree($branch, 'file1');
         $treeObject = $tree->getBlob();
+        $this->assertInstanceOf(\GitElephant\Objects\NodeObject::class, $treeObject);
         $this->assertEquals(['file content'], $this->getRepository()->outputContent($treeObject, $branch));
     }
 
@@ -754,13 +725,11 @@ class RepositoryTest extends TestCase
         $remote->createBranch('develop');
 
         $repo = Repository::createFromRemote($remote->getPath());
-        $this->assertInstanceOf('GitElephant\Repository', $repo);
+        $this->assertInstanceOf(\GitElephant\Repository::class, $repo);
         $this->assertGreaterThanOrEqual(2, $repo->getBranches());
         $branches = $repo->getBranches();
         $branchesName = array_map(
-            function (Branch $b) {
-                return $b->getName();
-            },
+            fn (Branch $b) => $b->getName(),
             $branches
         );
         $this->assertContains('master', $branchesName);
@@ -778,7 +747,7 @@ class RepositoryTest extends TestCase
         $this->initRepository();
         $this->repository->init(false, 'master');
         $this->repository->addRemote('github', $remote->getPath());
-        $this->assertInstanceOf('GitElephant\Objects\Remote', $this->repository->getRemote('github'));
+        $this->assertInstanceOf(\GitElephant\Objects\Remote::class, $this->repository->getRemote('github'));
         $this->repository->addRemote('github2', $remote->getPath());
         $this->assertCount(2, $this->repository->getRemotes());
     }
@@ -805,7 +774,7 @@ class RepositoryTest extends TestCase
         $r2->fetch();
         $this->assertNotEmpty($r2->getBranches(true, true));
         $r2->fetch(null, null, true);
-        $this->assertNotNull($r2->getTag('test-tag'));
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $r2->getTag('test-tag'));
     }
 
     /**
@@ -863,7 +832,9 @@ class RepositoryTest extends TestCase
         $this->addFile('test1', null, null, $r);
         $r->commit('test commit', true);
         $master = $r->getBranch('master');
+        $this->assertInstanceOf(\GitElephant\Objects\Branch::class, $master);
         $revParse = $r->revParse($master, []);
+        $this->assertInstanceOf(\GitElephant\Objects\Branch::class, $master);
         $this->assertEquals($master->getSha(), $revParse[0]);
     }
 
@@ -884,10 +855,6 @@ class RepositoryTest extends TestCase
 
     /**
      * test add, remove and get global configs
-     *
-     * @covers \GitElephant\Repository::addGlobalConfig
-     * @covers \GitElephant\Repository::getGlobalConfigs
-     * @covers \GitElephant\Repository::removeGlobalConfig
      */
     public function testGlobalConfigs(): void
     {
@@ -957,10 +924,6 @@ class RepositoryTest extends TestCase
 
     /**
      * test add, remove and get global options
-     *
-     * @covers \GitElephant\Repository::addGlobalOption
-     * @covers \GitElephant\Repository::getGlobalOptions
-     * @covers \GitElephant\Repository::removeGlobalOption
      */
     public function testGlobalOptions(): void
     {
@@ -986,10 +949,6 @@ class RepositoryTest extends TestCase
 
     /**
      * test add, remove and get global command arguments
-     *
-     * @covers \GitElephant\Repository::addGlobalCommandArgument
-     * @covers \GitElephant\Repository::getGlobalCommandArguments
-     * @covers \GitElephant\Repository::removeGlobalCommandArgument
      */
     public function testGlobalCommandArguments(): void
     {
@@ -1013,9 +972,6 @@ class RepositoryTest extends TestCase
         $this->assertEmpty($repo->getGlobalCommandArguments());
     }
 
-    /**
-     * @covers \GitElephant\Repository::stash
-     */
     public function testStashThrowsExceptionIfNoCommits(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -1025,9 +981,6 @@ class RepositoryTest extends TestCase
         $this->getRepository()->stash('My stash', true);
     }
 
-    /**
-     * @covers \GitElephant\Repository::stash
-     */
     public function testStash(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -1040,9 +993,6 @@ class RepositoryTest extends TestCase
         $this->assertEquals(1, preg_match('%My stash%', $stashList[0]));
     }
 
-    /**
-     * @covers \GitElephant\Repository::stashList
-     */
     public function testStashList(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -1053,9 +1003,6 @@ class RepositoryTest extends TestCase
         $this->assertCount(1, $this->getRepository()->stashList());
     }
 
-    /**
-     * @covers \GitElephant\Repository::stashShow
-     */
     public function testStashShow(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -1066,9 +1013,6 @@ class RepositoryTest extends TestCase
         $this->assertIsString($this->getRepository()->stashShow(0));
     }
 
-    /**
-     * @covers \GitElephant\Repository::stashDrop
-     */
     public function testStashDrop(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -1080,9 +1024,6 @@ class RepositoryTest extends TestCase
         $this->assertCount(0, $this->getRepository()->stashList());
     }
 
-    /**
-     * @covers \GitElephant\Repository::stashPop
-     */
     public function testStashPop(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -1095,9 +1036,6 @@ class RepositoryTest extends TestCase
         $this->assertCount(0, $this->getRepository()->stashList());
     }
 
-    /**
-     * @covers \GitElephant\Repository::stashApply
-     */
     public function testStashApply(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -1110,9 +1048,6 @@ class RepositoryTest extends TestCase
         $this->assertCount(1, $this->getRepository()->stashList());
     }
 
-    /**
-     * @covers \GitElephant\Repository::stashBranch
-     */
     public function testStashBranch(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -1124,9 +1059,6 @@ class RepositoryTest extends TestCase
         $this->assertEquals('testbranch', $this->getRepository()->getMainBranch()->getName());
     }
 
-    /**
-     * @covers \GitElephant\Repository::stashCreate
-     */
     public function testStashCreate(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -1136,9 +1068,6 @@ class RepositoryTest extends TestCase
         $this->assertIsString($objectName);
     }
 
-    /**
-     * @covers \GitElephant\Repository::stashCreate
-     */
     public function testStashClear(): void
     {
         $this->getRepository()->init(false, 'master');

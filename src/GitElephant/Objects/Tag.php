@@ -33,13 +33,6 @@ use GitElephant\Repository;
 class Tag extends NodeObject
 {
     /**
-     * tag name
-     *
-     * @var string
-     */
-    private $name;
-
-    /**
      * full reference
      *
      * @var string
@@ -87,7 +80,6 @@ class Tag extends NodeObject
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return Tag
      */
     public static function createFromOutputLines(
         Repository $repository,
@@ -110,10 +102,12 @@ class Tag extends NodeObject
      * @throws \InvalidArgumentException
      * @internal param string $line a single tag line from the git binary
      */
-    public function __construct(Repository $repository, string $name)
+    public function __construct(Repository $repository, /**
+     * tag name
+     */
+        private readonly string $name)
     {
         $this->repository = $repository;
-        $this->name = $name;
         $this->fullRef = 'refs/tags/' . $this->name;
         $this->createFromCommand();
     }
@@ -123,8 +117,6 @@ class Tag extends NodeObject
      *
      * @param \GitElephant\Repository $repository repository instance
      * @param string                  $name       name
-     *
-     * @return \GitElephant\Objects\Tag
      */
     public static function pick(Repository $repository, string $name): \GitElephant\Objects\Tag
     {
@@ -169,7 +161,7 @@ class Tag extends NodeObject
     {
         $found = false;
         foreach ($outputLines as $tagString) {
-            if ($tagString != '' and $this->name === trim($tagString)) {
+            if ($tagString != '' && $this->name === trim($tagString)) {
                 $lines = $this->getCaller()
                     ->execute(RevListCommand::getInstance($this->getRepository())->getTagCommit($this))
                     ->getOutputLines();
@@ -194,9 +186,6 @@ class Tag extends NodeObject
         return $this->getSha();
     }
 
-    /**
-     * @return CallerInterface
-     */
     private function getCaller(): CallerInterface
     {
         return $this->getRepository()->getCaller();
@@ -204,8 +193,6 @@ class Tag extends NodeObject
 
     /**
      * name getter
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -214,8 +201,6 @@ class Tag extends NodeObject
 
     /**
      * fullRef getter
-     *
-     * @return string
      */
     public function getFullRef(): string
     {
@@ -234,8 +219,6 @@ class Tag extends NodeObject
 
     /**
      * sha getter
-     *
-     * @return string
      */
     public function getSha(): string
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\TestCase;
@@ -21,7 +22,7 @@ use GitElephant\TestCase;
  * @package GitElephant\Command
  * @author  David Neimeyer <davidneimeyer@gmail.com>
  */
-class RemoteCommandTest extends TestCase
+final class RemoteCommandTest extends TestCase
 {
     protected $startBranchName = 'test_branch';
     protected $startTagName = 'test_start_tag';

@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * User: matteo
  * Date: 28/05/13
  * Time: 18.36
  * Just for fun...
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\TestCase;
@@ -16,7 +17,7 @@ use GitElephant\TestCase;
  *
  * @package GitElephant\Command
  */
-class MergeCommandTest extends TestCase
+final class MergeCommandTest extends TestCase
 {
     /**
      * setUp
@@ -37,6 +38,7 @@ class MergeCommandTest extends TestCase
     {
         $mc = MergeCommand::getInstance();
         $branch = $this->getRepository()->getBranch('test');
+        $this->assertInstanceOf(\GitElephant\Objects\Branch::class, $branch);
         $this->assertEquals("merge 'refs/heads/test'", $mc->merge($branch));
         $this->assertEquals("merge '-m' 'test msg' 'refs/heads/test'", $mc->merge($branch, "test msg"));
         $this->assertEquals(
@@ -56,6 +58,7 @@ class MergeCommandTest extends TestCase
     {
         $branch = $this->getRepository()->getBranch('test');
         $this->expectException(\Symfony\Component\Process\Exception\InvalidArgumentException::class);
+        $this->assertInstanceOf(\GitElephant\Objects\Branch::class, $branch);
         MergeCommand::getInstance()->merge($branch, "test msg", ['--ff-only', '--no-ff']);
     }
 }

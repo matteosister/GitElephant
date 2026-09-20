@@ -36,23 +36,11 @@ use GitElephant\Repository;
 class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 {
     /**
-     * @var string|null
-     */
-    private $ref;
-
-    /**
      * the cursor position
      *
      * @var int|null
      */
     private $position;
-
-    /**
-     * the tree subject
-     *
-     * @var NodeObject|null
-     */
-    private $subject;
 
     /**
      * tree children
@@ -80,8 +68,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @param \GitElephant\Repository $repository  repo
      * @param array                   $outputLines output lines from command.log
-     *
-     * @return \GitElephant\Objects\Tree
      */
     public static function createFromOutputLines(Repository $repository, array $outputLines): \GitElephant\Objects\Tree
     {
@@ -117,12 +103,13 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      * @internal param \GitElephant\Objects\Object|string $treeObject Object instance
      */
-    public function __construct(Repository $repository, $ref = 'HEAD', ?NodeObject $subject = null)
+    public function __construct(Repository $repository, private $ref = 'HEAD', /**
+     * the tree subject
+     */
+        private readonly ?NodeObject $subject = null)
     {
         $this->position = 0;
         $this->repository = $repository;
-        $this->ref = $ref;
-        $this->subject = $subject;
         $this->createFromCommand();
     }
 
@@ -136,15 +123,10 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
         foreach ($outputLines as $line) {
             $this->parseLine($line);
         }
-        usort($this->children, function ($a, $b) {
-            return self::sortChildren($a, $b);
-        });
+        usort($this->children, $this->sortChildren(...));
         $this->scanPathsForBlob($outputLines);
     }
 
-    /**
-     * @return CallerInterface
-     */
     private function getCaller(): CallerInterface
     {
         return $this->getRepository()->getCaller();
@@ -152,8 +134,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * get the current tree parent, null if root
-     *
-     * @return null|string
      */
     public function getParent(): ?string
     {
@@ -166,28 +146,22 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * tell if the tree created is the root of the repository
-     *
-     * @return bool
      */
     public function isRoot(): bool
     {
-        return null === $this->subject;
+        return !$this->subject instanceof \GitElephant\Objects\NodeObject;
     }
 
     /**
      * tell if the path given is a blob path
-     *
-     * @return bool
      */
     public function isBlob(): bool
     {
-        return isset($this->blob);
+        return $this->blob !== null;
     }
 
     /**
      * the current tree path is a binary file
-     *
-     * @return bool
      */
     public function isBinary(): bool
     {
@@ -201,7 +175,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return string
      */
     public function getBinaryData(): string
     {
@@ -218,8 +191,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *   ),
      *   1 => array(),
      *   ...
-     *
-     * @return array
      */
     public function getBreadcrumb(): array
     {
@@ -228,7 +199,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
             $arrayNames = explode('/', $this->subject->getFullPath());
             $pathString = '';
             foreach ($arrayNames as $i => $name) {
-                if ($this->isBlob() and $name === $this->blob->getName()) {
+                if ($this->isBlob() && $name === $this->blob->getName()) {
                     $bc[$i]['path'] = $pathString . $name;
                     $bc[$i]['label'] = $this->blob;
                     $pathString .= $name . '/';
@@ -248,8 +219,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      * to tell if it's a blob
      *
      * @param array $outputLines output lines
-     *
-     * @return void
      */
     private function scanPathsForBlob(array $outputLines): void
     {
@@ -277,10 +246,8 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      *
      * @param \GitElephant\Objects\NodeObject $a the first object
      * @param \GitElephant\Objects\NodeObject $b the second object
-     *
-     * @return int
      */
-    private static function sortChildren(NodeObject $a, NodeObject $b): int
+    private function sortChildren(NodeObject $a, NodeObject $b): int
     {
         if ($a->getType() === $b->getType()) {
             $names = [$a->getName(), $b->getName()];
@@ -296,8 +263,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      * Parse a single line into pieces
      *
      * @param string $line a single line output from the git binary
-     *
-     * @return void
      */
     private function parseLine(string $line): void
     {
@@ -324,7 +289,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
             }
 
             $name = preg_replace($pattern, $replacement, $slices['fullPath']);
-            if (strpos($name, '/') !== false) {
+            if (str_contains($name, '/')) {
                 return;
             }
 
@@ -351,7 +316,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      * @param string $ref
      *
      * @throws \RuntimeException
-     * @return Commit\Message
      */
     public function getLastCommitMessage($ref = 'master'): \GitElephant\Objects\Commit\Message
     {
@@ -364,7 +328,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      * @param string $ref
      *
      * @throws \RuntimeException
-     * @return Author
      */
     public function getLastCommitAuthor($ref = 'master'): \GitElephant\Objects\Author
     {
@@ -392,8 +355,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * get the tree object for this tree
-     *
-     * @return \GitElephant\Objects\NodeObject|null
      */
     public function getObject(): ?\GitElephant\Objects\NodeObject
     {
@@ -402,8 +363,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Blob getter
-     *
-     * @return \GitElephant\Objects\NodeObject|null
      */
     public function getBlob(): ?\GitElephant\Objects\NodeObject
     {
@@ -412,8 +371,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Get Subject
-     *
-     * @return \GitElephant\Objects\NodeObject|null
      */
     public function getSubject(): ?\GitElephant\Objects\NodeObject
     {
@@ -422,8 +379,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Get Ref
-     *
-     * @return string|null
      */
     public function getRef(): ?string
     {
@@ -434,8 +389,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      * ArrayAccess interface
      *
      * @param int $offset offset
-     *
-     * @return bool
      */
     public function offsetExists($offset): bool
     {
@@ -452,7 +405,7 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
      */
     public function offsetGet($offset): mixed
     {
-        return isset($this->children[$offset]) ? $this->children[$offset] : null;
+        return $this->children[$offset] ?? null;
     }
 
     /**
@@ -482,8 +435,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Countable interface
-     *
-     * @return int
      */
     public function count(): int
     {
@@ -492,8 +443,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return TreeObject|null
      */
     public function current(): ?TreeObject
     {
@@ -510,8 +459,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return int
      */
     public function key(): int
     {
@@ -520,8 +467,6 @@ class Tree extends NodeObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return bool
      */
     public function valid(): bool
     {

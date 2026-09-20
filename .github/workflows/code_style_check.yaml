@@ -5,23 +5,24 @@ on:
   push:
     branches:
       - master
+      - develop
 
 jobs:
   code_style:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
-          coverage: none # disable xdebug, pcov
+          php-version: "8.3"
+          coverage: none
       - run: composer install --no-progress
       # fix code style, automatically
       - run: composer fix-cs
       # push changes back
       # note that this might not work with PRs from forks:
       # https://github.com/stefanzweifel/git-auto-commit-action/issues/25
-      - uses: stefanzweifel/git-auto-commit-action@v4.1.6
+      - uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Automatic Fix of Code Style
           branch: ${{ github.head_ref }}

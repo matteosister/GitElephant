@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Objects;
 
 use GitElephant\Repository;
@@ -24,7 +25,7 @@ use GitElephant\TestCase;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class TreeTest extends TestCase
+final class TreeTest extends TestCase
 {
     /**
      * setUp
@@ -130,8 +131,8 @@ class TreeTest extends TestCase
         $tree = $this->getRepository()->getTree();
         $this->assertNull($tree->getObject());
         $tree = $this->getRepository()->getTree('HEAD', 'test');
-        $this->assertNotNull($tree->getObject());
-        $this->assertEquals(NodeObject::TYPE_TREE, $tree->getObject()->getType());
+        $this->assertInstanceOf(\GitElephant\Objects\NodeObject::class, $tree->getObject());
+        $this->assertSame(NodeObject::TYPE_TREE, $tree->getObject()->getType());
         $tree = $this->getRepository()->getTree('HEAD', 'test/1');
         $this->assertEquals(NodeObject::TYPE_BLOB, $tree->getObject()->getType());
     }

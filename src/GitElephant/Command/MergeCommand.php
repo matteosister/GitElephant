@@ -53,7 +53,6 @@ class MergeCommand extends BaseCommand
      * @param array                       $options option flags for git merge
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function merge(Branch $with, $message = '', array $options = []): string
     {

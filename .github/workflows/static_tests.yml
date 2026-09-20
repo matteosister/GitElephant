@@ -5,15 +5,17 @@ on:
   push:
     branches:
       - master
+      - develop
 
 jobs:
   static_tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.1
-          coverage: none # disable xdebug, pcov
+          php-version: "8.3"
+          coverage: none
       - run: composer install --no-progress
-      - run: ./vendor/bin/phpstan analyse -c phpstan.neon
+      - run: composer static-tests
+      - run: composer rector

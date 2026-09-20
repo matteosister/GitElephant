@@ -94,8 +94,6 @@ abstract class AbstractCaller implements CallerInterface
 
     /**
      * returns the output of the last executed command
-     *
-     * @return string
      */
     public function getOutput(): string
     {
@@ -106,8 +104,6 @@ abstract class AbstractCaller implements CallerInterface
      * returns the output of the last executed command as an array of lines
      *
      * @param bool $stripBlankLines remove the blank lines
-     *
-     * @return array
      */
     public function getOutputLines(bool $stripBlankLines = false): array
     {
@@ -127,8 +123,6 @@ abstract class AbstractCaller implements CallerInterface
 
     /**
      * Get RawOutput
-     *
-     * @return string
      */
     public function getRawOutput(): string
     {

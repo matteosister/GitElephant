@@ -152,8 +152,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * destStartLine getter
-     *
-     * @return int
      */
     public function getDestStartLine(): int
     {
@@ -162,8 +160,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * destEndLine getter
-     *
-     * @return int
      */
     public function getDestEndLine(): int
     {
@@ -172,8 +168,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * originStartLine getter
-     *
-     * @return int
      */
     public function getOriginStartLine(): int
     {
@@ -182,8 +176,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * originEndLine getter
-     *
-     * @return int
      */
     public function getOriginEndLine(): int
     {
@@ -192,8 +184,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Get hunk header line
-     *
-     * @return string
      */
     public function getHeaderLine(): string
     {
@@ -211,8 +201,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Get Lines
-     *
-     * @return array
      */
     public function getLines(): array
     {
@@ -223,8 +211,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      * ArrayAccess interface
      *
      * @param int $offset offset
-     *
-     * @return bool
      */
     public function offsetExists($offset): bool
     {
@@ -235,12 +221,10 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
      * ArrayAccess interface
      *
      * @param int $offset offset
-     *
-     * @return DiffChunkLine|null
      */
     public function offsetGet($offset): ?DiffChunkLine
     {
-        return isset($this->lines[$offset]) ? $this->lines[$offset] : null;
+        return $this->lines[$offset] ?? null;
     }
 
     /**
@@ -270,8 +254,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Countable interface
-     *
-     * @return int
      */
     public function count(): int
     {
@@ -280,8 +262,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return DiffChunkLine|null
      */
     public function current(): ?DiffChunkLine
     {
@@ -298,8 +278,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return int
      */
     public function key(): int
     {
@@ -308,8 +286,6 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return bool
      */
     public function valid(): bool
     {

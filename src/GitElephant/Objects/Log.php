@@ -33,11 +33,6 @@ use GitElephant\Utilities;
 class Log implements \ArrayAccess, \Countable, \Iterator
 {
     /**
-     * @var \GitElephant\Repository
-     */
-    private $repository;
-
-    /**
      * the commits related to this log
      *
      * @var array
@@ -56,8 +51,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      *
      * @param \GitElephant\Repository $repository  repo
      * @param array                   $outputLines output lines from command.log
-     *
-     * @return \GitElephant\Objects\Log
      */
     public static function createFromOutputLines(Repository $repository, array $outputLines): \GitElephant\Objects\Log
     {
@@ -70,22 +63,17 @@ class Log implements \ArrayAccess, \Countable, \Iterator
     /**
      * Class constructor
      *
-     * @param Repository  $repository
      * @param string      $ref
      * @param string|null $path
-     * @param int         $limit
-     * @param int|null    $offset
-     * @param bool        $firstParent
      */
     public function __construct(
-        Repository $repository,
+        private Repository $repository,
         $ref = 'HEAD',
         $path = null,
         int $limit = 15,
         ?int $offset = null,
         bool $firstParent = false
     ) {
-        $this->repository = $repository;
         $this->createFromCommand($ref, $path, $limit, $offset, $firstParent);
     }
 
@@ -134,8 +122,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Get array representation
-     *
-     * @return array
      */
     public function toArray(): array
     {
@@ -144,8 +130,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Get the first commit
-     *
-     * @return Commit|null
      */
     public function first(): ?\GitElephant\Objects\Commit
     {
@@ -154,8 +138,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Get the last commit
-     *
-     * @return Commit|null
      */
     public function last(): ?\GitElephant\Objects\Commit
     {
@@ -166,8 +148,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * Get commit at index
      *
      * @param int $index the commit index
-     *
-     * @return Commit|null
      */
     public function index(int $index): ?\GitElephant\Objects\Commit
     {
@@ -178,8 +158,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * ArrayAccess interface
      *
      * @param int $offset offset
-     *
-     * @return bool
      */
     public function offsetExists($offset): bool
     {
@@ -190,12 +168,10 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * ArrayAccess interface
      *
      * @param int $offset offset
-     *
-     * @return Commit|null
      */
     public function offsetGet($offset): ?\GitElephant\Objects\Commit
     {
-        return isset($this->commits[$offset]) ? $this->commits[$offset] : null;
+        return $this->commits[$offset] ?? null;
     }
 
     /**
@@ -204,7 +180,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      * @param int   $offset offset
      * @param mixed $value  value
      *
-     * @return void
      * @throws \RuntimeException
      */
     public function offsetSet($offset, $value): void
@@ -217,7 +192,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
      *
      * @param int $offset offset
      *
-     * @return void
      * @throws \RuntimeException
      */
     public function offsetUnset($offset): void
@@ -227,8 +201,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Countable interface
-     *
-     * @return int
      */
     public function count(): int
     {
@@ -237,8 +209,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return Commit|null
      */
     public function current(): ?\GitElephant\Objects\Commit
     {
@@ -255,8 +225,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return int
      */
     public function key(): int
     {
@@ -265,8 +233,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return bool
      */
     public function valid(): bool
     {
@@ -293,8 +259,6 @@ class Log implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Repository getter
-     *
-     * @return \GitElephant\Repository
      */
     public function getRepository(): \GitElephant\Repository
     {

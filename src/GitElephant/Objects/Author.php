@@ -25,7 +25,7 @@ namespace GitElephant\Objects;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class Author
+class Author implements \Stringable
 {
     /**
      * Author name
@@ -43,8 +43,6 @@ class Author
 
     /**
      * return author as RFC 822 representation ( Foo Bar <foo@example.com )
-     *
-     * @return string
      */
     public function __toString(): string
     {
@@ -63,8 +61,6 @@ class Author
 
     /**
      * email getter
-     *
-     * @return string|null
      */
     public function getEmail(): ?string
     {
@@ -83,8 +79,6 @@ class Author
 
     /**
      * name getter
-     *
-     * @return string|null
      */
     public function getName(): ?string
     {

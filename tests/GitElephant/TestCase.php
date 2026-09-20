@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant;
 
 use GitElephant\Command\Caller\Caller;
@@ -62,9 +63,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
         }
         if (is_null($name)) {
             return $this->repository;
-        } else {
-            return $this->repository[$name];
         }
+        return $this->repository[$name];
     }
 
     /**
@@ -82,8 +82,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * @param null|string $name  the folder name
      * @param int         $index the repository index (for getting them back)
-     *
-     * @return void
      */
     protected function initRepository(?string $name = null, ?int $index = null): void
     {
@@ -129,8 +127,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
      * @param string|null $folder     folder name
      * @param string|null        $content    content
      * @param Repository  $repository repository to add file to
-     *
-     * @return void
      */
     protected function addFile(
         string $name,
@@ -143,15 +139,13 @@ class TestCase extends \PHPUnit\Framework\TestCase
             ? $path . DIRECTORY_SEPARATOR . $name
             : $path . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $name;
         $handle = fopen($filename, 'w');
-        $fileContent = $content === null ? 'test content' : $content;
-        $this->assertTrue(false !== fwrite($handle, $fileContent), sprintf('unable to write the file %s', $name));
+        $fileContent = $content ?? 'test content';
+        $this->assertNotFalse(fwrite($handle, $fileContent), sprintf('unable to write the file %s', $name));
         fclose($handle);
     }
 
     /**
      * remove file from repo
-     *
-     * @param string $name
      */
     protected function removeFile(string $name): void
     {
@@ -168,7 +162,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function updateFile(string $name, string $content): void
     {
         $filename = $this->path . DIRECTORY_SEPARATOR . $name;
-        $this->assertTrue(false !== file_put_contents($filename, $content));
+        $this->assertNotFalse(file_put_contents($filename, $content));
     }
 
     /**
@@ -195,8 +189,6 @@ class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * @param string $name name
-     *
-     * @return void
      */
     protected function addFolder($name): void
     {
@@ -209,17 +201,9 @@ class TestCase extends \PHPUnit\Framework\TestCase
         $this->getRepository()->addSubmodule($url, $path);
     }
 
-    /**
-     * @param string $classname
-     *
-     * @return MockObject
-     */
     protected function getMock(string $classname): MockObject
     {
-        return $this
-            ->getMockBuilder($classname)
-            ->disableOriginalConstructor()
-            ->getMock();
+        return $this->createMock($classname);
     }
 
     /**
@@ -227,18 +211,14 @@ class TestCase extends \PHPUnit\Framework\TestCase
      *
      * @param string $command command
      * @param string $output  output
-     *
-     * @return MockObject
      */
     protected function getMockCaller($command, $output): MockObject
     {
         $mock = $this->createMock(CallerInterface::class);
         $mock
-            ->expects($this->any())
             ->method('execute')
             ->willReturn($mock);
         $mock
-            ->expects($this->any())
             ->method('getOutputLines')
             ->willReturn($output);
 
@@ -248,31 +228,26 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function addCommandToMockContainer(MockObject $container, string $commandName): void
     {
         $container
-            ->expects($this->any())
             ->method('get')
-            ->with($this->equalTo($commandName))
+            ->with($commandName)
             ->willReturn($this->getMockCommand());
     }
 
     /**
      *
-     * @param MockObject $repo
      * @param string|array $output
-     * @return void
      */
     protected function addOutputToMockRepo(MockObject $repo, $output): void
     {
         $repo
-            ->expects($this->any())
             ->method('getCaller')
             ->willReturn($this->getMockCaller('', $output));
     }
 
     protected function getMockCommand(): MockObject
     {
-        $command = $this->getMock('Command', ['showCommit']);
+        $command = $this->getMock('Command');
         $command
-            ->expects($this->any())
             ->method('showCommit')
             ->willReturn('');
 
@@ -282,12 +257,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     protected function getMockRepository(): MockObject
     {
         return $this->getMock(
-            Repository::class,
-            [],
-            [
-                $this->repository->getPath(),
-                null,
-            ]
+            Repository::class
         );
     }
 
@@ -295,16 +265,8 @@ class TestCase extends \PHPUnit\Framework\TestCase
      * Do a test on a certain commit
      *
      * @param Commit $commit the commit to test
-     * @param string $sha
-     * @param string $tree
      * @param string $author the name of the author
      * @param string $committer the name of the committer
-     * @param string $emailAuthor
-     * @param string $emailCommitter
-     * @param integer $datetimeAuthor
-     * @param integer $datetimeCommitter
-     * @param string $message
-     * @return void
      */
     protected function doCommitTest(
         Commit $commit,
@@ -319,19 +281,19 @@ class TestCase extends \PHPUnit\Framework\TestCase
         string $message
     ): void {
         $this->assertInstanceOf(Commit::class, $commit);
-        $this->assertEquals($sha, $commit->getSha());
-        $this->assertEquals($tree, $commit->getTree());
+        $this->assertSame($sha, $commit->getSha());
+        $this->assertSame($tree, $commit->getTree());
         $this->assertInstanceOf(Author::class, $commit->getAuthor());
-        $this->assertEquals($author, $commit->getAuthor()->getName());
-        $this->assertEquals($emailAuthor, $commit->getAuthor()->getEmail());
+        $this->assertSame($author, $commit->getAuthor()->getName());
+        $this->assertSame($emailAuthor, $commit->getAuthor()->getEmail());
         $this->assertInstanceOf(Author::class, $commit->getCommitter());
-        $this->assertEquals($committer, $commit->getCommitter()->getName());
-        $this->assertEquals($emailCommitter, $commit->getCommitter()->getEmail());
+        $this->assertSame($committer, $commit->getCommitter()->getName());
+        $this->assertSame($emailCommitter, $commit->getCommitter()->getEmail());
         $this->assertInstanceOf(\DateTime::class, $commit->getDatetimeAuthor());
         $this->assertEquals($datetimeAuthor, $commit->getDatetimeAuthor()->format('U'));
         $this->assertInstanceOf(\DateTime::class, $commit->getDatetimeCommitter());
         $this->assertEquals($datetimeCommitter, $commit->getDatetimeCommitter()->format('U'));
-        $this->assertEquals($message, $commit->getMessage()->getShortMessage());
+        $this->assertSame($message, $commit->getMessage()->getShortMessage());
     }
 
     /**

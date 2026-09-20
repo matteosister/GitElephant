@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Objects;
 
 use GitElephant\Command\LogCommand;
@@ -21,7 +22,7 @@ use GitElephant\TestCase;
  *
  * @author Mathias Geat <mathias@ailoo.net>
  */
-class LogTest extends TestCase
+final class LogTest extends TestCase
 {
     /**
      * setUp
@@ -42,7 +43,7 @@ class LogTest extends TestCase
     public function testLogCountable(): void
     {
         $log = $this->getRepository()->getLog();
-        $this->assertEquals($log->count(), count($log));
+        $this->assertCount($log->count(), $log);
     }
 
     /**
@@ -76,31 +77,31 @@ class LogTest extends TestCase
     public function testLogCountLimit(): void
     {
         $log = $this->getRepository()->getLog();
-        $this->assertEquals(10, $log->count());
+        $this->assertCount(10, $log);
 
         $log = $this->getRepository()->getLog('HEAD', null, 10);
-        $this->assertEquals(10, $log->count());
+        $this->assertCount(10, $log);
 
         $log = $this->getRepository()->getLog('HEAD', null, 50);
-        $this->assertEquals(10, $log->count());
+        $this->assertCount(10, $log);
 
         $log = $this->getRepository()->getLog('HEAD', null, 60);
-        $this->assertEquals(10, $log->count());
+        $this->assertCount(10, $log);
 
         $log = $this->getRepository()->getLog('HEAD', null, 1);
-        $this->assertEquals(1, $log->count());
+        $this->assertCount(1, $log);
 
         $log = $this->getRepository()->getLog('HEAD', null, 0);
-        $this->assertEquals(0, $log->count());
+        $this->assertCount(0, $log);
 
         $log = $this->getRepository()->getLog('HEAD', null, -1);
-        $this->assertEquals(10, $log->count());
+        $this->assertCount(10, $log);
 
-        $log = $this->getRepository()->getLog('HEAD', "test\ file\ 1", -1, null);
-        $this->assertEquals(1, $log->count());
+        $log = $this->getRepository()->getLog('HEAD', "test\ file\ 1", -1);
+        $this->assertCount(1, $log);
 
-        $log = $this->getRepository()->getLog('HEAD', "test\ file*", -1, null);
-        $this->assertEquals(10, $log->count());
+        $log = $this->getRepository()->getLog('HEAD', "test\ file*", -1);
+        $this->assertCount(10, $log);
     }
 
     /**
@@ -109,16 +110,16 @@ class LogTest extends TestCase
     public function testLogOffset(): void
     {
         $log = $this->getRepository()->getLog('HEAD', null, 15, 0);
-        $this->assertEquals(10, $log->count());
+        $this->assertCount(10, $log);
 
         $log = $this->getRepository()->getLog('HEAD', null, 15, 5);
-        $this->assertEquals(5, $log->count());
+        $this->assertCount(5, $log);
 
         $log = $this->getRepository()->getLog('HEAD', null, 15, 50);
-        $this->assertEquals(0, $log->count());
+        $this->assertCount(0, $log);
 
         $log = $this->getRepository()->getLog('HEAD', null, 15, 100);
-        $this->assertEquals(0, $log->count());
+        $this->assertCount(0, $log);
     }
 
     /**
@@ -141,9 +142,9 @@ class LogTest extends TestCase
     {
         $log = $this->getRepository()->getLog();
 
-        $this->assertTrue(is_array($log->toArray()));
         $this->assertIsArray($log->toArray());
-        $this->assertEquals($log->count(), count($log->toArray()));
+        $this->assertIsArray($log->toArray());
+        $this->assertCount($log->count(), $log->toArray());
     }
 
     /**
