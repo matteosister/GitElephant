@@ -13,7 +13,8 @@ filter:
         - 'vendor/*'
 
 tools:
-    external_code_coverage: false
+    external_code_coverage:
+        timeout: 600
     php_code_sniffer:
         enabled: true
         filter:

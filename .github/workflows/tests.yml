@@ -42,7 +42,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          coverage: none
+          coverage: ${{ matrix.php == '8.3' && matrix.symfony == '7.*' && 'pcov' || 'none' }}
           tools: composer
 
       - name: Install Composer Dependencies
@@ -51,4 +51,14 @@ jobs:
           composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
       - name: Run PHPUnit Tests
-        run: composer tests
+        env:
+          SCRUTINIZER_TOKEN: ${{ secrets.SCRUTINIZER_TOKEN }}
+        run: |
+          if [ "${{ matrix.php }}" = "8.3" ] && [ "${{ matrix.symfony }}" = "7.*" ]; then
+            ./vendor/bin/phpunit --coverage-clover=coverage.clover
+            if wget -q https://scrutinizer-ci.com/ocular.phar; then
+              php ocular.phar code-coverage:upload --format=php-clover coverage.clover || true
+            fi
+          else
+            composer tests
+          fi
