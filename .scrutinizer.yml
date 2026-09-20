@@ -1,14 +1,19 @@
+build:
+    environment:
+        php: 8.3
+
 before_commands:
     - git --version
     - git config --global user.email "git-elephant@scrutinizer-ci.com"
     - git config --global user.name "git-elephant"
     - composer install
+
 filter:
     excluded_paths:
         - 'vendor/*'
+
 tools:
-    external_code_coverage:
-        timeout: 600
+    external_code_coverage: false
     php_code_sniffer:
         enabled: true
         filter:
