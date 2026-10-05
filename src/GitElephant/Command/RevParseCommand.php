@@ -74,17 +74,14 @@ class RevParseCommand extends BaseCommand
      * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
-    public function __construct(Repository $repo = null)
+    public function __construct(?Repository $repo = null)
     {
         parent::__construct($repo);
     }
 
     /**
-     * @param array $options
      * @param Branch|string $arg
-     *
      * @throws \RuntimeException
-     * @return string
      */
     public function revParse($arg = null, array $options = []): string
     {

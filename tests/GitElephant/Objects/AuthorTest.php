@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
@@ -21,7 +22,7 @@ use GitElephant\TestCase;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class AuthorTest extends TestCase
+final class AuthorTest extends TestCase
 {
     /**
      * testAuthor
@@ -31,8 +32,8 @@ class AuthorTest extends TestCase
         $author = new Author();
         $author->setEmail('foo@bar.com');
         $author->setName('foo');
-        $this->assertEquals('foo@bar.com', $author->getEmail());
-        $this->assertEquals('foo', $author->getName());
+        $this->assertSame('foo@bar.com', $author->getEmail());
+        $this->assertSame('foo', $author->getName());
         $this->assertEquals('foo <foo@bar.com>', $author);
     }
 }

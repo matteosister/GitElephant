@@ -39,7 +39,7 @@ class CatFileCommand extends BaseCommand
      * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
-    public function __construct(Repository $repo = null)
+    public function __construct(?Repository $repo = null)
     {
         parent::__construct($repo);
     }
@@ -51,7 +51,6 @@ class CatFileCommand extends BaseCommand
      * @param \GitElephant\Objects\TreeishInterface|string $treeish an object with TreeishInterface interface
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function content(NodeObject $object, $treeish): string
     {
@@ -71,7 +70,6 @@ class CatFileCommand extends BaseCommand
      * @param string $sha
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function contentBySha($sha): string
     {

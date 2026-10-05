@@ -40,7 +40,7 @@ class MergeCommand extends BaseCommand
      * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
-    public function __construct(Repository $repo = null)
+    public function __construct(?Repository $repo = null)
     {
         parent::__construct($repo);
     }
@@ -53,7 +53,6 @@ class MergeCommand extends BaseCommand
      * @param array                       $options option flags for git merge
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function merge(Branch $with, $message = '', array $options = []): string
     {
@@ -76,7 +75,7 @@ class MergeCommand extends BaseCommand
             $this->addCommandArgument('-m');
             $this->addCommandArgument($message);
         }
-        
+
         $this->addCommandSubject($with->getFullRef());
 
         return $this->getCommand();

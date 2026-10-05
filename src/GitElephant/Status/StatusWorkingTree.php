@@ -20,7 +20,7 @@
 
 namespace GitElephant\Status;
 
-use PhpCollection\Sequence;
+use GitElephant\Sequence\Sequence;
 
 /**
  * Class StatusWorkingTree
@@ -31,17 +31,15 @@ class StatusWorkingTree extends Status
 {
     /**
      * all files with modified status in the working tree
-     *
-     * @return Sequence
      */
-    public function all(): \PhpCollection\Sequence
+    public function all(): \GitElephant\Sequence\Sequence
     {
         return new Sequence(
             array_filter(
                 $this->files,
                 function (StatusFile $statusFile) {
                     $status = $statusFile->getWorkingTreeStatus();
-                    return $status !== null && $status != "";
+                    return $status !== null && $status !== "";
                 }
             )
         );
@@ -50,11 +48,9 @@ class StatusWorkingTree extends Status
     /**
      * filter files by working tree status
      *
-     * @param string $type
      *
-     * @return Sequence
      */
-    protected function filterByType(string $type): \PhpCollection\Sequence
+    protected function filterByType(string $type): \GitElephant\Sequence\Sequence
     {
         if (!$this->files) {
             return new Sequence();
@@ -63,9 +59,7 @@ class StatusWorkingTree extends Status
         return new Sequence(
             array_filter(
                 $this->files,
-                function (StatusFile $statusFile) use ($type) {
-                    return $type === $statusFile->getWorkingTreeStatus();
-                }
+                fn (StatusFile $statusFile) => $type === $statusFile->getWorkingTreeStatus()
             )
         );
     }

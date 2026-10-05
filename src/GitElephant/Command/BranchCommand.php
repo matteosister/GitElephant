@@ -37,7 +37,7 @@ class BranchCommand extends BaseCommand
      * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
-    public function __construct(Repository $repo = null)
+    public function __construct(?Repository $repo = null)
     {
         parent::__construct($repo);
     }
@@ -69,7 +69,7 @@ class BranchCommand extends BaseCommand
      * @throws \RuntimeException
      * @return string the command
      */
-    public function create(string $name, string $startPoint = null): string
+    public function create(string $name, ?string $startPoint = null): string
     {
         $this->clearAll();
         $this->addCommandName(self::BRANCH_COMMAND);
@@ -133,7 +133,6 @@ class BranchCommand extends BaseCommand
      * @param bool   $verbose verbose, show also the upstream branch
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function singleInfo(string $name, bool $all = false, bool $simple = false, bool $verbose = false): string
     {

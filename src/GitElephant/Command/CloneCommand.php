@@ -38,7 +38,7 @@ class CloneCommand extends BaseCommand
      * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
-    public function __construct(Repository $repo = null)
+    public function __construct(?Repository $repo = null)
     {
         parent::__construct($repo);
     }
@@ -57,9 +57,9 @@ class CloneCommand extends BaseCommand
      */
     public function cloneUrl(
         string $url,
-        string $to = null,
-        string $repoReference = null,
-        int $depth = null,
+        ?string $to = null,
+        ?string $repoReference = null,
+        ?int $depth = null,
         bool $recursive = false
     ): string {
         // get binary version before reset
@@ -86,11 +86,11 @@ class CloneCommand extends BaseCommand
             $this->addCommandArgument('--depth=' . $depth);
             // shallow-submodules is a nice to have feature. Just ignoring if git version not high enough
             // It would be nice if this had a logger injected for us to log notices
-            if (version_compare($version, '2.9.0', '>=') && $recursive && 1 == $depth) {
+            if (version_compare($version, '2.9.0', '>=') && $recursive && 1 === $depth) {
                 $this->addCommandArgument('--shallow-submodules');
             }
         }
-        
+
         if ($recursive) {
             $this->addCommandArgument('--recursive');
         }

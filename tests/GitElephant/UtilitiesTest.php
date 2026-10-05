@@ -18,6 +18,7 @@ namespace GitElephant;
 /**
  * @author Matteo Giachino <matteog@gmail.com>
  */
+#[\PHPUnit\Framework\Attributes\CoversMethod(\GitElephant\Utilities::class, 'pregSplitArray')]
 final class UtilitiesTest extends TestCase
 {
     /**
@@ -25,7 +26,7 @@ final class UtilitiesTest extends TestCase
      *
      * @var array<string>
      */
-    private $arr = [
+    private static array $arr = [
         'a',
         'b',
         'c',
@@ -36,15 +37,12 @@ final class UtilitiesTest extends TestCase
     ];
 
     /**
-     * @dataProvider pregSplitArrayProvider()
      *
-     * @covers \GitElephant\Utilities::pregSplitArray
      *
      * @param array<string> $expected
      * @param array<string> $list
-     * @param string $pattern
-     * @return void
      */
+    #[\PHPUnit\Framework\Attributes\DataProvider('pregSplitArrayProvider')]
     public function testPregSplitArray(array $expected, array $list, string $pattern): void
     {
         $this->assertEquals(
@@ -56,13 +54,6 @@ final class UtilitiesTest extends TestCase
         );
     }
 
-    /**
-     *
-     *
-     * @dataProvider
-     *
-     * @return void
-     */
     public function testPregSplitFlatArray(): void
     {
         $this->assertEquals(
@@ -71,33 +62,31 @@ final class UtilitiesTest extends TestCase
                 ['b', 'c', '1', 'd'],
                 ['b', 'e'],
             ],
-            Utilities::pregSplitFlatArray($this->arr, '/^b$/')
+            Utilities::pregSplitFlatArray(self::$arr, '/^b$/')
         );
     }
 
     /**
      * Get the array test contents
      *
-     * @return array
+     * @return \Iterator<(int | string), mixed>
      */
-    public function pregSplitArrayProvider(): array
+    public static function pregSplitArrayProvider(): \Iterator
     {
-        return [
+        yield [
             [
-                [
-                    ['b', 'c', '1', 'd'],
-                    ['b', 'e'],
-                ],
-                $this->arr,
-                '/^b$/',
+                ['b', 'c', '1', 'd'],
+                ['b', 'e'],
             ],
+            self::$arr,
+            '/^b$/',
+        ];
+        yield [
             [
-                [
-                    ['1', 'd', 'b', 'e'],
-                ],
-                $this->arr,
-                '/^\d$/',
+                ['1', 'd', 'b', 'e'],
             ],
+            self::$arr,
+            '/^\d$/',
         ];
     }
 }

@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * User: matteo
  * Date: 28/05/13
  * Time: 21.42
  * Just for fun...
  */
-
 namespace GitElephant\Status;
 
 use GitElephant\TestCase;
@@ -16,7 +17,7 @@ use GitElephant\TestCase;
  *
  * @package GitElephant\Status
  */
-class StatusTest extends TestCase
+final class StatusTest extends TestCase
 {
     /**
      * setUp
@@ -51,9 +52,7 @@ class StatusTest extends TestCase
         $this->assertEquals('untracked', $s->untracked()->first()->get()->getDescription());
         $this->assertFalse($s->untracked()->first()->get()->isRenamed());
         $this->assertInterfaces($s->untracked());
-        foreach ($s->untracked() as $file) {
-            $this->assertInstanceOf('GitElephant\Status\StatusFile', $file);
-        }
+        $this->assertContainsOnlyInstancesOf(\GitElephant\Status\StatusFile::class, $s->untracked());
     }
 
     /**
@@ -68,9 +67,7 @@ class StatusTest extends TestCase
         $this->assertCount(1, $s->modified());
         $this->assertFalse($s->modified()->first()->get()->isRenamed());
         $this->assertInterfaces($s->modified());
-        foreach ($s->modified() as $file) {
-            $this->assertInstanceOf('GitElephant\Status\StatusFile', $file);
-        }
+        $this->assertContainsOnlyInstancesOf(\GitElephant\Status\StatusFile::class, $s->modified());
     }
 
     /**
@@ -84,9 +81,7 @@ class StatusTest extends TestCase
         $this->assertCount(1, $s->added());
         $this->assertFalse($s->added()->first()->get()->isRenamed());
         $this->assertInterfaces($s->added());
-        foreach ($s->added() as $file) {
-            $this->assertInstanceOf('GitElephant\Status\StatusFile', $file);
-        }
+        $this->assertContainsOnlyInstancesOf(\GitElephant\Status\StatusFile::class, $s->added());
     }
 
     /**
@@ -101,9 +96,7 @@ class StatusTest extends TestCase
         $this->assertCount(1, $s->deleted());
         $this->assertFalse($s->deleted()->first()->get()->isRenamed());
         $this->assertInterfaces($s->deleted());
-        foreach ($s->deleted() as $file) {
-            $this->assertInstanceOf('GitElephant\Status\StatusFile', $file);
-        }
+        $this->assertContainsOnlyInstancesOf(\GitElephant\Status\StatusFile::class, $s->deleted());
     }
 
     /**
@@ -120,9 +113,7 @@ class StatusTest extends TestCase
         $this->assertEquals('test', $s->renamed()->first()->get()->getName());
         $this->assertEquals('test2', $s->renamed()->first()->get()->getRenamed());
         $this->assertInterfaces($s->renamed());
-        foreach ($s->renamed() as $file) {
-            $this->assertInstanceOf('GitElephant\Status\StatusFile', $file);
-        }
+        $this->assertContainsOnlyInstancesOf(\GitElephant\Status\StatusFile::class, $s->renamed());
     }
 
     /**
@@ -190,8 +181,6 @@ On new git version this is not happening anymore.'
 
     /**
      * Test the name, type and describe getter & setter
-     *
-     * @return void
      */
     public function testStatusFiles(): void
     {

@@ -21,7 +21,6 @@
 namespace GitElephant\Command;
 
 use GitElephant\Repository;
-use PhpCollection\Map;
 
 /**
  * BaseCommand
@@ -37,7 +36,7 @@ class BaseCommand
      *
      * @var string|null
      */
-    private $commandName = null;
+    private $commandName;
 
     /**
      * config options
@@ -77,23 +76,23 @@ class BaseCommand
     /**
      * the command subject
      *
-     * @var string|SubCommandCommand|null
+     * @var array|string|SubCommandCommand|null
      */
-    private $commandSubject = null;
+    private $commandSubject;
 
     /**
      * the command second subject (i.e. for branch)
      *
-     * @var string|SubCommandCommand|null
+     * @var array|string|SubCommandCommand|null
      */
-    private $commandSubject2 = null;
+    private $commandSubject2;
 
     /**
      * the path
      *
      * @var string|null
      */
-    private $path = null;
+    private $path;
 
     /**
      * @var string|null
@@ -113,17 +112,15 @@ class BaseCommand
      *
      * @param null|\GitElephant\Repository $repo The repo object to read
      */
-    public function __construct(Repository $repo = null)
+    public function __construct(?Repository $repo = null)
     {
         if (!is_null($repo)) {
             $this->addGlobalConfigs($repo->getGlobalConfigs());
             $this->addGlobalOptions($repo->getGlobalOptions());
 
             $arguments = $repo->getGlobalCommandArguments();
-            if (!empty($arguments)) {
-                foreach ($arguments as $argument) {
-                    $this->addGlobalCommandArgument($argument);
-                }
+            foreach ($arguments as $argument) {
+                $this->addGlobalCommandArgument($argument);
             }
             $this->repo = $repo;
         }
@@ -149,7 +146,7 @@ class BaseCommand
      * @param Repository $repo
      * @return static
      */
-    public static function getInstance(Repository $repo = null)
+    public static function getInstance(?Repository $repo = null)
     {
         return new static($repo);
     }
@@ -166,8 +163,6 @@ class BaseCommand
 
     /**
      * Get command name
-     *
-     * @return string
      */
     protected function getCommandName(): string
     {
@@ -177,7 +172,7 @@ class BaseCommand
     /**
      * Set Configs
      *
-     * @param array|Map $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
+     * @param array $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
      */
     public function addConfigs($configs): void
     {
@@ -189,7 +184,7 @@ class BaseCommand
     /**
      * Set global configs
      *
-     * @param array|Map $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
+     * @param array $configs the config variable. i.e. { "color.status" => "false", "color.diff" => "true" }
      */
     protected function addGlobalConfigs($configs): void
     {
@@ -203,7 +198,7 @@ class BaseCommand
     /**
      * Set global option
      *
-     * @param array|Map $options a global option
+     * @param array $options a global option
      */
     protected function addGlobalOptions($options): void
     {
@@ -216,8 +211,6 @@ class BaseCommand
 
     /**
      * Get Configs
-     *
-     * @return array
      */
     public function getConfigs(): array
     {
@@ -248,12 +241,10 @@ class BaseCommand
 
     /**
      * Get all added command arguments
-     *
-     * @return array
      */
     protected function getCommandArguments(): array
     {
-        return $this->commandArguments !== [] ? $this->commandArguments : [];
+        return $this->commandArguments;
     }
 
     /**
@@ -309,7 +300,7 @@ class BaseCommand
                 $normalizedOptions[$switchOptions[$option]] = $switchOptions[$option];
             } else {
                 $parts = preg_split('/([\s=])+/', $option, 2, PREG_SPLIT_DELIM_CAPTURE);
-                if (!empty($parts) && is_array($parts)) {
+                if ($parts !== false && $parts !== []) {
                     $optionName = $parts[0];
                     if (in_array($optionName, $valueOptions)) {
                         $value = $parts[1] === '=' ? $option : [$parts[0], $parts[2]];
@@ -325,7 +316,6 @@ class BaseCommand
     /**
      * Get the current command
      *
-     * @return string
      * @throws \RuntimeException
      */
     public function getCommand(): string
@@ -357,7 +347,7 @@ class BaseCommand
         $command = '';
         $combinedArguments = array_merge($this->globalCommandArguments, $this->commandArguments);
         if (count($combinedArguments) > 0) {
-            $command .= ' ' . implode(' ', array_map('escapeshellarg', $combinedArguments));
+            $command .= ' ' . implode(' ', array_map(escapeshellarg(...), $combinedArguments));
         }
 
         return $command;
@@ -382,15 +372,13 @@ class BaseCommand
     {
         $command = '';
         $combinedConfigs = array_merge($this->globalConfigs, $this->configs);
-        if (count($combinedConfigs) > 0) {
-            foreach ($combinedConfigs as $config => $value) {
-                $command .= sprintf(
-                    ' %s %s=%s',
-                    escapeshellarg('-c'),
-                    escapeshellarg($config),
-                    escapeshellarg($value)
-                );
-            }
+        foreach ($combinedConfigs as $config => $value) {
+            $command .= sprintf(
+                ' %s %s=%s',
+                escapeshellarg('-c'),
+                escapeshellarg($config),
+                escapeshellarg($value)
+            );
         }
 
         return $command;
@@ -404,10 +392,8 @@ class BaseCommand
     private function getCLIGlobalOptions(): string
     {
         $command = '';
-        if (count($this->globalOptions) > 0) {
-            foreach ($this->globalOptions as $name => $value) {
-                $command .= sprintf(' %s=%s', escapeshellarg($name), escapeshellarg($value));
-            }
+        foreach ($this->globalOptions as $name => $value) {
+            $command .= sprintf(' %s=%s', escapeshellarg($name), escapeshellarg($value));
         }
 
         return $command;
@@ -442,7 +428,7 @@ class BaseCommand
             if ($this->commandSubject instanceof SubCommandCommand) {
                 $command .= $this->commandSubject->getCommand();
             } elseif (is_array($this->commandSubject)) {
-                $command .= implode(' ', array_map('escapeshellarg', $this->commandSubject));
+                $command .= implode(' ', array_map(escapeshellarg(...), $this->commandSubject));
             } else {
                 $command .= escapeshellarg($this->commandSubject);
             }
@@ -452,7 +438,7 @@ class BaseCommand
             if ($this->commandSubject2 instanceof SubCommandCommand) {
                 $command .= $this->commandSubject2->getCommand();
             } elseif (is_array($this->commandSubject2)) {
-                $command .= implode(' ', array_map('escapeshellarg', $this->commandSubject2));
+                $command .= implode(' ', array_map(escapeshellarg(...), $this->commandSubject2));
             } else {
                 $command .= escapeshellarg($this->commandSubject2);
             }
@@ -463,14 +449,10 @@ class BaseCommand
 
     /**
      * Get the version of the git binary
-     *
-     * @return string|null
      */
     public function getBinaryVersion(): ?string
     {
-        if (is_null($this->binaryVersion)) {
-            $this->binaryVersion = $this->repo->getCaller()->getBinaryVersion();
-        }
+        $this->binaryVersion ??= $this->repo->getCaller()->getBinaryVersion();
 
         return $this->binaryVersion;
     }

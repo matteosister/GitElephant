@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * User: matteo
  * Date: 06/06/13
  * Time: 23.45
  * Just for fun...
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\TestCase;
@@ -16,7 +17,7 @@ use GitElephant\TestCase;
  *
  * @package GitElephant\Command
  */
-class MvCommandTest extends TestCase
+final class MvCommandTest extends TestCase
 {
     /**
      * setUp

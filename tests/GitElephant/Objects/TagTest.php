@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * User: matteo
  * Date: 28/10/12
@@ -7,12 +9,11 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
 
-class TagTest extends TestCase
+final class TagTest extends TestCase
 {
     /**
      * testTag
@@ -24,9 +25,9 @@ class TagTest extends TestCase
         $this->getRepository()->commit('commit1', true);
         $this->getRepository()->createTag('test-tag');
         $tag = new Tag($this->getRepository(), 'test-tag');
-        $this->assertInstanceOf('GitElephant\Objects\Tag', $tag);
-        $this->assertEquals('test-tag', $tag->getName());
-        $this->assertEquals('refs/tags/test-tag', $tag->getFullRef());
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $tag);
+        $this->assertSame('test-tag', $tag->getName());
+        $this->assertSame('refs/tags/test-tag', $tag->getFullRef());
         $this->assertEquals($this->getRepository()->getCommit()->getSha(), $tag->getSha());
     }
 
@@ -40,12 +41,12 @@ class TagTest extends TestCase
         $this->repository->commit('commit1', true);
         Tag::create($this->repository, 'tag1', $this->repository->getCommit());
         $tag = new Tag($this->repository, 'tag1');
-        $this->assertInstanceOf('GitElephant\Objects\Tag', $tag);
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $tag);
         $this->assertEquals($tag->getSha(), $this->repository->getCommit()->getSha());
         $branch = Branch::create($this->repository, 'test-branch');
         Tag::create($this->repository, 'tag2', $branch);
         $tag = new Tag($this->repository, 'tag2');
-        $this->assertEquals($tag->getSha(), $branch->getSha());
+        $this->assertSame($tag->getSha(), $branch->getSha());
     }
 
     /**

@@ -37,16 +37,6 @@ use GitElephant\Repository;
 class Commit implements TreeishInterface, \Countable
 {
     /**
-     * @var \GitElephant\Repository
-     */
-    private $repository;
-
-    /**
-     * @var string
-     */
-    private $ref;
-
-    /**
      * sha
      *
      * @var string
@@ -98,7 +88,7 @@ class Commit implements TreeishInterface, \Countable
     /**
      * the date for committer
      *
-     * @var \Datetime
+     * @var \DateTime
      */
     private $datetimeCommitter;
 
@@ -106,12 +96,10 @@ class Commit implements TreeishInterface, \Countable
      * Class constructor
      *
      * @param \GitElephant\Repository $repository the repository
-     * @param TreeishInterface|string $treeish    a treeish reference
+     * @param TreeishInterface|string $ref a treeish reference
      */
-    private function __construct(Repository $repository, $treeish = 'HEAD')
+    private function __construct(private Repository $repository, private $ref = 'HEAD')
     {
-        $this->repository = $repository;
-        $this->ref = $treeish;
         $this->parents = [];
     }
 
@@ -128,7 +116,6 @@ class Commit implements TreeishInterface, \Countable
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return Commit
      */
     public static function create(
         Repository $repository,
@@ -149,7 +136,6 @@ class Commit implements TreeishInterface, \Countable
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return Commit
      */
     public static function pick(Repository $repository, $treeish = null): Commit
     {
@@ -164,8 +150,6 @@ class Commit implements TreeishInterface, \Countable
      *
      * @param \GitElephant\Repository $repository  repository
      * @param array                   $outputLines output lines
-     *
-     * @return Commit
      */
     public static function createFromOutputLines(Repository $repository, array $outputLines): Commit
     {
@@ -196,7 +180,7 @@ class Commit implements TreeishInterface, \Countable
     {
         $command = BranchCommand::getInstance($this->getRepository())->contains($this->getSha());
 
-        return array_map('trim', (array) $this->getCaller()->execute($command)->getOutputLines(true));
+        return array_map(trim(...), $this->getCaller()->execute($command)->getOutputLines(true));
     }
 
     /**
@@ -206,7 +190,6 @@ class Commit implements TreeishInterface, \Countable
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return int
      */
     public function count(): int
     {
@@ -272,12 +255,10 @@ class Commit implements TreeishInterface, \Countable
 
     /**
      * Returns true if the commit is a root commit. Usually the first of the repository
-     *
-     * @return bool
      */
     public function isRoot(): bool
     {
-        return empty($this->parents);
+        return $this->parents === [];
     }
 
     /**
@@ -290,9 +271,6 @@ class Commit implements TreeishInterface, \Countable
         return $this->sha;
     }
 
-    /**
-     * @return CallerInterface
-     */
     private function getCaller(): CallerInterface
     {
         return $this->getRepository()->getCaller();
@@ -310,8 +288,6 @@ class Commit implements TreeishInterface, \Countable
 
     /**
      * Repository getter
-     *
-     * @return \GitElephant\Repository
      */
     public function getRepository(): \GitElephant\Repository
     {
@@ -350,8 +326,6 @@ class Commit implements TreeishInterface, \Countable
 
     /**
      * parent getter
-     *
-     * @return array
      */
     public function getParents(): array
     {
@@ -408,7 +382,6 @@ class Commit implements TreeishInterface, \Countable
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return array
      */
     public function revParse(array $options = []): array
     {
@@ -416,7 +389,7 @@ class Commit implements TreeishInterface, \Countable
         $caller = $this->repository->getCaller();
         $caller->execute($c);
 
-        return array_map('trim', $caller->getOutputLines(true));
+        return array_map(trim(...), $caller->getOutputLines(true));
     }
 
     /**
@@ -424,8 +397,6 @@ class Commit implements TreeishInterface, \Countable
      *
      * return true if some tag of repository point to this commit
      * return false otherwise
-     *
-     * @return bool
      */
     public function tagged(): bool
     {

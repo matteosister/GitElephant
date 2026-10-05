@@ -27,17 +27,15 @@ class ResetCommand extends BaseCommand
      * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
-    public function __construct(Repository $repo = null)
+    public function __construct(?Repository $repo = null)
     {
         parent::__construct($repo);
     }
 
     /**
      * @param TreeishInterface|Commit|string $arg
-     * @param array $options
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function reset($arg = null, array $options = []): string
     {
@@ -57,10 +55,9 @@ class ResetCommand extends BaseCommand
 
     /**
      * @param Repository $repository
-     * @return ResetCommand
      */
-    public static function getInstance(Repository $repository = null): \GitElephant\Command\ResetCommand
+    public static function getInstance(?Repository $repository = null): static
     {
-        return new self($repository);
+        return new static($repository);
     }
 }

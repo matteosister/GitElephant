@@ -25,7 +25,7 @@ namespace GitElephant\Objects\Commit;
  *
  * @author Mathias Geat <mathias@ailoo.net>
  */
-class Message
+class Message implements \Stringable
 {
     /**
      * the message
@@ -44,15 +44,12 @@ class Message
         if (is_array($message)) {
             $this->message = $message;
         } else {
-            $this->message = [];
             $this->message = (string)$message;
         }
     }
 
     /**
      * Short message equals first message line
-     *
-     * @return string|null
      */
     public function getShortMessage(): ?string
     {
@@ -61,8 +58,6 @@ class Message
 
     /**
      * Full commit message
-     *
-     * @return string|null
      */
     public function getFullMessage(): ?string
     {
@@ -73,8 +68,6 @@ class Message
      * Return message string
      *
      * @param bool $full get the full message
-     *
-     * @return string|null
      */
     public function toString(bool $full = false): ?string
     {
@@ -84,19 +77,16 @@ class Message
 
         if ($full) {
             return implode(PHP_EOL, $this->message);
-        } else {
-            return $this->message[0];
         }
+        return $this->message[0];
     }
 
     /**
      * String representation equals short message
-     *
-     * @return string
      */
     public function __toString(): string
     {
         $thisString = $this->toString();
-        return $thisString === null ? "" : $thisString;
+        return $thisString ?? "";
     }
 }

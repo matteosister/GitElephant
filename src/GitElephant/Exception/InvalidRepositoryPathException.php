@@ -39,7 +39,7 @@ class InvalidRepositoryPathException extends \InvalidArgumentException
      * @param int        $code     code
      * @param \Exception $previous previous
      */
-    public function __construct($message = "", $code = 0, \Exception $previous = null)
+    public function __construct($message = "", $code = 0, ?\Exception $previous = null)
     {
         parent::__construct(sprintf($this->messageTpl, $message), $code, $previous);
     }

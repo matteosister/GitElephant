@@ -37,7 +37,7 @@ class PushCommand extends BaseCommand
      * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
-    public function __construct(Repository $repo = null)
+    public function __construct(?Repository $repo = null)
     {
         parent::__construct($repo);
     }
@@ -47,9 +47,8 @@ class PushCommand extends BaseCommand
      * @param Branch|string $branch
      *
      * @throws \RuntimeException
-     * @return string
      */
-    public function push($remote = 'origin', $branch = 'master', string $args = null): string
+    public function push($remote = 'origin', $branch = 'master', ?string $args = null): string
     {
         $this->clearAll();
 
@@ -63,7 +62,7 @@ class PushCommand extends BaseCommand
         $this->addCommandName(self::GIT_PUSH_COMMAND);
         $this->addCommandSubject($remote);
         $this->addCommandSubject2($branch);
-        
+
         if (!is_null($args)) {
             $this->addCommandArgument($args);
         }

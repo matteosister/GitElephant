@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
@@ -20,7 +21,7 @@ use GitElephant\TestCase;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class LogRangeTest extends TestCase
+final class LogRangeTest extends TestCase
 {
     /**
      * @var Commit
@@ -88,7 +89,7 @@ class LogRangeTest extends TestCase
         $this->assertEquals($this->secondCommit, $logRange[8]);
         $this->assertTrue(isset($logRange[0]));
         foreach ($logRange as $key => $commit) {
-            $this->assertInstanceOf('GitElephant\Objects\Commit', $commit);
+            $this->assertInstanceOf(\GitElephant\Objects\Commit::class, $commit);
             $this->assertIsInt($key);
         }
         $r = $this->getRepository(1);

@@ -29,20 +29,14 @@ namespace GitElephant\Command\Caller;
 class CallerSSH2 extends AbstractCaller
 {
     /**
-     * @var resource
-     */
-    private $resource;
-
-    /**
      * @param resource $resource
      * @param string   $gitPath path of the git executable on the remote host
      *
      * @internal param string $host remote host
      * @internal param int $port remote port
      */
-    public function __construct($resource, $gitPath = '/usr/bin/git')
+    public function __construct(private $resource, $gitPath = '/usr/bin/git')
     {
-        $this->resource = $resource;
         $this->binaryPath = $gitPath;
     }
 
@@ -52,8 +46,6 @@ class CallerSSH2 extends AbstractCaller
      * @param string      $cmd the command
      * @param bool        $git prepend git to the command
      * @param null|string $cwd directory where the command should be executed
-     *
-     * @return CallerInterface
      */
     public function execute(
         $cmd,
@@ -70,7 +62,7 @@ class CallerSSH2 extends AbstractCaller
         
         $this->rawOutput = $data === false ? '' : $data;
         // rtrim values
-        $values = array_map('rtrim', explode(PHP_EOL, $this->rawOutput));
+        $values = array_map(rtrim(...), explode(PHP_EOL, $this->rawOutput));
         $this->outputLines = $values;
 
         return $this;

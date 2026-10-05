@@ -77,12 +77,11 @@ class Branch extends NodeObject implements TreeishInterface
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws \Symfony\Component\Process\Exception\InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return \GitElephant\Objects\Branch
      */
     public static function create(
         Repository $repository,
         string $name,
-        string $startPoint = null
+        ?string $startPoint = null
     ): \GitElephant\Objects\Branch {
         /** @var BranchCommand $branchCommand */
         $branchCommand = BranchCommand::getInstance($repository);
@@ -101,7 +100,6 @@ class Branch extends NodeObject implements TreeishInterface
      * @param string                  $outputLine output line
      *
      * @throws \InvalidArgumentException
-     * @return Branch
      */
     public static function createFromOutputLine(Repository $repository, string $outputLine): \GitElephant\Objects\Branch
     {
@@ -119,7 +117,6 @@ class Branch extends NodeObject implements TreeishInterface
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return Branch
      */
     public static function checkout(Repository $repository, $name, $create = false): \GitElephant\Objects\Branch
     {
@@ -199,7 +196,6 @@ class Branch extends NodeObject implements TreeishInterface
      * @param string $branchString branch line output
      *
      * @throws \InvalidArgumentException
-     * @return array
      */
     public static function getMatches(string $branchString): array
     {
@@ -209,16 +205,15 @@ class Branch extends NodeObject implements TreeishInterface
             '/^\*?\ *?\(.*(detached).*\)\ +(\S{40})\ +(.+)$/',
         ];
 
-        $matches = [];
-        while (empty($matches) and $regex = array_pop($regexList)) {
+        while (empty($matches) && $regex = array_pop($regexList)) {
             preg_match($regex, trim($branchString), $matches);
         }
 
-        if (empty($matches)) {
+        if ($matches === []) {
             throw new \InvalidArgumentException(sprintf('the branch string is not valid: %s', $branchString));
         }
 
-        return array_map('trim', $matches);
+        return array_map(trim(...), $matches);
     }
 
     /**
@@ -243,8 +238,6 @@ class Branch extends NodeObject implements TreeishInterface
 
     /**
      * name setter
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -263,8 +256,6 @@ class Branch extends NodeObject implements TreeishInterface
 
     /**
      * sha getter
-     *
-     * @return string
      */
     public function getSha(): string
     {
@@ -283,8 +274,6 @@ class Branch extends NodeObject implements TreeishInterface
 
     /**
      * current getter
-     *
-     * @return bool
      */
     public function getCurrent(): bool
     {
@@ -303,8 +292,6 @@ class Branch extends NodeObject implements TreeishInterface
 
     /**
      * comment getter
-     *
-     * @return string
      */
     public function getComment(): string
     {
@@ -323,8 +310,6 @@ class Branch extends NodeObject implements TreeishInterface
 
     /**
      * fullRef getter
-     *
-     * @return string
      */
     public function getFullRef(): string
     {

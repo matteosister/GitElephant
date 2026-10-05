@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\TestCase;
@@ -22,7 +23,7 @@ use GitElephant\TestCase;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class BranchCommandTest extends TestCase
+final class BranchCommandTest extends TestCase
 {
     /**
      * setUp, called on every method
@@ -37,45 +38,39 @@ class BranchCommandTest extends TestCase
 
     /**
      * create test
-     *
-     * @covers GitElephant\Command\BranchCommand::create
      */
     public function testCreate(): void
     {
         $branch = new BranchCommand();
-        $this->assertEquals("branch 'test'", $branch->create('test'), 'create branch command');
-        $this->assertEquals(1, count($this->getRepository()->getBranches()), 'one branch in initiated git repo');
+        $this->assertSame("branch 'test'", $branch->create('test'), 'create branch command');
+        $this->assertCount(1, $this->getRepository()->getBranches(), 'one branch in initiated git repo');
         $this->getCaller()->execute($branch->create('test'));
-        $this->assertEquals(2, count($this->getRepository()->getBranches()), 'two branches after add branch command');
+        $this->assertCount(2, $this->getRepository()->getBranches(), 'two branches after add branch command');
         $this->getCaller()->execute($branch->create('test2'));
-        $this->assertEquals(3, count($this->getRepository()->getBranches()), 'three branches after add branch command');
-        $this->assertEquals("branch 'test' 'master'", $branch->create('test', 'master'));
+        $this->assertCount(3, $this->getRepository()->getBranches(), 'three branches after add branch command');
+        $this->assertSame("branch 'test' 'master'", $branch->create('test', 'master'));
     }
 
     /**
      * listBranches test
-     *
-     * @covers GitElephant\Command\BranchCommand::listBranches
      */
     public function testListBranches(): void
     {
         $branch = new BranchCommand();
-        $this->assertEquals($branch->listBranches(), "branch '-v' '--no-color' '--no-abbrev'");
-        $this->assertEquals($branch->listBranches(true), "branch '-v' '--no-color' '--no-abbrev' '-a'");
-        $this->assertEquals($branch->listBranches(false, true), "branch '--no-color' '--no-abbrev'");
+        $this->assertSame("branch '-v' '--no-color' '--no-abbrev'", $branch->listBranches());
+        $this->assertSame("branch '-v' '--no-color' '--no-abbrev' '-a'", $branch->listBranches(true));
+        $this->assertSame("branch '--no-color' '--no-abbrev'", $branch->listBranches(false, true));
     }
 
     /**
      * lists test
-     *
-     * @covers GitElephant\Command\BranchCommand::lists
      */
     public function testLists(): void
     {
         $branch = new BranchCommand();
-        $this->assertEquals($branch->lists(), "branch '-v' '--no-color' '--no-abbrev'");
-        $this->assertEquals($branch->lists(true), "branch '-v' '--no-color' '--no-abbrev' '-a'");
-        $this->assertEquals($branch->lists(false, true), "branch '--no-color' '--no-abbrev'");
+        $this->assertSame("branch '-v' '--no-color' '--no-abbrev'", $branch->lists());
+        $this->assertSame("branch '-v' '--no-color' '--no-abbrev' '-a'", $branch->lists(true));
+        $this->assertSame("branch '--no-color' '--no-abbrev'", $branch->lists(false, true));
     }
 
     /**
@@ -84,19 +79,19 @@ class BranchCommandTest extends TestCase
     public function testSingleInfo(): void
     {
         $bc = new BranchCommand();
-        $this->assertEquals(
+        $this->assertSame(
             "branch '-v' '--list' '--no-color' '--no-abbrev' 'master'",
             $bc->singleInfo('master')
         );
-        $this->assertEquals(
+        $this->assertSame(
             "branch '-v' '--list' '--no-color' '--no-abbrev' '-a' 'master'",
             $bc->singleInfo('master', true)
         );
-        $this->assertEquals(
+        $this->assertSame(
             "branch '-v' '--list' '--no-color' '--no-abbrev' '-a' '-vv' 'master'",
             $bc->singleInfo('master', true, false, true)
         );
-        $this->assertEquals(
+        $this->assertSame(
             "branch '--list' '--no-color' '--no-abbrev' '-a' '-vv' 'master'",
             $bc->singleInfo('master', true, true, true)
         );
@@ -104,18 +99,16 @@ class BranchCommandTest extends TestCase
 
     /**
      * delete test
-     *
-     * @covers GitElephant\Command\BranchCommand::delete
      */
     public function testDelete(): void
     {
         $branch = new BranchCommand();
-        $this->assertEquals(
+        $this->assertSame(
             "branch '-d' 'test-branch'",
             $branch->delete('test-branch'),
             'list branch command without force'
         );
-        $this->assertEquals(
+        $this->assertSame(
             "branch '-D' 'test-branch'",
             $branch->delete('test-branch', true),
             'list branch command with force'

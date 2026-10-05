@@ -35,7 +35,7 @@ class LogRangeCommand extends BaseCommand
      * @param \GitElephant\Repository $repo The repository object this command
      *                                      will interact with
      */
-    public function __construct(Repository $repo = null)
+    public function __construct(?Repository $repo = null)
     {
         parent::__construct($repo);
     }
@@ -52,7 +52,6 @@ class LogRangeCommand extends BaseCommand
      * @param boolean|false                                $firstParent skip commits brought in to branch by a merge
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function showLog(
         $refStart,
@@ -94,7 +93,7 @@ class LogRangeCommand extends BaseCommand
         if (null !== $path && !empty($path)) {
             $this->addPath($path);
         }
-        
+
         $this->addCommandSubject($refStart . '..' . $refEnd);
 
         return $this->getCommand();
