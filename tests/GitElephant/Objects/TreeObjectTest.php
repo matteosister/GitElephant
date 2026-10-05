@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
 
-class TreeObjectTest extends TestCase
+final class TreeObjectTest extends TestCase
 {
     public function setUp(): void
     {
@@ -18,6 +20,6 @@ class TreeObjectTest extends TestCase
     public function testInstance(): void
     {
         $tree = $this->getRepository()->getTree('master', 'test');
-        $this->assertInstanceOf('GitElephant\Objects\TreeObject', $tree[0]);
+        $this->assertInstanceOf(\GitElephant\Objects\TreeObject::class, $tree[0]);
     }
 }

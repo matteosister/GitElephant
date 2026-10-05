@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * This file is part of the GitElephant package.
  *
@@ -10,7 +12,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\TestCase;
@@ -21,7 +22,7 @@ use GitElephant\TestCase;
  * @author Matteo Giachino <matteog@gmail.com>
  */
 
-class LogCommandTest extends TestCase
+final class LogCommandTest extends TestCase
 {
     /**
      * set up
@@ -46,6 +47,7 @@ class LogCommandTest extends TestCase
         $branch = $this->getRepository()->getBranch($branchName);
         $obj = $this->getRepository()->getTree('HEAD', 'test-folder/test-file')->getBlob();
         $lc = LogCommand::getInstance();
+        $this->assertInstanceOf(\GitElephant\Objects\NodeObject::class, $obj);
         $this->assertEquals(
             "log '-s' '--pretty=raw' '--no-color' -- 'test-folder/test-file'",
             $lc->showObjectLog($obj)

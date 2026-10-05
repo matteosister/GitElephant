@@ -58,7 +58,6 @@ class MainCommand extends BaseCommand
      * @param bool $bare
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function init($bare = false, ?string $initialBranchName = null): string
     {
@@ -80,7 +79,6 @@ class MainCommand extends BaseCommand
      * @param bool $porcelain
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function status($porcelain = false): string
     {
@@ -101,7 +99,6 @@ class MainCommand extends BaseCommand
      * @param string $what what should be added to the repository
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function add($what = '.'): string
     {
@@ -119,7 +116,6 @@ class MainCommand extends BaseCommand
      * @param string $what what should be removed from the stage
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function unstage($what): string
     {
@@ -138,11 +134,9 @@ class MainCommand extends BaseCommand
      * @param bool                    $stageAll commit all changes
      * @param string|Author           $author override the author for this commit
      * @param bool                    $allowEmpty whether to add param `--allow-empty` to commit command
-     * @param \DateTimeInterface|null $date
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
-     * @return string
      */
     public function commit(
         ?string $message,
@@ -154,7 +148,7 @@ class MainCommand extends BaseCommand
         $this->clearAll();
 
         if (trim($message) === '' || is_null($message)) {
-            throw new \InvalidArgumentException(sprintf('You can\'t commit without message'));
+            throw new \InvalidArgumentException('You can\'t commit without message');
         }
         $this->addCommandName(self::GIT_COMMIT);
 
@@ -171,7 +165,7 @@ class MainCommand extends BaseCommand
             $this->addCommandArgument('--allow-empty');
         }
 
-        if (null !== $date) {
+        if ($date instanceof \DateTimeInterface) {
             $this->addCommandArgument('--date');
             $this->addCommandArgument($date->format(\DateTimeInterface::RFC822));
         }
@@ -188,7 +182,6 @@ class MainCommand extends BaseCommand
      * @param string|Branch|TreeishInterface $ref the reference to checkout
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function checkout($ref): string
     {
@@ -216,7 +209,6 @@ class MainCommand extends BaseCommand
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
-     * @return string
      */
     public function move($from, $to): string
     {
@@ -248,7 +240,6 @@ class MainCommand extends BaseCommand
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
-     * @return string
      */
     public function remove($path, $recursive, $force): string
     {
@@ -278,21 +269,14 @@ class MainCommand extends BaseCommand
      * Validates a path
      *
      * @param string $path path
-     *
-     * @return bool
      */
     protected function validatePath($path): bool
     {
         if (empty($path)) {
             return false;
         }
-
         // we are always operating from root directory
         // so forbid relative paths
-        if (false !== strpos($path, '..')) {
-            return false;
-        }
-
-        return true;
+        return !str_contains($path, '..');
     }
 }

@@ -51,7 +51,6 @@ class LsTreeCommand extends BaseCommand
      * @param string|Branch $ref The reference to build the tree from
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function fullTree($ref = 'HEAD'): string
     {
@@ -78,7 +77,6 @@ class LsTreeCommand extends BaseCommand
      * @param string|NodeObject $path path
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function tree($ref = 'HEAD', $path = null): string
     {
@@ -110,13 +108,10 @@ class LsTreeCommand extends BaseCommand
      * @param null|string $ref the reference to build the tree from
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function listAll($ref = null): string
     {
-        if (is_null($ref)) {
-            $ref = 'HEAD';
-        }
+        $ref ??= 'HEAD';
         $this->clearAll();
         $this->addCommandName(self::LS_TREE_COMMAND);
         $this->addCommandSubject($ref);

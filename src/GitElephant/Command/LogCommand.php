@@ -55,7 +55,6 @@ class LogCommand extends BaseCommand
      * @param int|null                                $offset skip n entries
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function showObjectLog(NodeObject $obj, $branch = null, ?int $limit = null, ?int $offset = null): string
     {
@@ -82,7 +81,6 @@ class LogCommand extends BaseCommand
      * @param bool                                         $firstParent skip commits brought in to branch by a merge
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function showLog($ref, $path = null, $limit = null, ?int $offset = null, bool $firstParent = false): string
     {
@@ -99,7 +97,6 @@ class LogCommand extends BaseCommand
         }
 
         if (null !== $offset) {
-            $offset = (int) $offset;
             $this->addCommandArgument('--skip=' . $offset);
         }
 

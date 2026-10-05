@@ -52,7 +52,6 @@ class DiffTreeCommand extends BaseCommand
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
-     * @return string
      */
     public function rootDiff(Commit $commit): string
     {

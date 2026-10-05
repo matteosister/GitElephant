@@ -47,9 +47,7 @@ class StatusIndex extends Status
         return new Sequence(
             array_filter(
                 $this->files,
-                function (StatusFile $statusFile) {
-                    return $statusFile->getIndexStatus() && '?' !== $statusFile->getIndexStatus();
-                }
+                fn (StatusFile $statusFile) => $statusFile->getIndexStatus() && '?' !== $statusFile->getIndexStatus()
             )
         );
     }
@@ -57,7 +55,6 @@ class StatusIndex extends Status
     /**
      * filter files by index status
      *
-     * @param string $type
      *
      * @return Sequence<StatusFile>
      */
@@ -70,9 +67,7 @@ class StatusIndex extends Status
         return new Sequence(
             array_filter(
                 $this->files,
-                function (StatusFile $statusFile) use ($type) {
-                    return $type === $statusFile->getIndexStatus();
-                }
+                fn (StatusFile $statusFile) => $type === $statusFile->getIndexStatus()
             )
         );
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
  *
@@ -15,7 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GitElephant\Sequence;
 
 use PhpOption\Option;
@@ -32,38 +33,28 @@ interface SequenceInterface extends CollectionInterface
 {
     /**
      * Returns the first element in the collection if available.
-     *
-     * @return Option
      */
     public function first(): Option;
 
     /**
      * Returns the last element in the collection if available.
-     *
-     * @return Option
      */
     public function last(): Option;
 
     /**
      * Returns all elements in this sequence.
-     *
-     * @return array
      */
     public function all(): array;
 
     /**
      * Returns a new Sequence with all elements in reverse order.
-     *
-     * @return SequenceInterface
      */
     public function reverse(): SequenceInterface;
 
     /**
      * Adds the elements of another sequence to this sequence.
      *
-     * @param SequenceInterface $seq
      *
-     * @return SequenceInterface
      */
     public function addSequence(SequenceInterface $seq): SequenceInterface;
 
@@ -89,8 +80,6 @@ interface SequenceInterface extends CollectionInterface
      * Returns whether the given index is defined in the sequence.
      *
      * @param integer $index (0-based)
-     *
-     * @return boolean
      */
     public function isDefinedAt(int $index): bool;
 
@@ -136,15 +125,12 @@ interface SequenceInterface extends CollectionInterface
      * Adds an element to the sequence.
      *
      * @param mixed $elem
-     *
-     * @return void
      */
     public function add($elem): void;
 
     /**
      * Removes the element at the given index, and returns it.
      *
-     * @param integer $index
      *
      * @return mixed
      */
@@ -153,19 +139,15 @@ interface SequenceInterface extends CollectionInterface
     /**
      * Adds all elements to the sequence.
      *
-     * @param array $elements
      *
-     * @return void
      */
     public function addAll(array $elements): void;
 
     /**
      * Updates the value at the given index.
      *
-     * @param integer $index
      * @param mixed $value
      *
-     * @return void
      */
     public function update(int $index, $value): void;
 
@@ -176,9 +158,7 @@ interface SequenceInterface extends CollectionInterface
      * If the passed number is greater than the available number of elements, all
      * will be removed.
      *
-     * @param integer $number
      *
-     * @return SequenceInterface
      */
     public function drop(int $number): SequenceInterface;
 
@@ -189,9 +169,7 @@ interface SequenceInterface extends CollectionInterface
      * If the passed number is greater than the available number of elements, all
      * will be removed.
      *
-     * @param integer $number
      *
-     * @return SequenceInterface
      */
     public function dropRight(int $number): SequenceInterface;
 
@@ -201,8 +179,6 @@ interface SequenceInterface extends CollectionInterface
      *
      * @param callable $callable Receives the element to drop as first argument,
      *   and returns true (drop), or false (stop).
-     *
-     * @return SequenceInterface
      */
     public function dropWhile(callable $callable): SequenceInterface;
 
@@ -213,9 +189,7 @@ interface SequenceInterface extends CollectionInterface
      * If the passed number is greater than the available number of elements,
      * then all elements will be returned as a new collection.
      *
-     * @param integer $number
      *
-     * @return CollectionInterface
      */
     public function take(int $number): CollectionInterface;
 
@@ -223,9 +197,7 @@ interface SequenceInterface extends CollectionInterface
      * Creates a new collection by taking elements from the current collection
      * for as long as the callable returns true.
      *
-     * @param callable $callable
      *
-     * @return CollectionInterface
      */
     public function takeWhile(callable $callable): CollectionInterface;
 
@@ -233,9 +205,7 @@ interface SequenceInterface extends CollectionInterface
      * Creates a new collection by applying the passed callable to all elements
      * of the current collection.
      *
-     * @param callable $callable
      *
-     * @return CollectionInterface
      */
     public function map(callable $callable): CollectionInterface;
 }

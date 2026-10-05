@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * Copyright 2012 Johannes M. Schmitt <schmittjoh@gmail.com>
  *
@@ -15,7 +17,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 namespace GitElephant\Sequence;
 
 /**
@@ -30,15 +31,11 @@ interface CollectionInterface extends \Traversable, \Countable
      * Returns whether this collection contains the passed element.
      *
      * @param mixed $elem
-     *
-     * @return boolean
      */
     public function contains($elem): bool;
 
     /**
      * Returns whether the collection is empty.
-     *
-     * @return boolean
      */
     public function isEmpty(): bool;
 
@@ -49,8 +46,6 @@ interface CollectionInterface extends \Traversable, \Countable
      *
      * @param callable $callable receives an element of the collection and must
      *   return true (= keep) or false (= remove).
-     *
-     * @return CollectionInterface
      */
     public function filter(callable $callable): CollectionInterface;
 
@@ -61,8 +56,6 @@ interface CollectionInterface extends \Traversable, \Countable
      *
      * @param callable $callable receives an element of the collection and must
      *   return true (= remove) or false (= keep).
-     *
-     * @return CollectionInterface
      */
     public function filterNot(callable $callable): CollectionInterface;
 

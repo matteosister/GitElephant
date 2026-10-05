@@ -55,7 +55,6 @@ class SubmoduleCommand extends BaseCommand
      * @param string $path   path to register the submodule to
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function add($gitUrl, $path = null): string
     {
@@ -73,8 +72,6 @@ class SubmoduleCommand extends BaseCommand
      * initialize a repository's submodules
      *
      * @param  string $path init only submodules at the specified path
-     *
-     * @return string
      */
     public function init($path = null): string
     {
@@ -123,8 +120,6 @@ class SubmoduleCommand extends BaseCommand
      * @param  bool   $init      init before update
      * @param  bool   $force     force the checkout as part of update
      * @param  string $path      update only a specific submodule path
-     *
-     * @return string
      */
     public function update(
         bool $recursive = false,

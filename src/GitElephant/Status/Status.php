@@ -32,11 +32,6 @@ use GitElephant\Sequence\Sequence;
 class Status
 {
     /**
-     * @var \GitElephant\Repository
-     */
-    private $repository;
-
-    /**
      * @var array<StatusFile>
      */
     protected $files;
@@ -44,21 +39,17 @@ class Status
     /**
      * Private constructor in order to follow the singleton pattern
      *
-     * @param Repository $repository
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    private function __construct(Repository $repository)
+    private function __construct(private readonly Repository $repository)
     {
         $this->files = [];
-        $this->repository = $repository;
         $this->createFromCommand();
     }
 
     /**
-     * @param Repository $repository
-     *
      * @return \GitElephant\Status\Status
      */
     public static function get(Repository $repository)
@@ -150,26 +141,22 @@ class Status
      * create objects from command output
      * https://www.kernel.org/pub/software/scm/git/docs/git-status.html in the output section
      *
-     *
-     * @param array $lines
      */
     private function parseOutputLines(array $lines): void
     {
         foreach ($lines as $line) {
             $matches = $this->splitStatusLine($line);
             if ($matches) {
-                $x = isset($matches[1]) ? $matches[1] : null;
-                $y = isset($matches[2]) ? $matches[2] : null;
-                $file = isset($matches[3]) ? $matches[3] : null;
-                $renamedFile = isset($matches[5]) ? $matches[5] : null;
+                $x = $matches[1] ?? null;
+                $y = $matches[2] ?? null;
+                $file = $matches[3] ?? null;
+                $renamedFile = $matches[5] ?? null;
                 $this->files[] = StatusFile::create($x, $y, $file, $renamedFile);
             }
         }
     }
 
     /**
-     * @param string $line
-     *
      * @return array<string>|null
      */
     protected function splitStatusLine(string $line)
@@ -181,7 +168,6 @@ class Status
     /**
      * filter files status in working tree and in index status
      *
-     * @param string $type
      *
      * @return Sequence<StatusFile>
      */
@@ -194,9 +180,7 @@ class Status
         return new Sequence(
             array_filter(
                 $this->files,
-                function (StatusFile $statusFile) use ($type) {
-                    return $type === $statusFile->getWorkingTreeStatus() || $type === $statusFile->getIndexStatus();
-                }
+                fn (StatusFile $statusFile) => $type === $statusFile->getWorkingTreeStatus() || $type === $statusFile->getIndexStatus()
             )
         );
     }

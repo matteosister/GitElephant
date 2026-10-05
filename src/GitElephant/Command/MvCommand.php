@@ -49,7 +49,6 @@ class MvCommand extends BaseCommand
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
-     * @return string
      */
     public function rename($source, $target): string
     {

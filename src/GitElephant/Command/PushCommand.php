@@ -47,7 +47,6 @@ class PushCommand extends BaseCommand
      * @param Branch|string $branch
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function push($remote = 'origin', $branch = 'master', ?string $args = null): string
     {

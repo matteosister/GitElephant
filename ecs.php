@@ -1,24 +1,21 @@
 <?php
 
-use Symplify\EasyCodingStandard\Config\ECSConfig;
-use Symplify\EasyCodingStandard\ValueObject\Option;
+declare(strict_types=1);
+
 use PhpCsFixer\Fixer\ArrayNotation\ArraySyntaxFixer;
+use Symplify\EasyCodingStandard\Config\ECSConfig;
 use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
-return static function (ECSConfig $configurator): void {
-    $configurator->paths([__DIR__ . '/src', __DIR__ . '/tests']);
-
-    // A. full sets
-    $configurator->sets([
+return ECSConfig::configure()
+    ->withPaths([__DIR__ . '/src', __DIR__ . '/tests'])
+    ->withSets([
         SetList::CLEAN_CODE,
-        SetList::PSR_12
-    ]);
-
-    // B. standalone rule
-    $configurator->ruleWithConfiguration(ArraySyntaxFixer::class, [
+        SetList::PSR_12,
+    ])
+    ->withConfiguredRule(ArraySyntaxFixer::class, [
         'syntax' => 'short',
+    ])
+    ->withSkip([
+        'Unused variable $deleted.' => ['src/GitElephant/Objects/Diff/DiffChunk.php'],
+        'Unused variable $new.' => ['src/GitElephant/Objects/Diff/DiffChunk.php'],
     ]);
-
-    $configurator->skip(['Unused variable $deleted.' => ['src/GitElephant/Objects/Diff/DiffChunk.php'], 'Unused variable $new.' => ['src/GitElephant/Objects/Diff/DiffChunk.php']]);
-};

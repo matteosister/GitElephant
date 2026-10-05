@@ -40,9 +40,6 @@ class AbstractSequence extends AbstractCollection implements SequenceInterface
      */
     protected $elements;
 
-    /**
-     * @param array $elements
-     */
     public function __construct(array $elements = [])
     {
         $this->elements = array_values($elements);
@@ -91,8 +88,6 @@ class AbstractSequence extends AbstractCollection implements SequenceInterface
      *
      * @param callable $callable receives the element and must return true (=
      *   keep) or false (= remove).
-     *
-     * @return CollectionInterface
      */
     public function filter(callable $callable): CollectionInterface
     {
@@ -114,8 +109,6 @@ class AbstractSequence extends AbstractCollection implements SequenceInterface
      *
      * @param callable $callable receives the element and must return true (=
      *   remove) or false (= keep).
-     *
-     * @return CollectionInterface
      */
     public function filterNot(callable $callable): CollectionInterface
     {
@@ -159,7 +152,6 @@ class AbstractSequence extends AbstractCollection implements SequenceInterface
     /**
      * Finds the first index where the given callable returns true.
      *
-     * @param callable $callable
      *
      * @return integer the index, or -1 if the predicate is not true for any
      *   element.
@@ -276,8 +268,6 @@ class AbstractSequence extends AbstractCollection implements SequenceInterface
      *
      * @param callable $callable receives elements of this sequence as first
      *   argument, and returns true/false.
-     *
-     * @return CollectionInterface
      */
     public function takeWhile(callable $callable): CollectionInterface
     {

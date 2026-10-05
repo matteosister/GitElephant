@@ -48,7 +48,6 @@ class ShowCommand extends BaseCommand
      * @param string|\GitElephant\Objects\Commit $ref the reference for the show command
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function showCommit($ref): string
     {

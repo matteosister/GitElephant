@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * User: matteo
  * Date: 05/01/13
@@ -7,7 +9,6 @@
  *
  * Just for fun...
  */
-
 namespace GitElephant\Objects;
 
 use GitElephant\TestCase;
@@ -15,7 +16,7 @@ use GitElephant\TestCase;
 /**
  * Branch tests
  */
-class BranchTest extends TestCase
+final class BranchTest extends TestCase
 {
     /**
      * testGetMatches
@@ -73,15 +74,15 @@ class BranchTest extends TestCase
         $this->addFile('test');
         $this->getRepository()->commit('test commit', true);
         $b = new Branch($this->getRepository(), 'master');
-        $this->assertEquals('master', $b->getName());
-        $this->assertEquals('test commit', $b->getComment());
+        $this->assertSame('master', $b->getName());
+        $this->assertSame('test commit', $b->getComment());
         $this->assertTrue($b->getCurrent());
         $this->getRepository()->createBranch('develop');
         $b = new Branch($this->getRepository(), 'develop');
-        $this->assertEquals('develop', $b->getName());
-        $this->assertEquals('test commit', $b->getComment());
+        $this->assertSame('develop', $b->getName());
+        $this->assertSame('test commit', $b->getComment());
         $this->assertFalse($b->getCurrent());
-        $this->expectException('GitElephant\Exception\InvalidBranchNameException');
+        $this->expectException(\GitElephant\Exception\InvalidBranchNameException::class);
         $this->fail(Branch::checkout($this->getRepository(), 'non-existent'));
     }
 

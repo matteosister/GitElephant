@@ -11,9 +11,6 @@ parameters:
 			message: '#Unsafe usage of new static\(\).#'
 			path: %currentWorkingDirectory%
 		-
-			message: '#Parameter \#1 \$command of class Symfony\\Component\\Process\\Process constructor expects array, string given.#'
-			path: src/GitElephant/Command/Caller/Caller.php
-		-
 			identifier: missingType.iterableValue
 		-
 			identifier: missingType.generics

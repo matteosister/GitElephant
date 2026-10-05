@@ -50,16 +50,6 @@ class StatusFile
     /**
      * @var string
      */
-    private $name;
-
-    /**
-     * @var string
-     */
-    private $renamed;
-
-    /**
-     * @var string
-     */
     private $type;
 
     /**
@@ -73,12 +63,10 @@ class StatusFile
      * @param string $name    file name
      * @param string $renamed new file name (if renamed)
      */
-    private function __construct(string $x, string $y, string $name, ?string $renamed = null)
+    private function __construct(string $x, string $y, private readonly string $name, private readonly ?string $renamed = null)
     {
         $this->x = ' ' === $x ? null : $x;
         $this->y = ' ' === $y ? null : $y;
-        $this->name = $name;
-        $this->renamed = $renamed;
     }
 
     /**
@@ -86,8 +74,6 @@ class StatusFile
      * @param string $y       Y section of the status --porcelain output
      * @param string $name    file name
      * @param string $renamed new file name (if renamed)
-     *
-     * @return StatusFile
      */
     public static function create(
         string $x,
@@ -98,9 +84,6 @@ class StatusFile
         return new self($x, $y, $name, $renamed);
     }
 
-    /**
-     * @return bool
-     */
     public function isRenamed(): bool
     {
         return $this->renamed !== null;
@@ -108,8 +91,6 @@ class StatusFile
 
     /**
      * Get the file name
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -118,8 +99,6 @@ class StatusFile
 
     /**
      * Get the renamed
-     *
-     * @return string|null
      */
     public function getRenamed(): ?string
     {
@@ -138,8 +117,6 @@ class StatusFile
 
     /**
      * Get the status of the working tree
-     *
-     * @return string|null
      */
     public function getWorkingTreeStatus(): ?string
     {
@@ -148,8 +125,6 @@ class StatusFile
 
     /**
      * description of the status
-     *
-     * @return void
      */
     public function calculateDescription(): void
     {
@@ -202,7 +177,6 @@ class StatusFile
      *
      * @see #calulcateDescription()
      * @see #setDescription($description)
-     * @return string
      */
     public function getDescription(): string
     {

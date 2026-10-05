@@ -31,13 +31,8 @@ use GitElephant\Repository;
  * @package GitElephant\Objects
  * @author  David Neimeyer <davidneimeyer@gmail.com>
  */
-class Remote
+class Remote implements \Stringable
 {
-    /**
-     * @var \GitElephant\Repository
-     */
-    private $repository;
-
     /**
      * remote name
      *
@@ -64,7 +59,7 @@ class Remote
      *
      * @var string
      */
-    private $remoteHEAD = null;
+    private $remoteHEAD;
 
     /**
      * @var array<Branch>
@@ -82,9 +77,8 @@ class Remote
      * @throws \InvalidArgumentException
      * @throws \UnexpectedValueException
      */
-    public function __construct(Repository $repository, ?string $name = null, bool $queryRemotes = true)
+    public function __construct(private readonly Repository $repository, ?string $name = null, bool $queryRemotes = true)
     {
-        $this->repository = $repository;
         if ($name) {
             $this->name = trim($name);
             $this->createFromCommand($queryRemotes);
@@ -97,8 +91,6 @@ class Remote
      * @param \GitElephant\Repository $repository   repository instance
      * @param string                  $name         remote name
      * @param bool                    $queryRemotes Fetch new information from remotes
-     *
-     * @return \GitElephant\Objects\Remote
      */
     public static function pick(
         Repository $repository,
@@ -121,9 +113,7 @@ class Remote
      */
     public function getVerboseOutput(?RemoteCommand $remoteCmd = null): array
     {
-        if ($remoteCmd === null) {
-            $remoteCmd = RemoteCommand::getInstance($this->repository);
-        }
+        $remoteCmd ??= RemoteCommand::getInstance($this->repository);
         $command = $remoteCmd->verbose();
 
         return $this->repository->getCaller()->execute($command)->getOutputLines(true);
@@ -150,9 +140,7 @@ class Remote
         ?RemoteCommand $remoteCmd = null,
         bool $queryRemotes = true
     ): array {
-        if ($remoteCmd === null) {
-            $remoteCmd = RemoteCommand::getInstance($this->repository);
-        }
+        $remoteCmd ??= RemoteCommand::getInstance($this->repository);
         $command = $remoteCmd->show($name, $queryRemotes);
 
         return $this->repository->getCaller()->execute($command)->getOutputLines(true);
@@ -170,7 +158,6 @@ class Remote
      * @throws \UnexpectedValueException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
-     * @return \GitElephant\Objects\Remote
      */
     private function createFromCommand(bool $queryRemotes = true): self
     {
@@ -182,7 +169,7 @@ class Remote
                 $list[] = $matches[1];
             }
         }
-        array_filter($list);
+        $list = array_filter($list);
         if (in_array($this->name, $list)) {
             $remoteDetails = $this->getShowOutput($this->name, null, $queryRemotes);
             $this->parseOutputLines($remoteDetails);
@@ -202,13 +189,13 @@ class Remote
      */
     public function parseOutputLines(array $remoteDetails): void
     {
-        array_filter($remoteDetails);
+        $remoteDetails = array_filter($remoteDetails);
         $name = array_shift($remoteDetails);
         $name = is_string($name) ? trim($name) : '';
         $name = $this->parseName($name);
 
         if ($name === '') {
-            throw new \UnexpectedValueException(sprintf('Invalid data provided for remote detail parsing'));
+            throw new \UnexpectedValueException('Invalid data provided for remote detail parsing');
         }
 
         $this->name = $name;
@@ -285,9 +272,7 @@ class Remote
         $aggBranches = [];
         foreach ($configuredRefs as $branches) {
             foreach ($branches as $branchName => $data) {
-                if (!isset($aggBranches[$branchName])) {
-                    $aggBranches[$branchName] = [];
-                }
+                $aggBranches[$branchName] ??= [];
                 $aggBranches[$branchName] += $data;
             }
         }
@@ -392,17 +377,16 @@ class Remote
      * @param string $remoteString remote line output
      *
      * @throws \InvalidArgumentException
-     * @return array
      */
     public static function getMatches(string $remoteString): array
     {
         $matches = [];
         preg_match('/^(\S+)\s*(\S[^\( ]+)\s*\((.+)\)$/', trim($remoteString), $matches);
-        if (empty($matches)) {
+        if ($matches === []) {
             throw new \InvalidArgumentException(sprintf('the remote string is not valid: %s', $remoteString));
         }
 
-        return array_map('trim', $matches);
+        return array_map(trim(...), $matches);
     }
 
     /**
@@ -427,8 +411,6 @@ class Remote
 
     /**
      * name getter
-     *
-     * @return string
      */
     public function getName(): string
     {
@@ -437,8 +419,6 @@ class Remote
 
     /**
      * fetchURL getter
-     *
-     * @return string
      */
     public function getFetchURL(): string
     {
@@ -457,8 +437,6 @@ class Remote
 
     /**
      * pushURL getter
-     *
-     * @return string
      */
     public function getPushURL(): string
     {
@@ -477,8 +455,6 @@ class Remote
 
     /**
      * remote HEAD branch getter
-     *
-     * @return string
      */
     public function getRemoteHEAD(): string
     {
@@ -497,8 +473,6 @@ class Remote
 
     /**
      * get structured representation of branches
-     *
-     * @return array
      */
     public function getBranches(): array
     {
@@ -507,8 +481,6 @@ class Remote
 
     /**
      * set structured representation of branches
-     *
-     * @param array $branches
      */
     public function setBranches(array $branches): void
     {

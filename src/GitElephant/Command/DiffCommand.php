@@ -48,10 +48,9 @@ class DiffCommand extends BaseCommand
      *
      * @param TreeishInterface      $of   the reference to diff
      * @param TreeishInterface|null $with the source reference to diff with $of, if not specified is the current HEAD
-     * @param string|null                 $path the path to diff, if not specified the full repository
+     * @param string|\GitElephant\Objects\NodeObject|null $path the path to diff, if not specified the full repository
      *
      * @throws \RuntimeException
-     * @return string
      */
     public function diff($of, $with = null, $path = null): string
     {

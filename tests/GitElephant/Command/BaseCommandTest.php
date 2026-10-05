@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * User: matteo
  * Date: 20/05/13
  * Time: 21.47
  * Just for fun...
  */
-
 namespace GitElephant\Command;
 
 use GitElephant\TestCase;
@@ -16,17 +17,15 @@ use GitElephant\TestCase;
  *
  * @package GitElephant\Command
  */
-class BaseCommandTest extends TestCase
+final class BaseCommandTest extends TestCase
 {
     /**
      * test class constructor
-     *
-     * @covers GitElephant\Command\BaseCommand::__construct
      */
     public function testConstructor(): void
     {
         $bc1 = new BaseCommand();
-        $this->assertInstanceOf("\\GitElephant\\Command\\BaseCommand", $bc1);
+        $this->assertInstanceOf(\GitElephant\Command\BaseCommand::class, $bc1);
 
         $repo = $this->getRepository();
 
@@ -48,27 +47,22 @@ class BaseCommandTest extends TestCase
         $ref_bc = new \ReflectionClass($bc2);
 
         $ref_bc_cfg_prop = $ref_bc->getProperty('globalConfigs');
-        $ref_bc_cfg_prop->setAccessible(true);
         $this->assertSame($configs, $ref_bc_cfg_prop->getValue($bc2));
 
         $ref_bc_opt_prop = $ref_bc->getProperty('globalOptions');
-        $ref_bc_opt_prop->setAccessible(true);
         $this->assertSame($options, $ref_bc_opt_prop->getValue($bc2));
 
         $ref_bc_arg_prop = $ref_bc->getProperty('globalCommandArguments');
-        $ref_bc_arg_prop->setAccessible(true);
         $this->assertSame($arguments, $ref_bc_arg_prop->getValue($bc2));
     }
 
     /**
      * test static factory
-     *
-     * @covers GitElephant\Command\BaseCommand::getInstance
      */
     public function testGetInstance(): void
     {
         $bc = BaseCommand::getInstance();
-        $this->assertInstanceOf("\\GitElephant\\Command\\BaseCommand", $bc);
+        $this->assertInstanceOf(\GitElephant\Command\BaseCommand::class, $bc);
     }
 
     public function testAddGlobalConfigs(): void
@@ -78,11 +72,9 @@ class BaseCommandTest extends TestCase
         $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_cfg_prop = $ref_bc->getProperty('globalConfigs');
-        $ref_bc_cfg_prop->setAccessible(true);
         $this->assertEmpty($ref_bc_cfg_prop->getValue($bc));
 
         $ref_bc_cfg_meth = $ref_bc->getMethod('addGlobalConfigs');
-        $ref_bc_cfg_meth->setAccessible(true);
         $ref_bc_cfg_meth->invoke($bc, $configs);
         $this->assertSame($configs, $ref_bc_cfg_prop->getValue($bc));
     }
@@ -94,11 +86,9 @@ class BaseCommandTest extends TestCase
         $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_opt_prop = $ref_bc->getProperty('globalOptions');
-        $ref_bc_opt_prop->setAccessible(true);
         $this->assertEmpty($ref_bc_opt_prop->getValue($bc));
 
         $ref_bc_opt_meth = $ref_bc->getMethod('addGlobalOptions');
-        $ref_bc_opt_meth->setAccessible(true);
         $ref_bc_opt_meth->invoke($bc, $options);
         $this->assertSame($options, $ref_bc_opt_prop->getValue($bc));
     }
@@ -110,11 +100,9 @@ class BaseCommandTest extends TestCase
         $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_arg_prop = $ref_bc->getProperty('globalCommandArguments');
-        $ref_bc_arg_prop->setAccessible(true);
         $this->assertEmpty($ref_bc_arg_prop->getValue($bc));
 
         $ref_bc_arg_meth = $ref_bc->getMethod('addGlobalCommandArgument');
-        $ref_bc_arg_meth->setAccessible(true);
         foreach ($arguments as $argument) {
             $ref_bc_arg_meth->invoke($bc, $argument);
         }
@@ -128,11 +116,9 @@ class BaseCommandTest extends TestCase
         $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_arg_prop = $ref_bc->getProperty('commandName');
-        $ref_bc_arg_prop->setAccessible(true);
         $ref_bc_arg_prop->setValue($bc, $name);
 
         $ref_bc_cli_meth = $ref_bc->getMethod('getCommand');
-        $ref_bc_cli_meth->setAccessible(true);
 
         $expected = $name;
         $actual = $ref_bc_cli_meth->invoke($bc);
@@ -156,11 +142,9 @@ class BaseCommandTest extends TestCase
         $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_arg_prop = $ref_bc->getProperty('globalCommandArguments');
-        $ref_bc_arg_prop->setAccessible(true);
         $ref_bc_arg_prop->setValue($bc, $args);
 
         $ref_bc_cli_meth = $ref_bc->getMethod('getCLICommandArguments');
-        $ref_bc_cli_meth->setAccessible(true);
 
         $expected = '';
         foreach ($args as $argument) {
@@ -177,11 +161,9 @@ class BaseCommandTest extends TestCase
         $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_arg_prop = $ref_bc->getProperty('commandName');
-        $ref_bc_arg_prop->setAccessible(true);
         $ref_bc_arg_prop->setValue($bc, $name);
 
         $ref_bc_cli_meth = $ref_bc->getMethod('getCLICommandName');
-        $ref_bc_cli_meth->setAccessible(true);
 
         $expected = " $name";
         $actual = $ref_bc_cli_meth->invoke($bc);
@@ -198,15 +180,12 @@ class BaseCommandTest extends TestCase
         $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_glob_cfg_prop = $ref_bc->getProperty('globalConfigs');
-        $ref_bc_glob_cfg_prop->setAccessible(true);
         $ref_bc_glob_cfg_prop->setValue($bc, $globals);
 
         $ref_bc_loc_cfg_prop = $ref_bc->getProperty('configs');
-        $ref_bc_loc_cfg_prop->setAccessible(true);
         $ref_bc_loc_cfg_prop->setValue($bc, $locals);
 
         $ref_bc_cli_meth = $ref_bc->getMethod('getCLIConfigs');
-        $ref_bc_cli_meth->setAccessible(true);
 
         $expected = '';
         foreach ($configs as $name => $value) {
@@ -223,11 +202,9 @@ class BaseCommandTest extends TestCase
         $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_opt_prop = $ref_bc->getProperty('globalOptions');
-        $ref_bc_opt_prop->setAccessible(true);
         $ref_bc_opt_prop->setValue($bc, $options);
 
         $ref_bc_cli_meth = $ref_bc->getMethod('getCLIGlobalOptions');
-        $ref_bc_cli_meth->setAccessible(true);
 
         $expected = '';
         foreach ($options as $name => $value) {
@@ -244,11 +221,9 @@ class BaseCommandTest extends TestCase
         $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_path_prop = $ref_bc->getProperty('path');
-        $ref_bc_path_prop->setAccessible(true);
         $ref_bc_path_prop->setValue($bc, $path);
 
         $ref_bc_cli_meth = $ref_bc->getMethod('getCLIPath');
-        $ref_bc_cli_meth->setAccessible(true);
 
         $expected = " -- '$path'";
         $actual = $ref_bc_cli_meth->invoke($bc);
@@ -263,15 +238,12 @@ class BaseCommandTest extends TestCase
         $ref_bc = new \ReflectionClass($bc);
 
         $ref_bc_subj1_prop = $ref_bc->getProperty('commandSubject');
-        $ref_bc_subj1_prop->setAccessible(true);
         $ref_bc_subj1_prop->setValue($bc, $subject1);
 
         $ref_bc_subj2_prop = $ref_bc->getProperty('commandSubject2');
-        $ref_bc_subj2_prop->setAccessible(true);
         $ref_bc_subj2_prop->setValue($bc, $subject2);
 
         $ref_bc_cli_meth = $ref_bc->getMethod('getCLISubjects');
-        $ref_bc_cli_meth->setAccessible(true);
 
         $expected = " '$subject1' '$subject2'";
         $actual = $ref_bc_cli_meth->invoke($bc);

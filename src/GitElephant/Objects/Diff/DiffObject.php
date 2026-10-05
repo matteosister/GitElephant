@@ -27,7 +27,7 @@ use GitElephant\Utilities;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class DiffObject implements \ArrayAccess, \Countable, \Iterator
+class DiffObject implements \ArrayAccess, \Countable, \Iterator, \Stringable
 {
     public const MODE_INDEX = 'index';
     public const MODE_MODE = 'mode';
@@ -107,7 +107,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
         if ($this->mode === self::MODE_INDEX || $this->mode === self::MODE_NEW_FILE) {
             $lines = array_slice($lines, $sliceIndex);
-            if (!empty($lines)) {
+            if ($lines !== []) {
                 $this->findChunks($lines);
             }
         }
@@ -115,8 +115,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * toString magic method
-     *
-     * @return string
      */
     public function __toString(): string
     {
@@ -194,8 +192,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * chunks getter
-     *
-     * @return array
      */
     public function getChunks(): array
     {
@@ -204,8 +200,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * destinationPath getter
-     *
-     * @return string
      */
     public function getDestinationPath(): string
     {
@@ -214,8 +208,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * mode getter
-     *
-     * @return string
      */
     public function getMode(): string
     {
@@ -224,8 +216,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * originalPath getter
-     *
-     * @return string
      */
     public function getOriginalPath(): string
     {
@@ -234,8 +224,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Check if path has changed (file was renamed)
-     *
-     * @return bool
      */
     public function hasPathChanged(): bool
     {
@@ -245,7 +233,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
     /**
      * Get similarity index
      *
-     * @return int
      * @throws \RuntimeException if not a rename
      */
     public function getSimilarityIndex(): int
@@ -261,8 +248,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      * ArrayAccess interface
      *
      * @param int $offset offset
-     *
-     * @return bool
      */
     public function offsetExists($offset): bool
     {
@@ -273,12 +258,10 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
      * ArrayAccess interface
      *
      * @param int $offset offset
-     *
-     * @return DiffChunk|null
      */
     public function offsetGet($offset): ?DiffChunk
     {
-        return isset($this->chunks[$offset]) ? $this->chunks[$offset] : null;
+        return $this->chunks[$offset] ?? null;
     }
 
     /**
@@ -308,8 +291,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Countable interface
-     *
-     * @return int
      */
     public function count(): int
     {
@@ -318,8 +299,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return DiffChunk|null
      */
     public function current(): ?DiffChunk
     {
@@ -336,8 +315,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return int
      */
     public function key(): int
     {
@@ -346,8 +323,6 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator
 
     /**
      * Iterator interface
-     *
-     * @return bool
      */
     public function valid(): bool
     {

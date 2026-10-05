@@ -86,7 +86,7 @@ class CloneCommand extends BaseCommand
             $this->addCommandArgument('--depth=' . $depth);
             // shallow-submodules is a nice to have feature. Just ignoring if git version not high enough
             // It would be nice if this had a logger injected for us to log notices
-            if (version_compare($version, '2.9.0', '>=') && $recursive && 1 == $depth) {
+            if (version_compare($version, '2.9.0', '>=') && $recursive && 1 === $depth) {
                 $this->addCommandArgument('--shallow-submodules');
             }
         }
