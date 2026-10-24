@@ -130,8 +130,9 @@ class Branch extends NodeObject implements TreeishInterface
     /**
      * Class constructor
      *
-     * @param \GitElephant\Repository $repository repository instance
-     * @param string                  $name       branch name
+     * @param \GitElephant\Repository $repository        repository instance
+     * @param string                  $name              branch name
+     * @param bool                    $createFromCommand whether to populate branch properties from git command
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
