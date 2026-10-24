@@ -68,6 +68,102 @@ final class DiffTest extends TestCase
         $this->assertSame(4, $chunk[4]->getOriginNumber());
     }
 
+    public function testDiffFileModeChangeWithContentChange(): void
+    {
+        $this->getRepository()->init(false, 'master');
+        $this->addFile('script.sh', null, "#!/bin/sh\necho 'hello'\n");
+        $this->getRepository()->commit('commit1', true);
+
+        chmod($this->path . DIRECTORY_SEPARATOR . 'script.sh', 0755);
+        $this->updateFile('script.sh', "#!/bin/sh\necho 'hello world'\n");
+        $this->getRepository()->commit('commit2', true);
+        $commit = $this->getRepository()->getCommit();
+
+        $diff = Diff::create($this->getRepository(), $commit);
+
+        $this->assertCount(1, $diff);
+        $object = $diff[0];
+        $this->assertInstanceOf(DiffObject::class, $object);
+        $this->assertSame(DiffObject::MODE_MODE, $object->getMode());
+        $this->assertCount(1, $object);
+        $chunk = $object[0];
+        $this->assertInstanceOf(DiffChunk::class, $chunk);
+        $this->assertGreaterThan(0, count($chunk));
+    }
+
+    public function testDiffFileModeChangeWithoutContentChange(): void
+    {
+        $this->getRepository()->init(false, 'master');
+        $this->addFile('script.sh', null, "#!/bin/sh\necho 'hello'\n");
+        $this->getRepository()->commit('commit1', true);
+
+        chmod($this->path . DIRECTORY_SEPARATOR . 'script.sh', 0755);
+        $this->getRepository()->commit('commit2', true);
+        $commit = $this->getRepository()->getCommit();
+
+        $diff = Diff::create($this->getRepository(), $commit);
+
+        $this->assertCount(1, $diff);
+        $object = $diff[0];
+        $this->assertInstanceOf(DiffObject::class, $object);
+        $this->assertSame(DiffObject::MODE_MODE, $object->getMode());
+        $this->assertCount(0, $object);
+        $this->assertSame([], $object->getChunks());
+    }
+
+    public function testDiffObjectFileModeChangeWithContentChange(): void
+    {
+        $lines = [
+            'diff --git SRC/.env.example DST/.env.example',
+            'old mode 100644',
+            'new mode 100755',
+            'index 214b462..fbb124e 100755',
+            '--- SRC/.env.example',
+            '+++ DST/.env.example',
+            '@@ -1,5 +1,6 @@',
+            ' line 1',
+            '+line 2',
+        ];
+        $object = new DiffObject($lines);
+        $this->assertSame(DiffObject::MODE_MODE, $object->getMode());
+        $this->assertCount(1, $object);
+        $this->assertSame('.env.example', $object->getOriginalPath());
+        $this->assertSame('.env.example', $object->getDestinationPath());
+    }
+
+    public function testDiffObjectFileModeChangeWithoutContentChange(): void
+    {
+        $lines = [
+            'diff --git SRC/.env.example DST/.env.example',
+            'old mode 100644',
+            'new mode 100755',
+        ];
+        $object = new DiffObject($lines);
+        $this->assertSame(DiffObject::MODE_MODE, $object->getMode());
+        $this->assertCount(0, $object);
+        $this->assertSame([], $object->getChunks());
+    }
+
+    public function testDiffObjectModeFallbackWhenUnmatched(): void
+    {
+        $lines = [
+            'diff --git SRC/file DST/file',
+            'unknown header',
+        ];
+        $object = new DiffObject($lines);
+        $this->assertSame('', $object->getMode());
+    }
+
+    public function testDiffObjectNewModeOnly(): void
+    {
+        $lines = [
+            'diff --git SRC/file DST/file',
+            'new mode 100755',
+        ];
+        $object = new DiffObject($lines);
+        $this->assertSame(DiffObject::MODE_MODE, $object->getMode());
+    }
+
     private function assertArrayInterfaces($obj): void
     {
         $this->assertInstanceOf('\Iterator', $obj);
