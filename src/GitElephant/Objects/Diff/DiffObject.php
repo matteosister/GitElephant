@@ -109,7 +109,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator, \Stringable
             }
         }
 
-        if ($this->mode === self::MODE_INDEX || $this->mode === self::MODE_NEW_FILE || $this->mode === self::MODE_MODE) {
+        if (in_array($this->mode, [self::MODE_INDEX, self::MODE_NEW_FILE, self::MODE_MODE], true)) {
             $chunkStartIndex = null;
             foreach ($lines as $index => $line) {
                 if (preg_match('/^@@ -(\d+,\d+)|(\d+) \+(\d+,\d+)|(\d+) @@(.*)$/', $line) === 1) {
