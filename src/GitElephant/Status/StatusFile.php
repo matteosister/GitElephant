@@ -84,11 +84,17 @@ class StatusFile
         return new self($x, $y, $name, $renamed);
     }
 
+    /**
+     * Check if the file is renamed
+     */
     public function isRenamed(): bool
     {
         return $this->renamed !== null;
     }
 
+    /**
+     * Check if the file represents a merge conflict or unmerged state
+     */
     public function isConflict(): bool
     {
         $x = $this->x ?? ' ';
@@ -99,6 +105,9 @@ class StatusFile
             || $y === self::UPDATED_BUT_UNMERGED;
     }
 
+    /**
+     * Alias for isConflict()
+     */
     public function isUnmerged(): bool
     {
         return $this->isConflict();
