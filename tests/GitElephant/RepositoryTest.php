@@ -776,8 +776,8 @@ final class RepositoryTest extends TestCase
         $this->assertNotEmpty($r2->getBranches(false, true));
         $remoteBranch = $r2->getBranch('remotes/origin/tag-test', true);
         $this->assertInstanceOf(\GitElephant\Objects\Branch::class, $remoteBranch);
-        $this->assertEquals('remotes/origin/tag-test', $remoteBranch->getName());
-        $this->assertEquals('refs/remotes/origin/tag-test', $remoteBranch->getFullRef());
+        $this->assertSame('remotes/origin/tag-test', $remoteBranch->getName());
+        $this->assertSame('refs/remotes/origin/tag-test', $remoteBranch->getFullRef());
         $r2->fetch(null, null, true);
         $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $r2->getTag('test-tag'));
     }
