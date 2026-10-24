@@ -138,6 +138,35 @@ class Status
     }
 
     /**
+     * unmerged / merge conflict files
+     *
+     * @return Sequence<StatusFile>
+     */
+    public function conflicts(): \GitElephant\Sequence\Sequence
+    {
+        if (!$this->files) {
+            return new Sequence();
+        }
+
+        return new Sequence(
+            array_filter(
+                $this->files,
+                fn (StatusFile $statusFile) => $statusFile->isConflict()
+            )
+        );
+    }
+
+    /**
+     * alias for conflicts()
+     *
+     * @return Sequence<StatusFile>
+     */
+    public function unmerged(): \GitElephant\Sequence\Sequence
+    {
+        return $this->conflicts();
+    }
+
+    /**
      * create objects from command output
      * https://www.kernel.org/pub/software/scm/git/docs/git-status.html in the output section
      *

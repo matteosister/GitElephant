@@ -38,12 +38,12 @@ class StatusFile
     public const UPDATED_BUT_UNMERGED = 'U';
 
     /**
-     * @var string
+     * @var string|null
      */
     private $x;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $y;
 
@@ -87,6 +87,21 @@ class StatusFile
     public function isRenamed(): bool
     {
         return $this->renamed !== null;
+    }
+
+    public function isConflict(): bool
+    {
+        $x = $this->x ?? ' ';
+        $y = $this->y ?? ' ';
+
+        return (bool) preg_match('/^(DD|AU|UD|UA|DU|AA|UU)$/', $x . $y)
+            || $x === self::UPDATED_BUT_UNMERGED
+            || $y === self::UPDATED_BUT_UNMERGED;
+    }
+
+    public function isUnmerged(): bool
+    {
+        return $this->isConflict();
     }
 
     /**
