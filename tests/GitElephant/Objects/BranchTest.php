@@ -125,4 +125,25 @@ final class BranchTest extends TestCase
         Branch::create($this->repository, 'test-branch2', 'test-branch');
         $this->assertCount(3, $this->repository->getBranches(true));
     }
+
+    public function testCreateFromOutputLine(): void
+    {
+        $this->getRepository()->init(false, 'master');
+        $this->addFile('test');
+        $this->repository->commit('test commit', true);
+
+        $line = '* master 45eac8c31adfbbf633824cee6ce8cc5040b33513 test message';
+        $branch = Branch::createFromOutputLine($this->getRepository(), $line);
+        $this->assertSame('master', $branch->getName());
+        $this->assertSame('45eac8c31adfbbf633824cee6ce8cc5040b33513', $branch->getSha());
+        $this->assertSame('test message', $branch->getComment());
+        $this->assertTrue($branch->getCurrent());
+        $this->assertSame('refs/heads/master', $branch->getFullRef());
+
+        $remoteLine = '  remotes/origin/main 45eac8c31adfbbf633824cee6ce8cc5040b33513 remote commit';
+        $remoteBranch = Branch::createFromOutputLine($this->getRepository(), $remoteLine);
+        $this->assertSame('remotes/origin/main', $remoteBranch->getName());
+        $this->assertSame('refs/remotes/origin/main', $remoteBranch->getFullRef());
+        $this->assertFalse($remoteBranch->getCurrent());
+    }
 }
