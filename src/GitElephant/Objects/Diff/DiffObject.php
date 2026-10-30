@@ -91,24 +91,35 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator, \Stringable
 
         $this->findPath($lines[0]);
 
-        $sliceIndex = 4;
-
         if ($this->hasPathChanged()) {
-            $this->findSimilarityIndex($lines[1]);
+            if (isset($lines[1])) {
+                $this->findSimilarityIndex($lines[1]);
+            }
             if (isset($lines[4]) && !empty($lines[4])) {
                 $this->findMode($lines[4]);
-                $sliceIndex = 7;
             } else {
                 $this->mode = self::MODE_RENAMED;
             }
         } else {
-            $this->findMode($lines[1]);
+            if (isset($lines[1])) {
+                $this->findMode($lines[1]);
+            }
+            if ($this->mode === null && isset($lines[2])) {
+                $this->findMode($lines[2]);
+            }
         }
 
-        if ($this->mode === self::MODE_INDEX || $this->mode === self::MODE_NEW_FILE) {
-            $lines = array_slice($lines, $sliceIndex);
-            if ($lines !== []) {
-                $this->findChunks($lines);
+        if (in_array($this->mode, [self::MODE_INDEX, self::MODE_NEW_FILE, self::MODE_MODE], true)) {
+            $chunkStartIndex = null;
+            foreach ($lines as $index => $line) {
+                if (preg_match('/^@@ -(\d+,\d+)|(\d+) \+(\d+,\d+)|(\d+) @@(.*)$/', $line) === 1) {
+                    $chunkStartIndex = $index;
+                    break;
+                }
+            }
+
+            if ($chunkStartIndex !== null) {
+                $this->findChunks(array_slice($lines, $chunkStartIndex));
             }
         }
     }
@@ -164,7 +175,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator, \Stringable
             $this->mode = self::MODE_INDEX;
         }
 
-        if (preg_match('/^mode (.*)\.\.(.*) (.*)$/', $line)) {
+        if (preg_match('/^old mode (.*)$/', $line) || preg_match('/^new mode (.*)$/', $line) || preg_match('/^mode (.*)\.\.(.*) (.*)$/', $line)) {
             $this->mode = self::MODE_MODE;
         }
 
@@ -211,7 +222,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator, \Stringable
      */
     public function getMode(): string
     {
-        return $this->mode;
+        return $this->mode ?? '';
     }
 
     /**
