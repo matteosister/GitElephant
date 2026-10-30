@@ -437,16 +437,22 @@ class Repository
                 ->execute(BranchCommand::getInstance($this)->listBranches($all, true))
                 ->getOutputLines(true);
 
-            $branches = array_map(
-                fn ($v) => ltrim($v, '* '),
-                $outputLines
-            );
+            $branches = [];
+            foreach ($outputLines as $line) {
+                if (str_contains($line, '->')) {
+                    continue;
+                }
+                $branches[] = ltrim($line, '* ');
+            }
         } else {
             $outputLines = $this->caller
                 ->execute(BranchCommand::getInstance($this)->listBranches($all))
                 ->getOutputLines(true);
 
             foreach ($outputLines as $branchLine) {
+                if (str_contains($branchLine, '->')) {
+                    continue;
+                }
                 $branches[] = Branch::createFromOutputLine($this, $branchLine);
             }
         }
@@ -476,15 +482,16 @@ class Repository
      * Retrieve a Branch object by a branch name
      *
      * @param string $name The branch name
+     * @param bool   $all  Search in all branches (including remotes)
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function getBranch(string $name): ?\GitElephant\Objects\Branch
+    public function getBranch(string $name, bool $all = false): ?\GitElephant\Objects\Branch
     {
         /** @var Branch $branch */
-        foreach ($this->getBranches() as $branch) {
+        foreach ($this->getBranches(false, $all) as $branch) {
             if ($branch->getName() === $name) {
                 return $branch;
             }

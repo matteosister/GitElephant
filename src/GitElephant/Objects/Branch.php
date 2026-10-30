@@ -104,7 +104,7 @@ class Branch extends NodeObject implements TreeishInterface
     public static function createFromOutputLine(Repository $repository, string $outputLine): \GitElephant\Objects\Branch
     {
         $matches = static::getMatches($outputLine);
-        $branch = new self($repository, $matches[1]);
+        $branch = new self($repository, $matches[1], false);
         $branch->parseOutputLine($outputLine);
 
         return $branch;
@@ -130,20 +130,25 @@ class Branch extends NodeObject implements TreeishInterface
     /**
      * Class constructor
      *
-     * @param \GitElephant\Repository $repository repository instance
-     * @param string                  $name       branch name
+     * @param \GitElephant\Repository $repository        repository instance
+     * @param string                  $name              branch name
+     * @param bool                    $createFromCommand whether to populate branch properties from git command
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      * @throws \GitElephant\Exception\InvalidBranchNameException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function __construct(Repository $repository, string $name)
+    public function __construct(Repository $repository, string $name, bool $createFromCommand = true)
     {
         $this->repository = $repository;
         $this->name = trim($name);
-        $this->fullRef = 'refs/heads/' . $name;
-        $this->createFromCommand();
+        $this->fullRef = str_starts_with($this->name, 'remotes/')
+            ? 'refs/' . $this->name
+            : 'refs/heads/' . $this->name;
+        if ($createFromCommand) {
+            $this->createFromCommand();
+        }
     }
 
     /**
