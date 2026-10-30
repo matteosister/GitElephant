@@ -66,6 +66,37 @@ final class DiffTest extends TestCase
         $this->assertSame(2, $chunk[1]->getOriginNumber());
         $this->assertSame(3, $chunk[4]->getDestNumber());
         $this->assertSame(4, $chunk[4]->getOriginNumber());
+
+        $this->assertNotNull($diff->getRaw());
+        $this->assertStringContainsString('content line 2 changed', $diff->getRaw());
+        $this->assertSame($diff->getRaw(), (string) $diff);
+    }
+
+    public function testRawDiff(): void
+    {
+        $this->getRepository()->init(false, 'master');
+        $this->addFile('foo', null, "content line 1\ncontent line 2\ncontent line 3");
+        $this->getRepository()->commit('commit1', true);
+        $this->addFile('foo', null, "content line 1\ncontent line 2 changed");
+        $this->getRepository()->commit('commit2', true);
+        $commit = $this->getRepository()->getCommit();
+
+        $diff = Diff::create($this->getRepository(), $commit);
+
+        $this->assertInstanceOf(\Stringable::class, $diff);
+        $this->assertIsString($diff->getRaw());
+        $this->assertStringContainsString('diff --git', $diff->getRaw());
+        $this->assertStringContainsString('-content line 2', $diff->getRaw());
+        $this->assertStringContainsString('+content line 2 changed', $diff->getRaw());
+        $this->assertSame($diff->getRaw(), (string) $diff);
+
+        $emptyDiff = new Diff($this->getRepository());
+        $this->assertNull($emptyDiff->getRaw());
+        $this->assertSame('', (string) $emptyDiff);
+
+        $customDiff = new Diff($this->getRepository(), [], 'custom raw diff');
+        $this->assertSame('custom raw diff', $customDiff->getRaw());
+        $this->assertSame('custom raw diff', (string) $customDiff);
     }
 
     private function assertArrayInterfaces($obj): void

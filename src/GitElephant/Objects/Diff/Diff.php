@@ -32,7 +32,7 @@ use GitElephant\Utilities;
  *
  * @author Matteo Giachino <matteog@gmail.com>
  */
-class Diff implements \ArrayAccess, \Countable, \Iterator
+class Diff implements \ArrayAccess, \Countable, \Iterator, \Stringable
 {
     /**
      * the cursor position
@@ -71,12 +71,16 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
      *
      * @param \GitElephant\Repository $repository  repository instance
      * @param array<DiffObject>                  $diffObjects  array of diff objects
+     * @param string|null                        $raw          raw diff output
      */
-    public function __construct(private Repository $repository, /**
-     * DiffObject instances
-     */
-        private array $diffObjects = [])
-    {
+    public function __construct(
+        private Repository $repository,
+        /**
+         * DiffObject instances
+         */
+        private array $diffObjects = [],
+        private ?string $raw = null
+    ) {
         $this->position = 0;
     }
 
@@ -115,8 +119,9 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
             $command = DiffCommand::getInstance($this->repository)->diff($commit1, $commit2, $path);
         }
 
-        $outputLines = $this->getCaller()->execute($command)->getOutputLines();
-        $this->parseOutputLines($outputLines);
+        $callerOutput = $this->getCaller()->execute($command);
+        $this->raw = $callerOutput->getOutput();
+        $this->parseOutputLines($callerOutput->getOutputLines());
     }
 
     /**
@@ -157,6 +162,22 @@ class Diff implements \ArrayAccess, \Countable, \Iterator
     public function getRepository(): \GitElephant\Repository
     {
         return $this->repository;
+    }
+
+    /**
+     * Raw diff output getter
+     */
+    public function getRaw(): ?string
+    {
+        return $this->raw;
+    }
+
+    /**
+     * toString magic method
+     */
+    public function __toString(): string
+    {
+        return $this->raw ?? '';
     }
 
     /**
