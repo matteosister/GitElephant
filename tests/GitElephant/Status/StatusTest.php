@@ -200,6 +200,90 @@ On new git version this is not happening anymore.'
     }
 
     /**
+     * conflicts / unmerged files
+     */
+    public function testConflicts(): void
+    {
+        $status = $this->repository->getStatus();
+        $this->assertCount(0, $status->conflicts());
+        $this->assertCount(0, $status->unmerged());
+
+        $this->getRepository()->createBranch('branch2');
+        $this->getRepository()->checkout('branch2');
+        $this->updateFile('initial', 'branch2 content');
+        $this->getRepository()->commit('branch2 commit', true);
+
+        $this->getRepository()->checkout('master');
+        $this->updateFile('initial', 'master content');
+        $this->getRepository()->commit('master commit', true);
+
+        try {
+            $this->getRepository()->merge($this->getRepository()->getBranch('branch2'));
+        } catch (\RuntimeException) {
+            // merge conflict causes git merge to return non-zero exit code
+        }
+
+        $s = $this->repository->getStatus();
+        $this->assertCount(1, $s->conflicts());
+        $this->assertCount(1, $s->unmerged());
+        $this->assertEquals('initial', $s->conflicts()->first()->get()->getName());
+        $this->assertTrue($s->conflicts()->first()->get()->isConflict());
+        $this->assertTrue($s->conflicts()->first()->get()->isUnmerged());
+        $this->assertInterfaces($s->conflicts());
+        $this->assertContainsOnlyInstancesOf(StatusFile::class, $s->conflicts());
+
+        $wt = $this->repository->getWorkingTreeStatus();
+        $index = $this->repository->getIndexStatus();
+        $this->assertCount(1, $wt->conflicts());
+        $this->assertCount(1, $index->conflicts());
+        $this->assertCount(1, $wt->unmerged());
+        $this->assertCount(1, $index->unmerged());
+    }
+
+    /**
+     * test StatusFile isConflict / isUnmerged
+     */
+    public function testStatusFileIsConflict(): void
+    {
+        $conflictStatuses = [
+            ['D', 'D'],
+            ['A', 'U'],
+            ['U', 'D'],
+            ['U', 'A'],
+            ['D', 'U'],
+            ['A', 'A'],
+            ['U', 'U'],
+            ['U', ' '],
+            [' ', 'U'],
+        ];
+
+        foreach ($conflictStatuses as [$x, $y]) {
+            $file = StatusFile::create($x, $y, 'file');
+            $this->assertTrue($file->isConflict(), sprintf('Expected %s%s to be conflict', $x, $y));
+            $this->assertTrue($file->isUnmerged(), sprintf('Expected %s%s to be unmerged', $x, $y));
+        }
+
+        $nonConflictStatuses = [
+            [' ', 'M'],
+            ['M', ' '],
+            ['M', 'M'],
+            ['A', ' '],
+            [' ', 'D'],
+            ['D', ' '],
+            ['R', ' '],
+            ['C', ' '],
+            ['?', '?'],
+            [' ', ' '],
+        ];
+
+        foreach ($nonConflictStatuses as [$x, $y]) {
+            $file = StatusFile::create($x, $y, 'file');
+            $this->assertFalse($file->isConflict(), sprintf('Expected %s%s not to be conflict', $x, $y));
+            $this->assertFalse($file->isUnmerged(), sprintf('Expected %s%s not to be unmerged', $x, $y));
+        }
+    }
+
+    /**
      * @param mixed $subject
      */
     private function assertInterfaces($subject): void
