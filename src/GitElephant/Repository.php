@@ -1045,8 +1045,6 @@ class Repository
      *
      * @param Remote|string|null $to
      * @param Branch|string|null $ref
-     * @param string|null        $args
-     * @param bool               $tags
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException

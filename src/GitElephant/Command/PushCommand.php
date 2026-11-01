@@ -45,8 +45,6 @@ class PushCommand extends BaseCommand
     /**
      * @param Remote|string      $remote
      * @param Branch|string|null $branch
-     * @param string|null        $args
-     * @param bool               $tags
      *
      * @throws \RuntimeException
      */
