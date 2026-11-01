@@ -52,6 +52,7 @@ final class MergeCommandTest extends TestCase
 
         $this->getRepository()->createTag('v1.0');
         $tag = $this->getRepository()->getTag('v1.0');
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $tag);
         $this->assertEquals("merge 'refs/tags/v1.0'", $mc->merge($tag));
         $this->assertEquals("merge 'refs/tags/v1.0'", $mc->merge('refs/tags/v1.0'));
 

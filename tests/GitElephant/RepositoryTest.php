@@ -329,6 +329,7 @@ final class RepositoryTest extends TestCase
         $this->assertCount(1, $this->getRepository()->getTree());
 
         $tag = $this->getRepository()->getTag('release-1.0');
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $tag);
         $this->getRepository()->merge($tag);
         $this->assertCount(2, $this->getRepository()->getTree());
 

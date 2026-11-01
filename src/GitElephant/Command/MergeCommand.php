@@ -83,7 +83,7 @@ class MergeCommand extends BaseCommand
         } elseif ($with instanceof TreeishInterface) {
             $ref = $with->getSha();
         } else {
-            $ref = (string) $with;
+            $ref = $with;
         }
 
         $this->addCommandSubject($ref);
