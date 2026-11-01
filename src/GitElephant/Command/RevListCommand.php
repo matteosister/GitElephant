@@ -85,8 +85,6 @@ class RevListCommand extends BaseCommand
     /**
      * rev-list left-right count between two branches or references
      *
-     * @param Branch|TreeishInterface|string $left
-     * @param Branch|TreeishInterface|string $right
      *
      * @throws \RuntimeException
      */
@@ -97,8 +95,8 @@ class RevListCommand extends BaseCommand
         $this->addCommandArgument('--left-right');
         $this->addCommandArgument('--count');
 
-        $leftRef = $left instanceof Branch ? $left->getName() : ($left instanceof TreeishInterface ? $left->getSha() : (string) $left);
-        $rightRef = $right instanceof Branch ? $right->getName() : ($right instanceof TreeishInterface ? $right->getSha() : (string) $right);
+        $leftRef = $left instanceof Branch ? $left->getName() : ($left instanceof TreeishInterface ? $left->getSha() : $left);
+        $rightRef = $right instanceof Branch ? $right->getName() : ($right instanceof TreeishInterface ? $right->getSha() : $right);
 
         $this->addCommandSubject(sprintf('%s...%s', $leftRef, $rightRef));
 

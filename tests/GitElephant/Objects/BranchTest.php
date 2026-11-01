@@ -168,6 +168,7 @@ final class BranchTest extends TestCase
         $this->assertSame(2, $counts[1]);
 
         $master = $this->getRepository()->getBranch('master');
+        $this->assertInstanceOf(\GitElephant\Objects\Branch::class, $master);
         $masterCounts = $master->getAheadBehindCount('branch1');
         $this->assertSame(2, $masterCounts['behind']);
         $this->assertSame(0, $masterCounts['ahead']);
