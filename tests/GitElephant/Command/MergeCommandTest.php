@@ -49,6 +49,14 @@ final class MergeCommandTest extends TestCase
             "merge '--no-ff' '-m' 'test msg' 'refs/heads/test'",
             $mc->merge($branch, "test msg", ['--no-ff'])
         );
+
+        $this->getRepository()->createTag('v1.0');
+        $tag = $this->getRepository()->getTag('v1.0');
+        $this->assertEquals("merge 'refs/tags/v1.0'", $mc->merge($tag));
+        $this->assertEquals("merge 'refs/tags/v1.0'", $mc->merge('refs/tags/v1.0'));
+
+        $commit = $this->getRepository()->getCommit();
+        $this->assertEquals(sprintf("merge '%s'", $commit->getSha()), $mc->merge($commit));
     }
 
     /**

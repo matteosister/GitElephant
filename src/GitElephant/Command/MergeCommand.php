@@ -21,6 +21,8 @@
 namespace GitElephant\Command;
 
 use GitElephant\Objects\Branch;
+use GitElephant\Objects\Tag;
+use GitElephant\Objects\TreeishInterface;
 use GitElephant\Repository;
 
 /**
@@ -48,13 +50,13 @@ class MergeCommand extends BaseCommand
     /**
      * Generate a merge command
      *
-     * @param \GitElephant\Objects\Branch $with    the branch to merge
-     * @param string                      $message a message for the merge commit, if merge is 3-way
-     * @param array                       $options option flags for git merge
+     * @param Branch|Tag|TreeishInterface|string $with the branch, tag, treeish or ref to merge
+     * @param string                             $message a message for the merge commit, if merge is 3-way
+     * @param array                              $options option flags for git merge
      *
      * @throws \RuntimeException
      */
-    public function merge(Branch $with, $message = '', array $options = []): string
+    public function merge(Branch|Tag|TreeishInterface|string $with, string $message = '', array $options = []): string
     {
         if (in_array(self::MERGE_OPTION_FF_ONLY, $options) && in_array(self::MERGE_OPTION_NO_FF, $options)) {
             throw new \Symfony\Component\Process\Exception\InvalidArgumentException(
@@ -76,7 +78,15 @@ class MergeCommand extends BaseCommand
             $this->addCommandArgument($message);
         }
 
-        $this->addCommandSubject($with->getFullRef());
+        if ($with instanceof Branch || $with instanceof Tag) {
+            $ref = $with->getFullRef();
+        } elseif ($with instanceof TreeishInterface) {
+            $ref = $with->getSha();
+        } else {
+            $ref = (string) $with;
+        }
+
+        $this->addCommandSubject($ref);
 
         return $this->getCommand();
     }
