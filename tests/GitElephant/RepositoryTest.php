@@ -827,6 +827,10 @@ final class RepositoryTest extends TestCase
 
         $this->assertEquals('test commit', $r3->getLog()->last()->getMessage());
         $this->assertEquals($r1->getMainBranch()->getSha(), $r3->getLog()->last()->getSha());
+
+        $r1->createTag('v1.0.0');
+        $r1->push('origin', tags: true);
+        $this->assertNotNull($r2->getTag('v1.0.0'));
     }
 
     public function testRevParse(): void

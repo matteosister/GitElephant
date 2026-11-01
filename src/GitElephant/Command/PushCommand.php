@@ -43,12 +43,14 @@ class PushCommand extends BaseCommand
     }
 
     /**
-     * @param Remote|string $remote
-     * @param Branch|string $branch
+     * @param Remote|string      $remote
+     * @param Branch|string|null $branch
+     * @param string|null        $args
+     * @param bool               $tags
      *
      * @throws \RuntimeException
      */
-    public function push($remote = 'origin', $branch = 'master', ?string $args = null): string
+    public function push($remote = 'origin', $branch = 'master', ?string $args = null, bool $tags = false): string
     {
         $this->clearAll();
 
@@ -60,11 +62,16 @@ class PushCommand extends BaseCommand
         }
 
         $this->addCommandName(self::GIT_PUSH_COMMAND);
-        $this->addCommandSubject($remote);
-        $this->addCommandSubject2($branch);
-
+        if ($tags) {
+            $this->addCommandArgument('--tags');
+        }
         if (!is_null($args)) {
             $this->addCommandArgument($args);
+        }
+
+        $this->addCommandSubject($remote);
+        if (!is_null($branch)) {
+            $this->addCommandSubject2($branch);
         }
 
         return $this->getCommand();
