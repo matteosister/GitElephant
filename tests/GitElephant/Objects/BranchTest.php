@@ -146,4 +146,34 @@ final class BranchTest extends TestCase
         $this->assertSame('refs/remotes/origin/main', $remoteBranch->getFullRef());
         $this->assertFalse($remoteBranch->getCurrent());
     }
+
+    public function testAheadBehindCount(): void
+    {
+        $this->getRepository()->init(false, 'master');
+        $this->addFile('test1');
+        $this->getRepository()->commit('commit 1', true);
+
+        $branch1 = Branch::create($this->getRepository(), 'branch1');
+
+        $this->getRepository()->checkout('branch1');
+        $this->addFile('test2');
+        $this->getRepository()->commit('commit 2', true);
+        $this->addFile('test3');
+        $this->getRepository()->commit('commit 3', true);
+
+        $counts = $branch1->getAheadBehindCount('master');
+        $this->assertSame(0, $counts['behind']);
+        $this->assertSame(2, $counts['ahead']);
+        $this->assertSame(0, $counts[0]);
+        $this->assertSame(2, $counts[1]);
+
+        $master = $this->getRepository()->getBranch('master');
+        $masterCounts = $master->getAheadBehindCount('branch1');
+        $this->assertSame(2, $masterCounts['behind']);
+        $this->assertSame(0, $masterCounts['ahead']);
+
+        $repoCounts = $this->getRepository()->countCommitsBetween('master', 'branch1');
+        $this->assertSame(0, $repoCounts['behind']);
+        $this->assertSame(2, $repoCounts['ahead']);
+    }
 }

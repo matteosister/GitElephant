@@ -320,4 +320,19 @@ class Branch extends NodeObject implements TreeishInterface
     {
         return $this->fullRef;
     }
+
+    /**
+     * Return the count of commits behind and ahead between another branch (or origin/remote) and this branch.
+     *
+     * @param Branch|TreeishInterface|string|null $compareWith The reference to compare against. If null, defaults to "origin/{$this->name}".
+     *
+     * @throws \RuntimeException
+     * @return array{0: int, 1: int, 'behind': int, 'ahead': int, 'left': int, 'right': int}
+     */
+    public function getAheadBehindCount(Branch|TreeishInterface|string|null $compareWith = null): array
+    {
+        $compareWith ??= 'origin/' . $this->getName();
+
+        return $this->getRepository()->countCommitsBetween($compareWith, $this);
+    }
 }

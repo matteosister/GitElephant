@@ -34,6 +34,7 @@ use GitElephant\Command\PushCommand;
 use GitElephant\Command\RemoteCommand;
 use GitElephant\Command\ResetCommand;
 use GitElephant\Command\RevParseCommand;
+use GitElephant\Command\RevListCommand;
 use GitElephant\Command\StashCommand;
 use GitElephant\Command\SubmoduleCommand;
 use GitElephant\Command\TagCommand;
@@ -311,6 +312,36 @@ class Repository
         $this->caller->execute(RevParseCommand::getInstance()->revParse($arg, $options));
 
         return array_map(trim(...), $this->caller->getOutputLines(true));
+    }
+
+    /**
+     * Return the count of commits behind (left) and ahead (right) between two references or branches.
+     *
+     * In git rev-list --left-right --count left...right:
+     * - 'behind' (or 'left') is the number of commits in $left but not in $right
+     * - 'ahead' (or 'right') is the number of commits in $right but not in $left
+     *
+     * @param Branch|TreeishInterface|string $left  The left/base reference (e.g. origin/master)
+     * @param Branch|TreeishInterface|string $right The right reference (e.g. local master)
+     *
+     * @throws \RuntimeException
+     * @return array{0: int, 1: int, 'behind': int, 'ahead': int, 'left': int, 'right': int}
+     */
+    public function countCommitsBetween(Branch|TreeishInterface|string $left, Branch|TreeishInterface|string $right): array
+    {
+        $output = $this->caller->execute(RevListCommand::getInstance($this)->countBetween($left, $right))->getOutput();
+        $parts = preg_split('/\s+/', trim($output));
+        $behind = isset($parts[0]) && is_numeric($parts[0]) ? (int) $parts[0] : 0;
+        $ahead = isset($parts[1]) && is_numeric($parts[1]) ? (int) $parts[1] : 0;
+
+        return [
+            0 => $behind,
+            1 => $ahead,
+            'behind' => $behind,
+            'ahead' => $ahead,
+            'left' => $behind,
+            'right' => $ahead,
+        ];
     }
 
     /**

@@ -20,8 +20,10 @@
 
 namespace GitElephant\Command;
 
+use GitElephant\Objects\Branch;
 use GitElephant\Objects\Commit;
 use GitElephant\Objects\Tag;
+use GitElephant\Objects\TreeishInterface;
 use GitElephant\Repository;
 
 /**
@@ -76,6 +78,29 @@ class RevListCommand extends BaseCommand
         $this->addCommandName(static::GIT_REVLIST);
         $this->addCommandArgument(sprintf('--max-count=%s', $max));
         $this->addCommandSubject($commit->getSha());
+
+        return $this->getCommand();
+    }
+
+    /**
+     * rev-list left-right count between two branches or references
+     *
+     * @param Branch|TreeishInterface|string $left
+     * @param Branch|TreeishInterface|string $right
+     *
+     * @throws \RuntimeException
+     */
+    public function countBetween(Branch|TreeishInterface|string $left, Branch|TreeishInterface|string $right): string
+    {
+        $this->clearAll();
+        $this->addCommandName(static::GIT_REVLIST);
+        $this->addCommandArgument('--left-right');
+        $this->addCommandArgument('--count');
+
+        $leftRef = $left instanceof Branch ? $left->getName() : ($left instanceof TreeishInterface ? $left->getSha() : (string) $left);
+        $rightRef = $right instanceof Branch ? $right->getName() : ($right instanceof TreeishInterface ? $right->getSha() : (string) $right);
+
+        $this->addCommandSubject(sprintf('%s...%s', $leftRef, $rightRef));
 
         return $this->getCommand();
     }
