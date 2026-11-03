@@ -532,18 +532,18 @@ class Repository
     }
 
     /**
-     * Merge a Branch in the current checked out branch
+     * Merge a Branch, Tag, Treeish or ref in the current checked out branch
      *
-     * @param Objects\Branch $branch  The branch to merge in the current checked out branch
-     * @param string         $message The message for the merge commit, if merge is 3-way
-     * @param string         $mode    The merge mode: ff-only, no-ff or auto
+     * @param Branch|Tag|TreeishInterface|string $branch The branch, tag, treeish or ref to merge in the current checked out branch
+     * @param string                             $message The message for the merge commit, if merge is 3-way
+     * @param string                             $mode    The merge mode: ff-only, no-ff or auto
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function merge(Branch $branch, string $message = '', string $mode = 'auto'): self
+    public function merge(Branch|Tag|TreeishInterface|string $branch, string $message = '', string $mode = 'auto'): self
     {
         $valid_modes = [
             'auto', // deafult git behavior
