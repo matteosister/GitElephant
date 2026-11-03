@@ -831,6 +831,10 @@ final class RepositoryTest extends TestCase
         $r1->createTag('v1.0.0');
         $r1->push('origin', tags: true);
         $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $r2->getTag('v1.0.0'));
+
+        $r1->createTag('v1.0.1');
+        $r1->push(tags: true);
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $r2->getTag('v1.0.1'));
     }
 
     public function testRevParse(): void

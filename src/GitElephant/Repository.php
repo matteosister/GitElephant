@@ -1053,7 +1053,7 @@ class Repository
      */
     public function push($to = null, $ref = null, ?string $args = null, bool $tags = false): void
     {
-        $this->caller->execute(PushCommand::getInstance($this)->push($to ?? 'origin', $ref, $args, $tags));
+        $this->caller->execute(PushCommand::getInstance($this)->push($to, $ref, $args, $tags));
     }
 
     /**

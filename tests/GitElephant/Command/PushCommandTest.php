@@ -59,7 +59,9 @@ final class PushCommandTest extends TestCase
         $this->assertEquals("push 'test-remote' 'develop'", $pc->push($remote, 'develop'));
         $branch = Branch::create($this->getRepository(), 'test-branch');
         $this->assertEquals("push 'test-remote' 'test-branch'", $pc->push($remote, $branch));
-        $this->assertEquals("push '--tags' 'origin' 'master'", $pc->push('origin', 'master', null, true));
+        $this->assertEquals("push", $pc->push(null, null));
+        $this->assertEquals("push '--tags'", $pc->push(null, null, null, true));
         $this->assertEquals("push '--tags' 'origin'", $pc->push('origin', null, null, true));
+        $this->assertEquals("push '--tags' 'origin' 'master'", $pc->push('origin', 'master', null, true));
     }
 }

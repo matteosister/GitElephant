@@ -43,7 +43,7 @@ class PushCommand extends BaseCommand
     }
 
     /**
-     * @param Remote|string      $remote
+     * @param Remote|string|null $remote
      * @param Branch|string|null $branch
      *
      * @throws \RuntimeException
@@ -67,7 +67,9 @@ class PushCommand extends BaseCommand
             $this->addCommandArgument($args);
         }
 
-        $this->addCommandSubject($remote);
+        if (!is_null($remote)) {
+            $this->addCommandSubject($remote);
+        }
         if (!is_null($branch)) {
             $this->addCommandSubject2($branch);
         }
