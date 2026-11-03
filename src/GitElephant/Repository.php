@@ -1043,18 +1043,17 @@ class Repository
     /**
      * Push changes to remote repository
      *
-     * @param string $to
-     * @param string $ref
-     * @param string $args
+     * @param Remote|string|null $to
+     * @param Branch|string|null $ref
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function push($to = null, $ref = null, ?string $args = null): void
+    public function push($to = null, $ref = null, ?string $args = null, bool $tags = false): void
     {
-        $this->caller->execute(PushCommand::getInstance($this)->push($to, $ref, $args));
+        $this->caller->execute(PushCommand::getInstance($this)->push($to, $ref, $args, $tags));
     }
 
     /**
