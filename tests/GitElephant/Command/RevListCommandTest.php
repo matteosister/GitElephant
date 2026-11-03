@@ -30,6 +30,6 @@ final class RevListCommandTest extends TestCase
 
         $c = RevListCommand::getInstance();
         $this->assertEquals("rev-list '--left-right' '--count' 'origin/master...master'", $c->countBetween('origin/master', 'master'));
-        $this->assertEquals("rev-list '--left-right' '--count' 'branch1...branch2'", $c->countBetween($branch1, $branch2));
+        $this->assertEquals("rev-list '--left-right' '--count' 'refs/heads/branch1...refs/heads/branch2'", $c->countBetween($branch1, $branch2));
     }
 }

@@ -322,16 +322,21 @@ class Branch extends NodeObject implements TreeishInterface
     }
 
     /**
-     * Return the count of commits behind and ahead between another branch (or origin/remote) and this branch.
+     * Return the count of commits behind and ahead between another branch (or upstream) and this branch.
      *
-     * @param Branch|TreeishInterface|string|null $compareWith The reference to compare against. If null, defaults to "origin/{$this->name}".
+     * @param TreeishInterface|string|null $compareWith The reference to compare against. If null, defaults to "{$this->name}@{upstream}".
      *
      * @throws \RuntimeException
-     * @return array{0: int, 1: int, 'behind': int, 'ahead': int, 'left': int, 'right': int}
+     * @return array{'behind': int, 'ahead': int}
      */
-    public function getAheadBehindCount(Branch|TreeishInterface|string|null $compareWith = null): array
+    public function getAheadBehindCount(TreeishInterface|string|null $compareWith = null): array
     {
-        $compareWith ??= 'origin/' . $this->getName();
+        if ($compareWith === null) {
+            if (str_starts_with($this->fullRef, 'refs/remotes/')) {
+                throw new \RuntimeException('Remote branches do not have an upstream branch to compare with.');
+            }
+            $compareWith = $this->getName() . '@{upstream}';
+        }
 
         return $this->getRepository()->countCommitsBetween($compareWith, $this);
     }

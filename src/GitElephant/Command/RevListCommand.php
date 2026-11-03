@@ -85,20 +85,31 @@ class RevListCommand extends BaseCommand
     /**
      * rev-list left-right count between two branches or references
      *
+     * @param TreeishInterface|string $left  The left/base reference
+     * @param TreeishInterface|string $right The right reference
      *
      * @throws \RuntimeException
      */
-    public function countBetween(Branch|TreeishInterface|string $left, Branch|TreeishInterface|string $right): string
+    public function countBetween(TreeishInterface|string $left, TreeishInterface|string $right): string
     {
         $this->clearAll();
         $this->addCommandName(static::GIT_REVLIST);
         $this->addCommandArgument('--left-right');
         $this->addCommandArgument('--count');
 
-        $leftRef = $left instanceof Branch ? $left->getName() : ($left instanceof TreeishInterface ? $left->getSha() : $left);
-        $rightRef = $right instanceof Branch ? $right->getName() : ($right instanceof TreeishInterface ? $right->getSha() : $right);
+        $refToString = static function (TreeishInterface|string $ref): string {
+            if ($ref instanceof Branch) {
+                return $ref->getFullRef();
+            }
 
-        $this->addCommandSubject(sprintf('%s...%s', $leftRef, $rightRef));
+            if ($ref instanceof TreeishInterface) {
+                return $ref->getSha();
+            }
+
+            return $ref;
+        };
+
+        $this->addCommandSubject(sprintf('%s...%s', $refToString($left), $refToString($right)));
 
         return $this->getCommand();
     }

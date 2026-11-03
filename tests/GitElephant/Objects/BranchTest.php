@@ -164,8 +164,6 @@ final class BranchTest extends TestCase
         $counts = $branch1->getAheadBehindCount('master');
         $this->assertSame(0, $counts['behind']);
         $this->assertSame(2, $counts['ahead']);
-        $this->assertSame(0, $counts[0]);
-        $this->assertSame(2, $counts[1]);
 
         $master = $this->getRepository()->getBranch('master');
         $this->assertInstanceOf(\GitElephant\Objects\Branch::class, $master);
@@ -173,8 +171,46 @@ final class BranchTest extends TestCase
         $this->assertSame(2, $masterCounts['behind']);
         $this->assertSame(0, $masterCounts['ahead']);
 
+        $masterCountsFromBranch = $master->getAheadBehindCount($branch1);
+        $this->assertSame(2, $masterCountsFromBranch['behind']);
+        $this->assertSame(0, $masterCountsFromBranch['ahead']);
+
         $repoCounts = $this->getRepository()->countCommitsBetween('master', 'branch1');
         $this->assertSame(0, $repoCounts['behind']);
         $this->assertSame(2, $repoCounts['ahead']);
+
+        // Default (null) path: configure upstream tracking for branch1 to track master
+        $this->getRepository()->getCaller()->execute('branch --set-upstream-to=master branch1');
+        $defaultCounts = $branch1->getAheadBehindCount();
+        $this->assertSame(0, $defaultCounts['behind']);
+        $this->assertSame(2, $defaultCounts['ahead']);
+    }
+
+    public function testAheadBehindCountRemoteBranchThrowsException(): void
+    {
+        $this->getRepository()->init(false, 'master');
+        $this->addFile('test1');
+        $this->getRepository()->commit('commit 1', true);
+
+        $remoteLine = '  remotes/origin/main 45eac8c31adfbbf633824cee6ce8cc5040b33513 remote commit';
+        $remoteBranch = Branch::createFromOutputLine($this->getRepository(), $remoteLine);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Remote branches do not have an upstream branch to compare with.');
+        $remoteBranch->getAheadBehindCount();
+    }
+
+    public function testCountCommitsBetweenUnparseableOutputThrowsException(): void
+    {
+        $this->getRepository()->init(false, 'master');
+        $caller = $this->createMock(\GitElephant\Command\Caller\CallerInterface::class);
+        $caller->method('execute')->willReturn($caller);
+        $caller->method('getOutput')->willReturn('invalid output');
+
+        $this->getRepository()->setCaller($caller);
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('Unable to parse git rev-list output: "invalid output"');
+        $this->getRepository()->countCommitsBetween('master', 'branch1');
     }
 }

@@ -318,29 +318,26 @@ class Repository
      * Return the count of commits behind (left) and ahead (right) between two references or branches.
      *
      * In git rev-list --left-right --count left...right:
-     * - 'behind' (or 'left') is the number of commits in $left but not in $right
-     * - 'ahead' (or 'right') is the number of commits in $right but not in $left
+     * - 'behind' is the number of commits in $left but not in $right
+     * - 'ahead' is the number of commits in $right but not in $left
      *
-     * @param Branch|TreeishInterface|string $left  The left/base reference (e.g. origin/master)
-     * @param Branch|TreeishInterface|string $right The right reference (e.g. local master)
+     * @param TreeishInterface|string $left  The left/base reference (e.g. origin/master)
+     * @param TreeishInterface|string $right The right reference (e.g. local master)
      *
      * @throws \RuntimeException
-     * @return array{0: int, 1: int, 'behind': int, 'ahead': int, 'left': int, 'right': int}
+     * @return array{'behind': int, 'ahead': int}
      */
-    public function countCommitsBetween(Branch|TreeishInterface|string $left, Branch|TreeishInterface|string $right): array
+    public function countCommitsBetween(TreeishInterface|string $left, TreeishInterface|string $right): array
     {
-        $output = $this->caller->execute(RevListCommand::getInstance($this)->countBetween($left, $right))->getOutput();
-        $parts = preg_split('/\s+/', trim($output));
-        $behind = isset($parts[0]) && is_numeric($parts[0]) ? (int) $parts[0] : 0;
-        $ahead = isset($parts[1]) && is_numeric($parts[1]) ? (int) $parts[1] : 0;
+        $output = trim($this->caller->execute(RevListCommand::getInstance($this)->countBetween($left, $right))->getOutput());
+        $parts = preg_split('/\s+/', $output);
+        if ($parts === false || count($parts) < 2 || !is_numeric($parts[0]) || !is_numeric($parts[1])) {
+            throw new \RuntimeException(sprintf('Unable to parse git rev-list output: "%s"', $output));
+        }
 
         return [
-            0 => $behind,
-            1 => $ahead,
-            'behind' => $behind,
-            'ahead' => $ahead,
-            'left' => $behind,
-            'right' => $ahead,
+            'behind' => (int) $parts[0],
+            'ahead' => (int) $parts[1],
         ];
     }
 
