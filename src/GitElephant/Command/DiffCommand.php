@@ -67,6 +67,9 @@ class DiffCommand extends BaseCommand
         $this->addCommandArgument('--dst-prefix=DST/');
         $this->addCommandArgument('--src-prefix=SRC/');
 
+        $this->assertNotAnOption($of);
+        $this->assertNotAnOption($with);
+
         $subject = '';
 
         if (is_null($with)) {

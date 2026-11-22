@@ -93,6 +93,7 @@ class RevParseCommand extends BaseCommand
         }
 
         if (!is_null($arg)) {
+            $this->assertNotAnOption($arg);
             $this->addCommandSubject2($arg);
         }
 

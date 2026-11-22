@@ -1085,4 +1085,57 @@ final class RepositoryTest extends TestCase
         $this->getRepository()->stashClear();
         $this->assertCount(0, $this->getRepository()->stashList());
     }
+
+    public function testGetLogRangeWithDefaultOffset(): void
+    {
+        $this->getRepository()->init(false, 'master');
+        $this->addFile('test1');
+        $this->getRepository()->commit('first commit', true);
+        $firstCommit = $this->getRepository()->getCommit();
+        $this->addFile('test2');
+        $this->getRepository()->commit('second commit', true);
+        $secondCommit = $this->getRepository()->getCommit();
+
+        $logRange = $this->getRepository()->getLogRange($firstCommit->getSha(), $secondCommit->getSha());
+        $this->assertCount(1, $logRange);
+        $this->assertEquals($secondCommit->getSha(), $logRange[0]->getSha());
+    }
+
+    public function testOptionLikeRevisionIsRefused(): void
+    {
+        $this->getRepository()->init(false, 'master');
+        $this->addFile('test');
+        $this->getRepository()->commit('first commit', true);
+
+        $marker = sys_get_temp_dir() . '/gitelephant-arg-injection-' . uniqid('', true);
+        $payload = '--output=' . $marker;
+
+        $calls = [
+            'getLog' => fn () => $this->getRepository()->getLog($payload),
+            'getLog with path' => fn () => $this->getRepository()->getLog($payload, 'test'),
+            'getLog with array' => fn () => $this->getRepository()->getLog(['HEAD', $payload]),
+            'getLogRange start' => fn () => $this->getRepository()->getLogRange($payload, 'HEAD'),
+            'getLogRange end' => fn () => $this->getRepository()->getLogRange('HEAD', $payload),
+            'getCommit' => fn () => $this->getRepository()->getCommit($payload),
+            'countCommits' => fn () => $this->getRepository()->countCommits($payload),
+            'getDiff' => fn () => $this->getRepository()->getDiff($payload),
+        ];
+
+        try {
+            foreach ($calls as $label => $call) {
+                $thrown = false;
+                try {
+                    $call();
+                } catch (\InvalidArgumentException) {
+                    $thrown = true;
+                }
+                $this->assertTrue($thrown, sprintf('%s accepted a revision that starts with "-"', $label));
+                $this->assertFileDoesNotExist($marker, sprintf('%s created marker file via --output option', $label));
+            }
+        } finally {
+            if (file_exists($marker)) {
+                @unlink($marker);
+            }
+        }
+    }
 }

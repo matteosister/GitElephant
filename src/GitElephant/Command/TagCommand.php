@@ -58,6 +58,9 @@ class TagCommand extends BaseCommand
         $this->clearAll();
         $this->addCommandName(self::TAG_COMMAND);
 
+        $this->assertNotAnOption($name);
+        $this->assertNotAnOption($startPoint);
+
         if (null !== $message) {
             $this->addCommandArgument('-m');
             $this->addCommandArgument($message);
@@ -118,6 +121,8 @@ class TagCommand extends BaseCommand
         if ($tag instanceof Tag) {
             $name = $tag->getName();
         }
+
+        $this->assertNotAnOption($name);
 
         $this->addCommandArgument('-d');
         $this->addCommandSubject($name);

@@ -47,6 +47,7 @@ class ResetCommand extends BaseCommand
         }
 
         if ($arg != null) {
+            $this->assertNotAnOption($arg);
             $this->addCommandSubject2($arg);
         }
 

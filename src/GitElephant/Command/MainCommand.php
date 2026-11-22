@@ -103,6 +103,7 @@ class MainCommand extends BaseCommand
     public function add($what = '.'): string
     {
         $this->clearAll();
+        $this->assertNotAnOption($what);
         $this->addCommandName(self::GIT_ADD);
         $this->addCommandArgument('--all');
         $this->addCommandSubject($what);
@@ -194,6 +195,8 @@ class MainCommand extends BaseCommand
             $what = $ref->getSha();
         }
 
+        $this->assertNotAnOption($what);
+
         $this->addCommandName(self::GIT_CHECKOUT);
         $this->addCommandArgument('-q');
         $this->addCommandSubject($what);
@@ -223,6 +226,9 @@ class MainCommand extends BaseCommand
         if (!$this->validatePath($to)) {
             throw new \InvalidArgumentException('Invalid destination path');
         }
+
+        $this->assertNotAnOption($from);
+        $this->assertNotAnOption($to);
 
         $this->addCommandName(self::GIT_MOVE);
         $this->addCommandSubject($from);

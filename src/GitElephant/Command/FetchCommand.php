@@ -58,6 +58,9 @@ class FetchCommand extends BaseCommand
             $branch = $branch->getName();
         }
 
+        $this->assertNotAnOption($remote);
+        $this->assertNotAnOption($branch);
+
         $normalizedOptions = $this->normalizeOptions($options, $this->fetchCmdSwitchOptions());
 
         $this->clearAll();

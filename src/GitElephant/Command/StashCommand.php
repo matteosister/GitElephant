@@ -57,6 +57,7 @@ class StashCommand extends BaseCommand
         $this->addCommandName(self::STASH_COMMAND . ' save');
 
         if (!is_null($message)) {
+            $this->assertNotAnOption($message);
             $this->addCommandSubject($message);
         }
 
@@ -165,6 +166,7 @@ class StashCommand extends BaseCommand
      */
     public function branch($branch, $stash): string
     {
+        $this->assertNotAnOption($branch);
         $stash = $this->normalizeStashName($stash);
         $this->clearAll();
         $this->addCommandName(self::STASH_COMMAND . ' branch');

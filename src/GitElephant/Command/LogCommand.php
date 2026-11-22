@@ -108,6 +108,8 @@ class LogCommand extends BaseCommand
             $ref = $ref->getSha();
         }
 
+        $this->assertNotAnOption($ref);
+
         if (null !== $path && !empty($path)) {
             $this->addPath($path);
         }

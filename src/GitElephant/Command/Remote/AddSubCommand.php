@@ -94,6 +94,9 @@ class AddSubCommand extends SubCommandCommand
             $this->addCmdValueOptions()
         );
 
+        $this->assertNotAnOption($name);
+        $this->assertNotAnOption($url);
+
         $this->addCommandName(self::GIT_REMOTE_ADD);
         $this->addCommandSubject($name);
         $this->addCommandSubject($url);

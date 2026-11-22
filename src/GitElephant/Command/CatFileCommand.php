@@ -56,6 +56,7 @@ class CatFileCommand extends BaseCommand
     {
         $this->clearAll();
         $sha = $treeish instanceof TreeishInterface ? $treeish->getSha() : $treeish;
+        $this->assertNotAnOption($sha);
         $this->addCommandName(static::GIT_CAT_FILE);
         // pretty format
         $this->addCommandArgument('-p');
@@ -74,6 +75,7 @@ class CatFileCommand extends BaseCommand
     public function contentBySha($sha): string
     {
         $this->clearAll();
+        $this->assertNotAnOption($sha);
         $this->addCommandName(static::GIT_CAT_FILE);
         $this->addCommandArgument('-p');
         $this->addCommandSubject($sha);

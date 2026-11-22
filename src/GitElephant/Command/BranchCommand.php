@@ -53,6 +53,7 @@ class BranchCommand extends BaseCommand
     public function contains(string $reference): string
     {
         $this->clearAll();
+        $this->assertNotAnOption($reference);
         $this->addCommandName(self::BRANCH_COMMAND);
         $this->addCommandArgument('--contains');
         $this->addCommandSubject($reference);
@@ -72,6 +73,8 @@ class BranchCommand extends BaseCommand
     public function create(string $name, ?string $startPoint = null): string
     {
         $this->clearAll();
+        $this->assertNotAnOption($name);
+        $this->assertNotAnOption($startPoint);
         $this->addCommandName(self::BRANCH_COMMAND);
         $this->addCommandSubject($name);
         if (null !== $startPoint) {
@@ -150,6 +153,7 @@ class BranchCommand extends BaseCommand
         if ($verbose) {
             $this->addCommandArgument('-vv');
         }
+        $this->assertNotAnOption($name);
         $this->addCommandSubject($name);
 
         return $this->getCommand();
@@ -168,6 +172,7 @@ class BranchCommand extends BaseCommand
     {
         $arg = $force ? '-D' : '-d';
         $this->clearAll();
+        $this->assertNotAnOption($name);
         $this->addCommandName(self::BRANCH_COMMAND);
         $this->addCommandArgument($arg);
         $this->addCommandSubject($name);

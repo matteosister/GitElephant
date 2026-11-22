@@ -65,6 +65,7 @@ class ShowSubCommand extends SubCommandCommand
          *  init'd or mock) will likely trigger warning/error condition
          */
         if ($name) {
+            $this->assertNotAnOption($name);
             $this->addCommandSubject($name);
         }
 

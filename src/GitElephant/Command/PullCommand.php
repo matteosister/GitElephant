@@ -57,6 +57,9 @@ class PullCommand extends BaseCommand
         if ($branch instanceof Branch) {
             $branch = $branch->getName();
         }
+
+        $this->assertNotAnOption($remote);
+        $this->assertNotAnOption($branch);
         $this->clearAll();
         $this->addCommandName(self::GIT_PULL_COMMAND);
         if ($rebase) {

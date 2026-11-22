@@ -64,4 +64,16 @@ final class DiffCommandTest extends TestCase
             $this->diffCommand->diff($commit)
         );
     }
+
+    public function testDiffRefusesOptionLikeRevision(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->diffCommand->diff('--output=/tmp/pwn');
+    }
+
+    public function testDiffRefusesOptionLikeWithRevision(): void
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->diffCommand->diff('HEAD', '--output=/tmp/pwn');
+    }
 }

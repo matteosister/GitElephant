@@ -58,6 +58,7 @@ class LsTreeCommand extends BaseCommand
         if ($ref instanceof TreeishInterface) {
             $what = $ref->getSha();
         }
+        $this->assertNotAnOption($what);
         $this->clearAll();
         $this->addCommandName(self::LS_TREE_COMMAND);
         // recurse
@@ -92,6 +93,8 @@ class LsTreeCommand extends BaseCommand
         }
         $subject = $what;
 
+        $this->assertNotAnOption($subject);
+
         $this->clearAll();
 
         $this->addCommandName(self::LS_TREE_COMMAND);
@@ -112,6 +115,7 @@ class LsTreeCommand extends BaseCommand
     public function listAll($ref = null): string
     {
         $ref ??= 'HEAD';
+        $this->assertNotAnOption($ref);
         $this->clearAll();
         $this->addCommandName(self::LS_TREE_COMMAND);
         $this->addCommandSubject($ref);

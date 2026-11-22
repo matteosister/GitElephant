@@ -62,6 +62,9 @@ class CloneCommand extends BaseCommand
         ?int $depth = null,
         bool $recursive = false
     ): string {
+        $this->assertNotAnOption($url);
+        $this->assertNotAnOption($to);
+
         // get binary version before reset
         $version = $this->getBinaryVersion();
 

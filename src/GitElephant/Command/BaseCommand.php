@@ -278,6 +278,35 @@ class BaseCommand
     }
 
     /**
+     * Assert that a positional argument does not start with "-", preventing git
+     * from interpreting it as a command-line option (CWE-88).
+     *
+     * @param mixed $value
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function assertNotAnOption($value): void
+    {
+        if (is_array($value)) {
+            foreach ($value as $item) {
+                $this->assertNotAnOption($item);
+            }
+
+            return;
+        }
+
+        if ($value instanceof \Stringable) {
+            $value = (string) $value;
+        }
+
+        if (is_string($value) && str_starts_with($value, '-')) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid argument "%s": value cannot start with "-".', $value)
+            );
+        }
+    }
+
+    /**
      * Normalize any valid option to its long name
      * an provide a structure that can be more intelligently
      * handled by other routines

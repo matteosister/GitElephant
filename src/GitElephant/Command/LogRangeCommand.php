@@ -90,6 +90,9 @@ class LogRangeCommand extends BaseCommand
             $refEnd = $refEnd->getSha();
         }
 
+        $this->assertNotAnOption($refStart);
+        $this->assertNotAnOption($refEnd);
+
         if (null !== $path && !empty($path)) {
             $this->addPath($path);
         }

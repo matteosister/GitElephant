@@ -60,6 +60,8 @@ class MvCommand extends BaseCommand
         } else {
             $sourceName = $source;
         }
+        $this->assertNotAnOption($sourceName);
+        $this->assertNotAnOption($target);
         $this->clearAll();
         $this->addCommandName(self::MV_COMMAND);
         // Skip move or rename actions which would lead to an error condition
