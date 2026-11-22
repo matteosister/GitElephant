@@ -61,7 +61,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
         $refEnd,
         $path = null,
         int $limit = 15,
-        int $offset = 0,
+        ?int $offset = null,
         bool $firstParent = false
     ) {
         $this->createFromCommand($refStart, $refEnd, $path, $limit, $offset, $firstParent);
@@ -70,12 +70,12 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
     /**
      * get the commit properties from command
      *
-     * @param string  $refStart    treeish reference
-     * @param string  $refEnd      treeish reference
-     * @param string  $path        path
-     * @param int     $limit       limit
-     * @param int  $offset      offset
-     * @param boolean $firstParent first parent
+     * @param string   $refStart    treeish reference
+     * @param string   $refEnd      treeish reference
+     * @param string   $path        path
+     * @param int      $limit       limit
+     * @param int|null $offset      offset
+     * @param boolean  $firstParent first parent
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
@@ -88,7 +88,7 @@ class LogRange implements \ArrayAccess, \Countable, \Iterator
         $refEnd,
         $path = null,
         int $limit = 15,
-        int $offset = 0,
+        ?int $offset = null,
         bool $firstParent = false
     ): void {
         $command = LogRangeCommand::getInstance($this->getRepository())->showLog(
