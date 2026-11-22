@@ -62,8 +62,11 @@ class CloneCommand extends BaseCommand
         ?int $depth = null,
         bool $recursive = false
     ): string {
-        $this->assertNotAnOption($url);
+        $this->assertSafeRemoteUrl($url);
         $this->assertNotAnOption($to);
+        if (null !== $repoReference) {
+            $this->assertNotAnOption($repoReference);
+        }
 
         // get binary version before reset
         $version = $this->getBinaryVersion();

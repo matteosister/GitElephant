@@ -112,7 +112,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator, \Stringable
         if (in_array($this->mode, [self::MODE_INDEX, self::MODE_NEW_FILE, self::MODE_MODE], true)) {
             $chunkStartIndex = null;
             foreach ($lines as $index => $line) {
-                if (preg_match('/^@@ -(\d+,\d+)|(\d+) \+(\d+,\d+)|(\d+) @@(.*)$/', $line) === 1) {
+                if (preg_match('/^@@ -(\d+(?:,\d+)?) \+(\d+(?:,\d+)?) @@(.*)$/', $line) === 1) {
                     $chunkStartIndex = $index;
                     break;
                 }
@@ -143,7 +143,7 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator, \Stringable
     {
         $arrayChunks = Utilities::pregSplitArray(
             $lines,
-            '/^@@ -(\d+,\d+)|(\d+) \+(\d+,\d+)|(\d+) @@(.*)$/'
+            '/^@@ -(\d+(?:,\d+)?) \+(\d+(?:,\d+)?) @@(.*)$/'
         );
         foreach ($arrayChunks as $chunkLines) {
             $this->chunks[] = new DiffChunk($chunkLines);
@@ -171,19 +171,19 @@ class DiffObject implements \ArrayAccess, \Countable, \Iterator, \Stringable
      */
     private function findMode(string $line): void
     {
-        if (preg_match('/^index (.*)\.\.(.*) (.*)$/', $line)) {
+        if (preg_match('/^index ([0-9a-f]+)\.\.([0-9a-f]+)(?: (\d+))?$/', $line)) {
             $this->mode = self::MODE_INDEX;
         }
 
-        if (preg_match('/^old mode (.*)$/', $line) || preg_match('/^new mode (.*)$/', $line) || preg_match('/^mode (.*)\.\.(.*) (.*)$/', $line)) {
+        if (preg_match('/^old mode (\d+)$/', $line) || preg_match('/^new mode (\d+)$/', $line) || preg_match('/^mode (\d+)\.\.(\d+) (\d+)$/', $line)) {
             $this->mode = self::MODE_MODE;
         }
 
-        if (preg_match('/^new file mode (.*)/', $line)) {
+        if (preg_match('/^new file mode (\d+)/', $line)) {
             $this->mode = self::MODE_NEW_FILE;
         }
 
-        if (preg_match('/^deleted file mode (.*)/', $line)) {
+        if (preg_match('/^deleted file mode (\d+)/', $line)) {
             $this->mode = self::MODE_DELETED_FILE;
         }
     }

@@ -100,20 +100,20 @@ class SubCommandCommand extends BaseCommand
      */
     public function getCommand(): string
     {
-        $command = $this->getCommandName();
+        $parts = [trim($this->getCommandName())];
 
-        $command .= ' ';
         $args = $this->getCommandArguments();
         if (count($args) > 0) {
-            $command .= $this->extractArguments($args);
-            $command .= ' ';
+            $extracted = trim($this->extractArguments($args));
+            if ($extracted !== '') {
+                $parts[] = $extracted;
+            }
         }
         $subjects = $this->getCommandSubjects();
         if ($subjects !== []) {
-            $command .= implode(' ', array_map(escapeshellarg(...), $subjects));
+            $parts[] = implode(' ', array_map(escapeshellarg(...), $subjects));
         }
-        $command = preg_replace('/\\s{2,}/', ' ', $command);
 
-        return trim($command);
+        return implode(' ', array_filter($parts, static fn (string $part): bool => $part !== ''));
     }
 }

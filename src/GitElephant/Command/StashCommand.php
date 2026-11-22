@@ -33,6 +33,48 @@ class StashCommand extends BaseCommand
     public const STASH_COMMAND = 'stash';
 
     /**
+     * Allowlist of safe switch options for `git stash list` (which forwards options to `git log`).
+     * Excludes dangerous flags such as --output, --ext-diff, and --textconv.
+     *
+     * @var string[]
+     */
+    private const ALLOWED_LIST_SWITCH_OPTIONS = [
+        '-p',
+        '--patch',
+        '-s',
+        '--no-patch',
+        '--stat',
+        '--name-only',
+        '--name-status',
+        '--oneline',
+        '--abbrev-commit',
+        '--no-abbrev-commit',
+        '--relative-date',
+        '--reverse',
+        '--merges',
+        '--no-merges',
+    ];
+
+    /**
+     * Allowlist of safe value-taking option prefixes for `git stash list`.
+     *
+     * @var string[]
+     */
+    private const ALLOWED_LIST_VALUE_PREFIXES = [
+        '--date=',
+        '--pretty=',
+        '--format=',
+        '--max-count=',
+        '--skip=',
+        '--grep=',
+        '--author=',
+        '--since=',
+        '--until=',
+        '--after=',
+        '--before=',
+    ];
+
+    /**
      * constructor
      *
      * @param \GitElephant\Repository $repo The repository object this command
@@ -84,6 +126,13 @@ class StashCommand extends BaseCommand
         $this->addCommandName(self::STASH_COMMAND . ' list');
 
         if (null !== $options) {
+            foreach ($options as $option) {
+                if (!is_string($option) || !$this->isAllowedListOption($option)) {
+                    throw new \InvalidArgumentException(
+                        sprintf('Invalid stash list option "%s": option is not allowed.', is_scalar($option) ? (string) $option : gettype($option))
+                    );
+                }
+            }
             $this->addCommandSubject($options);
         }
 
@@ -201,13 +250,54 @@ class StashCommand extends BaseCommand
 
     /**
      * @param int|string $stash
+     *
+     * @throws \InvalidArgumentException
      */
     private function normalizeStashName($stash): string
     {
-        if (!str_starts_with($stash, 'stash@{')) {
+        if (is_int($stash)) {
+            if ($stash < 0) {
+                throw new \InvalidArgumentException(sprintf('Invalid stash reference "%d".', $stash));
+            }
+
             return 'stash@{' . $stash . '}';
         }
 
-        return $stash;
+        if (!is_string($stash)) {
+            throw new \InvalidArgumentException('Invalid stash reference: expected non-negative integer or stash@{n}.');
+        }
+
+        if (ctype_digit($stash)) {
+            return 'stash@{' . $stash . '}';
+        }
+
+        if (preg_match('/^stash@\{\d+\}$/', $stash) === 1) {
+            return $stash;
+        }
+
+        throw new \InvalidArgumentException(sprintf('Invalid stash reference "%s".', $stash));
+    }
+
+    private function isAllowedListOption(string $option): bool
+    {
+        if (str_contains($option, "\0") || str_contains($option, "\r") || str_contains($option, "\n")) {
+            return false;
+        }
+
+        if (in_array($option, self::ALLOWED_LIST_SWITCH_OPTIONS, true)) {
+            return true;
+        }
+
+        if (preg_match('/^-n\d+$/', $option) === 1) {
+            return true;
+        }
+
+        foreach (self::ALLOWED_LIST_VALUE_PREFIXES as $prefix) {
+            if (str_starts_with($option, $prefix)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

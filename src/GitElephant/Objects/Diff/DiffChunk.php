@@ -116,7 +116,7 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
                 $this->lines[] = new DiffChunkLineUnchanged($originUnchanged++, $destUnchanged++, $line);
                 $deleted++;
                 $new++;
-            } elseif (!preg_match('/\\ No newline at end of file/', $line)) {
+            } elseif (!preg_match('/^\\\\ No newline at end of file$/', $line)) {
                 throw new \Exception(sprintf('GitElephant was unable to parse the line %s', $line));
             }
         }
@@ -130,7 +130,9 @@ class DiffChunk implements \ArrayAccess, \Countable, \Iterator
     private function getLinesNumbers(string $line): void
     {
         $matches = [];
-        preg_match('/@@ -(.*) \+(.*) @@?(.*)/', $line, $matches);
+        if (preg_match('/^@@ -(\d+(?:,\d+)?) \+(\d+(?:,\d+)?) @@(.*)$/', $line, $matches) !== 1) {
+            throw new \InvalidArgumentException(sprintf('Invalid diff chunk header: %s', $line));
+        }
         if (!strpos($matches[1], ',')) {
             // one line
             $this->originStartLine = (int) $matches[1];

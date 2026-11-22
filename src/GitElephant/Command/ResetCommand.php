@@ -22,6 +22,19 @@ class ResetCommand extends BaseCommand
     public const OPTION_SOFT = '--soft';
 
     /**
+     * @var string[]
+     */
+    private const ALLOWED_OPTIONS = [
+        self::OPTION_HARD,
+        self::OPTION_MERGE,
+        self::OPTION_SOFT,
+        '--mixed',
+        '--keep',
+        '-q',
+        '--quiet',
+    ];
+
+    /**
      * constructor
      *
      * @param \GitElephant\Repository $repo The repository object this command
@@ -43,10 +56,15 @@ class ResetCommand extends BaseCommand
         $this->addCommandName(self::GIT_RESET_COMMAND);
         // if there are options add them.
         foreach ($options as $option) {
+            if (!is_string($option) || !in_array($option, self::ALLOWED_OPTIONS, true)) {
+                throw new \InvalidArgumentException(
+                    sprintf('Invalid reset option "%s": option is not allowed.', is_scalar($option) ? (string) $option : gettype($option))
+                );
+            }
             $this->addCommandArgument($option);
         }
 
-        if ($arg != null) {
+        if ($arg !== null) {
             $this->assertNotAnOption($arg);
             $this->addCommandSubject2($arg);
         }

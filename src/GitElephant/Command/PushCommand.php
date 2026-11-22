@@ -32,6 +32,39 @@ class PushCommand extends BaseCommand
     public const GIT_PUSH_COMMAND = 'push';
 
     /**
+     * Allowlist of safe git push flags permitted via the $args parameter.
+     * Dangerous flags such as --exec, --receive-pack, and --repo are excluded.
+     *
+     * @var string[]
+     */
+    private const ALLOWED_PUSH_ARGS = [
+        '--all',
+        '--atomic',
+        '--delete',
+        '-d',
+        '--dry-run',
+        '-n',
+        '--follow-tags',
+        '--force',
+        '-f',
+        '--force-with-lease',
+        '--mirror',
+        '--no-atomic',
+        '--no-thin',
+        '--no-verify',
+        '--porcelain',
+        '--prune',
+        '--quiet',
+        '-q',
+        '--set-upstream',
+        '-u',
+        '--tags',
+        '--thin',
+        '--verbose',
+        '-v',
+    ];
+
+    /**
      * constructor
      *
      * @param \GitElephant\Repository $repo The repository object this command
@@ -59,7 +92,7 @@ class PushCommand extends BaseCommand
             $branch = $branch->getName();
         }
 
-        $this->assertNotAnOption($remote);
+        $this->assertSafeRemoteUrl($remote);
         $this->assertNotAnOption($branch);
 
         $this->addCommandName(self::GIT_PUSH_COMMAND);
@@ -67,6 +100,11 @@ class PushCommand extends BaseCommand
         $this->addCommandSubject2($branch);
 
         if (!is_null($args)) {
+            if (!in_array($args, self::ALLOWED_PUSH_ARGS, true)) {
+                throw new \InvalidArgumentException(
+                    sprintf('Invalid push argument "%s": option is not allowed.', $args)
+                );
+            }
             $this->addCommandArgument($args);
         }
 

@@ -64,6 +64,7 @@ class DiffTreeCommand extends BaseCommand
         $this->addCommandArgument('--root');
         $this->addCommandArgument('--dst-prefix=DST/');
         $this->addCommandArgument('--src-prefix=SRC/');
+        $this->assertNotAnOption($commit);
         $this->addCommandSubject($commit);
 
         return $this->getCommand();

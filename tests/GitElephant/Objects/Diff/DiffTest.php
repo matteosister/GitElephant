@@ -195,6 +195,22 @@ final class DiffTest extends TestCase
         $this->assertSame(DiffObject::MODE_MODE, $object->getMode());
     }
 
+    public function testDiffObjectDoesNotSplitChunksOnContentMatchingPartialHunkPattern(): void
+    {
+        $lines = [
+            'diff --git SRC/file.txt DST/file.txt',
+            'index 1234567..89abcdef 100644',
+            '--- SRC/file.txt',
+            '+++ DST/file.txt',
+            '@@ -1,2 +1,3 @@',
+            ' line 1',
+            '+x = 1 +2,3',
+            '+note 1 @@not-a-header',
+        ];
+        $object = new DiffObject($lines);
+        $this->assertCount(1, $object->getChunks());
+    }
+
     private function assertArrayInterfaces($obj): void
     {
         $this->assertInstanceOf('\Iterator', $obj);

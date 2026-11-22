@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace GitElephant\Command;
 
+use GitElephant\Objects\Branch;
+use GitElephant\Objects\Commit;
 use GitElephant\Objects\NodeObject;
 use GitElephant\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -72,6 +74,41 @@ final class ArgumentInjectionTest extends TestCase
         yield 'StashCommand::branch' => [fn (): string => StashCommand::getInstance()->branch('--help', '0')];
         yield 'SubmoduleCommand::add url' => [fn (): string => SubmoduleCommand::getInstance()->add('--force')];
         yield 'SubmoduleCommand::add path' => [fn (): string => SubmoduleCommand::getInstance()->add('https://example.com/repo.git', '--force')];
+        // Multibyte / invalid UTF-8 bypasses of escapeshellarg()
+        yield 'CloneCommand::cloneUrl invalid UTF-8 prefix' => [fn (): string => CloneCommand::getInstance()->cloneUrl("\x80--upload-pack=id")];
+        yield 'ShowCommand::showCommit invalid UTF-8 prefix' => [fn (): string => ShowCommand::getInstance()->showCommit("\xFF--output=/tmp/pwn")];
+        // Negative numeric scalars
+        yield 'ShowCommand::showCommit negative int' => [fn (): string => ShowCommand::getInstance()->showCommit(-1)];
+        yield 'ResetCommand::reset negative int' => [fn (): string => ResetCommand::getInstance()->reset(-1)];
+        yield 'RevParseCommand::revParse negative int' => [fn (): string => RevParseCommand::getInstance()->revParse(-1)];
+        // Control characters (null byte / newlines)
+        yield 'ShowCommand::showCommit null byte' => [fn (): string => ShowCommand::getInstance()->showCommit("HEAD\0--output=/tmp/pwn")];
+        yield 'ShowCommand::showCommit newline' => [fn (): string => ShowCommand::getInstance()->showCommit("HEAD\n--output=/tmp/pwn")];
+        // Dangerous remote-helper protocols
+        yield 'CloneCommand::cloneUrl ext:: protocol' => [fn (): string => CloneCommand::getInstance()->cloneUrl('ext::sh -c id')];
+        yield 'CloneCommand::cloneUrl fd:: protocol' => [fn (): string => CloneCommand::getInstance()->cloneUrl('fd::1,2')];
+        yield 'FetchCommand::fetch ext:: protocol' => [fn (): string => FetchCommand::getInstance()->fetch('ext::sh -c id')];
+        yield 'PullCommand::pull ext:: protocol' => [fn (): string => PullCommand::getInstance()->pull('ext::sh -c id')];
+        yield 'PushCommand::push ext:: protocol' => [fn (): string => PushCommand::getInstance()->push('ext::sh -c id', 'main')];
+        yield 'RemoteCommand::add ext:: protocol' => [fn (): string => RemoteCommand::getInstance()->add('origin', 'ext::sh -c id')];
+        yield 'SubmoduleCommand::add ext:: protocol' => [fn (): string => SubmoduleCommand::getInstance()->add('ext::sh -c id')];
+        // Disallowed option injection in Push, Stash, Reset, RevParse
+        yield 'PushCommand::push --receive-pack' => [fn (): string => PushCommand::getInstance()->push('origin', 'main', '--receive-pack=id')];
+        yield 'PushCommand::push --exec' => [fn (): string => PushCommand::getInstance()->push('origin', 'main', '--exec=id')];
+        yield 'PushCommand::push --repo' => [fn (): string => PushCommand::getInstance()->push('origin', 'main', '--repo=https://evil.example/repo.git')];
+        yield 'StashCommand::listStashes --output' => [fn (): string => StashCommand::getInstance()->listStashes(['--output=/tmp/pwn'])];
+        yield 'StashCommand::listStashes --ext-diff' => [fn (): string => StashCommand::getInstance()->listStashes(['--ext-diff'])];
+        yield 'StashCommand::show rev range' => [fn (): string => StashCommand::getInstance()->show('stash@{0}..HEAD')];
+        yield 'StashCommand::show blob path' => [fn (): string => StashCommand::getInstance()->show('stash@{0}:secret.txt')];
+        yield 'StashCommand::show negative int' => [fn (): string => StashCommand::getInstance()->show(-1)];
+        yield 'ResetCommand::reset disallowed option' => [fn (): string => ResetCommand::getInstance()->reset('HEAD', ['--pathspec-from-file=/etc/passwd'])];
+        yield 'RevParseCommand::revParse disallowed option' => [fn (): string => RevParseCommand::getInstance()->revParse('HEAD', ['--git-path=/etc/passwd'])];
+        // Branch without remote (positional shift)
+        yield 'FetchCommand::fetch branch without remote' => [fn (): string => FetchCommand::getInstance()->fetch(null, 'main')];
+        yield 'PullCommand::pull branch without remote' => [fn (): string => PullCommand::getInstance()->pull(null, 'main')];
+        // Bare value option in RemoteCommand::add
+        yield 'RemoteCommand::add bare value option' => [fn (): string => RemoteCommand::getInstance()->add('origin', 'https://example.com/repo.git', ['-t'])];
+        yield 'RemoteCommand::add option-like value' => [fn (): string => RemoteCommand::getInstance()->add('origin', 'https://example.com/repo.git', ['-t --force'])];
     }
 
     #[DataProvider('optionLikeCommandProvider')]
@@ -86,5 +123,45 @@ final class ArgumentInjectionTest extends TestCase
         $node = $this->createStub(NodeObject::class);
         $this->expectException(\InvalidArgumentException::class);
         CatFileCommand::getInstance()->content($node, '--batch');
+    }
+
+    public function testMergeRefusesOptionLikeBranchFullRef(): void
+    {
+        $branch = $this->createStub(Branch::class);
+        $branch->method('getFullRef')->willReturn('--no-verify');
+
+        $this->expectException(\InvalidArgumentException::class);
+        MergeCommand::getInstance()->merge($branch);
+    }
+
+    public function testRevListCommitPathRefusesNegativeMax(): void
+    {
+        $commit = $this->createStub(Commit::class);
+        $commit->method('getSha')->willReturn('abcdef1234567890');
+
+        $this->expectException(\InvalidArgumentException::class);
+        RevListCommand::getInstance()->commitPath($commit, -1);
+    }
+
+    public function testAllowedOptionsStillWork(): void
+    {
+        $this->assertSame(
+            "push '--force-with-lease' 'origin' 'main'",
+            PushCommand::getInstance()->push('origin', 'main', '--force-with-lease')
+        );
+        $this->assertSame(
+            "stash list '--oneline' '--max-count=5'",
+            StashCommand::getInstance()->listStashes(['--oneline', '--max-count=5'])
+        );
+        $this->assertSame(
+            "rev-parse '--short=7' 'HEAD'",
+            RevParseCommand::getInstance()->revParse('HEAD', ['--short=7'])
+        );
+    }
+
+    public function testConsecutiveSpacesInsideQuotedArgumentsArePreserved(): void
+    {
+        $cmd = MainCommand::getInstance()->commit('hello   world');
+        $this->assertSame("commit '-m' 'hello   world'", $cmd);
     }
 }

@@ -58,7 +58,11 @@ class FetchCommand extends BaseCommand
             $branch = $branch->getName();
         }
 
-        $this->assertNotAnOption($remote);
+        if ($remote === null && $branch !== null) {
+            throw new \InvalidArgumentException('Cannot specify a branch without a remote.');
+        }
+
+        $this->assertSafeRemoteUrl($remote);
         $this->assertNotAnOption($branch);
 
         $normalizedOptions = $this->normalizeOptions($options, $this->fetchCmdSwitchOptions());

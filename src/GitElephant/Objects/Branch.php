@@ -206,8 +206,8 @@ class Branch extends NodeObject implements TreeishInterface
     {
         $branchString = trim($branchString);
         $regexList = [
-            '/^\*?\ *?(\S+)\ +(\S{40})\ +(.+)$/',
-            '/^\*?\ *?\(.*(detached).*\)\ +(\S{40})\ +(.+)$/',
+            '/^\*?\s*(\S+)\s+([0-9a-f]{40})\s+(.+)$/',
+            '/^\*?\s*\([^)]*(detached)[^)]*\)\s+([0-9a-f]{40})\s+(.+)$/',
         ];
 
         while (empty($matches) && $regex = array_pop($regexList)) {

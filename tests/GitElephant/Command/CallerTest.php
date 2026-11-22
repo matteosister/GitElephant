@@ -116,4 +116,16 @@ final class CallerTest extends TestCase
         $this->expectException(\GitElephant\Exception\InvalidRepositoryPathException::class);
         new Caller(null, 'someinvalidpath');
     }
+
+    public function testErrorMessageRedactsUrlCredentials(): void
+    {
+        $caller = new Caller(null, $this->getRepository()->getPath());
+        try {
+            $caller->execute("ls-remote 'https://alice:supersecret@127.0.0.1:1/nonexistent.git'");
+            $this->fail('Expected RuntimeException was not thrown.');
+        } catch (\RuntimeException $e) {
+            $this->assertStringNotContainsString('supersecret', $e->getMessage());
+            $this->assertStringContainsString('https://***@127.0.0.1:1/nonexistent.git', $e->getMessage());
+        }
+    }
 }

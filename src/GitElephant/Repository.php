@@ -149,9 +149,21 @@ class Repository
     ): \GitElephant\Repository {
         if (null === $repositoryPath) {
             $tempDir = realpath(sys_get_temp_dir());
-            $repositoryPath = sprintf('%s%s%s', $tempDir, DIRECTORY_SEPARATOR, sha1(uniqid()));
-            $fs = new Filesystem();
-            $fs->mkdir($repositoryPath);
+            if ($tempDir === false) {
+                throw new \RuntimeException('Unable to resolve system temporary directory.');
+            }
+            $created = false;
+            for ($attempt = 0; $attempt < 5; $attempt++) {
+                $candidate = sprintf('%s%s%s', $tempDir, DIRECTORY_SEPARATOR, bin2hex(random_bytes(16)));
+                if (@mkdir($candidate, 0700, false)) {
+                    $repositoryPath = $candidate;
+                    $created = true;
+                    break;
+                }
+            }
+            if (!$created) {
+                throw new \RuntimeException('Unable to create temporary repository directory.');
+            }
         }
         $repository = new Repository($repositoryPath, $binary, $name);
         if ($git instanceof Repository) {
@@ -1355,7 +1367,7 @@ class Repository
     public function stashCreate(): string
     {
         $stashCommand = StashCommand::getInstance($this);
-        $command = $stashCommand->clear();
+        $command = $stashCommand->create();
         $this->caller->execute($command);
 
         return $this->caller->getOutput();

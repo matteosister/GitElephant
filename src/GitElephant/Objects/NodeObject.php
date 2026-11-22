@@ -156,11 +156,34 @@ class NodeObject implements TreeishInterface
      *
      * @param string $basePath the base path of the repository
      *
-     * @return string
+     * @throws \InvalidArgumentException if the resolved path escapes $basePath or is a symlink
+     *
+     * @return string|false
      */
     public function getMimeType(string $basePath)
     {
-        return mime_content_type($basePath . DIRECTORY_SEPARATOR . $this->path);
+        $realBasePath = realpath($basePath);
+        if ($realBasePath === false || !is_dir($realBasePath)) {
+            throw new \InvalidArgumentException(sprintf('Invalid base path "%s".', $basePath));
+        }
+
+        $relativePath = $this->getFullPath();
+        if ($relativePath === '') {
+            $relativePath = $this->path;
+        }
+
+        $candidatePath = $realBasePath . DIRECTORY_SEPARATOR . ltrim($relativePath, '/\\');
+        if (is_link($candidatePath)) {
+            throw new \InvalidArgumentException(sprintf('Refusing to follow symlink "%s".', $relativePath));
+        }
+
+        $realTargetPath = realpath($candidatePath);
+        $basePrefix = rtrim($realBasePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+        if ($realTargetPath === false || !str_starts_with($realTargetPath, $basePrefix)) {
+            throw new \InvalidArgumentException(sprintf('Path "%s" is outside the repository base path.', $relativePath));
+        }
+
+        return mime_content_type($realTargetPath);
     }
 
     /**

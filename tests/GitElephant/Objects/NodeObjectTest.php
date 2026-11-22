@@ -83,4 +83,39 @@ final class NodeObjectTest extends TestCase
         $object->setRepository($repo2);
         $this->assertSame($repo2, $object->getRepository());
     }
+
+    public function testGetMimeTypeRejectsPathTraversal(): void
+    {
+        $repo = $this->getRepository();
+        $node = new NodeObject($repo, '100644', NodeObject::TYPE_BLOB, 'sha', '10', 'passwd', '../../../../etc');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $node->getMimeType($repo->getPath());
+    }
+
+    public function testGetMimeTypeRejectsSymlink(): void
+    {
+        $repo = $this->getRepository();
+        $linkPath = $repo->getPath() . DIRECTORY_SEPARATOR . 'outside-link';
+        symlink('/etc/hosts', $linkPath);
+
+        $node = new NodeObject($repo, '120000', NodeObject::TYPE_LINK, 'sha', '10', 'outside-link', '');
+
+        try {
+            $this->expectException(\InvalidArgumentException::class);
+            $node->getMimeType($repo->getPath());
+        } finally {
+            @unlink($linkPath);
+        }
+    }
+
+    public function testGetMimeTypeWorksForValidFile(): void
+    {
+        $repo = $this->getRepository();
+        $node = new NodeObject($repo, '100644', NodeObject::TYPE_BLOB, 'sha', '10', 'test-file', '');
+
+        $mime = $node->getMimeType($repo->getPath());
+        $this->assertIsString($mime);
+        $this->assertNotEmpty($mime);
+    }
 }

@@ -77,7 +77,7 @@ class Caller extends AbstractCaller
         array $acceptedExitCodes = [0]
     ): CallerInterface {
         if ($git) {
-            $cmd = $this->getBinaryPath() . ' ' . $cmd;
+            $cmd = escapeshellarg($this->getBinaryPath()) . ' ' . $cmd;
         }
 
         if (stripos(PHP_OS, 'WIN') !== 0) {
@@ -93,11 +93,11 @@ class Caller extends AbstractCaller
 
         $process->setTimeout(15000);
         $process->run();
-        if (!in_array($process->getExitCode(), $acceptedExitCodes)) {
+        if (!in_array($process->getExitCode(), $acceptedExitCodes, true)) {
             $text = 'Exit code: ' . $process->getExitCode();
-            $text .= ' while executing: "' . $cmd;
-            $text .= '" with reason: ' . $process->getErrorOutput();
-            $text .= "\n" . $process->getOutput();
+            $text .= ' while executing: "' . $this->redactSensitiveData($cmd);
+            $text .= '" with reason: ' . $this->redactSensitiveData($process->getErrorOutput());
+            $text .= "\n" . $this->redactSensitiveData($process->getOutput());
             throw new \RuntimeException($text);
         }
 
@@ -144,5 +144,23 @@ class Caller extends AbstractCaller
     public function getRawOutput(): string
     {
         return $this->rawOutput;
+    }
+
+    /**
+     * Redact embedded URL credentials and authorization headers from error output.
+     */
+    private function redactSensitiveData(string $text): string
+    {
+        $redacted = preg_replace('#([a-zA-Z][a-zA-Z0-9+.-]*://)[^/\s@\'"]+@#', '$1***@', $text);
+        if (is_string($redacted)) {
+            $text = $redacted;
+        }
+
+        $redacted = preg_replace('/(Authorization:\s*)\S+(?:\s+\S+)?/i', '$1***', $text);
+        if (is_string($redacted)) {
+            $text = $redacted;
+        }
+
+        return $text;
     }
 }

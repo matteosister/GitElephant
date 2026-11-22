@@ -57,6 +57,7 @@ class RevListCommand extends BaseCommand
         $this->addCommandName(static::GIT_REVLIST);
         // only the last commit
         $this->addCommandArgument('-n1');
+        $this->assertNotAnOption($tag->getFullRef());
         $this->addCommandSubject($tag->getFullRef());
 
         return $this->getCommand();
@@ -72,9 +73,14 @@ class RevListCommand extends BaseCommand
      */
     public function commitPath(Commit $commit, $max = 1000): string
     {
+        if (!is_int($max) || $max < 0) {
+            throw new \InvalidArgumentException('Max count must be a non-negative integer.');
+        }
+
+        $this->assertNotAnOption($commit->getSha());
         $this->clearAll();
         $this->addCommandName(static::GIT_REVLIST);
-        $this->addCommandArgument(sprintf('--max-count=%s', $max));
+        $this->addCommandArgument(sprintf('--max-count=%d', $max));
         $this->addCommandSubject($commit->getSha());
 
         return $this->getCommand();

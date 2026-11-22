@@ -158,6 +158,12 @@ class BaseCommand
      */
     protected function addCommandName(string $commandName): void
     {
+        if (preg_match('/^[a-z0-9]+(?:-[a-z0-9]+)*(?:\s+[a-z0-9]+(?:-[a-z0-9]+)*)*$/', $commandName) !== 1) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid git command name "%s".', $commandName)
+            );
+        }
+
         $this->commandName = $commandName;
     }
 
@@ -234,7 +240,7 @@ class BaseCommand
      */
     protected function addGlobalCommandArgument($commandArgument): void
     {
-        if (!empty($commandArgument)) {
+        if ($commandArgument !== null && $commandArgument !== '') {
             $this->globalCommandArguments[] = $commandArgument;
         }
     }
@@ -279,7 +285,8 @@ class BaseCommand
 
     /**
      * Assert that a positional argument does not start with "-", preventing git
-     * from interpreting it as a command-line option (CWE-88).
+     * from interpreting it as a command-line option (CWE-88), and does not contain
+     * control characters or invalid UTF-8 sequences that escapeshellarg() could strip.
      *
      * @param mixed $value
      *
@@ -295,13 +302,61 @@ class BaseCommand
             return;
         }
 
-        if ($value instanceof \Stringable) {
+        if ($value instanceof \Stringable || is_int($value) || is_float($value)) {
             $value = (string) $value;
         }
 
-        if (is_string($value) && str_starts_with($value, '-')) {
+        if (!is_string($value)) {
+            return;
+        }
+
+        if (str_contains($value, "\0") || str_contains($value, "\r") || str_contains($value, "\n")) {
+            throw new \InvalidArgumentException(
+                'Invalid argument: value cannot contain null bytes or newline characters.'
+            );
+        }
+
+        if (preg_match('//u', $value) !== 1) {
+            throw new \InvalidArgumentException(
+                'Invalid argument: value must be valid UTF-8.'
+            );
+        }
+
+        if (str_starts_with($value, '-')) {
             throw new \InvalidArgumentException(
                 sprintf('Invalid argument "%s": value cannot start with "-".', $value)
+            );
+        }
+
+        // Guard against escapeshellarg() stripping leading non-ASCII bytes under C/POSIX locales.
+        $escaped = escapeshellarg($value);
+        $unquoted = strlen($escaped) >= 2 ? substr($escaped, 1, -1) : $escaped;
+        if (str_starts_with($unquoted, '-')) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid argument "%s": escaped value cannot start with "-".', $value)
+            );
+        }
+    }
+
+    /**
+     * Assert that a remote name or repository URL is not an option and does not
+     * use a dangerous git remote-helper transport protocol such as "ext::" or "fd::".
+     *
+     * @param mixed $url
+     *
+     * @throws \InvalidArgumentException
+     */
+    protected function assertSafeRemoteUrl($url): void
+    {
+        $this->assertNotAnOption($url);
+
+        if ($url instanceof \Stringable) {
+            $url = (string) $url;
+        }
+
+        if (is_string($url) && preg_match('/^[a-zA-Z0-9+.-]+::/', $url) === 1) {
+            throw new \InvalidArgumentException(
+                sprintf('Invalid remote URL "%s": remote-helper transport protocols are not allowed.', $url)
             );
         }
     }
@@ -325,15 +380,25 @@ class BaseCommand
         $normalizedOptions = [];
 
         foreach ($options as $option) {
+            if (!is_string($option)) {
+                continue;
+            }
+
             if (array_key_exists($option, $switchOptions)) {
                 $normalizedOptions[$switchOptions[$option]] = $switchOptions[$option];
-            } else {
-                $parts = preg_split('/([\s=])+/', $option, 2, PREG_SPLIT_DELIM_CAPTURE);
-                if ($parts !== false && $parts !== []) {
-                    $optionName = $parts[0];
-                    if (in_array($optionName, $valueOptions)) {
-                        $value = $parts[1] === '=' ? $option : [$parts[0], $parts[2]];
-                        $normalizedOptions[$optionName] = $value;
+            } elseif (in_array($option, $valueOptions, true)) {
+                throw new \InvalidArgumentException(
+                    sprintf('Option "%s" requires a value.', $option)
+                );
+            } elseif (preg_match('/^(--?[a-zA-Z0-9-]+)(?:=(.+)|\s+(.+))$/s', $option, $matches) === 1) {
+                $optionName = $matches[1];
+                if (in_array($optionName, $valueOptions, true)) {
+                    if ($matches[2] !== '') {
+                        $normalizedOptions[$optionName] = $option;
+                    } else {
+                        $optValue = $matches[3];
+                        $this->assertNotAnOption($optValue);
+                        $normalizedOptions[$optionName] = [$optionName, $optValue];
                     }
                 }
             }
@@ -353,17 +418,16 @@ class BaseCommand
             throw new \RuntimeException("You should pass a commandName to execute a command");
         }
 
-        $command = '';
-        $command .= $this->getCLIConfigs();
-        $command .= $this->getCLIGlobalOptions();
-        $command .= $this->getCLICommandName();
-        $command .= $this->getCLICommandArguments();
-        $command .= $this->getCLISubjects();
-        $command .= $this->getCLIPath();
+        $parts = [
+            trim($this->getCLIConfigs()),
+            trim($this->getCLIGlobalOptions()),
+            trim($this->getCLICommandName()),
+            trim($this->getCLICommandArguments()),
+            trim($this->getCLISubjects()),
+            trim($this->getCLIPath()),
+        ];
 
-        $command = preg_replace('/\\s{2,}/', ' ', $command);
-
-        return trim($command);
+        return implode(' ', array_filter($parts, static fn (string $part): bool => $part !== ''));
     }
 
     /**

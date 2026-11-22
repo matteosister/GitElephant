@@ -53,18 +53,41 @@ class CallerSSH2 extends AbstractCaller
         $cwd = null
     ): \GitElephant\Command\Caller\CallerInterface {
         if ($git) {
-            $cmd = $this->getBinaryPath() . ' ' . $cmd;
+            $gitCmd = $this->escapePosixArg($this->getBinaryPath());
+            if ($cwd !== null && $cwd !== '') {
+                $gitCmd .= ' -C ' . $this->escapePosixArg($cwd);
+            }
+            $cmd = 'LC_ALL=C ' . $gitCmd . ' ' . $cmd;
+        } else {
+            if ($cwd !== null && $cwd !== '') {
+                $cmd = 'cd ' . $this->escapePosixArg($cwd) . ' && LC_ALL=C ' . $cmd;
+            } else {
+                $cmd = 'LC_ALL=C ' . $cmd;
+            }
         }
+
         $stream = ssh2_exec($this->resource, $cmd);
+        if ($stream === false) {
+            throw new \RuntimeException('Failed to execute remote SSH2 command.');
+        }
+
         stream_set_blocking($stream, true);
         $data = stream_get_contents($stream);
         fclose($stream);
-        
+
         $this->rawOutput = $data === false ? '' : $data;
         // rtrim values
         $values = array_map(rtrim(...), explode(PHP_EOL, $this->rawOutput));
         $this->outputLines = $values;
 
         return $this;
+    }
+
+    /**
+     * Escape a single argument using POSIX single-quoting, independent of local OS/locale.
+     */
+    private function escapePosixArg(string $arg): string
+    {
+        return "'" . str_replace("'", "'\\''", $arg) . "'";
     }
 }

@@ -88,6 +88,8 @@ class AddSubCommand extends SubCommandCommand
      */
     public function prepare($name, $url, $options = []): self
     {
+        $this->clearAll();
+
         $options = $this->normalizeOptions(
             $options,
             $this->addCmdSwitchOptions(),
@@ -95,7 +97,7 @@ class AddSubCommand extends SubCommandCommand
         );
 
         $this->assertNotAnOption($name);
-        $this->assertNotAnOption($url);
+        $this->assertSafeRemoteUrl($url);
 
         $this->addCommandName(self::GIT_REMOTE_ADD);
         $this->addCommandSubject($name);

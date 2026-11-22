@@ -40,7 +40,11 @@ class Utilities
         $slices = [];
         $index = -1;
         foreach ($list as $value) {
-            if (preg_match($pattern, $value) === 1) {
+            $match = preg_match($pattern, $value);
+            if ($match === false) {
+                throw new \RuntimeException(sprintf('Regular expression failed with error code %d.', preg_last_error()));
+            }
+            if ($match === 1) {
                 ++$index;
             }
 
@@ -63,7 +67,11 @@ class Utilities
         $slices = [];
         $index = -1;
         foreach ($list as $value) {
-            if (preg_match($pattern, $value) === 1) {
+            $match = preg_match($pattern, $value);
+            if ($match === false) {
+                throw new \RuntimeException(sprintf('Regular expression failed with error code %d.', preg_last_error()));
+            }
+            if ($match === 1) {
                 ++$index;
             }
 

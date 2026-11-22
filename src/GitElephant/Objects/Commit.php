@@ -225,7 +225,7 @@ class Commit implements TreeishInterface, \Countable
                 $this->parents[] = $matches[1];
             }
 
-            if (preg_match('/^author (.*) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
+            if (preg_match('/^author ([^<]+) <([^>]+)> (\d+) (\S+)$/', $line, $matches) > 0) {
                 $author = new Author();
                 $author->setName($matches[1]);
                 $author->setEmail($matches[2]);
@@ -235,7 +235,7 @@ class Commit implements TreeishInterface, \Countable
                 $this->datetimeAuthor = $date;
             }
 
-            if (preg_match('/^committer (.*) <(.*)> (\d+) (.*)$/', $line, $matches) > 0) {
+            if (preg_match('/^committer ([^<]+) <([^>]+)> (\d+) (\S+)$/', $line, $matches) > 0) {
                 $committer = new Author();
                 $committer->setName($matches[1]);
                 $committer->setEmail($matches[2]);

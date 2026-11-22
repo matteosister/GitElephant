@@ -381,7 +381,7 @@ class Remote implements \Stringable
     public static function getMatches(string $remoteString): array
     {
         $matches = [];
-        preg_match('/^(\S+)\s*(\S[^\( ]+)\s*\((.+)\)$/', trim($remoteString), $matches);
+        preg_match('/^(\S+)\s+(\S[^(\s]*)\s+\(([^)]+)\)$/', trim($remoteString), $matches);
         if ($matches === []) {
             throw new \InvalidArgumentException(sprintf('the remote string is not valid: %s', $remoteString));
         }

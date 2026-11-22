@@ -58,7 +58,11 @@ class PullCommand extends BaseCommand
             $branch = $branch->getName();
         }
 
-        $this->assertNotAnOption($remote);
+        if ($remote === null && $branch !== null) {
+            throw new \InvalidArgumentException('Cannot specify a branch without a remote.');
+        }
+
+        $this->assertSafeRemoteUrl($remote);
         $this->assertNotAnOption($branch);
         $this->clearAll();
         $this->addCommandName(self::GIT_PULL_COMMAND);
