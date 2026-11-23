@@ -31,7 +31,7 @@ final class ArgumentInjectionTest extends TestCase
         yield 'LogRangeCommand::showLog start' => [fn (): string => LogRangeCommand::getInstance()->showLog('--output=/tmp/pwn', 'HEAD')];
         yield 'LogRangeCommand::showLog end' => [fn (): string => LogRangeCommand::getInstance()->showLog('HEAD', '--output=/tmp/pwn')];
         yield 'ShowCommand::showCommit' => [fn (): string => ShowCommand::getInstance()->showCommit('--output=/tmp/pwn')];
-        yield 'ShowCommand::showCommit stringable' => [fn (): string => ShowCommand::getInstance()->showCommit(new class implements \Stringable {
+        yield 'ShowCommand::showCommit stringable' => [fn (): string => ShowCommand::getInstance()->showCommit(new class() implements \Stringable {
             public function __toString(): string
             {
                 return '--output=/tmp/pwn';
