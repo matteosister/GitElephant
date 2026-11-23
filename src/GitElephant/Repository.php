@@ -33,6 +33,7 @@ use GitElephant\Command\PullCommand;
 use GitElephant\Command\PushCommand;
 use GitElephant\Command\RemoteCommand;
 use GitElephant\Command\ResetCommand;
+use GitElephant\Command\RevListCommand;
 use GitElephant\Command\RevParseCommand;
 use GitElephant\Command\StashCommand;
 use GitElephant\Command\SubmoduleCommand;
@@ -326,6 +327,33 @@ class Repository
     }
 
     /**
+     * Return the count of commits behind (left) and ahead (right) between two references or branches.
+     *
+     * In git rev-list --left-right --count left...right:
+     * - 'behind' is the number of commits in $left but not in $right
+     * - 'ahead' is the number of commits in $right but not in $left
+     *
+     * @param TreeishInterface|string $left  The left/base reference (e.g. origin/master)
+     * @param TreeishInterface|string $right The right reference (e.g. local master)
+     *
+     * @throws \RuntimeException
+     * @return array{'behind': int, 'ahead': int}
+     */
+    public function countCommitsBetween(TreeishInterface|string $left, TreeishInterface|string $right): array
+    {
+        $output = trim($this->caller->execute(RevListCommand::getInstance($this)->countBetween($left, $right))->getOutput());
+        $parts = preg_split('/\s+/', $output);
+        if ($parts === false || count($parts) < 2 || !is_numeric($parts[0]) || !is_numeric($parts[1])) {
+            throw new \RuntimeException(sprintf('Unable to parse git rev-list output: "%s"', $output));
+        }
+
+        return [
+            'behind' => (int) $parts[0],
+            'ahead' => (int) $parts[1],
+        ];
+    }
+
+    /**
      * Check if this is a bare repository
      */
     public function isBare(): bool
@@ -544,18 +572,18 @@ class Repository
     }
 
     /**
-     * Merge a Branch in the current checked out branch
+     * Merge a Branch, Tag, Treeish or ref in the current checked out branch
      *
-     * @param Objects\Branch $branch  The branch to merge in the current checked out branch
-     * @param string         $message The message for the merge commit, if merge is 3-way
-     * @param string         $mode    The merge mode: ff-only, no-ff or auto
+     * @param Branch|Tag|TreeishInterface|string $branch The branch, tag, treeish or ref to merge in the current checked out branch
+     * @param string                             $message The message for the merge commit, if merge is 3-way
+     * @param string                             $mode    The merge mode: ff-only, no-ff or auto
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function merge(Branch $branch, string $message = '', string $mode = 'auto'): self
+    public function merge(Branch|Tag|TreeishInterface|string $branch, string $message = '', string $mode = 'auto'): self
     {
         $valid_modes = [
             'auto', // deafult git behavior
@@ -1055,18 +1083,17 @@ class Repository
     /**
      * Push changes to remote repository
      *
-     * @param string $to
-     * @param string $ref
-     * @param string $args
+     * @param Remote|string|null $to
+     * @param Branch|string|null $ref
      *
      * @throws \RuntimeException
      * @throws \Symfony\Component\Process\Exception\LogicException
      * @throws InvalidArgumentException
      * @throws \Symfony\Component\Process\Exception\RuntimeException
      */
-    public function push($to = null, $ref = null, ?string $args = null): void
+    public function push($to = null, $ref = null, ?string $args = null, bool $tags = false): void
     {
-        $this->caller->execute(PushCommand::getInstance($this)->push($to, $ref, $args));
+        $this->caller->execute(PushCommand::getInstance($this)->push($to, $ref, $args, $tags));
     }
 
     /**

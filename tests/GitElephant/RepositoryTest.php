@@ -313,6 +313,37 @@ final class RepositoryTest extends TestCase
         $this->fail("Merge should have produced a runtime exception.");
     }
 
+    public function testMergeTag(): void
+    {
+        $this->getRepository()->init(false, 'master');
+        $this->addFile('file1');
+        $this->getRepository()->commit('commit1', true);
+
+        $this->getRepository()->createBranch('feature');
+        $this->getRepository()->checkout('feature');
+        $this->addFile('file2');
+        $this->getRepository()->commit('commit2', true);
+        $this->getRepository()->createTag('release-1.0');
+
+        $this->getRepository()->checkout('master');
+        $this->assertCount(1, $this->getRepository()->getTree());
+
+        $tag = $this->getRepository()->getTag('release-1.0');
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $tag);
+        $this->getRepository()->merge($tag);
+        $this->assertCount(2, $this->getRepository()->getTree());
+
+        $this->getRepository()->createBranch('feature2');
+        $this->getRepository()->checkout('feature2');
+        $this->addFile('file3');
+        $this->getRepository()->commit('commit3', true);
+        $this->getRepository()->createTag('release-2.0');
+
+        $this->getRepository()->checkout('master');
+        $this->getRepository()->merge('release-2.0');
+        $this->assertCount(3, $this->getRepository()->getTree());
+    }
+
     public function testTags(): void
     {
         $this->getRepository()->init(false, 'master');
@@ -827,6 +858,14 @@ final class RepositoryTest extends TestCase
 
         $this->assertEquals('test commit', $r3->getLog()->last()->getMessage());
         $this->assertEquals($r1->getMainBranch()->getSha(), $r3->getLog()->last()->getSha());
+
+        $r1->createTag('v1.0.0');
+        $r1->push('origin', tags: true);
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $r2->getTag('v1.0.0'));
+
+        $r1->createTag('v1.0.1');
+        $r1->push(tags: true);
+        $this->assertInstanceOf(\GitElephant\Objects\Tag::class, $r2->getTag('v1.0.1'));
     }
 
     public function testRevParse(): void
