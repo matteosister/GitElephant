@@ -263,6 +263,7 @@ class StashCommand extends BaseCommand
             return 'stash@{' . $stash . '}';
         }
 
+        /** @phpstan-ignore function.alreadyNarrowedType */
         if (!is_string($stash)) {
             throw new \InvalidArgumentException('Invalid stash reference: expected non-negative integer or stash@{n}.');
         }

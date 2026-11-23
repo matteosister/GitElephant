@@ -158,7 +158,7 @@ class Caller extends AbstractCaller
 
         $redacted = preg_replace('/(Authorization:\s*)\S+(?:\s+\S+)?/i', '$1***', $text);
         if (is_string($redacted)) {
-            $text = $redacted;
+            return $redacted;
         }
 
         return $text;

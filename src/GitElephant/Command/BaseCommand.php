@@ -236,7 +236,7 @@ class BaseCommand
     /**
      * Add a global command argument
      *
-     * @param string $commandArgument the command argument
+     * @param string|null $commandArgument the command argument
      */
     protected function addGlobalCommandArgument($commandArgument): void
     {

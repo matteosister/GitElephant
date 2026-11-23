@@ -75,6 +75,7 @@ class RevListCommand extends BaseCommand
      */
     public function commitPath(Commit $commit, $max = 1000): string
     {
+        /** @phpstan-ignore function.alreadyNarrowedType */
         if (!is_int($max) || $max < 0) {
             throw new \InvalidArgumentException('Max count must be a non-negative integer.');
         }
